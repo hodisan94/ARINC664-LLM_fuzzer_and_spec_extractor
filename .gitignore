@@ -106,10 +106,18 @@ build/
 **/output/
 **/checkpoints/
 **/iteration_history.jsonl
+**/iteration_history_backup_*.jsonl
+**/iteration_*_test.json
+**/demo_history.jsonl
+**/backup_*.jsonl
 **/multimodel_output/
 **/comparison_results.json
 **/alignment_results.json
 **/arbitration_results.json
+**/protocol_rules.json
+**/test_case_extraction_checkpoint.jsonl
+**/*_run.log
+**/run_log.txt
 
 # OS files
 .DS_Store
