@@ -1,0 +1,69 @@
+{
+  "bag": {
+    "allowed_ms": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128
+    ]
+  },
+  "frame": {
+    "lmin": 64,
+    "lmax": 1518,
+    "smin": null,
+    "jitter_max_fraction": 0.5,
+    "latency_max_ms": 0.15
+  },
+  "redundancy": {
+    "default_true": true,
+    "allow_non_redundant_if_explicit": false,
+    "exceptions_hint": null
+  },
+  "switch": {
+    "filtering_conditions": [
+      "drop if frame length > Lmax",
+      "drop if frame length < Smin",
+      "drop if VL not defined"
+    ],
+    "policing_mode": "unspecified",
+    "token_bucket_size": null,
+    "token_bucket_refill": null,
+    "forwarding_rules": [],
+    "sequence_handling": [],
+    "redundancy_handling": []
+  },
+  "switching": {
+    "filtering_conditions": [],
+    "policing_mode": null,
+    "token_bucket_size": null,
+    "token_bucket_refill": null,
+    "forwarding_rules": [
+      "forward only if the frame is valid and complies with configuration parameters",
+      "forward frames to appropriate physical output ports based on filtering results"
+    ],
+    "sequence_handling": [
+      "drop duplicate frames",
+      "detect missing frames"
+    ],
+    "redundancy_handling": [
+      "discard duplicates"
+    ]
+  },
+  "monitoring": {
+    "mib_required": true,
+    "snmp_agent_required": true,
+    "network_management_function": true,
+    "fault_indicator": true,
+    "fault_update_interval_ms": 100
+  },
+  "performance": {
+    "max_switch_delay_us": 128,
+    "max_end_to_end_latency_ms": 16,
+    "max_jitter_fraction": 0.5,
+    "link_speed_mbps": 100
+  }
+}

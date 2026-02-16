@@ -1,0 +1,1215 @@
+{
+  "bag": {
+    "allowed_values_ms": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128
+    ],
+    "_allowed_values_ms_validation": {
+      "confidence": "medium",
+      "agreement": [
+        "openai",
+        "anthropic"
+      ],
+      "all_values": {
+        "openai": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128
+        ],
+        "anthropic": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          128
+        ]
+      },
+      "note": "",
+      "source": "majority"
+    },
+    "constraints": "BAG values are limited to powers of 2, and if a partition needs to transmit data less often than 128 ms, the BAG value 128 will be used.",
+    "_constraints_validation": {
+      "confidence": "arbitrated_high",
+      "original_values": {
+        "openai": "There should be one BAG value per VL, and for groups of VLs sharing the same account, all VLs should have the same BAG.",
+        "anthropic": "BAG values are limited to powers of 2 in order to simplify the ES design. If a partition needs to transmit data less often than 128 ms, the BAG value 128 will be used."
+      },
+      "arbitrator": "openai",
+      "justification": "The specification text clearly states that BAG values are limited to powers of 2 and specifies that if a partition needs to transmit data less often than 128 ms, the BAG value 128 will be used. This directly supports anthropic's interpretation.",
+      "source": "arbitration"
+    }
+  },
+  "frame_structure": {
+    "afdx_fields": {
+      "payload_offset": null,
+      "_payload_offset_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": null,
+          "anthropic": null
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "sequence_num_offset": null,
+      "_sequence_num_offset_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": null,
+          "anthropic": null
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "vl_id_offset": null,
+      "_vl_id_offset_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": null,
+          "anthropic": null
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "sequence_num_size": "null",
+      "_sequence_num_size_validation": {
+        "confidence": "arbitrated_low",
+        "original_values": {
+          "openai": null,
+          "anthropic": 1
+        },
+        "arbitrator": "openai",
+        "justification": "The provided specification text does not explicitly define the size of the sequence number field within the AFDX frame structure. It mentions the sequence number in the context of the Total Length field in IPv4 packets but does not specify its size. Therefore, the correct interpretation for 'frame_structure.afdx_fields.sequence_num_size' cannot be determined from the given text.",
+        "source": "arbitration"
+      },
+      "vl_id_size": "null",
+      "_vl_id_size_validation": {
+        "confidence": "arbitrated_low",
+        "original_values": {
+          "openai": null,
+          "anthropic": 32
+        },
+        "arbitrator": "openai",
+        "justification": "The provided specification text does not mention the size of the 'vl_id' field within the AFDX frame structure. The text primarily discusses aspects of the Ethernet and IP layer specifications, including the IPv4 packet structure and its fields, but does not specify a 'vl_id' field or its size.",
+        "source": "arbitration"
+      }
+    },
+    "ethernet": {
+      "crc_fcs_required": true,
+      "_crc_fcs_required_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": true,
+          "anthropic": true
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "dest_mac_offset": null,
+      "_dest_mac_offset_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": null,
+          "anthropic": null
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "ethertype_offset": null,
+      "_ethertype_offset_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": null,
+          "anthropic": null
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "lmax": 1518,
+      "_lmax_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": 1518,
+          "anthropic": 1518
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "lmin": 64,
+      "_lmin_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": 64,
+          "anthropic": 64
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "smin": 84,
+      "_smin_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": 84,
+          "anthropic": 84
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "src_mac_offset": null,
+      "_src_mac_offset_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": null,
+          "anthropic": null
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "dest_mac_size": 6,
+      "_dest_mac_size_validation": {
+        "confidence": "arbitrated_high",
+        "original_values": {
+          "openai": null,
+          "anthropic": 6
+        },
+        "arbitrator": "openai",
+        "justification": "The specification text refers to MAC addresses, which in Ethernet are universally 6 bytes (48 bits) in size. This is a standard Ethernet specification, and ARINC 664 Part 7, which is based on Ethernet, would adhere to this standard. The text mentions MAC addresses in the context of switch forwarding and addressing, implying the use of standard Ethernet MAC addresses.",
+        "source": "arbitration"
+      },
+      "ethertype_value": "null",
+      "_ethertype_value_validation": {
+        "confidence": "arbitrated_low",
+        "original_values": {
+          "openai": null,
+          "anthropic": "0x800"
+        },
+        "arbitrator": "openai",
+        "justification": "The provided specification text does not mention or define the 'ethertype_value' for Ethernet frames in the context of ARINC 664 Part 7. The text primarily discusses latency, MAC addressing, and virtual link identifiers, but does not specify the Ethertype value.",
+        "source": "arbitration"
+      },
+      "multicast_bit_rule": "The least significant bit of the first byte indicates the group address (always = 1).",
+      "_multicast_bit_rule_validation": {
+        "confidence": "arbitrated_medium",
+        "original_values": {
+          "openai": "The least significant bit of the first byte indicates the group address (always = 1). The second to least significant bit of the first byte indicates the locally administered address (always = 1).",
+          "anthropic": "least significant bit of the first byte indicates the group address (always = 1)"
+        },
+        "arbitrator": "openai",
+        "justification": "The specification text provided does not directly address the multicast bit rule for Ethernet frames. However, it does mention that the least significant bit of the first byte indicates the Individual Address = 0, which implies that for multicast addresses, this bit would be set to 1. This aligns with the general understanding of Ethernet addressing where the least significant bit of the first byte is used to distinguish between unicast (0) and multicast (1) addresses.",
+        "source": "arbitration"
+      },
+      "src_mac_size": 6,
+      "_src_mac_size_validation": {
+        "confidence": "arbitrated_high",
+        "original_values": {
+          "openai": null,
+          "anthropic": 6
+        },
+        "arbitrator": "openai",
+        "justification": "The specification text does not directly specify the size of the source MAC address in the provided excerpts. However, Ethernet standards universally define MAC addresses as 6 bytes (48 bits) in length. ARINC 664 Part 7, which builds upon Ethernet standards, would adhere to this established size for MAC addresses. The absence of a specific mention in the provided text does not negate the standard Ethernet MAC address size.",
+        "source": "arbitration"
+      }
+    },
+    "ip_header": {
+      "checksum_required": true,
+      "_checksum_required_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": true,
+          "anthropic": true
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "version": 4,
+      "_version_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": 4,
+          "anthropic": 4
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "fragmentation_allowed": "false",
+      "_fragmentation_allowed_validation": {
+        "confidence": "arbitrated_medium",
+        "original_values": {
+          "openai": true,
+          "anthropic": false
+        },
+        "arbitrator": "openai",
+        "justification": "The specification text does not explicitly state whether fragmentation is allowed or not. However, the IPv4 packet structure includes fields related to fragmentation (Fragment identification, Control flag, Fragment offset), which suggests that the protocol inherently supports fragmentation. Despite this, the context of ARINC 664 Part 7, which is focused on deterministic and reliable communication, typically discourages fragmentation to avoid complications in real-time data transmission. Therefore, it is reasonable to interpret that fragmentation is not allowed in this specific application, aligning with the deterministic nature of AFDX.",
+        "source": "arbitration"
+      },
+      "header_validation": "A datagram whose version number is not 4 MUST be silently discarded.",
+      "_header_validation_validation": {
+        "confidence": "arbitrated_medium",
+        "original_values": {
+          "openai": [
+            "A datagram whose version number is not 4 MUST be silently discarded.",
+            "A host MUST verify the IP header checksum on every received datagram and silently discard every datagram that has a bad checksum.",
+            "A host MUST silently discard an incoming datagram that is not destined for the host.",
+            "A host MUST silently discard an incoming datagram containing an IP source address that is invalid by the rules of this section.",
+            "No ICMP errors",
+            "No ICMP redirect from ES",
+            "Only ICMP \"echo request\" and \"echo reply\" are allowed",
+            "The host IP layer MUST operate correctly in a minimal network environment, and in particular, when there are no gateways.",
+            "AFDX is statically defined, no default gateways",
+            "Every host MUST implement an ICMP Echo server function that receives Echo Requests and sends corresponding Echo Replies.",
+            "An ICMP Echo Request destined to an IP broadcast or IP multicast address MAY be silently discarded.",
+            "The IP source address in an ICMP Echo Reply MUST be the same as the specific-destination address of the corresponding ICMP Echo Request message.",
+            "Data received in an ICMP Echo Request MUST be entirely included in the resulting Echo Reply.",
+            "Echo Reply messages MUST be passed to the ICMP user interface, unless the corresponding Echo Request originated in the IP layer.",
+            "If a Record Route and/or Time Stamp option is received in an ICMP Echo Request, this option SHOULD be updated to include the current host and included in the IP header of the Echo Reply message, without 'truncation'.",
+            "If a Source Route option is received in an ICMP Echo Request, the return route MUST be reversed and used as a Source Route option for the Echo Reply message.",
+            "A host SHOULD NOT implement ICMP Information Request or Reply messages.",
+            "A host MAY implement Timestamp and Timestamp Reply.",
+            "An ICMP Timestamp Request message to an IP broadcast or IP multicast address MAY be silently discarded.",
+            "The IP source address in an ICMP Timestamp Reply MUST be the same as the specific-destination address of the corresponding Timestamp Request message.",
+            "The interface between the IP layer and the transport layer MUST provide full access to all the mechanisms of the IP layer, including options, Type-of-Service, and Time-to-Live.",
+            "A host MUST be able to generate Destination Unreachable messages with the following codes: 4 (Fragmentation Required but DF Set), 5 (Source Route Failed).",
+            "A source-routed datagram being forwarded MAY have a source address that is not one of the IP addresses of the forwarding host.",
+            "A host that is forwarding a source-routed datagram containing a Record Route option MUST update that option, if it has room.",
+            "A host that is forwarding a source-routed datagram containing a Timestamp Option MUST add the current timestamp to that option, according to the rules for this option.",
+            "A host that supports non-local source-routing MUST have a configurable switch to disable forwarding and this switch MUST default to disabled.",
+            "The host MUST satisfy all gateway requirements for configurable policy filters restricting non-local forwarding.",
+            "If a host receives a datagram with an incomplete source route but does not forward it for some reason, the host SHOULD return an ICMP Destination Unreachable (code 5, Source Route Failed) message, unless the datagram was itself an ICMP error message.",
+            "A host MUST recognize any of the four standard IP broadcast address forms in the destination address of an incoming datagram.",
+            "All hosts SHOULD recognize and accept any non-standard broadcast addresses as the destination address of an incoming datagram.",
+            "A host MAY optionally have a configuration option to choose the 0 or the -1 form of broadcast address, for each physical interface, but this option SHOULD default to the standard (-1) form.",
+            "A host MUST recognize any of these forms in the destination address of an incoming datagram.",
+            "Use IP broadcast/multicast address in link-layer broadcast."
+          ],
+          "anthropic": [
+            "IPv4 packet structure should be compliant with Figure 3-30",
+            "Total Length field should range from 21 to 1499 bytes due to the Sequence Number",
+            "A datagram whose version number is not 4 MUST be silently discarded",
+            "A host MUST verify the IP header checksum on every received datagram and silently discard every datagram that has a bad checksum",
+            "A host MUST silently discard an incoming datagram that is not destined for the host",
+            "A host MUST silently discard an incoming datagram containing an IP source address that is invalid",
+            "IP source address validation required",
+            "Invalid IP source addresses (broadcast or multicast) must be discarded",
+            "datagrams whose source address does not define a single host must be rejected - zero address, loopback address, broadcast address, multicast address, or Class address",
+            "All IP options (except NOP or END-OF-LIST) received in datagrams MUST be passed to the transport layer",
+            "The IP and transport layer MUST each interpret those IP options that they understand and silently ignore the others",
+            "An IP header containing more than one Source Route option MUST NOT be sent",
+            "A host MUST NOT send a datagram with a Time-to-Live (TTL) value of zero",
+            "A host MUST recognize any broadcast address forms in the destination address",
+            "All hosts SHOULD recognize and accept non-standard broadcast addresses as destination address",
+            "A host MUST recognize Limited Broadcast {-1, -1}",
+            "A host MUST recognize Directed Broadcast {<Network-number>,-1}",
+            "A host MUST recognize Subnet Directed Broadcast {<Network-number>,<Subnet-number>,-1}",
+            "A host MUST recognize All-Subnets Directed Broadcast {<Network-number>,-1,-1}",
+            "Pass all IP options up to transport layer",
+            "Include IP header + 8-octets or more from original for ICMP error messages",
+            "EMTU_R MUST be greater than or equal to 576",
+            "EMTU_R SHOULD be either configurable or indefinite",
+            "EMTU_R SHOULD be greater than or equal to the MTU of the connected network(s)"
+          ]
+        },
+        "arbitrator": "openai",
+        "justification": "The specification text indicates that the packet structure version should be IPv4, which implies that any datagram not conforming to this version should be discarded. This aligns with the rule extracted by both AI systems that a datagram whose version number is not 4 must be silently discarded.",
+        "source": "arbitration"
+      },
+      "ttl_rules": "The specification does not clearly define TTL rules for AFDX.",
+      "_ttl_rules_validation": {
+        "confidence": "arbitrated_low",
+        "original_values": {
+          "openai": "A host MUST NOT send a datagram with a Time-to-Live (TTL) value of zero.",
+          "anthropic": "TTL value used to send TCP segments MUST be configurable. Default value is 1 for AFDX."
+        },
+        "arbitrator": "openai",
+        "justification": "The provided specification text does not mention any specific rules or requirements regarding the Time-to-Live (TTL) value for AFDX. The text primarily discusses IP multicast and broadcast requirements, but does not address TTL configuration or restrictions.",
+        "source": "arbitration"
+      }
+    },
+    "payload": {
+      "min_size": 18,
+      "_min_size_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": 18,
+          "anthropic": 18
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "max_size": "1471",
+      "_max_size_validation": {
+        "confidence": "arbitrated_high",
+        "original_values": {
+          "openai": 1471,
+          "anthropic": 8192
+        },
+        "arbitrator": "openai",
+        "justification": "The specification text provides a detailed breakdown of the IPv4 packet structure, indicating that the total length of an IPv4 packet can range from 21 to 1499 bytes in AFDX. The payload size is derived by subtracting the header size from the total length. Given the header size of 20 bytes (as per standard IPv4 header), the maximum payload size is 1479 - 20 = 1459 bytes. However, considering the specific AFDX constraints, the maximum payload size is 1471 bytes, as the total length includes the Sequence Number field, which is not part of the payload.",
+        "source": "arbitration"
+      },
+      "vl_specific_ranges": "The specification text provided does not clearly define 'frame_structure.payload.vl_specific_ranges'.",
+      "_vl_specific_ranges_validation": {
+        "confidence": "arbitrated_low",
+        "original_values": {
+          "openai": "Sampling Com Ports should not use IP fragmentation, therefore the size of each sampling message should be less than or equal to the payload size of the associated Virtual Link.",
+          "anthropic": "The maximum frame size for VLi is denoted S i max (expressed in bytes). S i max is a configurable parameter that should be in the range [84, 1538]. The minimum frame size for VLi is denoted S i min (expressed in bytes). S i min is a configurable parameter that should be in the range [84, 1538]. S i min should be less than or equal to S i max. A maximum AFDX frame length should be defined on a per VL basis. sampling message should be less than or equal to the payload size of the associated Virtual Link. The minimum size packet in Ethernet has a payload of 18 bytes. If a message is sent on an AFDX network that is less than 18 bytes long the message will be padded out to 18 bytes before it appears on the medium."
+        },
+        "arbitrator": "openai",
+        "justification": "The provided specification text does not contain information about the specific payload size constraints or ranges for Virtual Links (VLs) in terms of frame structure. The text focuses on latency, MAC addressing, and general end-system specifications without detailing payload size ranges or fragmentation rules.",
+        "source": "arbitration"
+      }
+    },
+    "udp_header": {
+      "checksum_required": false,
+      "_checksum_required_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": false,
+          "anthropic": false
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "length_validation": null,
+      "_length_validation_validation": {
+        "confidence": "medium",
+        "agreement": [
+          "openai",
+          "anthropic"
+        ],
+        "all_values": {
+          "openai": null,
+          "anthropic": null
+        },
+        "note": "",
+        "source": "majority"
+      },
+      "port_rules": "Transport layer port assignments are not critical and can be assigned by a system integrator using any values in the range 1 to 65535.",
+      "_port_rules_validation": {
+        "confidence": "arbitrated_medium",
+        "original_values": {
+          "openai": "Transport layer port assignments are not critical and can be assigned by a system integrator using any values in the range 1 to 65535. Avoid using port numbers in the range of 0 \u2013 1023 and 1024 to 49151 for full assurance of avoiding addressing issues with adjacent networks.",
+          "anthropic": "In transmission, a SAP Port should only be linked to a single set (UDP port source, IP source and VL (MAC destination)). In reception, a SAP Port should only be linked to a single set (UDP/TCP port destination, IP destination and VL (MAC destination)). The UDP/TCP port number should identify the Service Access Point. Transport layer port assignments are not critical and can be assigned by a system integrator using any values in the range 1 to 65535. An application will know the message format by means of the port number it is received on."
+        },
+        "arbitrator": "openai",
+        "justification": "The specification text does not explicitly mention any specific rules about avoiding certain port ranges (0-1023 or 1024-49151) or the exact role of port numbers in identifying Service Access Points (SAP). However, it does indicate that the port assignments are not critical and can be configured by the system integrator, suggesting flexibility in port number usage.",
+        "source": "arbitration"
+      }
+    }
+  },
+  "monitoring": {
+    "mib_required": true,
+    "_mib_required_validation": {
+      "confidence": "medium",
+      "agreement": [
+        "openai",
+        "anthropic"
+      ],
+      "all_values": {
+        "openai": true,
+        "anthropic": true
+      },
+      "note": "",
+      "source": "majority"
+    },
+    "snmp_required": true,
+    "_snmp_required_validation": {
+      "confidence": "medium",
+      "agreement": [
+        "openai",
+        "anthropic"
+      ],
+      "all_values": {
+        "openai": true,
+        "anthropic": true
+      },
+      "note": "",
+      "source": "majority"
+    },
+    "update_interval_ms": 100,
+    "_update_interval_ms_validation": {
+      "confidence": "medium",
+      "agreement": [
+        "openai",
+        "anthropic"
+      ],
+      "all_values": {
+        "openai": 100,
+        "anthropic": 100
+      },
+      "note": "",
+      "source": "majority"
+    },
+    "discard_counters": {
+      "categories": [
+        "traffic policing discards"
+      ],
+      "_categories_validation": {
+        "confidence": "arbitrated_medium",
+        "original_values": {
+          "openai": [],
+          "anthropic": [
+            "invalid frames",
+            "filtered frames",
+            "traffic policing discards",
+            "silently-discarded datagram"
+          ]
+        },
+        "arbitrator": "openai",
+        "justification": "The specification text describes a traffic policing mechanism where frames are discarded if certain conditions are not met. Specifically, frames are discarded if the Byte ACi or Frame ACi is less than the required size, and the appropriate MIB entry is updated. This indicates that 'traffic policing discards' is a valid category for discard counters. However, the specification text does not explicitly list categories like 'invalid frames', 'filtered frames', or 'silently-discarded datagram', making it unclear if these are also valid categories.",
+        "source": "arbitration"
+      },
+      "tracking_required": "true",
+      "_tracking_required_validation": {
+        "confidence": "arbitrated_medium",
+        "original_values": {
+          "openai": null,
+          "anthropic": true
+        },
+        "arbitrator": "openai",
+        "justification": "The specification text describes that when a frame is discarded due to insufficient ACi (either Byte ACi or Frame ACi), the appropriate MIB entry is updated. This implies that discard events are tracked, which aligns with the interpretation that tracking is required for discard counters.",
+        "source": "arbitration"
+      }
+    },
+    "fault_detection": "The specification does not clearly define 'monitoring.fault_detection'.",
+    "_fault_detection_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": "A fault detection should modify the status object of the MIB managed by the switch.",
+        "anthropic": "sequence number based fault detection"
+      },
+      "arbitrator": "openai",
+      "justification": "The provided specification text describes the functional blocks of the AFDX switch, including the Monitoring function, but does not explicitly define how fault detection should be implemented or what specific mechanisms it should use. The text mentions that the Monitoring function logs events and creates statistics, but does not detail whether this includes modifying the status object of the MIB or using sequence number-based fault detection.",
+      "source": "arbitration"
+    },
+    "statistics": [
+      "arrival of a frame",
+      "failed CRC check",
+      "internal situation"
+    ],
+    "_statistics_validation": {
+      "confidence": "arbitrated_medium",
+      "original_values": {
+        "openai": [],
+        "anthropic": [
+          "arrival of a frame",
+          "failed CRC check",
+          "internal situation",
+          "Fault/Healthy MIB variable should be updated every 100 ms",
+          "record the event in a statistics counter"
+        ]
+      },
+      "arbitrator": "openai",
+      "justification": "The specification text mentions that the Monitoring function logs events such as the arrival of a frame or a failed CRC check and creates statistics about the internal situation. However, it does not explicitly mention updating MIB variables every 100 ms or recording events in a statistics counter. Therefore, only the mentioned events are relevant to 'monitoring.statistics'.",
+      "source": "arbitration"
+    }
+  },
+  "performance": {
+    "link_speed_mbps": 100,
+    "_link_speed_mbps_validation": {
+      "confidence": "medium",
+      "agreement": [
+        "openai",
+        "anthropic"
+      ],
+      "all_values": {
+        "openai": 100,
+        "anthropic": 100
+      },
+      "note": "",
+      "source": "majority"
+    },
+    "max_switch_delay_us": 100,
+    "_max_switch_delay_us_validation": {
+      "confidence": "medium",
+      "agreement": [
+        "openai",
+        "anthropic"
+      ],
+      "all_values": {
+        "openai": 100,
+        "anthropic": 100
+      },
+      "note": "",
+      "source": "majority"
+    },
+    "max_end_to_end_latency_ms": "null",
+    "_max_end_to_end_latency_ms_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": null,
+        "anthropic": 10
+      },
+      "arbitrator": "openai",
+      "justification": "The provided specification text does not explicitly define a maximum end-to-end latency value in milliseconds. It discusses latency components and the deterministic nature of the network but does not specify a numerical limit for end-to-end latency.",
+      "source": "arbitration"
+    },
+    "max_jitter_fraction": "null",
+    "_max_jitter_fraction_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": null,
+        "anthropic": 0.5
+      },
+      "arbitrator": "openai",
+      "justification": "The provided specification text does not explicitly define or mention a 'max_jitter_fraction' or provide any numerical value such as 0.5 that could be directly associated with jitter or its fraction. The text discusses concepts of latency, jitter, and determinism in a network but does not specify a maximum jitter fraction.",
+      "source": "arbitration"
+    }
+  },
+  "redundancy": {
+    "network_a_b_architecture": true,
+    "_network_a_b_architecture_validation": {
+      "confidence": "medium",
+      "agreement": [
+        "openai",
+        "anthropic"
+      ],
+      "all_values": {
+        "openai": true,
+        "anthropic": true
+      },
+      "note": "",
+      "source": "majority"
+    },
+    "accept_first_policy": "When redundancy management is active, it should deliver the first of the redundant frames received.",
+    "_accept_first_policy_validation": {
+      "confidence": "arbitrated_high",
+      "original_values": {
+        "openai": "When redundancy management is active, it should deliver the first of the redundant frames received.",
+        "anthropic": "redundant copies should be sent within maximum time difference of 0.5 ms"
+      },
+      "arbitrator": "openai",
+      "justification": "The specification clearly states that when redundancy management is active, it should deliver the first of the redundant frames received. This is referred to as the 'First Win' philosophy, which ensures network availability in case of one AFDX switch loss.",
+      "source": "arbitration"
+    },
+    "discard_duplicate_policy": "The Redundancy Management Algorithm should only use the RSN of a frame as the criterion for rejection or acceptance.",
+    "_discard_duplicate_policy_validation": {
+      "confidence": "arbitrated_high",
+      "original_values": {
+        "openai": "The Redundancy Management Algorithm should only use the RSN of a frame as the criterion for rejection or acceptance.",
+        "anthropic": "deliver one of the redundant data when RM active, deliver both when RM not active"
+      },
+      "arbitrator": "openai",
+      "justification": "The specification clearly states that the Redundancy Management Algorithm should only use the RSN (Relative Sequence Number) of a frame as the criterion for rejection or acceptance. This indicates that the decision to discard duplicates is based solely on the RSN, aligning with openai's interpretation.",
+      "source": "arbitration"
+    },
+    "dual_transmission_required": "The correct value is not clearly defined",
+    "_dual_transmission_required_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": true,
+        "anthropic": false
+      },
+      "arbitrator": "openai",
+      "justification": "The provided specification text discusses the redundancy management function and its behavior in terms of frame acceptance and sequence order, but it does not explicitly state whether dual transmission is required. It describes how redundancy management should handle frames and mentions the 'First Win' philosophy, but it does not specify whether dual transmission is mandatory or optional.",
+      "source": "arbitration"
+    },
+    "policy": "First Valid wins",
+    "_policy_validation": {
+      "confidence": "arbitrated_high",
+      "original_values": {
+        "openai": "The Redundancy Management function must forward only in-sequence frames, but reordering is not required.",
+        "anthropic": "First Valid wins"
+      },
+      "arbitrator": "openai",
+      "justification": "The specification clearly states that when redundancy management is active, it should deliver the first of the redundant frames received. This 'First Win' philosophy is explicitly mentioned in the text, indicating that the first valid frame received is the one that should be forwarded.",
+      "source": "arbitration"
+    }
+  },
+  "sequence_numbers": {
+    "range": [
+      0,
+      255
+    ],
+    "_range_validation": {
+      "confidence": "medium",
+      "agreement": [
+        "openai",
+        "anthropic"
+      ],
+      "all_values": {
+        "openai": [
+          0,
+          255
+        ],
+        "anthropic": [
+          0,
+          255
+        ]
+      },
+      "note": "",
+      "source": "majority"
+    },
+    "wraparound": true,
+    "_wraparound_validation": {
+      "confidence": "medium",
+      "agreement": [
+        "openai",
+        "anthropic"
+      ],
+      "all_values": {
+        "openai": true,
+        "anthropic": true
+      },
+      "note": "",
+      "source": "majority"
+    },
+    "handling_rules": "The frame sequence number should be one octet long with a range of 0 to 255. For each VL, the sequence number should initially be set to 0. The sequence number is always assigned this initial value following a reset of the transmitting ES. The frame sequence number should be incremented by one for each consecutive frame of the same VL and wrap-around to 1 following the value 255.",
+    "_handling_rules_validation": {
+      "confidence": "arbitrated_medium",
+      "original_values": {
+        "openai": [
+          "The frame sequence number should be one octet long with a range of 0 to 255.",
+          "For each VL, the sequence number should initially be set to 0.",
+          "The sequence number is always assigned this initial value following a reset of the transmitting ES.",
+          "The frame sequence number should be incremented by one for each consecutive frame of the same VL and wrap-around to 1 following the value 255.",
+          "The Received Sequence Number (RSN) is equal to 0",
+          "The frame is the first frame received after any reset of the receiving ES"
+        ],
+        "anthropic": [
+          "Per VL, the End System should add a sequence number for each transmitted frame",
+          "The frame sequence number should initially be set to 0",
+          "The sequence number is always assigned this initial value following a reset of the transmitting ES",
+          "The frame sequence number should be incremented by one for each consecutive frame of the same VL",
+          "wrap-around to 1 following the value 255",
+          "Accept frames with sequence number in interval [PSN+1, PSN+2]",
+          "Accept frames with RSN equal to 0",
+          "Accept first frame after reset",
+          "Sequence number 0 transmitted only after reset",
+          "RM function should ensure that frames are forwarded in an increasing RSN order",
+          "RM will accept the next frame whatever its sequence number is if skew max is exceeded",
+          "RM function must forward only in-sequence frames",
+          "Redundancy Management Algorithm should only use the RSN of a frame as the criterion for rejection or acceptance"
+        ]
+      },
+      "arbitrator": "openai",
+      "justification": "The specification text does not explicitly state the details about the sequence number length, initial value, or wrap-around behavior. However, the text does mention that the Redundancy Management Algorithm should only use the RSN of a frame as the criterion for rejection or acceptance and that frames should be forwarded in an increasing RSN order. This implies a sequential handling of sequence numbers, which aligns with the interpretation that sequence numbers should increment and wrap-around.",
+      "source": "arbitration"
+    },
+    "missing_frame_detection": "Increment by one makes it possible to detect missing frames",
+    "_missing_frame_detection_validation": {
+      "confidence": "arbitrated_high",
+      "original_values": {
+        "openai": "Loss of one single frame is considered as a normal event due to a non-zero Bit Error Rate.",
+        "anthropic": "Increment by one makes it possible to detect missing frames"
+      },
+      "arbitrator": "openai",
+      "justification": "The specification explicitly states that incrementing the sequence number by one for each consecutive frame makes it possible to detect missing frames. This is because any gap in the sequence numbers indicates a missing frame.",
+      "source": "arbitration"
+    },
+    "out_of_window_action": "The specification text does not clearly define the action for out-of-window sequence numbers.",
+    "_out_of_window_action_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": "Frames that do not meet these criteria are discarded.",
+        "anthropic": "accept the next frame whatever its sequence number is"
+      },
+      "arbitrator": "openai",
+      "justification": "The provided specification text does not contain any information regarding sequence numbers or their handling when they are out of window. The text focuses on latency, MAC addressing, and other unrelated aspects of the protocol.",
+      "source": "arbitration"
+    },
+    "window_size": "null",
+    "_window_size_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": null,
+        "anthropic": 2
+      },
+      "arbitrator": "openai",
+      "justification": "The specification text provided does not explicitly define a 'window size' for sequence numbers in the context of redundancy management or sequence number handling. The text discusses the use of RSN (Redundancy Sequence Number) for ordering and acceptance of frames but does not specify a numerical window size value.",
+      "source": "arbitration"
+    }
+  },
+  "switching": {
+    "split_horizon": null,
+    "_split_horizon_validation": {
+      "confidence": "medium",
+      "agreement": [
+        "openai",
+        "anthropic"
+      ],
+      "all_values": {
+        "openai": null,
+        "anthropic": null
+      },
+      "note": "",
+      "source": "majority"
+    },
+    "forwarding_rules": "The switch forwards frames filtered by the Filtering and Policing function to the appropriate physical output ports.",
+    "_forwarding_rules_validation": {
+      "confidence": "arbitrated_medium",
+      "original_values": {
+        "openai": [
+          "The order of input and output frames belonging to a Virtual Link should be maintained by the switch.",
+          "If an output port cannot accept a frame due to buffer congestion, this frame should be discarded for this port.",
+          "In the case of a link failure of a port, frames forwarded to and held in buffers of this port should be discarded for this port.",
+          "An output port should not transmit frames that are older than 'max delay.'",
+          "The switch should have the capability to receive a frame on any port and forward it to any combination of ports (including the receiving port).",
+          "On a per VL basis: Input physical port, List of output physical ports, MAC destination address (VL identifier VLi), Bandwith Allocation Gap (BAGi), Maximum allowed Jitter, ACcount (ACi) [specifying if this account is shared or not], Maximum allowed Total Ethernet Line size (Smax), Minimum allowed Total Ethernet Line size (Smin), Prioritization (high or low)",
+          "On a per port basis: Max delay, Port State (ON/ OFF), Speed of the physical port, Output Buffer Size for Low Priority VLs, Output Buffer Size for High Priority VLs",
+          "Switch Forwarding is defined in Table 3-2.",
+          "Input port MAC destination field of the received frames Output ports",
+          "The filtering, policing, and forwarding function of the switch should be able to process at least 4096 VLs.",
+          "Given a deterministic configuration, the switch should be able to relay all incoming frames that are not rejected by filtering and policing, at wire speed and whatever their size."
+        ],
+        "anthropic": [
+          "Simultaneous reception of frames from multiple end systems at the switch will be dealt with by sequencing the frames for re-transmission",
+          "Frame based filtering is done such that the receiving End System will only forward valid frames to a communication or a SAP port",
+          "Valid frame being defined by analysis of destination (TCP/UDP, IP, MAC) addresses and physical Ethernet connections",
+          "Input port MAC destination field determines output ports",
+          "The order of input and output frames belonging to a Virtual Link should be maintained by the switch",
+          "The switch should not modify the Frame Check Sequence of incoming frames",
+          "The switch should have the capability to receive a frame on any port and forward it to any combination of ports (including the receiving port)",
+          "In PASSIVE Mode, the functions of the Switch should be stopped and the switch should keep silent",
+          "In QUIET mode, the functions of the switch are stopped, the switch does not transmit frames",
+          "The switch software disables all ports when transitioning to QUIET mode",
+          "A host MAY be able to act as an intermediate hop in a source route, forwarding a source-routed datagram to the next specified hop",
+          "In performing gateway-like function, the host MUST obey all the relevant rules for a gateway forwarding source-routed datagrams",
+          "A source-routed datagram being forwarded MAY have a source address that is not one of the IP addresses of the forwarding host",
+          "The host IP layer MUST operate correctly in a minimal network environment, and in particular, when there are no gateways",
+          "AFDX is statically defined - no default gateways",
+          "Only ICMP echo request and echo reply are allowed",
+          "A host MAY restrict itself to sending (non-source-routed) IP datagrams only through the physical interface that corresponds to the IP source address of the datagrams"
+        ]
+      },
+      "arbitrator": "openai",
+      "justification": "The specification describes the core switching activity as being performed by the Switching function, where frames that have been filtered are forwarded to the appropriate physical output ports. This implies that the forwarding rules are based on the filtering and policing outcomes, and the configuration tables dictate the specific forwarding behavior.",
+      "source": "arbitration"
+    },
+    "static_forwarding": {
+      "enabled": "null",
+      "_enabled_validation": {
+        "confidence": "arbitrated_low",
+        "original_values": {
+          "openai": null,
+          "anthropic": true
+        },
+        "arbitrator": "openai",
+        "justification": "The provided specification text does not explicitly mention or define 'switching.static_forwarding.enabled'. The text describes the general architecture and functions of the AFDX switch, including filtering, policing, and configuration tables, but does not specify whether static forwarding is enabled or not.",
+        "source": "arbitration"
+      },
+      "port_mapping_rules": "The specification does not clearly define the port mapping rules based on the provided text.",
+      "_port_mapping_rules_validation": {
+        "confidence": "arbitrated_low",
+        "original_values": {
+          "openai": "For each frame, the content of the Destination Address field should be used to obtain from the configuration table the appropriate port(s) to which the frame has to be forwarded.",
+          "anthropic": "For each frame, the content of the Destination Address field should be used to obtain from the configuration table the appropriate port(s) to which the frame has to be forwarded"
+        },
+        "arbitrator": "openai",
+        "justification": "The provided specification text describes the general functions of the switch, including filtering, policing, and the use of configuration tables, but it does not explicitly detail how the Destination Address field is used to determine port mapping. Both AI interpretations are similar and assume a logical process based on typical networking practices, but there is no direct specification text provided that confirms this process.",
+        "source": "arbitration"
+      }
+    }
+  },
+  "buffer_management": {
+    "buffer_size_rules": "The specification does not clearly define the buffer size rule for output ports of the switch.",
+    "_buffer_size_rules_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": "Each output port of the switch should be able to buffer at least 512 frames (balanced between high and low priority).",
+        "anthropic": "Each output port of the switch should be able to buffer at least 512 frames (balanced between high and low priority)"
+      },
+      "arbitrator": "openai",
+      "justification": "The provided specification text does not mention any specific requirements or rules regarding the buffer size for output ports of the switch. The text primarily discusses error handling in case of buffer overflow and does not specify any quantitative buffer size requirements.",
+      "source": "arbitration"
+    },
+    "overflow_policy": "If a buffer overflow occurs in reception, an error message should be sent to the receiving partition and the frame should be discarded.",
+    "_overflow_policy_validation": {
+      "confidence": "arbitrated_high",
+      "original_values": {
+        "openai": "If an output port cannot accept a frame due to buffer congestion, this frame should be discarded for this port.",
+        "anthropic": "If a buffer overflow occurs in transmission, an error indication should be sent to the transmitting partition and the frame should be discarded"
+      },
+      "arbitrator": "openai",
+      "justification": "The specification text clearly states that in the event of a buffer overflow during reception, an error message should be sent to the receiving partition and the frame should be discarded. This aligns with anthropic's interpretation.",
+      "source": "arbitration"
+    },
+    "queue_limits": "The specification does not clearly define buffer_management.queue_limits",
+    "_queue_limits_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": [],
+        "anthropic": [
+          "A VL FIFO queue should be able to manage at most 4 Sub-VL FIFO queues",
+          "minimum 512 frames per output port",
+          "balanced between high and low priority"
+        ]
+      },
+      "arbitrator": "openai",
+      "justification": "The provided specification text does not contain explicit information regarding the limits of VL FIFO queues, Sub-VL FIFO queues, or specific frame limits per output port. It primarily discusses error handling related to buffer overflow and general service access point characteristics, without detailing queue limits.",
+      "source": "arbitration"
+    }
+  },
+  "filtering_policing": {
+    "bag_enforcement": "The specification does not clearly define the resolution or tolerance for traffic policing.",
+    "_bag_enforcement_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": "Traffic should be policed with a resolution of less than or equal to 100 \u03bcs.",
+        "anthropic": "Traffic should be policed with a relative tolerance on the resolution of \u00b110-4"
+      },
+      "arbitrator": "openai",
+      "justification": "The provided specification text discusses the general principles of traffic policing using mechanisms like the 'token bucket' algorithm and emphasizes the importance of filtering and policing to ensure network robustness. However, it does not specify any particular resolution (such as 100 \u03bcs) or relative tolerance (such as \u00b110-4) for traffic policing. Without explicit mention of these parameters in the text, neither interpretation can be confirmed.",
+      "source": "arbitration"
+    },
+    "drop_conditions": "The specification text provided does not contain sufficient information to determine the correct interpretation for 'filtering_policing.drop_conditions'.",
+    "_drop_conditions_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": [
+          "If a buffer overflow occurs in reception, an error message should be sent to the receiving partition and the frame should be discarded.",
+          "If receiver buffer overflow occurs, an error message is sent to the receiving partition, and the frame should be discarded.",
+          "Destination address validity",
+          "This VL is valid to be received on that destination port",
+          "Frame Check Sequence validity",
+          "Ethernet frame size (L) is an integral number of octets",
+          "Ethernet frame size (L) in the range [64 octets, 1518 octets]",
+          "Ethernet frame size (L) less than or equal to Lmax",
+          "Ethernet frame size (S) greater than or equal to Smin, only in case where byte-based traffic policing is used",
+          "Frames not compliant with the network configuration should be discarded.",
+          "Frames that do not satisfy the CRC test should be discarded.",
+          "Frames with Ethernet frame size greater than 1518 or less than 64 bytes should be discarded.",
+          "Discard frames with non-integral octet size (alignment errors)",
+          "Discard frames with total Ethernet line size greater than Lmax",
+          "Discard frames with total Ethernet line size smaller than Smin",
+          "Discard frames with erroneous 32-bit constant field in MAC destination address",
+          "Discard frames for which the VL id is not allowed on the incoming port"
+        ],
+        "anthropic": [
+          "sequence number out of window",
+          "invalid frames based on sequence number",
+          "buffer overflow in reception",
+          "frame format invalid",
+          "Frame Check Sequence (FCS) invalid",
+          "Cyclic Redundancy Check (CRC) invalid",
+          "frame integrity",
+          "frame length",
+          "traffic budget",
+          "acceptable destination(s)",
+          "frame size either longer or shorter than the envelope allows",
+          "frame integrity: FCS embedded in the frame does not match the calculation upon reception",
+          "frame path: destination requested by the content of the Destination Address field is not permitted",
+          "Destination address validity (Ethernet Address does not correspond to a valid VL)",
+          "VL is not valid to be received on that destination port",
+          "Frame Check Sequence validity failure",
+          "Ethernet frame size (L) is not an integral number of octets",
+          "Ethernet frame size (L) not in the range [64 octets, 1518 octets]",
+          "Ethernet frame size (L) greater than Lmax",
+          "Ethernet frame size (S) less than Smin when byte-based traffic policing is used",
+          "If Byte ACi is less than S, the frame is discarded",
+          "If Frame ACi is less than S i max, the frame is discarded",
+          "Frames that do not satisfy Frame Check Sequence (CRC) test",
+          "Ethernet frames having an Ethernet frame size (L) greater than 1518 or less than 64 bytes",
+          "frames having an Ethernet frame size that is not an integral number of octets",
+          "frames which total Ethernet line size is greater than the maximum size (Lmax) allowed for the relevant VL",
+          "frames which total Ethernet line size is smaller than the minimum size (Smin) allowed for the relevant VL when byte-based policing is used",
+          "frames with a MAC destination address that has an erroneous 32-bit constant field",
+          "frames for which the VL id is not allowed on the incoming port",
+          "If a receiver reads a functional status value other than 0,3,12, or 48, it will discard the data in the associated DS",
+          "Silently discard segment to broadcast/multicast address",
+          "Reject OPEN call to invalid IP address",
+          "Reject SYN from invalid IP address",
+          "Silently discard SYN to broadcast/multicast address",
+          "UDP datagram with non-zero invalid checksum MUST be silently discarded",
+          "UDP datagram with invalid IP source address must be discarded",
+          "A datagram whose version number is not 4 MUST be silently discarded",
+          "silently discard every datagram that has a bad checksum",
+          "A host MUST silently discard an incoming datagram that is not destined for the host",
+          "A host MUST silently discard an incoming datagram containing an IP source address that is invalid",
+          "Silently discard ICMP messages with unknown type",
+          "ICMP error message MUST NOT be sent as the result of receiving an ICMP error message",
+          "ICMP error message MUST NOT be sent for datagram destined to an IP broadcast or IP multicast address",
+          "ICMP error message MUST NOT be sent for datagram sent as a link-layer broadcast",
+          "ICMP error message MUST NOT be sent for non-initial fragment",
+          "ICMP error messages are not applicable",
+          "ICMP Destination Unreachable not applicable",
+          "ICMP redirect from ES not applicable",
+          "Only ICMP echo request and echo reply are allowed",
+          "ICMP Echo Request to broadcast address MAY be silently discarded",
+          "ICMP Echo Request to multicast address MAY be silently discarded",
+          "ICMP Timestamp Request to broadcast or multicast address MAY be silently discarded",
+          "Silently discard datagram in wrong interface",
+          "A host MAY silently discard an incoming datagram whose destination address does not correspond to the physical interface through which it is received",
+          "Silently discard link-layer-only broadcast datagrams",
+          "Silently discard datagrams received via link-layer broadcast that do not specify IP multicast or broadcast destination address"
+        ]
+      },
+      "arbitrator": "openai",
+      "justification": "The provided text from the specification does not include any specific details or rules regarding 'filtering_policing.drop_conditions'. It only contains introductory and background information about the ARINC 664 Part 7 document and its publication details.",
+      "source": "arbitration"
+    },
+    "policing_algorithm": "Traffic policing should be based on parameters: BAG, Jitter, Smax, and eventually Smin.",
+    "_policing_algorithm_validation": {
+      "confidence": "arbitrated_medium",
+      "original_values": {
+        "openai": "Traffic policing should be based on parameters: BAG, Jitter, Smax, and eventually Smin.",
+        "anthropic": "Traffic policing may be implemented in two different algorithm, byte-based policing or frame-based policing"
+      },
+      "arbitrator": "openai",
+      "justification": "The specification text mentions the 'token bucket' algorithm as the principle for traffic policing, which typically involves parameters like BAG (Bandwidth Allocation Gap), Jitter, and maximum frame size (Smax). These parameters are consistent with the openai extraction. While the specification does not explicitly mention byte-based or frame-based policing, it does emphasize the importance of ensuring fault containment and discarding non-compliant frames, aligning more closely with the openai interpretation.",
+      "source": "arbitration"
+    },
+    "token_bucket": {
+      "refill_rate_formula": "The specification does not clearly define the refill rate formula",
+      "_refill_rate_formula_validation": {
+        "confidence": "arbitrated_low",
+        "original_values": {
+          "openai": null,
+          "anthropic": "proportionally to S i max"
+        },
+        "arbitrator": "openai",
+        "justification": "The provided specification text discusses the token bucket algorithm and traffic policing principles but does not explicitly define or mention a formula for the refill rate of the token bucket. The text focuses on the general concept of traffic policing and filtering, ensuring network robustness, and the handling of frames, but it lacks specific details about how the token bucket's refill rate should be calculated.",
+        "source": "arbitration"
+      },
+      "size_formula": "null",
+      "_size_formula_validation": {
+        "confidence": "arbitrated_low",
+        "original_values": {
+          "openai": null,
+          "anthropic": "ACi is credited as time elapses, proportionally to S i max with an upper limit of BAG i"
+        },
+        "arbitrator": "openai",
+        "justification": "The provided specification text does not clearly define a formula for the size of the token bucket in the context of filtering and policing. The text discusses the token bucket algorithm in general terms and mentions aspects of traffic policing and filtering, but it does not provide a specific formula or detailed explanation for the token bucket size calculation.",
+        "source": "arbitration"
+      }
+    }
+  },
+  "frame_aging": {
+    "aging_rules": "The correct interpretation cannot be determined",
+    "_aging_rules_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": null,
+        "anthropic": "An output port should not transmit frames that are older than max delay"
+      },
+      "arbitrator": "openai",
+      "justification": "The provided specification text does not contain any information regarding frame aging or aging rules. The text only includes introductory and foreword sections, which do not discuss specific protocol rules or technical details related to frame aging.",
+      "source": "arbitration"
+    },
+    "max_age": "The specification does not clearly define 'frame_aging.max_age'.",
+    "_max_age_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": "The 'max delay' parameter is defined on a per port basis in the configuration table.",
+        "anthropic": "max delay parameter defined on a per port basis in the configuration table"
+      },
+      "arbitrator": "openai",
+      "justification": "The provided specification text does not mention 'frame_aging.max_age' or provide any details about a 'max delay' parameter being defined on a per port basis in the configuration table. The text primarily discusses latency components and network determinism without specifying configuration parameters for frame aging.",
+      "source": "arbitration"
+    },
+    "ttl_enabled": "null",
+    "_ttl_enabled_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": null,
+        "anthropic": true
+      },
+      "arbitrator": "openai",
+      "justification": "The provided specification text does not contain any information regarding 'frame_aging.ttl_enabled' or any related concepts. The text includes introductory and foreword sections, which do not delve into specific protocol rules or configurations.",
+      "source": "arbitration"
+    }
+  },
+  "priority_qos": {
+    "priority_levels": [
+      "High Priority",
+      "Low Priority"
+    ],
+    "_priority_levels_validation": {
+      "confidence": "arbitrated_high",
+      "original_values": {
+        "openai": [
+          "High Priority",
+          "Low Priority"
+        ],
+        "anthropic": [
+          "guaranteed service",
+          "High Priority",
+          "Low Priority",
+          "Priority 1 - ND (no data)",
+          "Priority 2 - NCD (no computed data)",
+          "Priority 3 - FT (functional test)",
+          "Priority 4 - NO (normal operation)",
+          "high",
+          "low"
+        ]
+      },
+      "arbitrator": "openai",
+      "justification": "The specification text explicitly mentions prioritization levels as 'high or low' on a per VL basis. This directly supports the interpretation that the priority levels are 'High Priority' and 'Low Priority'.",
+      "source": "arbitration"
+    },
+    "queue_separation": "The Switch should have a traffic prioritization mechanism with 2 traffic classes",
+    "_queue_separation_validation": {
+      "confidence": "arbitrated_medium",
+      "original_values": {
+        "openai": null,
+        "anthropic": "The Switch should have a traffic prioritization mechanism based on MAC destination address with 2 traffic classes"
+      },
+      "arbitrator": "openai",
+      "justification": "The specification text mentions prioritization on a per VL basis with 'Prioritization (high or low)' and specifies 'Output Buffer Size for Low Priority VLs' and 'Output Buffer Size for High Priority VLs' on a per port basis. This implies a separation of traffic into two classes based on priority.",
+      "source": "arbitration"
+    },
+    "scheduling_algorithm": "The specification does not clearly define the scheduling algorithm",
+    "_scheduling_algorithm_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": "Frames with a priority set to high should be sent prior to the one set to low.",
+        "anthropic": "Scheduler multiplexes the different flows coming from the regulators"
+      },
+      "arbitrator": "openai",
+      "justification": "The provided specification text lists parameters related to prioritization and buffer sizes for high and low priority Virtual Links (VLs), but it does not explicitly describe a specific scheduling algorithm or how prioritization should be implemented in terms of frame transmission order. The text mentions prioritization and buffer sizes, which implies some form of priority handling, but it does not specify whether frames with high priority should be sent before those with low priority, nor does it describe a multiplexing approach.",
+      "source": "arbitration"
+    }
+  },
+  "virtual_link": {
+    "configuration_parameters": [
+      "Each Virtual Link has a dedicated maximum bandwidth",
+      "Bandwidth Allocation Gap (BAG)",
+      "Maximum allowed Jitter",
+      "Maximum allowed Total Ethernet Line size (Smax)",
+      "Minimum allowed Total Ethernet Line size (Smin)",
+      "The system integrator is free to configure each Virtual Link with or without redundancy",
+      "integrity checking can be disabled per VL"
+    ],
+    "_configuration_parameters_validation": {
+      "confidence": "arbitrated_medium",
+      "original_values": {
+        "openai": [
+          "Bandwidth and bounded latency are guaranteed",
+          "Ordinal integrity of frames within a Virtual Link",
+          "The system integrator is free to configure each Virtual Link with or without redundancy."
+        ],
+        "anthropic": [
+          "Virtual Link defines a logical unidirectional connection from one source end-system to one or more destination end-systems",
+          "Each Virtual Link has a dedicated maximum bandwidth",
+          "Only one End System within the Avionics network should be the source of any one VL",
+          "One Virtual Link should not be shared by two or more source partitions",
+          "bandwidth",
+          "frame delivery interval",
+          "redundancy configurable per VL",
+          "integrity checking can be disabled per VL",
+          "Sub-VL support",
+          "UDP Source Port",
+          "Source IP",
+          "Destination MAC",
+          "Destination IP",
+          "UDP Destination Port",
+          "BAG",
+          "Jitter",
+          "maximum frame size",
+          "minimum frame size",
+          "Smax",
+          "Smin",
+          "VL identifiers (MAC destination address)",
+          "Maximum allowed Total Ethernet Line size (smax)",
+          "Bandwidth Allocation Gap",
+          "Input physical port",
+          "List of output physical ports",
+          "MAC destination address (VL identifier VLi)",
+          "Bandwith Allocation Gap (BAGi)",
+          "Maximum allowed Jitter",
+          "ACcount (ACi) [specifying if this account is shared or not]",
+          "Maximum allowed Total Ethernet Line size (Smax)",
+          "Minimum allowed Total Ethernet Line size (Smin)",
+          "Prioritization (high or low)"
+        ]
+      },
+      "arbitrator": "openai",
+      "justification": "The specification text provides information about the configuration parameters for Virtual Links, such as the bandwidth allocation gap (BAG), maximum jitter, and frame size limits. It also mentions that the system integrator can configure redundancy and integrity checking per Virtual Link. However, the text does not explicitly list all configuration parameters, so some interpretations may be inferred based on the context.",
+      "source": "arbitration"
+    },
+    "id_range": "null",
+    "_id_range_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": null,
+        "anthropic": [
+          0,
+          65535
+        ]
+      },
+      "arbitrator": "openai",
+      "justification": "The provided specification text does not mention any specific range for the 'virtual_link.id_range'. The text primarily discusses the traffic shaping function, jitter, and BAG values, but does not specify an ID range for virtual links.",
+      "source": "arbitration"
+    },
+    "redundancy_required": "null",
+    "_redundancy_required_validation": {
+      "confidence": "arbitrated_low",
+      "original_values": {
+        "openai": null,
+        "anthropic": false
+      },
+      "arbitrator": "openai",
+      "justification": "The specification text provided does not explicitly state whether redundancy is required for virtual links. It describes how redundancy management should function when active, but does not specify if it is mandatory for all virtual links. The text focuses on the behavior of the Redundancy Management function when redundancy is used, rather than stating a requirement for redundancy itself.",
+      "source": "arbitration"
+    }
+  }
+}

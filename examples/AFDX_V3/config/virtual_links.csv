@@ -1,0 +1,51 @@
+# ============================================================================
+# AFDX Virtual Link Configuration for ns-3 Simulation
+# Based on ARINC 664 Part 7 Specification
+# ============================================================================
+#
+# Format: VL_ID,VL_Name,Source_ES,Subscriber_ES,Source_MAC,Dest_MAC,BAG_ms,Max_Frame_Size,Min_Frame_Size
+#
+# Field Descriptions:
+# -------------------
+# VL_ID           : Virtual Link Identifier (1-65535), must be unique
+# VL_Name         : Human-readable name (no spaces, use underscores)
+# Source_ES       : End System ID that transmits this VL (1-3)
+# Subscriber_ES   : End System IDs that receive this VL (semicolon-separated: "2;3" or single: "1")
+# Source_MAC      : Source MAC address (format: XX:XX:XX:XX:XX:XX)
+# Dest_MAC        : Destination multicast MAC (AFDX standard: 03:00:00:00:XX:XX)
+# BAG_ms          : Bandwidth Allocation Gap in milliseconds (transmission period)
+#                   Common values: 1, 2, 4, 8, 16, 32, 64, 128 ms
+# Max_Frame_Size  : Maximum Ethernet frame size in bytes (64-1518)
+# Min_Frame_Size  : Minimum Ethernet size in bytes (typically 64)
+#
+# AFDX Network Architecture:
+# --------------------------
+# - 3 End Systems: ES1 (Flight Control), ES2 (Air Data), ES3 (Navigation)
+# - 2 Redundant Networks: Network A and Network B
+# - Each VL is transmitted on BOTH networks simultaneously
+# - Receivers use "First Valid Frame Wins" algorithm
+#
+# Traffic Priority Levels:
+# ------------------------
+# Critical (BAG 1-8ms)   : Flight control commands
+# High (BAG 8-32ms)      : Sensor data, monitoring
+# Medium (BAG 32-64ms)   : Navigation, display updates
+#
+# ============================================================================
+
+# Flight Control Virtual Links (CRITICAL - Highest Priority)
+# ES1 transmits flight-critical control commands
+1001,Flight_Control_Roll,1,2;3,00:00:00:00:01:01,03:00:00:00:10:01,4,512,64
+1002,Flight_Control_Pitch,1,2;3,00:00:00:00:01:01,03:00:00:00:10:02,4,512,64
+1003,Flight_Control_Yaw,1,2;3,00:00:00:00:01:01,03:00:00:00:10:03,8,512,64
+
+# Sensor Data Virtual Links (HIGH Priority)
+# ES2 (Air Data Computer) distributes sensor readings
+2001,Air_Data_Computer,2,1;3,00:00:00:00:02:01,03:00:00:00:20:01,8,256,64
+2002,Inertial_Reference,2,1;3,00:00:00:00:02:01,03:00:00:00:20:02,16,256,64
+2003,GPS_Position,2,1;3,00:00:00:00:02:02,03:00:00:00:20:03,16,512,64
+
+# Navigation Virtual Links (MEDIUM Priority)
+# ES3 (Navigation System) provides navigation data
+3001,Navigation_Display,3,1;2,00:00:00:00:03:01,03:00:00:00:30:01,32,1024,64
+3002,Flight_Management,3,1;2,00:00:00:00:03:02,03:00:00:00:30:02,32,1024,64

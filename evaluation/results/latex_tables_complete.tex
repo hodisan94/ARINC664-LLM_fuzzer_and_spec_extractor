@@ -1,0 +1,82 @@
+% Generated: 2025-11-17 08:32:39
+% LLM vs Random Baseline Comparison
+
+% Table 1: Phase 1 - Specification Knowledge Extraction
+\begin{table}[ht]
+\centering
+\caption{Specification Knowledge Extraction Results}
+\label{tab:phase1}
+\small
+\begin{tabular}{lc}
+\toprule
+\textbf{Component} & \textbf{Count} \\
+\midrule
+Protocol rules extracted & 10 \\
+Test cases generated & 96 \\
+Avg. cases per rule & 6.9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Table 2: Fuzzer Performance Comparison
+\begin{table}[ht]
+\centering
+\caption{Fuzzer Performance Comparison (15 iterations each)}
+\label{tab:fuzzer-comparison}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{LLM-Guided} & \textbf{Random} \\
+\midrule
+VL coverage & 5/8 & 5/8 \\
+Rules/mutations tested & 4 & 8 \\
+Average reward & 0.987 & 0.854 \\
+Improvement & \multicolumn{2}{c}{\textbf{+15.5\%}} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Table 3: VL Testing Distribution
+\begin{table}[ht]
+\centering
+\caption{VL Testing Distribution}
+\label{tab:vl-distribution}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{VL ID} & \textbf{LLM (\%)} & \textbf{Random (\%)} \\
+\midrule
+VL 1001 & 20.0\% & 0.0\% \\
+VL 1002 & 0.0\% & 6.7\% \\
+VL 1003 & 0.0\% & 13.3\% \\
+VL 2001 & 20.0\% & 20.0\% \\
+VL 3001 & 20.0\% & 26.7\% \\
+VL 3002 & 0.0\% & 33.3\% \\
+VL 4001 & 20.0\% & 0.0\% \\
+VL 5001 & 20.0\% & 0.0\% \\
+\midrule
+Uniformity & \textbf{Uniform} & Non-uniform \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Table 4: Parameter Exploration Efficiency
+\begin{table}[ht]
+\centering
+\caption{Parameter Exploration Efficiency}
+\label{tab:efficiency}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Parameter} & \textbf{LLM Unique Values} & \textbf{Approach} \\
+\midrule
+BAG values & 4 & Focused \\
+Sequence numbers & 1 & Focused \\
+Frame sizes & 5 & Focused \\
+\midrule
+\multicolumn{3}{l}{\textit{LLM values:}} \\
+\quad BAG & \multicolumn{2}{l}{[3.0, 5.0, 8.0, 10.0]} \\
+\quad Seq & \multicolumn{2}{l}{[256.0]} \\
+\bottomrule
+\end{tabular}
+\end{table}

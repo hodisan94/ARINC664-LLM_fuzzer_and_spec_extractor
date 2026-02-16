@@ -1,0 +1,53 @@
+================================================================================
+THREE-WAY FUZZER COMPARISON REPORT
+Generated: 2026-01-10 17:55:56
+================================================================================
+
+## BASIC STATISTICS
+  LLM: 50 iterations
+  boofuzz: 20 iterations
+  Random: 20 iterations
+
+## REWARD ANALYSIS
+Fuzzer          Mean       Median     Max        Std       
+-------------------------------------------------------
+LLM             0.945      0.940      1.200      0.220     
+boofuzz         0.976      0.990      1.100      0.082     
+Random          0.816      0.700      1.180      0.237     
+
+LLM vs Random: +15.8%
+LLM vs boofuzz: -3.2%
+
+## COVERAGE ANALYSIS
+Fuzzer          VLs        Rules      Mutations 
+---------------------------------------------
+LLM             8          0          21        
+boofuzz         4          3          3         
+Random          6          10         0         
+
+## EFFICIENCY ANALYSIS
+Fuzzer          Policing %   Bugs       Bugs/Iter 
+-----------------------------------------------
+LLM             0.0          0          0.000     
+boofuzz         0.0          0          0.000     
+Random          0.0          0          0.000     
+
+## LLM LEARNING CURVE
+  Early iterations: 0.995
+  Late iterations: 0.895
+  Improvement: -10.1%
+
+## STATISTICAL SIGNIFICANCE
+  llm_vs_random: p=0.0368 (*) - LLM significantly better
+  llm_vs_boofuzz: p=0.3923 (ns) - No significant difference
+  boofuzz_vs_random: p=0.0219 (*) - boofuzz significantly better
+  kruskal_wallis: p=0.1173 (ns) - No significant difference
+
+================================================================================
+SUMMARY
+================================================================================
+
+Best mean reward: boofuzz (0.976)
+Most bugs found: LLM (0)
+
+================================================================================

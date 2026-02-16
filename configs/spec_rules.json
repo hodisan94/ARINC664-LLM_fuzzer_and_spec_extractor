@@ -1,0 +1,143 @@
+{
+  "bag": {
+    "allowed_values_ms": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128
+    ],
+    "constraints": "BAG values are limited to powers of 2, and if a partition needs to transmit data less often than 128 ms, the BAG value 128 will be used."
+  },
+  "frame_structure": {
+    "afdx_fields": {
+      "payload_offset": null,
+      "sequence_num_offset": null,
+      "vl_id_offset": null,
+      "sequence_num_size": "null",
+      "vl_id_size": "null"
+    },
+    "ethernet": {
+      "crc_fcs_required": true,
+      "dest_mac_offset": null,
+      "ethertype_offset": null,
+      "lmax": 1518,
+      "lmin": 64,
+      "smin": 84,
+      "src_mac_offset": null,
+      "dest_mac_size": 6,
+      "ethertype_value": "null",
+      "multicast_bit_rule": "The least significant bit of the first byte indicates the group address (always = 1).",
+      "src_mac_size": 6
+    },
+    "ip_header": {
+      "checksum_required": true,
+      "version": 4,
+      "fragmentation_allowed": "false",
+      "header_validation": "A datagram whose version number is not 4 MUST be silently discarded.",
+      "ttl_rules": "The specification does not clearly define TTL rules for AFDX."
+    },
+    "payload": {
+      "min_size": 18,
+      "max_size": "1471",
+      "vl_specific_ranges": "The specification text provided does not clearly define 'frame_structure.payload.vl_specific_ranges'."
+    },
+    "udp_header": {
+      "checksum_required": false,
+      "length_validation": null,
+      "port_rules": "Transport layer port assignments are not critical and can be assigned by a system integrator using any values in the range 1 to 65535."
+    }
+  },
+  "monitoring": {
+    "mib_required": true,
+    "snmp_required": true,
+    "update_interval_ms": 100,
+    "discard_counters": {
+      "categories": [
+        "traffic policing discards"
+      ],
+      "tracking_required": "true"
+    },
+    "fault_detection": "The specification does not clearly define 'monitoring.fault_detection'.",
+    "statistics": [
+      "arrival of a frame",
+      "failed CRC check",
+      "internal situation"
+    ]
+  },
+  "performance": {
+    "link_speed_mbps": 100,
+    "max_switch_delay_us": 100,
+    "max_end_to_end_latency_ms": "null",
+    "max_jitter_fraction": "null"
+  },
+  "redundancy": {
+    "network_a_b_architecture": true,
+    "accept_first_policy": "When redundancy management is active, it should deliver the first of the redundant frames received.",
+    "discard_duplicate_policy": "The Redundancy Management Algorithm should only use the RSN of a frame as the criterion for rejection or acceptance.",
+    "dual_transmission_required": "The correct value is not clearly defined",
+    "policy": "First Valid wins"
+  },
+  "sequence_numbers": {
+    "range": [
+      0,
+      255
+    ],
+    "wraparound": true,
+    "handling_rules": "The frame sequence number should be one octet long with a range of 0 to 255. For each VL, the sequence number should initially be set to 0. The sequence number is always assigned this initial value following a reset of the transmitting ES. The frame sequence number should be incremented by one for each consecutive frame of the same VL and wrap-around to 1 following the value 255.",
+    "missing_frame_detection": "Increment by one makes it possible to detect missing frames",
+    "out_of_window_action": "The specification text does not clearly define the action for out-of-window sequence numbers.",
+    "window_size": "null"
+  },
+  "switching": {
+    "split_horizon": null,
+    "forwarding_rules": "The switch forwards frames filtered by the Filtering and Policing function to the appropriate physical output ports.",
+    "static_forwarding": {
+      "enabled": "null",
+      "port_mapping_rules": "The specification does not clearly define the port mapping rules based on the provided text."
+    }
+  },
+  "buffer_management": {
+    "buffer_size_rules": "The specification does not clearly define the buffer size rule for output ports of the switch.",
+    "overflow_policy": "If a buffer overflow occurs in reception, an error message should be sent to the receiving partition and the frame should be discarded.",
+    "queue_limits": "The specification does not clearly define buffer_management.queue_limits"
+  },
+  "filtering_policing": {
+    "bag_enforcement": "The specification does not clearly define the resolution or tolerance for traffic policing.",
+    "drop_conditions": "The specification text provided does not contain sufficient information to determine the correct interpretation for 'filtering_policing.drop_conditions'.",
+    "policing_algorithm": "Traffic policing should be based on parameters: BAG, Jitter, Smax, and eventually Smin.",
+    "token_bucket": {
+      "refill_rate_formula": "The specification does not clearly define the refill rate formula",
+      "size_formula": "null"
+    }
+  },
+  "frame_aging": {
+    "aging_rules": "The correct interpretation cannot be determined",
+    "max_age": "The specification does not clearly define 'frame_aging.max_age'.",
+    "ttl_enabled": "null"
+  },
+  "priority_qos": {
+    "priority_levels": [
+      "High Priority",
+      "Low Priority"
+    ],
+    "queue_separation": "The Switch should have a traffic prioritization mechanism with 2 traffic classes",
+    "scheduling_algorithm": "The specification does not clearly define the scheduling algorithm"
+  },
+  "virtual_link": {
+    "configuration_parameters": [
+      "Each Virtual Link has a dedicated maximum bandwidth",
+      "Bandwidth Allocation Gap (BAG)",
+      "Maximum allowed Jitter",
+      "Maximum allowed Total Ethernet Line size (Smax)",
+      "Minimum allowed Total Ethernet Line size (Smin)",
+      "The system integrator is free to configure each Virtual Link with or without redundancy",
+      "integrity checking can be disabled per VL"
+    ],
+    "id_range": "null",
+    "redundancy_required": "null"
+  }
+}

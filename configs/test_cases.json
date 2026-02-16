@@ -1,0 +1,689 @@
+{
+  "bag": {
+    "rule_summary": "The BAG (Bandwidth Allocation Gap) specifies the time interval in milliseconds for the transmission of frames in a Virtual Link (VL). Only specific values are allowed.",
+    "valid_range": "Allowed values for BAG are 1, 2, 4, 8, 16, 32, 64, 128 milliseconds.",
+    "test_cases": [
+      {
+        "value": 0,
+        "violation_type": "below_min",
+        "reason": "The value 0 ms is not allowed as it implies no gap, violating the minimum allowed value of 1 ms.",
+        "expected_behavior": "The system should reject this configuration and possibly raise an error or warning."
+      },
+      {
+        "value": 3,
+        "violation_type": "not_in_list",
+        "reason": "The value 3 ms is not in the list of allowed BAG values, which are powers of 2.",
+        "expected_behavior": "The system should reject this configuration due to it not being an accepted BAG value."
+      },
+      {
+        "value": 129,
+        "violation_type": "above_max",
+        "reason": "The value 129 ms exceeds the maximum allowed value of 128 ms.",
+        "expected_behavior": "The system should reject this configuration and notify the user of the invalid BAG value."
+      },
+      {
+        "value": -1,
+        "violation_type": "negative",
+        "reason": "Negative values are not valid for BAG as they do not represent a logical time interval.",
+        "expected_behavior": "The system should reject this configuration and possibly raise an error or warning."
+      },
+      {
+        "value": "16ms",
+        "violation_type": "invalid_format",
+        "reason": "The value uses an invalid format by including non-numeric characters.",
+        "expected_behavior": "The system should reject this configuration due to format issues and expect numeric-only input."
+      },
+      {
+        "value": 256,
+        "violation_type": "above_max",
+        "reason": "The value 256 ms is significantly above the maximum allowed value of 128 ms.",
+        "expected_behavior": "The system should reject this configuration and alert the user to the invalid setting."
+      },
+      {
+        "value": 1.5,
+        "violation_type": "invalid_format",
+        "reason": "The value is a non-integer, whereas the expected BAG values are integer milliseconds.",
+        "expected_behavior": "The system should reject this configuration due to the requirement for integer values."
+      }
+    ]
+  },
+  "frame_structure.ip_header.header_validation": {
+    "rule_summary": "Validates the structure and fields of the IP header in an AFDX frame, including length, IP address classification, checksum, and more.",
+    "valid_range": "Total Length: 21-1499 bytes; IP Address: Class A, private Internet Unicast (First 8 bits: 0000 1010); IP Version: 4; Valid Source/Destination Addresses.",
+    "test_cases": [
+      {
+        "value": 20,
+        "violation_type": "below_min",
+        "reason": "Total Length is below the minimum valid threshold.",
+        "expected_behavior": "The packet should be silently discarded as it does not meet the minimum length requirement."
+      },
+      {
+        "value": 1500,
+        "violation_type": "above_max",
+        "reason": "Total Length exceeds the maximum valid threshold.",
+        "expected_behavior": "The packet should be silently discarded as it exceeds the allowable length."
+      },
+      {
+        "value": "172.16.0.1",
+        "violation_type": "not_class_a_private",
+        "reason": "IP address does not have the correct Class A private network prefix.",
+        "expected_behavior": "The packet should be silently discarded due to an invalid source IP address."
+      },
+      {
+        "value": "192.168.1.1",
+        "violation_type": "not_class_a_private",
+        "reason": "IP address is not a Class A private Internet Unicast address.",
+        "expected_behavior": "The packet should be silently discarded due to an invalid destination IP address."
+      },
+      {
+        "value": "255.255.255.255",
+        "violation_type": "broadcast_address",
+        "reason": "A broadcast address is used as a source address, which is not applicable.",
+        "expected_behavior": "The packet should be silently discarded due to the use of an invalid source address."
+      },
+      {
+        "value": 5,
+        "violation_type": "invalid_ip_version",
+        "reason": "IP version is not equal to 4.",
+        "expected_behavior": "The packet should be silently discarded as it does not use the correct IP version."
+      },
+      {
+        "value": "10.0.0.256",
+        "violation_type": "invalid_format",
+        "reason": "IP address contains a segment that exceeds the maximum value of 255.",
+        "expected_behavior": "The packet should be silently discarded due to an improperly formatted IP address."
+      }
+    ]
+  },
+  "virtual_link.id_range": {
+    "rule_summary": "The virtual link ID must be within the range of 0 to 255.",
+    "valid_range": "Values from 0 to 255 inclusive.",
+    "test_cases": [
+      {
+        "value": -1,
+        "violation_type": "below_min",
+        "reason": "The value is less than the minimum allowed value of 0.",
+        "expected_behavior": "The system should reject this virtual link ID as invalid."
+      },
+      {
+        "value": 256,
+        "violation_type": "above_max",
+        "reason": "The value exceeds the maximum allowed value of 255.",
+        "expected_behavior": "The system should reject this virtual link ID as invalid."
+      },
+      {
+        "value": 255.5,
+        "violation_type": "invalid_format",
+        "reason": "The value is a floating-point number, not an integer.",
+        "expected_behavior": "The system should reject this virtual link ID due to incorrect format."
+      },
+      {
+        "value": "one hundred",
+        "violation_type": "invalid_format",
+        "reason": "The value is a string representation, not an integer.",
+        "expected_behavior": "The system should reject this virtual link ID due to incorrect format."
+      },
+      {
+        "value": 5000,
+        "violation_type": "extreme_above_max",
+        "reason": "The value is significantly higher than the maximum allowed value of 255.",
+        "expected_behavior": "The system should reject this virtual link ID as invalid."
+      },
+      {
+        "value": -100,
+        "violation_type": "extreme_below_min",
+        "reason": "The value is significantly lower than the minimum allowed value of 0.",
+        "expected_behavior": "The system should reject this virtual link ID as invalid."
+      },
+      {
+        "value": "0x100",
+        "violation_type": "invalid_format",
+        "reason": "The value is in hexadecimal format, which is not expected.",
+        "expected_behavior": "The system should reject this virtual link ID due to incorrect format."
+      }
+    ]
+  },
+  "virtual_link.configuration_parameters": {
+    "rule_summary": "Each Virtual Link has specific configuration parameters that ensure proper data transmission and integrity.",
+    "valid_range": "Parameters must adhere to specific allocated bandwidths, maintain ordinal integrity, not be shared across source partitions, and respect other specified limits.",
+    "test_cases": [
+      {
+        "value": "BAG value = -1",
+        "violation_type": "negative",
+        "reason": "Bandwidth Allocation Gap (BAG) cannot be negative as it represents a time interval.",
+        "expected_behavior": "The system should reject this configuration and log an error."
+      },
+      {
+        "value": "Lmax = 0",
+        "violation_type": "below_min",
+        "reason": "The maximum frame size (Lmax) cannot be zero as it would imply no data can be transmitted.",
+        "expected_behavior": "The system should reject this configuration and log an error."
+      },
+      {
+        "value": "Source partitions = [Partition1, Partition2]",
+        "violation_type": "not_in_list",
+        "reason": "A Virtual Link must not be shared by more than one source partition.",
+        "expected_behavior": "The system should prevent this configuration from being applied."
+      },
+      {
+        "value": "MAC destination address = 'ZZ:ZZ:ZZ:ZZ:ZZ:ZZ'",
+        "violation_type": "invalid_format",
+        "reason": "MAC addresses must be in a valid hexadecimal format.",
+        "expected_behavior": "The system should reject this configuration and log an error."
+      },
+      {
+        "value": "Redundancy configuration = 'none'",
+        "violation_type": "not_in_list",
+        "reason": "Redundancy configuration must be specified according to system requirements and cannot be 'none'.",
+        "expected_behavior": "The system should reject this configuration and log an error."
+      },
+      {
+        "value": "BAGi = 1000000",
+        "violation_type": "above_max",
+        "reason": "Exceeds the maximum allowed Bandwidth Allocation Gap value for typical AFDX configurations.",
+        "expected_behavior": "The system should reject this configuration and log an error."
+      },
+      {
+        "value": "Maximum allowed Total Ethernet Line size (Smax) = 20000",
+        "violation_type": "above_max",
+        "reason": "Exceeds the typical Ethernet frame size limit of 1518 bytes.",
+        "expected_behavior": "The system should reject this configuration and log an error."
+      }
+    ]
+  },
+  "sequence_numbers": {
+    "rule_summary": "The sequence numbers must be in the range of 0 to 255, with wraparound enabled. The window size is 2, and invalid frames outside this window should be eliminated.",
+    "valid_range": "0 to 255 with wraparound enabled.",
+    "test_cases": [
+      {
+        "value": -1,
+        "violation_type": "below_min",
+        "reason": "Sequence numbers cannot be negative; -1 is below the minimum allowed value of 0.",
+        "expected_behavior": "The frame should be eliminated, and an error should be reported to network management."
+      },
+      {
+        "value": 256,
+        "violation_type": "above_max",
+        "reason": "Sequence numbers cannot exceed 255; 256 is above the maximum allowed value.",
+        "expected_behavior": "The frame should be eliminated, and an error should be reported to network management."
+      },
+      {
+        "value": 300,
+        "violation_type": "above_max",
+        "reason": "The value 300 is far beyond the maximum allowed range, testing extreme out-of-range handling.",
+        "expected_behavior": "The frame should be eliminated, and an error should be reported to network management."
+      },
+      {
+        "value": 0,
+        "violation_type": "duplicate_detection",
+        "reason": "If a frame with sequence number 0 is received multiple times without increment, it violates the duplicate detection rule.",
+        "expected_behavior": "Subsequent frames with the same sequence number should be discarded after the first is accepted."
+      },
+      {
+        "value": 1,
+        "violation_type": "missing_frame_detection",
+        "reason": "Sending a frame with sequence number 1 without first sending 0 violates the missing frame detection mechanism.",
+        "expected_behavior": "The system should recognize the missing sequence number 0 and report it to network management."
+      },
+      {
+        "value": "abc",
+        "violation_type": "invalid_format",
+        "reason": "Sequence numbers must be integers; 'abc' is an invalid format for a sequence number.",
+        "expected_behavior": "The frame should be eliminated due to invalid format, and an error should be reported to network management."
+      },
+      {
+        "value": 1000,
+        "violation_type": "extreme_value",
+        "reason": "The value 1000 is extremely out of range and tests the system's ability to handle very large, invalid sequence numbers.",
+        "expected_behavior": "The frame should be eliminated, and an error should be reported to network management."
+      }
+    ]
+  },
+  "filtering_policing.drop_conditions": {
+    "rule_summary": "Frames must meet integrity and format criteria, avoid buffer overflows, and use valid addressing and sizing standards.",
+    "valid_range": "Frames should adhere to sequence number, CRC, FCS checks, valid size, format, and addressing.",
+    "test_cases": [
+      {
+        "value": "frame_with_sequence_number_below_min",
+        "violation_type": "below_min",
+        "reason": "Sequence number is less than the minimum allowable value.",
+        "expected_behavior": "Frame should be discarded due to invalid sequence number."
+      },
+      {
+        "value": "frame_with_crc_value_above_max",
+        "violation_type": "above_max",
+        "reason": "CRC value exceeds the maximum allowable range.",
+        "expected_behavior": "Frame should be discarded due to CRC check failure."
+      },
+      {
+        "value": "frame_with_invalid_fcs_format",
+        "violation_type": "invalid_format",
+        "reason": "FCS is not in the correct format as expected by protocol.",
+        "expected_behavior": "Frame should be discarded due to FCS mismatch."
+      },
+      {
+        "value": "-1",
+        "violation_type": "negative",
+        "reason": "Negative value where only non-negative frame sizes are expected.",
+        "expected_behavior": "Frame should be discarded as size is invalid."
+      },
+      {
+        "value": "frame_with_non_integral_octet_size",
+        "violation_type": "not_in_list",
+        "reason": "Frame size is not an integral number of octets.",
+        "expected_behavior": "Frame should be discarded due to non-standard size."
+      },
+      {
+        "value": "frame_of_63_bytes",
+        "violation_type": "below_min",
+        "reason": "Frame size is below the minimum Ethernet frame size of 64 bytes.",
+        "expected_behavior": "Frame should be discarded due to undersized frame."
+      },
+      {
+        "value": "frame_of_1519_bytes",
+        "violation_type": "above_max",
+        "reason": "Frame size exceeds the maximum Ethernet frame size of 1518 bytes.",
+        "expected_behavior": "Frame should be discarded due to oversized frame."
+      },
+      {
+        "value": "udp_datagram_with_broadcast_ip_source",
+        "violation_type": "invalid_source_address",
+        "reason": "UDP datagram has a broadcast IP source address.",
+        "expected_behavior": "Datagram should be discarded by UDP or IP layer."
+      },
+      {
+        "value": "ip_datagram_with_version_5",
+        "violation_type": "invalid_format",
+        "reason": "IP version is not equal to 4.",
+        "expected_behavior": "Datagram should be silently discarded."
+      }
+    ]
+  },
+  "switching.forwarding_rules": {
+    "rule_summary": "Ensures that the AFDX switch forwards only valid and in-sequence frames according to specified virtual links and ports, maintaining frame order and adhering to maximum delay constraints.",
+    "valid_range": "Frames must be in-sequence, not older than the 'max delay', forwarded according to VL definitions, and compliant with size and policing rules.",
+    "test_cases": [
+      {
+        "value": "Frame with MAC1 received on Input port 1, forwarding attempt to Output port 3",
+        "violation_type": "invalid_forwarding",
+        "reason": "MAC1 is only supposed to forward to Output port 2, not 3",
+        "expected_behavior": "The frame should be dropped or reported as a forwarding violation"
+      },
+      {
+        "value": "Frame with MAC3 received on Input port 1, forwarding attempt only to Output port 2",
+        "violation_type": "partial_forwarding",
+        "reason": "MAC3 should be forwarded to both Output ports 2 and 3, not just one",
+        "expected_behavior": "The frame should be forwarded to both ports or flagged for incorrect forwarding"
+      },
+      {
+        "value": "Frame received with timestamp older than 'max delay' for Output port 2",
+        "violation_type": "above_max_delay",
+        "reason": "Frames older than the 'max delay' should not be transmitted",
+        "expected_behavior": "The frame should be discarded or flagged for exceeding delay"
+      },
+      {
+        "value": "Frames received out-of-sequence on Input port 1 for VL1",
+        "violation_type": "out_of_sequence",
+        "reason": "The switch must maintain the order of frames in a Virtual Link",
+        "expected_behavior": "Out-of-sequence frames should be reordered or dropped"
+      },
+      {
+        "value": "Frame with size exceeding maximum permissible size for any port",
+        "violation_type": "size_exceed",
+        "reason": "Switch ports should filter frames that exceed the maximum size",
+        "expected_behavior": "The frame should be discarded due to size constraint violation"
+      },
+      {
+        "value": "Frame with non-local source-routing received with forwarding enabled",
+        "violation_type": "source_routing_violation",
+        "reason": "Forwarding should be disabled by default for non-local source-routing",
+        "expected_behavior": "The frame should be blocked from forwarding due to configuration default"
+      },
+      {
+        "value": "Frame with MAC2 received on Input port 1, not forwarded to any output",
+        "violation_type": "no_forwarding",
+        "reason": "MAC2 should be forwarded to Output port 3",
+        "expected_behavior": "The frame should be forwarded correctly, or an error should be logged for missing forwarding"
+      }
+    ]
+  },
+  "sequence_number_field": {
+    "rule_summary": "Sequence numbers must increment with each frame and wrap around to 1 after 255. Frames must be in increasing RSN order.",
+    "valid_range": "Sequence numbers range from 1 to 255, with wrap-around to 1 after 255.",
+    "test_cases": [
+      {
+        "value": 0,
+        "violation_type": "below_min",
+        "reason": "Sequence numbers must start from 1, not 0.",
+        "expected_behavior": "The frame should be discarded or flagged as an error due to invalid sequence number."
+      },
+      {
+        "value": 256,
+        "violation_type": "above_max",
+        "reason": "Sequence numbers must not exceed 255 and should wrap back to 1.",
+        "expected_behavior": "The frame should be discarded or flagged as an error due to invalid sequence number."
+      },
+      {
+        "value": -1,
+        "violation_type": "negative",
+        "reason": "Sequence numbers cannot be negative as they are only defined for positive integers from 1 to 255.",
+        "expected_behavior": "The frame should be discarded or flagged as an error due to invalid sequence number."
+      },
+      {
+        "value": "abc",
+        "violation_type": "invalid_format",
+        "reason": "Sequence numbers must be numeric values, not strings.",
+        "expected_behavior": "The frame should be discarded or flagged as an error due to invalid format."
+      },
+      {
+        "value": 255,
+        "subsequent_value": 0,
+        "violation_type": "non_wrap_around",
+        "reason": "After 255, the sequence should wrap around to 1, not 0.",
+        "expected_behavior": "The subsequent frame should be discarded or flagged as an error due to incorrect wrap-around behavior."
+      },
+      {
+        "value": 5,
+        "previous_value": 10,
+        "violation_type": "decreasing_order",
+        "reason": "Sequence numbers must always be in increasing order. 5 following 10 violates this rule.",
+        "expected_behavior": "The frame should be discarded or flagged as out of order."
+      },
+      {
+        "value": [
+          1,
+          2,
+          4,
+          3
+        ],
+        "violation_type": "out_of_order",
+        "reason": "The sequence jumps backward from 4 to 3, violating the increasing order requirement.",
+        "expected_behavior": "The frame with sequence number 3 should be discarded or flagged as out of order."
+      }
+    ]
+  },
+  "priority_qos.priority_levels": {
+    "rule_summary": "Specifies valid priority levels for AFDX protocol, including both string and numeric representations.",
+    "valid_range": "High Priority, Low Priority, high, low, 1, 4, 3, 2",
+    "test_cases": [
+      {
+        "value": "Medium Priority",
+        "violation_type": "not_in_list",
+        "reason": "This value is not listed among the valid priority levels.",
+        "expected_behavior": "The system should reject or ignore this priority level."
+      },
+      {
+        "value": 0,
+        "violation_type": "below_min",
+        "reason": "Numerical value 0 is below the minimum valid priority level of 1.",
+        "expected_behavior": "The system should handle this as an invalid priority level."
+      },
+      {
+        "value": 5,
+        "violation_type": "above_max",
+        "reason": "Numerical value 5 is above the maximum valid priority level of 4.",
+        "expected_behavior": "The system should handle this as an invalid priority level."
+      },
+      {
+        "value": -1,
+        "violation_type": "negative",
+        "reason": "Negative numbers are not valid priority levels.",
+        "expected_behavior": "The system should treat negative values as invalid."
+      },
+      {
+        "value": "highpriority",
+        "violation_type": "invalid_format",
+        "reason": "The concatenated string 'highpriority' is not a recognized valid format.",
+        "expected_behavior": "The system should reject this format as it does not match any valid priority level."
+      },
+      {
+        "value": 2.5,
+        "violation_type": "invalid_format",
+        "reason": "Decimals are not acceptable as priority levels; only integers and specific strings are valid.",
+        "expected_behavior": "The system should treat decimals as invalid priority levels."
+      },
+      {
+        "value": "HIGH",
+        "violation_type": "case_sensitivity",
+        "reason": "Case-sensitive mismatch; 'HIGH' is not the same as 'high'.",
+        "expected_behavior": "The system may reject this due to case sensitivity, expecting 'high' instead."
+      }
+    ]
+  },
+  "output_buffer_size_low_priority_vls": {
+    "rule_summary": "Defines the permissible output buffer size for low priority Virtual Links (VLs).",
+    "valid_range": "Typically defined by the system, e.g., 64 bytes to 4096 bytes.",
+    "test_cases": [
+      {
+        "value": 63,
+        "violation_type": "below_min",
+        "reason": "This size is just below the minimum permissible buffer size, potentially causing data loss or underflow.",
+        "expected_behavior": "System should reject this configuration and log an error."
+      },
+      {
+        "value": 4097,
+        "violation_type": "above_max",
+        "reason": "Exceeds the maximum buffer size, which could lead to resource exhaustion or overflow.",
+        "expected_behavior": "System should reject this configuration and log an error."
+      },
+      {
+        "value": -1,
+        "violation_type": "negative",
+        "reason": "Negative buffer size is nonsensical and should be considered invalid.",
+        "expected_behavior": "System should reject this configuration and log an error."
+      },
+      {
+        "value": 5000,
+        "violation_type": "extreme_above_max",
+        "reason": "A significantly larger than maximum buffer size, aimed at testing system resource limits.",
+        "expected_behavior": "System should reject this configuration and log an error."
+      },
+      {
+        "value": "1024MB",
+        "violation_type": "invalid_format",
+        "reason": "Buffer size provided in an incorrect format (string with units).",
+        "expected_behavior": "System should reject this configuration and log an error."
+      }
+    ]
+  },
+  "output_buffer_size_high_priority_vls": {
+    "rule_summary": "Defines the permissible output buffer size for high priority Virtual Links (VLs).",
+    "valid_range": "Typically defined by the system, e.g., 128 bytes to 8192 bytes.",
+    "test_cases": [
+      {
+        "value": 127,
+        "violation_type": "below_min",
+        "reason": "This size is just below the minimum permissible buffer size, potentially causing data loss or underflow.",
+        "expected_behavior": "System should reject this configuration and log an error."
+      },
+      {
+        "value": 8193,
+        "violation_type": "above_max",
+        "reason": "Exceeds the maximum buffer size, which could lead to resource exhaustion or overflow.",
+        "expected_behavior": "System should reject this configuration and log an error."
+      },
+      {
+        "value": -50,
+        "violation_type": "negative",
+        "reason": "Negative buffer size is nonsensical and should be considered invalid.",
+        "expected_behavior": "System should reject this configuration and log an error."
+      },
+      {
+        "value": 10000,
+        "violation_type": "extreme_above_max",
+        "reason": "A significantly larger than maximum buffer size, aimed at testing system resource limits.",
+        "expected_behavior": "System should reject this configuration and log an error."
+      },
+      {
+        "value": "2048B",
+        "violation_type": "invalid_format",
+        "reason": "Buffer size provided in an incorrect format (string with units).",
+        "expected_behavior": "System should reject this configuration and log an error."
+      }
+    ]
+  },
+  "frame_aging.discard_conditions": {
+    "rule_summary": "Conditions under which frames should be discarded to prevent buffer overflow and ensure correct packet delivery.",
+    "valid_range": "Frames should be discarded under specified conditions such as buffer overflow, buffer congestion, TTL < 2, or incorrect destination address on a physical interface.",
+    "test_cases": [
+      {
+        "value": {
+          "buffer_state": "overflow",
+          "action": "do_not_discard"
+        },
+        "violation_type": "buffer_overflow",
+        "reason": "Frames are not discarded despite buffer overflow, which can lead to data loss or corruption.",
+        "expected_behavior": "System should discard frames to prevent overflow and maintain data integrity."
+      },
+      {
+        "value": {
+          "buffer_state": "congested",
+          "action": "do_not_discard"
+        },
+        "violation_type": "buffer_congestion",
+        "reason": "Frames should be discarded when the output port is congested, but they are not, potentially leading to delays or data loss.",
+        "expected_behavior": "System should discard frames to manage congestion and ensure timely delivery."
+      },
+      {
+        "value": {
+          "link_status": "failed",
+          "buffer_action": "hold"
+        },
+        "violation_type": "link_failure",
+        "reason": "Frames are held in buffers despite a link failure, preventing rerouting or resource freeing.",
+        "expected_behavior": "System should discard frames to allow for rerouting and free up resources."
+      },
+      {
+        "value": {
+          "TTL": 1
+        },
+        "violation_type": "below_min",
+        "reason": "Received packets with TTL < 2 are not discarded, potentially causing routing loops or inefficient network use.",
+        "expected_behavior": "System should discard packets with TTL < 2 to prevent routing issues."
+      },
+      {
+        "value": {
+          "destination_address": "incorrect_interface",
+          "action": "process"
+        },
+        "violation_type": "incorrect_interface",
+        "reason": "Frames with incorrect destination address are processed instead of being discarded, leading to misrouting.",
+        "expected_behavior": "System should discard frames with a destination address that doesn't match the receiving interface."
+      },
+      {
+        "value": {
+          "buffer_state": "normal",
+          "action": "discard"
+        },
+        "violation_type": "unnecessary_discard",
+        "reason": "Frames are discarded without any buffer overflow or congestion, which is an unnecessary loss of data.",
+        "expected_behavior": "System should retain frames as there is no valid discard condition met."
+      },
+      {
+        "value": {
+          "link_status": "operational",
+          "buffer_action": "discard"
+        },
+        "violation_type": "unnecessary_discard",
+        "reason": "Frames are discarded even though the link is operational, leading to unnecessary loss of data.",
+        "expected_behavior": "System should retain frames as the link is functional and capable of transmission."
+      }
+    ]
+  },
+  "monitoring.discard_counters.categories": {
+    "rule_summary": "Violations in frame size, frame integrity, destination address, and silently discarded datagrams must be monitored by discard counters.",
+    "valid_range": "Frames should conform to defined size limits, have integrity intact, correct destination addresses, and not be silently discarded.",
+    "test_cases": [
+      {
+        "value": "FrameSize: 1700 bytes",
+        "violation_type": "above_max",
+        "reason": "The frame size exceeds the maximum allowed size for AFDX frames, typically 1518 bytes for standard Ethernet frames.",
+        "expected_behavior": "The frame should be discarded, and the discard counter for frame size violations should increment."
+      },
+      {
+        "value": "FrameSize: 0 bytes",
+        "violation_type": "below_min",
+        "reason": "A frame with 0 bytes is invalid as it lacks a payload or header information.",
+        "expected_behavior": "The frame should be discarded, and the discard counter for frame size violations should increment."
+      },
+      {
+        "value": "Checksum: invalid",
+        "violation_type": "invalid_format",
+        "reason": "The checksum of the frame does not match, indicating a frame integrity violation.",
+        "expected_behavior": "The frame should be discarded due to integrity issues, and the discard counter for frame integrity violations should increment."
+      },
+      {
+        "value": "Destination MAC: FF:FF:FF:FF:FF:FF",
+        "violation_type": "broadcast_address",
+        "reason": "Using a broadcast address as a destination in a unicast frame violates the specific destination address rule.",
+        "expected_behavior": "The frame should be discarded due to incorrect destination, and the discard counter for destination address violations should increment."
+      },
+      {
+        "value": "Destination MAC: 00:00:00:00:00:00",
+        "violation_type": "invalid_address",
+        "reason": "Using an all-zero MAC address is invalid for destination addressing.",
+        "expected_behavior": "The frame should be discarded, and the discard counter for destination address violations should increment."
+      },
+      {
+        "value": "Frame with no payload",
+        "violation_type": "no_payload",
+        "reason": "A frame without payload may be interpreted as malformed or silently discarded.",
+        "expected_behavior": "The frame should be discarded, potentially incrementing the silently discarded datagrams counter."
+      },
+      {
+        "value": "Corrupted header data",
+        "violation_type": "corrupt_header",
+        "reason": "Damage to the header may prevent the frame from being correctly processed or routed.",
+        "expected_behavior": "The frame should be discarded due to header corruption, and the discard counter for frame integrity violations should increment."
+      }
+    ]
+  },
+  "monitoring.statistics": {
+    "rule_summary": "Record in counter for discarded datagrams",
+    "valid_range": "Counter should increment by one for each discarded datagram.",
+    "test_cases": [
+      {
+        "value": 0,
+        "violation_type": "no_increment",
+        "reason": "The counter did not increment when a datagram was discarded.",
+        "expected_behavior": "The system should detect the lack of counter increment and flag an error."
+      },
+      {
+        "value": -1,
+        "violation_type": "negative",
+        "reason": "The counter should never be negative, as it implies a subtraction operation.",
+        "expected_behavior": "The system should reject negative counter values and trigger an error or warning."
+      },
+      {
+        "value": "N/A",
+        "violation_type": "invalid_format",
+        "reason": "The counter received a non-numeric value, which is invalid.",
+        "expected_behavior": "The system should identify non-numeric values and log an error."
+      },
+      {
+        "value": 1.5,
+        "violation_type": "invalid_format",
+        "reason": "The counter should only accept integer increments, not fractional values.",
+        "expected_behavior": "The system should reject fractional increments and log an error."
+      },
+      {
+        "value": 2,
+        "violation_type": "above_max",
+        "reason": "The counter incremented by more than one for a single discarded datagram.",
+        "expected_behavior": "The system should detect anomalous counter increments and flag an error."
+      },
+      {
+        "value": 4294967296,
+        "violation_type": "overflow",
+        "reason": "The counter exceeded the maximum value for a 32-bit unsigned integer, causing an overflow.",
+        "expected_behavior": "The system should handle overflow situations gracefully and reset or cap the counter."
+      },
+      {
+        "value": -999999,
+        "violation_type": "extreme_negative",
+        "reason": "The counter has an extremely negative value, which is nonsensical for a count.",
+        "expected_behavior": "The system should reject extreme negative values and log a critical error."
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "vl_id": 1001,
+  "frames": [],
+  "metadata": {
+    "mutation_type": "frame_structure.ip_header.header_validation",
+    "test_cases": [
+      "TC0",
+      "TC1",
+      "TC2"
+    ],
+    "bag_value": null,
+    "frame_size": null,
+    "sequence_number": null,
+    "timing_jitter_ms": null,
+    "payload_pattern": null,
+    "strategy_type": "edge-case",
+    "num_frames": 0
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "_description": "Seed AFDX frames for mutation-based fuzzing. Each VL has a valid, conformant frame that serves as a baseline for generating test cases.",
+  "_format": "Each seed frame contains all necessary parameters for a valid AFDX transmission",
+  
+  "vl_1001": {
+    "vl_id": 1001,
+    "default_bag_ms": 8,
+    "default_frame_size_bytes": 128,
+    "default_sequence_start": 1,
+    "default_payload_hex": "AABBCCDD11223344556677889900AABB",
+    "description": "Standard conformant frame for VL 1001 - ES1 to Switch1"
+  },
+  
+  "vl_1002": {
+    "vl_id": 1002,
+    "default_bag_ms": 16,
+    "default_frame_size_bytes": 256,
+    "default_sequence_start": 1,
+    "default_payload_hex": "11223344556677889900AABBCCDDEEFF",
+    "description": "Standard conformant frame for VL 1002 - ES1 to Switch1"
+  },
+  
+  "vl_1003": {
+    "vl_id": 1003,
+    "default_bag_ms": 32,
+    "default_frame_size_bytes": 512,
+    "default_sequence_start": 1,
+    "default_payload_hex": "FFEEDDCCBBAA99887766554433221100",
+    "description": "Standard conformant frame for VL 1003 - ES1 to Switch1"
+  },
+  
+  "vl_2001": {
+    "vl_id": 2001,
+    "default_bag_ms": 8,
+    "default_frame_size_bytes": 128,
+    "default_sequence_start": 1,
+    "default_payload_hex": "2020202020202020202020202020ABCD",
+    "description": "Standard conformant frame for VL 2001 - ES2 to Switch1"
+  },
+  
+  "vl_2002": {
+    "vl_id": 2002,
+    "default_bag_ms": 16,
+    "default_frame_size_bytes": 256,
+    "default_sequence_start": 1,
+    "default_payload_hex": "3030303030303030303030303030DCBA",
+    "description": "Standard conformant frame for VL 2002 - ES2 to Switch1"
+  },
+  
+  "vl_2003": {
+    "vl_id": 2003,
+    "default_bag_ms": 32,
+    "default_frame_size_bytes": 512,
+    "default_sequence_start": 1,
+    "default_payload_hex": "4040404040404040404040404040EFEF",
+    "description": "Standard conformant frame for VL 2003 - ES2 to Switch1"
+  },
+  
+  "vl_3001": {
+    "vl_id": 3001,
+    "default_bag_ms": 16,
+    "default_frame_size_bytes": 256,
+    "default_sequence_start": 1,
+    "default_payload_hex": "5050505050505050505050505050CAFE",
+    "description": "Standard conformant frame for VL 3001 - ES3 to Switch1"
+  },
+  
+  "vl_3002": {
+    "vl_id": 3002,
+    "default_bag_ms": 32,
+    "default_frame_size_bytes": 512,
+    "default_sequence_start": 1,
+    "default_payload_hex": "6060606060606060606060606060BEEF",
+    "description": "Standard conformant frame for VL 3002 - ES3 to Switch1"
+  },
+  
+  "vl_default": {
+    "vl_id": 9999,
+    "default_bag_ms": 8,
+    "default_frame_size_bytes": 128,
+    "default_sequence_start": 1,
+    "default_payload_hex": "0000000000000000000000000000DEAD",
+    "description": "Generic seed frame for any VL ID (used for invalid VL testing)"
+  }
+}
+

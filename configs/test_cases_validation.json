@@ -1,0 +1,86 @@
+{
+  "total_test_cases": 96,
+  "valid_violations": 89,
+  "invalid_test_cases": [
+    {
+      "parameter": "sequence_numbers",
+      "test_case_index": 3,
+      "test_case": {
+        "value": 0,
+        "violation_type": "duplicate_detection",
+        "reason": "If a frame with sequence number 0 is received multiple times without increment, it violates the duplicate detection rule.",
+        "expected_behavior": "Subsequent frames with the same sequence number should be discarded after the first is accepted."
+      },
+      "reason": "Value 0 is within valid range [0, 255]"
+    },
+    {
+      "parameter": "sequence_numbers",
+      "test_case_index": 4,
+      "test_case": {
+        "value": 1,
+        "violation_type": "missing_frame_detection",
+        "reason": "Sending a frame with sequence number 1 without first sending 0 violates the missing frame detection mechanism.",
+        "expected_behavior": "The system should recognize the missing sequence number 0 and report it to network management."
+      },
+      "reason": "Value 1 is within valid range [0, 255]"
+    },
+    {
+      "parameter": "sequence_number_field",
+      "test_case_index": 0,
+      "test_case": {
+        "value": 0,
+        "violation_type": "below_min",
+        "reason": "Sequence numbers must start from 1, not 0.",
+        "expected_behavior": "The frame should be discarded or flagged as an error due to invalid sequence number."
+      },
+      "reason": "Value 0 is within valid range [0, 255]"
+    },
+    {
+      "parameter": "sequence_number_field",
+      "test_case_index": 4,
+      "test_case": {
+        "value": 255,
+        "subsequent_value": 0,
+        "violation_type": "non_wrap_around",
+        "reason": "After 255, the sequence should wrap around to 1, not 0.",
+        "expected_behavior": "The subsequent frame should be discarded or flagged as an error due to incorrect wrap-around behavior."
+      },
+      "reason": "Value 255 is within valid range [0, 255]"
+    },
+    {
+      "parameter": "sequence_number_field",
+      "test_case_index": 5,
+      "test_case": {
+        "value": 5,
+        "previous_value": 10,
+        "violation_type": "decreasing_order",
+        "reason": "Sequence numbers must always be in increasing order. 5 following 10 violates this rule.",
+        "expected_behavior": "The frame should be discarded or flagged as out of order."
+      },
+      "reason": "Value 5 is within valid range [0, 255]"
+    },
+    {
+      "parameter": "priority_qos.priority_levels",
+      "test_case_index": 1,
+      "test_case": {
+        "value": 0,
+        "violation_type": "below_min",
+        "reason": "Numerical value 0 is below the minimum valid priority level of 1.",
+        "expected_behavior": "The system should handle this as an invalid priority level."
+      },
+      "reason": "Value 0 is within valid range [0, 3]"
+    },
+    {
+      "parameter": "priority_qos.priority_levels",
+      "test_case_index": 5,
+      "test_case": {
+        "value": 2.5,
+        "violation_type": "invalid_format",
+        "reason": "Decimals are not acceptable as priority levels; only integers and specific strings are valid.",
+        "expected_behavior": "The system should treat decimals as invalid priority levels."
+      },
+      "reason": "Value 2.5 is within valid range [0, 3]"
+    }
+  ],
+  "warnings": []
+}

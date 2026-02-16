@@ -1,0 +1,160 @@
+{
+  "basic_stats": {
+    "LLM": {
+      "total_iterations": 30,
+      "successful_iterations": 30,
+      "success_rate": 100.0
+    },
+    "boofuzz": {
+      "total_iterations": 30,
+      "successful_iterations": 30,
+      "success_rate": 100.0
+    },
+    "Random": {
+      "total_iterations": 30,
+      "successful_iterations": 30,
+      "success_rate": 100.0
+    }
+  },
+  "reward_analysis": {
+    "LLM": {
+      "mean": 0.9797777777777779,
+      "median": 1.0266666666666666,
+      "std": 0.20251660607060115,
+      "min": 0.32666666666666666,
+      "max": 1.2,
+      "q25": 0.9033333333333334,
+      "q75": 1.1183333333333334
+    },
+    "boofuzz": {
+      "mean": 0.9513333333333335,
+      "median": 0.96,
+      "std": 0.08762773927047975,
+      "min": 0.7933333333333333,
+      "max": 1.1,
+      "q25": 0.8783333333333333,
+      "q75": 1.02
+    },
+    "Random": {
+      "mean": 0.7628888888888888,
+      "median": 0.69,
+      "std": 0.23366927103232146,
+      "min": 0.42000000000000004,
+      "max": 1.16,
+      "q25": 0.5483333333333333,
+      "q75": 0.935
+    },
+    "llm_vs_random_improvement": 28.429944654820876,
+    "llm_vs_boofuzz_improvement": 2.9899556178462907
+  },
+  "coverage_analysis": {
+    "LLM": {
+      "unique_vls": 6,
+      "unique_rules": 0,
+      "unique_mutations": 16,
+      "unique_violation_types": 0
+    },
+    "boofuzz": {
+      "unique_vls": 4,
+      "unique_rules": 5,
+      "unique_mutations": 4,
+      "unique_violation_types": 10
+    },
+    "Random": {
+      "unique_vls": 8,
+      "unique_rules": 11,
+      "unique_mutations": 0,
+      "unique_violation_types": 0
+    }
+  },
+  "efficiency_analysis": {
+    "LLM": {
+      "avg_policing_rate": 0.0,
+      "avg_forward_rate": 100.0,
+      "total_bugs_found": 0,
+      "first_bug_iteration": null,
+      "bugs_per_iteration": 0.0
+    },
+    "boofuzz": {
+      "avg_policing_rate": 0.0,
+      "avg_forward_rate": 0.0,
+      "total_bugs_found": 0,
+      "first_bug_iteration": null,
+      "bugs_per_iteration": 0.0
+    },
+    "Random": {
+      "avg_policing_rate": 0.0,
+      "avg_forward_rate": 100.0,
+      "total_bugs_found": 0,
+      "first_bug_iteration": null,
+      "bugs_per_iteration": 0.0
+    }
+  },
+  "learning_curve": {
+    "q1_reward": 0.9685714285714285,
+    "q2_reward": 0.9391666666666667,
+    "q3_reward": 0.9866666666666666,
+    "q4_reward": 1.0241666666666667,
+    "early_reward": 0.9528888888888889,
+    "late_reward": 1.0066666666666668,
+    "improvement_percent": 5.643656716417926
+  },
+  "violation_detection": {
+    "LLM": {
+      "violation_type_counts": {},
+      "high_reward_count": 28,
+      "high_reward_percent": 93.33333333333333
+    },
+    "boofuzz": {
+      "violation_type_counts": {
+        "invalid_format": 7,
+        "above_max": 7,
+        "below_min": 5,
+        "not_in_list": 3,
+        "negative": 2,
+        "not_class_a_private": 2,
+        "broadcast_address": 1,
+        "invalid_ip_version": 1,
+        "extreme_above_max": 1,
+        "extreme_below_min": 1
+      },
+      "high_reward_count": 30,
+      "high_reward_percent": 100.0
+    },
+    "Random": {
+      "violation_type_counts": {},
+      "high_reward_count": 23,
+      "high_reward_percent": 76.66666666666667
+    }
+  },
+  "statistical_tests": {
+    "llm_vs_random": {
+      "test": "Mann-Whitney U",
+      "statistic": 680.5,
+      "p_value": 0.00033207451530726807,
+      "significant": true,
+      "interpretation": "LLM significantly better"
+    },
+    "llm_vs_boofuzz": {
+      "test": "Mann-Whitney U",
+      "statistic": 570.5,
+      "p_value": 0.037882163740692816,
+      "significant": true,
+      "interpretation": "LLM significantly better"
+    },
+    "boofuzz_vs_random": {
+      "test": "Mann-Whitney U",
+      "statistic": 651.5,
+      "p_value": 0.001468612287814445,
+      "significant": true,
+      "interpretation": "boofuzz significantly better"
+    },
+    "kruskal_wallis": {
+      "test": "Kruskal-Wallis H",
+      "statistic": 15.46937066855648,
+      "p_value": 0.00043738999040946163,
+      "significant": true,
+      "interpretation": "Significant difference between groups"
+    }
+  }
+}

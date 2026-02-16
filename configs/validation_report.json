@@ -1,0 +1,148 @@
+{
+  "metadata": {
+    "generated_at": "2026-01-10T17:34:34.047322",
+    "comparison_source": "spec_extraction/comparison_results.json",
+    "arbitration_source": "spec_extraction/arbitration_results.json",
+    "providers_used": [
+      "openai",
+      "anthropic"
+    ]
+  },
+  "validation_summary": {
+    "methodology": "Multi-Model Cross-Validation with LLM Arbitration",
+    "total_rules": 72,
+    "confidence_distribution": {
+      "high": 0,
+      "medium": 25,
+      "arbitrated_high": 10,
+      "arbitrated_medium": 12,
+      "arbitrated_low": 25,
+      "low": 0
+    },
+    "source_distribution": {
+      "unanimous": 0,
+      "majority": 25,
+      "arbitration": 47,
+      "unresolved": 0
+    },
+    "confidence_rates": {
+      "high_or_arbitrated_high": 0.1388888888888889,
+      "medium_or_better": 0.6527777777777778,
+      "needs_review": 0.3472222222222222
+    }
+  },
+  "agreement_metrics": {
+    "pairwise_agreement": {
+      "openai_vs_anthropic": 0.4027777777777778
+    },
+    "fleiss_kappa": -0.19444444444444442,
+    "kappa_interpretation": "Less than chance agreement"
+  },
+  "quality_indicators": {
+    "high_confidence_percentage": "13.9%",
+    "validated_percentage": "65.3%",
+    "needs_review_percentage": "34.7%"
+  },
+  "rules_needing_review": [
+    {
+      "path": "buffer_management.buffer_size_rules",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "buffer_management.queue_limits",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "filtering_policing.bag_enforcement",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "filtering_policing.drop_conditions",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "filtering_policing.token_bucket.refill_rate_formula",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "filtering_policing.token_bucket.size_formula",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "frame_aging.aging_rules",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "frame_aging.max_age",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "frame_aging.ttl_enabled",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "frame_structure.afdx_fields.sequence_num_size",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "frame_structure.afdx_fields.vl_id_size",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "frame_structure.ethernet.ethertype_value",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "frame_structure.ip_header.ttl_rules",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "frame_structure.payload.vl_specific_ranges",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "monitoring.fault_detection",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "performance.max_end_to_end_latency_ms",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "performance.max_jitter_fraction",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "priority_qos.scheduling_algorithm",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "redundancy.dual_transmission_required",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "sequence_numbers.out_of_window_action",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "sequence_numbers.window_size",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "switching.static_forwarding.enabled",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "switching.static_forwarding.port_mapping_rules",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "virtual_link.id_range",
+      "issue": "Low confidence"
+    },
+    {
+      "path": "virtual_link.redundancy_required",
+      "issue": "Low confidence"
+    }
+  ]
+}
