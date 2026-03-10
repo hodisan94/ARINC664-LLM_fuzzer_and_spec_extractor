@@ -28,6 +28,9 @@ This document maps all cross-directory dependencies. **Consult this before movin
 
 ### `spec_extraction/` imports
 - Only internal imports (self-contained)
+- `run_multimodel.py` → `llm_providers.py`, `prompts_open.py`, `pdf_utils.py`
+- `align_rules.py` → `llm_providers.py`, `prompts_open.py`, `pdf_utils.py`
+- `export_validated.py` → reads `alignment_results.json` + `multimodel_output/rules_*.json`
 
 ### `evaluation/` imports
 - Only internal imports (uses subprocess to call other modules)
@@ -53,15 +56,37 @@ Moving `llm_fuzzer/`, `random_baseline/`, `boofuzz_baseline/`, `evaluation/`, `s
 ### `configs/spec_rules.json`
 Referenced by:
 - `llm_fuzzer/main.py`, `llm_fuzzer/core/strategy_planner.py`, `llm_fuzzer/core/test_generator.py`
+- `llm_fuzzer/utils/spec_loader.py` (generic indexer for all rule formats)
 - `random_baseline/main.py`, `random_baseline/random_strategy_generator.py`
 - `boofuzz_baseline/main.py`, `boofuzz_baseline/afdx_protocol.py`, `boofuzz_baseline/boofuzz_strategy_generator.py`
 - `evaluation/run_comparison.py`, `evaluation/analysis_without_llm.py`, `evaluation/comprehensive_analysis.py`
 - `tests/test_hybrid_freedom.py`, `tests/test_paper_alignment.py`
 
+### `configs/spec_rules_validated.json`
+Referenced by:
+- `spec_extraction/export_validated.py` (writes it)
+- Used for academic reporting and analysis (not loaded by fuzzer)
+
+### `configs/validation_report.json`
+Referenced by:
+- `spec_extraction/export_validated.py` (writes it)
+- Used for paper metrics (not loaded by fuzzer)
+
 ### `configs/test_cases.json`
-Referenced by same files as above, plus:
+Referenced by same files as spec_rules.json, plus:
 - `tests/test_smart_sequences.py`
 - `llm_fuzzer/demo.py`
+
+### `spec_extraction/alignment_results.json`
+Referenced by:
+- `spec_extraction/align_rules.py` (writes it)
+- `spec_extraction/export_validated.py` (reads it)
+
+### `spec_extraction/multimodel_output/rules_*.json`
+Referenced by:
+- `spec_extraction/run_multimodel.py` (writes them)
+- `spec_extraction/align_rules.py` (reads them)
+- `spec_extraction/export_validated.py` (reads them for enriched export)
 
 ### `examples/AFDX_V3/mutations.json`
 - Written by: `llm_fuzzer/utils/simulator_runner.py`

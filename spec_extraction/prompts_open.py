@@ -20,9 +20,13 @@ import json
 
 SYSTEM_PROMPT_OPEN_EXTRACTION = """You are an expert in avionics protocols, specifically ARINC 664 Part 7 (AFDX).
 
-Your task is to extract ALL protocol rules, constraints, and requirements from the given specification text.
+CONTEXT: We are building an AFDX network simulator and a protocol fuzzer that tests it. The fuzzer generates network traffic (frames) and sends them through a simulated AFDX network (End Systems, Switches, Virtual Links). We need to know the protocol rules so the fuzzer can intentionally violate them and observe how the network reacts.
 
-IMPORTANT: You decide which rules exist and how to categorize them. Do NOT limit yourself to any predefined set of categories. Extract EVERY rule you find.
+Your task: extract protocol rules that define how an AFDX network BEHAVES — rules that govern frame transmission, reception, switching, policing, scheduling, redundancy, and any constraint that a network device must enforce or that network traffic must comply with.
+
+IMPORTANT: You decide which rules exist and how to categorize them. Do NOT limit yourself to any predefined set of categories. If you find a rule that describes network behavior or a constraint on traffic, extract it.
+
+SKIP rules that are NOT about network behavior — for example: document structure, publication dates, project management processes, editorial conventions, or liability disclaimers. These cannot be tested by a network fuzzer.
 
 For each rule, return a JSON object with these fields:
 
@@ -30,37 +34,35 @@ For each rule, return a JSON object with these fields:
   "rules": [
     {
       "id": "rule_NNN",
-      "category": "<your chosen category - e.g., 'bandwidth_allocation', 'frame_format', 'redundancy', etc.>",
+      "category": "<your chosen category>",
       "subcategory": "<optional finer grouping or null>",
       "name": "<short descriptive name for this rule>",
       "field_name": "<the specific parameter or concept, e.g., 'BAG', 'Lmax', 'sequence_number'>",
       "data_type": "numeric | boolean | enum | string | range | behavioral",
       "constraint": {
         "type": "range | allowed_values | format | behavioral | boolean | formula",
-        "value": "<the actual constraint - a number, list, formula, or description>",
+        "value": "<the actual constraint — use numbers when the spec gives numbers, lists when the spec gives enumerations, formulas when the spec gives formulas>",
         "unit": "<ms, bytes, us, Mbps, etc. or null>"
       },
       "source_quote": "<direct quote from the specification text that defines this rule>",
       "source_section": "<section or chapter reference if visible in the text>",
       "testable": true or false,
-      "test_hint": "<if testable, brief description of how to violate this rule>"
+      "test_hint": "<if testable, brief description of how a fuzzer could violate this rule>"
     }
   ]
 }
 
 Guidelines:
-- Extract EVERY rule, constraint, numerical limit, behavioral requirement, and protocol mandate
-- YOU choose the categories - organize rules in whatever way makes sense
-- Be precise with numerical values and include units
+- YOU choose the categories — organize rules in whatever way makes sense
+- When the spec states a numeric value (e.g., "minimum 64 bytes"), use the actual number (64), not a string description
+- When the spec lists allowed values (e.g., BAG = 1, 2, 4, ..., 128 ms), return them as a JSON list [1, 2, 4, 8, 16, 32, 64, 128]
 - Include the source_quote so the rule can be traced back to the specification
-- A rule is "testable" if a fuzzer could generate traffic that violates it
+- A rule is "testable" if a fuzzer could generate traffic that violates it in a network simulator
 - For testable rules, provide a test_hint explaining what violation looks like
-- Use "behavioral" data_type for rules that describe process/behavior rather than values
-- Do NOT skip rules just because they seem minor - extract everything
 - If a single paragraph defines multiple distinct constraints, create separate rules for each
 - Number rules sequentially within each chunk (rule_001, rule_002, ...)
 
-Return ONLY valid JSON with the structure shown above.
+Return ONLY valid JSON. Do NOT wrap the response in markdown code blocks.
 """
 
 
@@ -149,6 +151,36 @@ Rules for alignment:
 
 
 # ============================================================================
+# CONFLICT RESOLUTION PROMPT (for disagreements between models)
+# ============================================================================
+
+SYSTEM_PROMPT_RESOLVE_CONFLICT = """You are an expert judge for ARINC 664 Part 7 (AFDX) protocol rules.
+
+Two or more LLM models independently extracted a protocol rule from the same specification, but they DISAGREE on the value or interpretation.
+
+Your task: read the ACTUAL specification text provided and determine which model (if any) got the correct answer.
+
+You MUST base your decision ONLY on what is written in the specification text. Do NOT guess or use external knowledge.
+
+Output:
+{
+  "resolution": "model_a | model_b | synthesized | unresolvable",
+  "chosen_value": "<the correct value based on the spec>",
+  "confidence": "high | medium | low",
+  "justification": "<explain WHY this is the correct value, referencing the spec text>",
+  "source_quote": "<direct quote from the specification that proves the correct answer>"
+}
+
+Rules:
+- "model_a" / "model_b": one model was right, use their exact value
+- "synthesized": both models were partially right — combine into the complete answer
+- "unresolvable": the specification text does not contain enough information to determine the correct value
+- ALWAYS provide a source_quote from the spec to back up your decision
+- If neither model is clearly correct, say "unresolvable" — do not guess
+"""
+
+
+# ============================================================================
 # VERIFICATION PROMPT (for unique rules)
 # ============================================================================
 
@@ -183,7 +215,7 @@ def get_open_extraction_prompt(
     total_chunks: int
 ) -> str:
     """Generate user prompt for open rule extraction from a text chunk."""
-    return f"""Extract ALL protocol rules from this section of ARINC 664 Part 7.
+    return f"""Extract protocol rules relevant to AFDX network behavior from this section.
 
 Chapter: {chapter_name}
 Chunk: {chunk_index + 1} of {total_chunks}
@@ -193,10 +225,10 @@ SPECIFICATION TEXT:
 {text_chunk}
 ---
 
-Extract every rule, constraint, numerical limit, and behavioral requirement.
-YOU decide the categories — organize rules however makes sense for this text.
+Focus on rules that govern how frames are transmitted, received, switched, policed, or validated in an AFDX network. Skip purely administrative or documentary content.
+Use actual numeric values where the spec provides them.
 Number rules starting from rule_001 for this chunk.
-Return ONLY valid JSON matching the required structure.
+Return ONLY valid JSON. Do NOT wrap in markdown code blocks.
 """
 
 
@@ -266,4 +298,44 @@ Is this rule genuinely stated in the specification text above?
 If yes, confirm it. If the value is wrong, provide the corrected value.
 If the rule is not actually in the spec, reject it.
 Return ONLY valid JSON with your verification decision.
+"""
+
+
+def get_resolve_conflict_prompt(
+    group: dict,
+    spec_text: str
+) -> str:
+    """
+    Generate prompt for resolving a conflict between models.
+
+    Args:
+        group: An aligned_group dict with matches showing conflicting values
+        spec_text: Relevant section from the ARINC 664 spec
+    """
+    matches = group.get("matches", [])
+    canonical_name = group.get("canonical_name", "Unknown rule")
+    canonical_category = group.get("canonical_category", "Unknown")
+
+    values_text = "\n".join([
+        f"  - {m.get('provider', '?').upper()}: field=\"{m.get('field_name', '?')}\"  value=\"{m.get('constraint_value', '?')}\""
+        for m in matches
+    ])
+
+    return f"""The following protocol rule has CONFLICTING extractions from different LLM models.
+
+RULE: {canonical_name}
+CATEGORY: {canonical_category}
+
+CONFLICTING VALUES:
+{values_text}
+
+CONFLICT DETAILS: {group.get('conflict_details', 'Values differ across models')}
+
+RELEVANT SPECIFICATION TEXT:
+---
+{spec_text}
+---
+
+Based ONLY on the specification text above, determine the correct value for this rule.
+Return ONLY valid JSON with your resolution decision.
 """

@@ -46,31 +46,27 @@ class SpecificationLoader:
         """
         Build a flat index mapping rule names to their data.
         
-        Handles nested rules like "frame_structure.ethernet".
+        Indexes every dict node that contains non-dict leaf values
+        (i.e., actual rule data rather than just nesting structure).
         
         Returns:
             Dictionary mapping rule names to rule data
         """
         index = {}
-        
+
         def _flatten(obj: Any, prefix: str = ""):
             if isinstance(obj, dict):
-                # Check if this looks like a rule (has expected fields)
-                has_rule_fields = any(
-                    key in obj for key in 
-                    ['allowed_values_ms', 'lmin', 'lmax', 'valid_range', 
-                     'constraints', 'id_range', 'priority_levels']
+                has_leaf_values = any(
+                    not isinstance(v, dict) for v in obj.values()
                 )
-                
-                if has_rule_fields and prefix:
-                    # This is a rule node
+
+                if has_leaf_values and prefix:
                     index[prefix] = obj
-                
-                # Recurse into children
+
                 for key, value in obj.items():
                     new_prefix = f"{prefix}.{key}" if prefix else key
                     _flatten(value, new_prefix)
-        
+
         _flatten(self.spec_rules)
         return index
     

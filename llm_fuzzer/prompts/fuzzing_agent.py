@@ -91,18 +91,22 @@ def _build_protocol_rules_section(spec_rules: Dict[str, Any]) -> str:
     lines = ["=" * 70]
     lines.append("AVAILABLE PROTOCOL RULES:")
     lines.append("=" * 70)
-    
-    # Show main rules
-    for idx, (rule_name, rule_data) in enumerate(sorted(spec_rules.items())[:10], 1):
+
+    for idx, (rule_name, rule_data) in enumerate(sorted(spec_rules.items()), 1):
         lines.append(f"\n{idx}. {rule_name}")
-        
+
         if isinstance(rule_data, dict):
             for key, value in rule_data.items():
-                if key in ['allowed_values_ms', 'lmin', 'lmax', 'id_range', 'priority_levels']:
+                val_str = str(value)
+                if len(val_str) <= 120:
                     lines.append(f"   - {key}: {value}")
-                elif key == 'constraints' and isinstance(value, str) and len(value) < 100:
-                    lines.append(f"   - {key}: {value}")
-    
+                else:
+                    lines.append(f"   - {key}: {val_str[:120]}...")
+        elif isinstance(rule_data, (list, int, float, bool)):
+            lines.append(f"   {rule_data}")
+        elif isinstance(rule_data, str) and len(rule_data) <= 120:
+            lines.append(f"   {rule_data}")
+
     return "\n".join(lines)
 
 

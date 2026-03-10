@@ -414,9 +414,44 @@ Validated Rate (Medium+) & """ + quality["validated_percentage"] + r""" \\
     print(f"LaTeX table saved to: {output_path}")
 
 
+def _build_clean_rule_entry(rule: Dict[str, Any]) -> Any:
+    """
+    Build a clean rule entry for the fuzzer.
+    For simple numeric/boolean/list values, store the value directly.
+    For complex rules, return the best available value.
+    """
+    val = rule.get("consensus_value")
+
+    if isinstance(val, (int, float, bool, list)):
+        return val
+
+    if isinstance(val, str):
+        try:
+            return int(val)
+        except (ValueError, TypeError):
+            pass
+        try:
+            return float(val)
+        except (ValueError, TypeError):
+            pass
+        if val.lower() in ("true", "false"):
+            return val.lower() == "true"
+
+    provider_values = rule.get("provider_values", {})
+    best_value = val
+    if best_value is None and provider_values:
+        best_value = next(iter(provider_values.values()), None)
+
+    if isinstance(best_value, (int, float, bool, list)):
+        return best_value
+
+    return best_value
+
+
 def export_from_alignment(
     alignment_path: str,
-    output_dir: str
+    output_dir: str,
+    extraction_dir: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     Export validated rules from the new alignment-based format.
@@ -429,6 +464,7 @@ def export_from_alignment(
     Args:
         alignment_path: Path to alignment_results.json
         output_dir: Output directory
+        extraction_dir: Directory containing per-provider extraction files
     
     Returns:
         Report dictionary
@@ -449,6 +485,25 @@ def export_from_alignment(
     aligned_groups = alignment.get("aligned_groups", [])
     unique_rules = alignment.get("unique_rules", [])
     unique_verified = alignment.get("unique_rules_verified", unique_rules)
+
+    # Load original extractions to get full rule data for unique rules
+    original_rules_by_provider = {}
+    if extraction_dir is None:
+        extraction_dir = str(Path(alignment_path).parent / "multimodel_output")
+    extraction_dir_path = Path(extraction_dir)
+    if extraction_dir_path.exists():
+        for fpath in extraction_dir_path.glob("rules_*.json"):
+            provider_name = fpath.stem.replace("rules_", "")
+            try:
+                with open(fpath) as f:
+                    pdata = json.load(f)
+                rule_index = {}
+                for r in pdata.get("rules", []):
+                    rule_index[r.get("id", "")] = r
+                original_rules_by_provider[provider_name] = rule_index
+                print(f"  Loaded original {provider_name}: {len(rule_index)} rules")
+            except Exception:
+                pass
 
     # Build validated rules list
     validated_rules = []
@@ -477,6 +532,12 @@ def export_from_alignment(
         if group.get("conflict_details"):
             rule_entry["conflict_details"] = group["conflict_details"]
 
+        judge_resolution = group.get("judge_resolution")
+        if judge_resolution and agreement == "resolved":
+            rule_entry["judge_decision"] = judge_resolution.get("resolution")
+            rule_entry["judge_justification"] = judge_resolution.get("justification")
+            rule_entry["judge_source_quote"] = judge_resolution.get("source_quote")
+
         validated_rules.append(rule_entry)
 
     # Process verified unique rules (confirmed only)
@@ -484,28 +545,46 @@ def export_from_alignment(
         verification = unique.get("verification", "unknown")
         if verification == "confirmed":
             rule_counter += 1
+            # Try to look up the full original rule for its constraint value
+            provider = unique.get("provider", "")
+            rule_id = unique.get("rule_id", "")
+            original_rule = original_rules_by_provider.get(provider, {}).get(rule_id, {})
+            constraint = original_rule.get("constraint", {})
+            constraint_val = constraint.get("value") if isinstance(constraint, dict) else None
+            corrected = unique.get("corrected_value")
+            best_val = corrected if corrected is not None else constraint_val
+
             validated_rules.append({
                 "id": f"rule_{rule_counter:03d}",
                 "name": unique.get("name", f"Rule {rule_counter}"),
                 "category": unique.get("category", "unknown"),
-                "consensus_value": unique.get("corrected_value") or None,
+                "consensus_value": best_val,
                 "agreement": "unique_confirmed",
                 "confidence": unique.get("confidence", "low"),
-                "providers": [unique.get("provider")],
+                "providers": [provider],
                 "source": "verified_unique",
-                "justification": unique.get("justification", "")
+                "justification": unique.get("justification", ""),
+                "data_type": original_rule.get("data_type"),
+                "constraint_type": constraint.get("type") if isinstance(constraint, dict) else None,
+                "unit": constraint.get("unit") if isinstance(constraint, dict) else None,
+                "test_hint": original_rule.get("test_hint"),
+                "source_quote": original_rule.get("source_quote", unique.get("source_quote", ""))
             })
         elif verification not in ("rejected", "error", "skipped"):
-            # Include unverified unique rules with low confidence
             rule_counter += 1
+            provider = unique.get("provider", "")
+            rule_id = unique.get("rule_id", "")
+            original_rule = original_rules_by_provider.get(provider, {}).get(rule_id, {})
+            constraint = original_rule.get("constraint", {})
+            constraint_val = constraint.get("value") if isinstance(constraint, dict) else None
             validated_rules.append({
                 "id": f"rule_{rule_counter:03d}",
                 "name": unique.get("name", f"Rule {rule_counter}"),
                 "category": unique.get("category", "unknown"),
-                "consensus_value": None,
+                "consensus_value": constraint_val,
                 "agreement": "unique_unverified",
                 "confidence": "low",
-                "providers": [unique.get("provider")],
+                "providers": [provider],
                 "source": "unverified_unique",
                 "warning": "Found by only one model, not yet verified"
             })
@@ -513,13 +592,32 @@ def export_from_alignment(
     # Build clean rules (for fuzzer consumption) — nested by category
     clean_rules = {}
     for rule in validated_rules:
-        if rule["confidence"] in ("high", "medium") or rule["agreement"] in ("full", "partial", "unique_confirmed"):
+        if rule["confidence"] in ("high", "medium") or rule["agreement"] in ("full", "partial", "resolved", "unique_confirmed"):
             cat = rule["category"]
             if cat not in clean_rules:
                 clean_rules[cat] = {}
 
             field_key = rule["name"].lower().replace(" ", "_").replace("-", "_")
-            clean_rules[cat][field_key] = rule["consensus_value"]
+            entry = _build_clean_rule_entry(rule)
+            # For behavioral/complex rules, enrich with test_hint if available
+            if entry is None or isinstance(entry, str):
+                test_hint = rule.get("test_hint")
+                data_type = rule.get("data_type")
+                unit = rule.get("unit")
+                source_quote = rule.get("source_quote", "")
+                if test_hint or data_type or source_quote:
+                    entry = {
+                        "value": entry,
+                        "data_type": data_type,
+                        "unit": unit,
+                        "test_hint": test_hint,
+                        "source_quote": source_quote[:200] if source_quote else None
+                    }
+                    # Remove None fields for cleaner output
+                    entry = {k: v for k, v in entry.items() if v is not None}
+                    if len(entry) == 1 and "value" in entry:
+                        entry = entry["value"]
+            clean_rules[cat][field_key] = entry
 
     # Save outputs
     # 1. Full validated rules with metadata
@@ -557,6 +655,7 @@ def export_from_alignment(
             "agreement_distribution": {
                 "full": sum(1 for r in validated_rules if r["agreement"] == "full"),
                 "partial": sum(1 for r in validated_rules if r["agreement"] == "partial"),
+                "resolved": sum(1 for r in validated_rules if r["agreement"] == "resolved"),
                 "conflict": sum(1 for r in validated_rules if r["agreement"] == "conflict"),
                 "unique_confirmed": sum(1 for r in validated_rules if r["agreement"] == "unique_confirmed"),
                 "unique_unverified": sum(1 for r in validated_rules if r["agreement"] == "unique_unverified")
@@ -585,10 +684,12 @@ def export_from_alignment(
     print("\n" + "=" * 70)
     print("  EXPORT COMPLETE")
     print("=" * 70)
+    n_resolved = sum(1 for r in validated_rules if r["agreement"] == "resolved")
     print(f"  Total validated rules: {len(validated_rules)}")
     print(f"  Categories: {len(report['validation_summary']['categories_found'])}")
     print(f"  High confidence: {n_high}")
     print(f"  Medium confidence: {n_med}")
+    print(f"  Resolved by judge: {n_resolved}")
     print(f"  Low confidence: {n_low}")
     print("=" * 70)
 
@@ -626,6 +727,11 @@ if __name__ == "__main__":
         help="Export mode: 'strict' uses comparison+arbitration, 'open' uses alignment, 'auto' detects (default: auto)"
     )
     parser.add_argument(
+        "--extraction-dir",
+        default=None,
+        help="Directory with original per-provider extraction files (rules_*.json)"
+    )
+    parser.add_argument(
         "--latex",
         action="store_true",
         help="Also generate LaTeX table for paper"
@@ -651,7 +757,8 @@ if __name__ == "__main__":
             sys.exit(1)
         report = export_from_alignment(
             alignment_path=args.alignment,
-            output_dir=args.output_dir
+            output_dir=args.output_dir,
+            extraction_dir=getattr(args, 'extraction_dir', None)
         )
     else:
         if not os.path.exists(args.comparison):

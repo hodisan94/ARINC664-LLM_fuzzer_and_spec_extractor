@@ -32,9 +32,12 @@ import argparse
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from datetime import datetime
+from dotenv import load_dotenv
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
+
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 from spec_extraction.llm_providers import (
     MultiModelClient,
@@ -44,8 +47,10 @@ from spec_extraction.llm_providers import (
 from spec_extraction.prompts_open import (
     SYSTEM_PROMPT_RULE_ALIGNMENT,
     SYSTEM_PROMPT_VERIFY_UNIQUE,
+    SYSTEM_PROMPT_RESOLVE_CONFLICT,
     get_alignment_prompt,
-    get_verify_unique_prompt
+    get_verify_unique_prompt,
+    get_resolve_conflict_prompt
 )
 
 
@@ -510,6 +515,130 @@ def verify_unique_rules(
     return alignment_result
 
 
+def resolve_conflicts(
+    alignment_result: Dict[str, Any],
+    extractions: Dict[str, Dict[str, Any]],
+    pdf_path: str,
+    judge_provider_name: str = "openai"
+) -> Dict[str, Any]:
+    """
+    Resolve conflicts where models disagree on a rule's value.
+
+    For each aligned group marked as "conflict", the judge LLM receives:
+      1. The conflicting values from each model
+      2. The relevant section of the ARINC 664 spec
+    and determines which model (if any) extracted the correct value.
+
+    Args:
+        alignment_result: Output from align_extractions()
+        extractions: Original provider extractions (to find source_quotes)
+        pdf_path: Path to ARINC 664 Part 7 PDF
+        judge_provider_name: LLM provider to use as the judge
+
+    Returns:
+        Updated alignment_result with resolved conflicts
+    """
+    aligned_groups = alignment_result.get("alignment", {}).get("aligned_groups", [])
+    conflicts = [g for g in aligned_groups if g.get("agreement") == "conflict"]
+
+    if not conflicts:
+        print("  No conflicts to resolve.")
+        return alignment_result
+
+    print(f"\n  Resolving {len(conflicts)} conflicts using {judge_provider_name} as judge...")
+
+    from spec_extraction.pdf_utils import get_all_relevant_text
+    chapter_texts = get_all_relevant_text(pdf_path)
+    full_spec_text = "\n\n".join(chapter_texts.values())
+
+    judge = get_single_provider(judge_provider_name)
+
+    max_spec_chars = 5000
+    resolved_count = 0
+    unresolvable_count = 0
+
+    for i, group in enumerate(conflicts):
+        group_id = group.get("group_id", f"G{i+1}")
+        canonical_name = group.get("canonical_name", "Unknown")
+
+        print(f"    [{i+1}/{len(conflicts)}] {canonical_name}...", end=" ")
+
+        # Gather source quotes from the original extractions to locate spec text
+        source_hints = _collect_source_hints(group, extractions)
+        relevant_text = _find_relevant_text(source_hints, full_spec_text, max_spec_chars)
+
+        try:
+            user_prompt = get_resolve_conflict_prompt(group, relevant_text)
+            resolution = judge.query_json(
+                system_prompt=SYSTEM_PROMPT_RESOLVE_CONFLICT,
+                user_prompt=user_prompt,
+                temperature=0.1,
+                max_tokens=1500
+            )
+
+            decision = resolution.get("resolution", "unresolvable")
+
+            if decision == "unresolvable":
+                unresolvable_count += 1
+                print("UNRESOLVABLE")
+            else:
+                resolved_count += 1
+                group["agreement"] = "resolved"
+                group["consensus_value"] = resolution.get("chosen_value")
+                group["confidence"] = resolution.get("confidence", "medium")
+                print(f"RESOLVED ({decision}) -> {resolution.get('chosen_value', '?')[:60]}")
+
+            group["judge_resolution"] = resolution
+
+        except Exception as e:
+            print(f"ERROR: {e}")
+            group["judge_resolution"] = {"resolution": "error", "error": str(e)}
+
+    # Update metrics
+    alignment_result["conflict_resolution_stats"] = {
+        "total_conflicts": len(conflicts),
+        "resolved": resolved_count,
+        "unresolvable": unresolvable_count,
+        "errors": len(conflicts) - resolved_count - unresolvable_count,
+        "judge": judge_provider_name
+    }
+
+    print(f"\n  Conflict resolution complete: "
+          f"{resolved_count} resolved, {unresolvable_count} unresolvable")
+
+    return alignment_result
+
+
+def _collect_source_hints(
+    group: Dict[str, Any],
+    extractions: Dict[str, Dict[str, Any]]
+) -> str:
+    """
+    Collect source_quote and field_name from the original rule objects
+    so we can locate the relevant spec section.
+    """
+    hints = []
+    for match in group.get("matches", []):
+        provider = match.get("provider", "")
+        rule_id = match.get("rule_id", "")
+
+        if provider in extractions:
+            for r in extractions[provider].get("rules", []):
+                if r.get("id") == rule_id:
+                    quote = r.get("source_quote", "")
+                    if quote:
+                        hints.append(quote)
+                    name = r.get("name", "")
+                    if name:
+                        hints.append(name)
+                    break
+
+    if not hints:
+        hints.append(group.get("canonical_name", ""))
+
+    return " ".join(hints)
+
+
 def _find_relevant_text(source_quote: str, full_text: str, max_chars: int) -> str:
     """Find the section of text most relevant to a source quote."""
     if not source_quote or not full_text:
@@ -586,17 +715,39 @@ if __name__ == "__main__":
         help="LLM provider to use as alignment arbiter"
     )
     parser.add_argument(
+        "--resolve-conflicts",
+        action="store_true",
+        help="Resolve conflicts by having a judge LLM check the spec"
+    )
+    parser.add_argument(
         "--verify-unique",
         action="store_true",
         help="Verify rules found by only one model"
     )
     parser.add_argument(
+        "--judge",
+        default=None,
+        choices=["openai", "anthropic", "google"],
+        help="LLM provider to use as conflict judge (default: same as --arbiter)"
+    )
+    parser.add_argument(
         "--pdf",
         default="configs/ARINC_664P7.pdf",
-        help="Path to spec PDF (required for --verify-unique)"
+        help="Path to spec PDF (required for --resolve-conflicts and --verify-unique)"
+    )
+    parser.add_argument(
+        "--full",
+        action="store_true",
+        help="Shortcut: align + resolve conflicts + verify unique rules"
     )
 
     args = parser.parse_args()
+
+    if args.full:
+        args.resolve_conflicts = True
+        args.verify_unique = True
+
+    judge_provider = args.judge or args.arbiter
 
     if not os.path.exists(args.input_dir):
         print(f"Error: Input directory not found: {args.input_dir}")
@@ -611,25 +762,39 @@ if __name__ == "__main__":
         print(f"  Found: {list(extractions.keys())}")
         sys.exit(1)
 
-    # Align
+    # Step 1: Align rules across models
     result = align_extractions(
         extractions=extractions,
         arbiter_provider_name=args.arbiter,
         output_path=args.output
     )
 
-    # Verify unique rules if requested
+    # Step 2: Resolve conflicts — judge goes back to the spec
+    if args.resolve_conflicts:
+        if not os.path.exists(args.pdf):
+            print(f"  Error: PDF not found: {args.pdf} (needed for conflict resolution)")
+        else:
+            result = resolve_conflicts(
+                alignment_result=result,
+                extractions=extractions,
+                pdf_path=args.pdf,
+                judge_provider_name=judge_provider
+            )
+            with open(args.output, 'w') as f:
+                json.dump(result, f, indent=2, default=str)
+            print(f"  Updated {args.output} with conflict resolutions")
+
+    # Step 3: Verify unique rules
     if args.verify_unique:
         if not os.path.exists(args.pdf):
-            print(f"  Error: PDF not found: {args.pdf}")
+            print(f"  Error: PDF not found: {args.pdf} (needed for unique verification)")
         else:
             result = verify_unique_rules(
                 alignment_result=result,
                 extractions=extractions,
                 pdf_path=args.pdf,
-                verifier_provider_name=args.arbiter
+                verifier_provider_name=judge_provider
             )
-            # Re-save with verification
             with open(args.output, 'w') as f:
                 json.dump(result, f, indent=2, default=str)
             print(f"  Updated {args.output} with verification results")

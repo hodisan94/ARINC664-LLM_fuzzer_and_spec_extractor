@@ -12,9 +12,12 @@ The original spec extraction pipeline used a **hardcoded JSON schema** with 12 p
 
 ### The new approach: Open Discovery
 1. LLMs freely discover rules — they choose their own categories, field names, and structure
-2. Each rule follows a small consistent **micro-format** (so outputs are comparable)
-3. After extraction, a separate **alignment step** matches rules semantically across models
-4. Rules found by only one model are flagged for **verification** instead of being silently dropped
+2. Prompts focus LLMs on **network behavior** rules relevant to simulation/fuzzing (skip document metadata)
+3. Each rule follows a small consistent **micro-format** (so outputs are comparable)
+4. After extraction, a separate **alignment step** matches rules semantically across models
+5. When models **disagree**, a judge LLM consults the actual spec text to determine the correct answer
+6. Rules found by only one model are **verified** by a judge (confirmed, rejected, or modified)
+7. Export enriches rules with `test_hint`, `data_type`, `unit`, and `source_quote` from original extractions
 
 ---
 
@@ -31,10 +34,13 @@ The original spec extraction pipeline used a **hardcoded JSON schema** with 12 p
 
 | File | What Changed |
 |------|-------------|
-| `spec_extraction/run_multimodel.py` | Added `--mode open\|strict` flag (default: `open`) |
+| `spec_extraction/run_multimodel.py` | Added `--mode open\|strict` flag; loads `.env`; increased `max_tokens` to 8192/16000 |
 | `spec_extraction/compare_extractions.py` | Auto-detects format; routes open format to `align_rules.py` |
-| `spec_extraction/export_validated.py` | Added `--mode open\|strict\|auto` with `export_from_alignment()` |
+| `spec_extraction/export_validated.py` | Added `--mode open\|strict\|auto`; loads original extraction data for enrichment; fixed save bug |
 | `spec_extraction/extract_test_cases.py` | `flatten_rules()` now handles both open list format and legacy nested format |
+| `spec_extraction/llm_providers.py` | `query_json()` strips markdown code-block wrappers before parsing (fixes Claude output) |
+| `llm_fuzzer/prompts/fuzzing_agent.py` | `_build_protocol_rules_section` now displays all rules generically |
+| `llm_fuzzer/utils/spec_loader.py` | `_build_rule_index` indexes all leaf-value nodes generically |
 
 ### Unchanged Files (still work as before)
 
@@ -44,7 +50,6 @@ The original spec extraction pipeline used a **hardcoded JSON schema** with 12 p
 | `spec_extraction/prompts.py` | Untouched — used by `extract_rules.py` |
 | `spec_extraction/arbitrate_conflicts.py` | Untouched — used in strict mode only |
 | `spec_extraction/llm_client.py` | Untouched |
-| `spec_extraction/llm_providers.py` | Untouched |
 | `spec_extraction/pdf_utils.py` | Untouched |
 | `spec_extraction/validate_test_cases.py` | Untouched |
 
@@ -113,85 +118,53 @@ python3 spec_extraction/run_multimodel.py \
 - `--parallel` — run providers in parallel (faster, uses more API quota)
 - `--providers openai anthropic` — use specific providers only
 
-### Step 2: Semantic Alignment
+### Step 2: Full Pipeline (Align + Resolve + Verify)
+
+The recommended way is to run all three steps at once:
 
 ```bash
 python3 spec_extraction/align_rules.py \
-    --input-dir spec_extraction/multimodel_output \
-    --output spec_extraction/alignment_results.json
+    --input spec_extraction/multimodel_output \
+    --pdf configs/ARINC_664P7.pdf \
+    --full \
+    --judge openai
 ```
 
-**What this does:**
+**What `--full` does (three steps in sequence):**
+
+**2a. Semantic Alignment:**
 - Loads all `rules_*.json` files from the output directory
-- Uses an LLM (default: OpenAI) to semantically match rules across providers
+- Uses an arbiter LLM to semantically match rules across providers (batch-based for large sets)
 - Groups rules that describe the same constraint (even with different wording)
 - Classifies each group: `full` agreement, `partial` agreement, or `conflict`
-- Lists rules found by only one model as `unique_rules`
-- Computes agreement metrics (pairwise agreement, Fleiss' Kappa)
 
-**Output example:**
-```json
-{
-  "alignment": {
-    "aligned_groups": [
-      {
-        "group_id": "G001",
-        "canonical_name": "BAG Allowed Values",
-        "canonical_category": "bandwidth_allocation",
-        "matches": [
-          {"provider": "openai", "rule_id": "rule_003", "constraint_value": [1,2,4,8,16,32,64,128]},
-          {"provider": "anthropic", "rule_id": "rule_007", "constraint_value": [1,2,4,8,16,32,64,128]},
-          {"provider": "google", "rule_id": "rule_002", "constraint_value": [1,2,4,8,16,32,64,128]}
-        ],
-        "agreement": "full",
-        "consensus_value": [1,2,4,8,16,32,64,128],
-        "confidence": "high"
-      }
-    ],
-    "unique_rules": [
-      {
-        "provider": "anthropic",
-        "rule_id": "rule_019",
-        "name": "ICMP Echo Prohibition",
-        "needs_verification": true,
-        "reason": "Only found by one model"
-      }
-    ]
-  },
-  "metrics": {
-    "total_aligned_groups": 14,
-    "full_agreement": 10,
-    "partial_agreement": 3,
-    "conflicts": 1,
-    "unique_rules": 8,
-    "fleiss_kappa": 0.723
-  }
-}
-```
+**2b. Conflict Resolution (`--resolve-conflicts`):**
+- For each group with `agreement: "conflict"`, the judge LLM receives both models' values + the relevant spec text
+- The judge determines: which model is correct, or if the answer should be synthesized from both
+- Decision: `model_a`, `model_b`, `synthesized`, or `unresolvable`
+- Resolved groups change from `conflict` → `resolved` with `judge_resolution` details
+
+**2c. Unique Rule Verification (`--verify-unique`):**
+- For each rule found by only one model, the judge reads the rule + spec text
+- Decision: `confirmed`, `rejected`, or `modified` (with corrected value)
+- Confirmed rules are included in the final output; rejected ones are dropped
 
 **Options:**
-- `--arbiter anthropic` — use a different LLM as the alignment arbiter
+- `--arbiter anthropic` — use a different LLM for alignment
+- `--judge openai` — use a specific LLM as the conflict resolution judge
+- `--resolve-conflicts` — run only conflict resolution (skip alignment)
+- `--verify-unique` — run only unique rule verification
 
-### Step 3 (Optional): Verify Unique Rules
+**Output:** `spec_extraction/alignment_results.json`
 
-```bash
-python3 spec_extraction/align_rules.py \
-    --input-dir spec_extraction/multimodel_output \
-    --output spec_extraction/alignment_results.json \
-    --verify-unique \
-    --pdf configs/ARINC_664P7.pdf
-```
-
-**What this does:**
-- For each rule found by only one model, sends the rule + relevant spec text to an LLM
-- The LLM verifies: is this a genuine rule? Is the value correct?
-- Decision: `confirmed`, `rejected`, or `modified` (with corrected value)
-- Confirmed rules get added to the final output; rejected ones are dropped
-
-### Step 4: Export Validated Rules
+### Step 3: Export Validated Rules
 
 ```bash
-python3 spec_extraction/export_validated.py --mode open
+python3 spec_extraction/export_validated.py \
+    --mode open \
+    --alignment spec_extraction/alignment_results.json \
+    --extraction-dir spec_extraction/multimodel_output \
+    --output-dir configs
 ```
 
 Or let it auto-detect:
@@ -201,11 +174,13 @@ python3 spec_extraction/export_validated.py
 
 **What this does:**
 - Reads `spec_extraction/alignment_results.json`
-- Builds `configs/spec_rules.json` (clean rules for fuzzer)
-- Builds `configs/spec_rules_validated.json` (rules with confidence metadata)
-- Builds `configs/validation_report.json` (academic reporting)
+- Loads original per-provider extraction files to get full rule data (constraint values, test_hints, source_quotes)
+- Builds `configs/spec_rules.json` — clean rules for fuzzer, enriched with metadata
+- Builds `configs/spec_rules_validated.json` — rules with confidence and agreement metadata
+- Builds `configs/validation_report.json` — academic reporting summary
 
 **Options:**
+- `--extraction-dir path` — directory with original per-provider extraction files
 - `--latex` — also generate a LaTeX table for the paper
 
 ### Step 5: Generate Test Cases
@@ -280,7 +255,24 @@ The alignment step works in three layers:
 | `full` | All models extracted the same rule with the same value | `high` |
 | `partial` | Models agree on the concept but differ slightly in specifics | `medium` |
 | `conflict` | Models disagree on the actual value or interpretation | `low` |
-| `unique` | Only one model found this rule | `low` (until verified) |
+| `resolved` | Conflict was resolved by judge consulting spec text | `high` or `medium` |
+| `unique_confirmed` | Only one model found this rule, judge confirmed it | `high` |
+| `unique_unverified` | Only one model found this rule, not yet verified | `low` |
+
+### Clean Rule Format in spec_rules.json
+
+Each rule in the clean output is stored as either:
+- **Simple value** — `int`, `float`, `bool`, or `list` (for directly usable constraints)
+- **Enriched dict** — for behavioral/complex rules:
+```json
+{
+  "value": "the constraint value or description",
+  "data_type": "numeric | behavioral | range | formula | ...",
+  "unit": "ms | bytes | μs | ...",
+  "test_hint": "how a fuzzer could violate this rule",
+  "source_quote": "direct quote from the spec (truncated to 200 chars)"
+}
+```
 
 ### Backward Compatibility
 

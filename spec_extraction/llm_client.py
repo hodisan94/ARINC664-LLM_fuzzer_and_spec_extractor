@@ -26,7 +26,7 @@ class LLMClient:
                 "Set OPENAI_API_KEY environment variable or pass api_key parameter."
             )
         
-        self.client = OpenAI(api_key=self.api_key)
+        self.client = OpenAI(api_key=self.api_key, timeout=120.0)
         self.model = model
     
     def query(
@@ -56,14 +56,19 @@ class LLMClient:
         ]
         
         try:
+            is_reasoning_model = any(tag in self.model for tag in ["gpt-5", "o1", "o3", "o4"])
+
             kwargs = {
                 "model": self.model,
                 "messages": messages,
-                "temperature": temperature,
-                "max_tokens": max_tokens,
             }
+
+            if is_reasoning_model:
+                kwargs["max_completion_tokens"] = max_tokens
+            else:
+                kwargs["max_tokens"] = max_tokens
+                kwargs["temperature"] = temperature
             
-            # Add response_format if specified (for JSON mode)
             if response_format:
                 kwargs["response_format"] = response_format
             

@@ -30,9 +30,12 @@ from pathlib import Path
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, Any, List, Optional
+from dotenv import load_dotenv
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
+
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 from spec_extraction.pdf_utils import get_all_relevant_text, chunk_text
 from spec_extraction.llm_providers import (
@@ -143,7 +146,7 @@ def extract_rules_with_provider(
                         system_prompt=prompts["extraction_system"],
                         user_prompt=user_prompt,
                         temperature=0.3,
-                        max_tokens=4096
+                        max_tokens=8192
                     )
                     
                     # Save checkpoint
@@ -181,7 +184,7 @@ def extract_rules_with_provider(
             system_prompt=prompts["aggregation_system"],
             user_prompt=aggregation_prompt,
             temperature=0.3,
-            max_tokens=8000
+            max_tokens=16000
         )
         
         print(f"  Aggregation complete")

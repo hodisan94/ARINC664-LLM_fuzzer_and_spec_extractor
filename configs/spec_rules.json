@@ -1,6 +1,509 @@
 {
-  "bag": {
-    "allowed_values_ms": [
+  "Address Validation": {
+    "reject_invalid_ip_address_on_open": "reject",
+    "ignore_syn_from_invalid_ip": "ignore",
+    "discard_syn_to_broadcast/multicast": "discard"
+  },
+  "Addressing": {
+    "domain_id_coding": [
+      1,
+      14
+    ],
+    "side_id_coding": [
+      1,
+      6
+    ],
+    "location_id_coding": [
+      1,
+      30
+    ],
+    "frame_based_filtering": {
+      "value": "Forward only valid frames based on destination addresses",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with invalid destination addresses to verify they are not forwarded.",
+      "source_quote": "Frame based filtering is done such that the receiving End System will only forward valid frames to a communication or a SAP port."
+    }
+  },
+  "Communication Ports": {
+    "no_ip_fragmentation_for_sampling_com_ports": "less than or equal to the payload size of the associated Virtual Link",
+    "unidirectional_multicast_for_sampling": "multicast and unidirectional",
+    "fifo_discipline_for_queuing": "FIFO",
+    "maximum_data_size_for_queuing_service": "up to 8192",
+    "in_order_fragment_transmission": "in-order"
+  },
+  "Broadcast": {
+    "recognize_standard_broadcast_addresses": [
+      "-1,-1",
+      "<Network-number>,-1",
+      "<Network-number>,<Subnet-number>,-1",
+      "<Network-number>,-1,-1"
+    ],
+    "recognize_non_standard_broadcast_addresses": [
+      "0,-1",
+      "<Network-number>,0",
+      "<Network-number>,<Subnet-number>,0",
+      "<Network-number>,0,0"
+    ]
+  },
+  "Configuration Management": {
+    "configuration_file_consistency": "All configuration files must be identical across all switches in the network",
+    "ops_configuration_file_usage": "OPS Configuration File is used when in Operational mode"
+  },
+  "Data Encoding": {
+    "big_endian_byte_order_requirement": "Big Endian",
+    "ethernet_bit_order": "MSB first",
+    "signed_32_integer_range_constraint": [
+      -2147483648,
+      2147483647
+    ],
+    "signed_64_integer_range_constraint": [
+      -9223372036854775808,
+      9223372036854775807
+    ],
+    "float_32_size_constraint": 32,
+    "float_64_size_constraint": 64,
+    "boolean_size_constraint": 32,
+    "network_data_element_byte_order_requirement": {
+      "value": "must have well-defined bit and byte order for network independence",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with data elements using incorrect or undefined byte order encoding",
+      "source_quote": "These data types have a well-defined bit and byte order that enables applications to send and receive a data element via the network regardless of the native bit or byte order of the host processors u"
+    }
+  },
+  "Data Types": {
+    "use_of_defined_data_primitives": [
+      "Signed_32",
+      "Signed_64",
+      "Float_32",
+      "Float_64",
+      "Boolean",
+      "String",
+      "Opaque Data"
+    ]
+  },
+  "End System Performance": {
+    "performance_calculation_formula": "Performance = 100 x (1 / (last_frame_latency - technological_latency + 1))",
+    "maximum_technological_latency_in_transmission": {
+      "value": "0 to 150",
+      "data_type": "range",
+      "unit": "\u03bcs",
+      "test_hint": "Generate frames with delays exceeding 150 \u03bcs to test if the system enforces the latency constraint.",
+      "source_quote": "The technological latency of the end-system in transmission should be bounded and lower than 150 \u03bcs + frame delay."
+    },
+    "frame_processing_rate": {
+      "value": "Process received frames at full frame rate of the medium",
+      "data_type": "behavioral",
+      "test_hint": "Send frames at maximum rate and check if the system can process them without dropping.",
+      "source_quote": "Process received frames at full frame rate of the medium and appropriate (selected) frames are made available to the partition at full frame rate of the medium."
+    },
+    "maximum_allowed_jitter": {
+      "value": "0 to 500",
+      "data_type": "range",
+      "unit": "\u03bcs",
+      "test_hint": "Introduce variable delays to exceed 500 \u03bcs jitter and observe if the system flags the issue.",
+      "source_quote": "In all cases, the jitter is bounded at 500\u03bcs to limit the impact on determinism for the whole network."
+    },
+    "wire_speed_capability": {
+      "value": "End System should handle back-to-back frames at wire speed.",
+      "data_type": "behavioral",
+      "test_hint": "Send back-to-back frames at maximum rate and verify if the End System can process them without loss.",
+      "source_quote": "The maximum throughput (\"wire speed\") corresponds to back-to-back frames."
+    },
+    "performance_measurement_burst_duration": [
+      1
+    ]
+  },
+  "Error Handling": {
+    "buffer_overflow_handling_in_transmission": "send error indication and discard frame"
+  },
+  "Filtering and Policing": {
+    "frame_filtering_function": "Frames must be filtered based on predefined criteria to ensure only valid frames are processed."
+  },
+  "Fragmentation": {
+    "local_fragmentation_of_outgoing_packets": "MAY implement",
+    "do_not_exceed_mms_s": {
+      "value": "<= MMS_S",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "Send a datagram larger than MMS_S and observe if it is rejected or fragmented.",
+      "source_quote": "A host that does not implement local fragmentation MUST ensure that the transport layer (for TCP) or the application layer (for UDP) obtains MMS_S from the IP layer and does not send a datagram exceed"
+    }
+  },
+  "Frame Validation": {
+    "frame_size_validation": "[64, 1518]",
+    "frame_forwarding_on_valid_crc": "Forward frame if FCS and CRC are valid; discard if not",
+    "maximum_frame_size_for_vl": "Frames should not exceed Lmax",
+    "discard_frames_with_non_integral_octet_size": {
+      "value": "discard if not an integral number of octets",
+      "data_type": "behavioral",
+      "test_hint": "Generate frames with sizes that are not whole numbers of octets to see if they are discarded.",
+      "source_quote": "The switch should discard incoming frames having an Ethernet frame size that is not an integral number of octets (alignment errors)."
+    },
+    "discard_frames_smaller_than_minimum_size": {
+      "value": "less than Smin",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "Send frames smaller than the allowed Smin for a VL to test if they are discarded.",
+      "source_quote": "The switch should also discard incoming frames which total Ethernet line size is smaller than the minimum size (Smin) allowed for the relevant VL."
+    },
+    "discard_frames_with_erroneous_mac_destination_address": {
+      "value": "discard if MAC destination address has erroneous 32-bit constant field",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with incorrect MAC destination addresses to see if they are discarded.",
+      "source_quote": "The switch should discard incoming frames with a MAC destination address that has an erroneous 32-bit constant field."
+    },
+    "discard_frames_with_disallowed_vl_id": {
+      "value": "discard if VL id is not allowed on the incoming port",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with VL ids that are not configured for the incoming port to test if they are discarded.",
+      "source_quote": "The switch should discard incoming frames for which the VL id is not allowed on the incoming port."
+    }
+  },
+  "ICMP Behavior": {
+    "silently_discard_unknown_icmp_messages": "Silently discard unknown types",
+    "do_not_send_icmp_error_for_certain_conditions": [
+      "ICMP error message",
+      "IP broadcast or multicast",
+      "Link layer broadcast",
+      "Non-unique source address"
+    ]
+  },
+  "ICMP": {
+    "generate_icmp_destination_unreachable": [
+      4,
+      5
+    ]
+  },
+  "ICMP Handling": {
+    "icmp_message_type_restriction": [
+      "echo request",
+      "echo reply"
+    ],
+    "echo_reply_source_address": "The IP source address in an ICMP Echo Reply MUST be the same as the specific-destination address of the corresponding ICMP Echo Request message.",
+    "echo_reply_data_integrity": "Data received in an ICMP Echo Request MUST be entirely included in the resulting Echo Reply.",
+    "multicast_echo_request_discard_allowance": "An ICMP Echo Request destined to an IP broadcast or IP multicast address MAY be silently discarded.",
+    "echo_reply_forwarding_requirement": "Echo Reply messages MUST be passed to the ICMP user interface, unless the corresponding Echo Request originated in the IP layer.",
+    "source_quench_handling": {
+      "value": "slow start",
+      "data_type": "behavioral",
+      "test_hint": "Test by sending a Source Quench message and observing TCP behavior.",
+      "source_quote": "TCP MUST react to a Source Quench by slowing transmission on the connection."
+    },
+    "no_icmp_error_messages": false,
+    "no_icmp_redirect_from_end_system": false,
+    "echo_server_implementation": {
+      "value": "Every host MUST implement an ICMP Echo server function that receives Echo Requests and sends corresponding Echo Replies.",
+      "data_type": "behavioral",
+      "test_hint": "Test by sending ICMP Echo Requests to a host and verifying that it sends back Echo Replies.",
+      "source_quote": "Every host MUST implement an ICMP Echo server function that receives Echo Requests and sends corresponding Echo Replies."
+    },
+    "reverse_source_route_for_echo_reply": {
+      "value": "If a Source Route option is received in an ICMP Echo Request, the return route MUST be reversed and used as a Source Route option for the Echo Reply message.",
+      "data_type": "behavioral",
+      "test_hint": "Send Echo Requests with Source Route options and verify that Echo Replies use the reversed route.",
+      "source_quote": "If a Source Route option is received in an ICMP Echo Request, the return route MUST be reversed and used as a Source Route option for the Echo Reply message."
+    }
+  },
+  "Integrity": {
+    "ordinal_integrity": "AFDX networks maintain the order of frames as they are transmitted and received."
+  },
+  "Interface": {
+    "full_access_to_ip_mechanisms": "The interface between the IP layer and the transport layer must provide full access to all the mechanisms of the IP layer, including options, Type-of-Service, and Time-to-Live."
+  },
+  "ICMP Restrictions": {
+    "icmp_message_type_restriction": [
+      "echo_request",
+      "echo_reply"
+    ]
+  },
+  "Options Processing": {
+    "ignore_unknown_ip/tcp_options": "ignore"
+  },
+  "TTL Management": {
+    "decrement_ttl_on_forwarding": "TTL = TTL - 1"
+  },
+  "Jitter": {
+    "jitter_time_calculation": "Tj = (8 x M) / Nbw + Tmin_gap"
+  },
+  "Latency Management": {
+    "maximum_latency_for_single_frame": "MAX_Latency_i \u0014 BAG_i + Max_jitter + Technological_Latency_in_transmission"
+  },
+  "MAC Addressing": {
+    "mac_destination_address_format": "xxxx xx11 xxxx xxxx xxxx xxxx xxxx xxxx",
+    "mac_source_address_format": "0000 0010 0000 0000 0000 0000 nnnn nnnn nnnn nnnn mmm 0 0000"
+  },
+  "Message Structure": {
+    "implicit_message_structure": "Implicit messages have no format overhead associated with them."
+  },
+  "Multihoming": {
+    "silently_discard_datagram_on_wrong_interface": "Silently discard if destination address does not match receiving interface"
+  },
+  "Network Interoperability": {
+    "interoperable_functional_elements": [
+      "Data link: MAC, VL addressing concept",
+      "Network: IP, ICMP",
+      "Transport: UDP, TCP (optional)",
+      "Network application layers: Sampling, Queuing, SAP, TFTP and SNMP"
+    ]
+  },
+  "Network Compatibility": {
+    "afdx_network_connection": true
+  },
+  "Network Redundancy": {
+    "interface_id_definition": [
+      1,
+      2
+    ]
+  },
+  "Network Configuration": {
+    "static_network_configuration": false
+  },
+  "Packet Handling": {
+    "packet_fragmentation": "Whenever a UDP datagram is too long to fit in a packet, it is broken into fragments."
+  },
+  "Policing": {
+    "policing_rate_tolerance": "\u00b110-4"
+  },
+  "Physical Layer": {
+    "physical_layer_specification": "ARINC 664 Part 2 defined solutions"
+  },
+  "Port Configuration": {
+    "port_directionality": [
+      "transmit",
+      "receive"
+    ],
+    "single_data_source_per_transmit_port": false,
+    "default_port_speed": 100
+  },
+  "Protocol Compliance": {
+    "not_applicable_requirements_interpretation": "MUST NOT"
+  },
+  "Quality of Service": {
+    "guaranteed_service_characteristics": "bandwidth and bounded latency guaranteed",
+    "fault_isolation_in_switch": true,
+    "maximum_network_transit_delay_guarantee": {
+      "value": "maximum network transit delay must be guaranteed for each transmission",
+      "data_type": "behavioral",
+      "test_hint": "Generate traffic loads that could cause transit delays to exceed guaranteed maximums",
+      "source_quote": "Each network transmission request must be serviced regardless of the data type and a maximum network transit delay (also called end-to-end latency) must be guaranteed."
+    },
+    "guaranteed_bandwidth_requirement": {
+      "value": "guaranteed service must provide constant bandwidth at link level",
+      "data_type": "behavioral",
+      "test_hint": "Create conditions where bandwidth allocation varies or is not guaranteed",
+      "source_quote": "Hence a guaranteed service provides both upper bounded delay and constant bandwidth leading to a logical open connection"
+    }
+  },
+  "Reassembly and Fragmentation": {
+    "minimum_reassembly_buffer_size": ">= 576",
+    "icmp_time_exceeded_on_reassembly_timeout": "If reassembly timeout expires, discard datagram and send ICMP Time Exceeded"
+  },
+  "Redundancy Management": {
+    "sequence_number_range": "0 to 255",
+    "first_valid_wins_policy": "First frame with next valid sequence number is accepted; duplicates are discarded.",
+    "handling_abnormal_frames": "Abnormal frames are not forwarded to partition.",
+    "skewmax_parameter": "SkewMax value must be provided by system integrator per VL based on network topology",
+    "increasing_rsn_order": "Frames should be forwarded in an increasing RSN order",
+    "skewmax_exceeded_acceptance": "If skew max is exceeded, accept the next frame regardless of sequence number",
+    "in_sequence_forwarding": "Forward only in-sequence frames, loss of one frame may lead to loss of its copy",
+    "handling_frame_loss": {
+      "value": "Frame from redundant network is accepted if one is lost.",
+      "data_type": "behavioral",
+      "unit": "none",
+      "test_hint": "Simulate loss of frames on one network and ensure frames from the redundant network are accepted.",
+      "source_quote": "Redundancy management result: The frame arriving on the B Network is accepted."
+    },
+    "first_win_redundancy_delivery": {
+      "value": "Deliver the first of the redundant frames received",
+      "data_type": "behavioral",
+      "test_hint": "Send multiple redundant frames and verify that only the first received is delivered.",
+      "source_quote": "When redundancy management is active, it should deliver the first of the redundant frames received."
+    },
+    "reset_tolerance": {
+      "value": "Reset of any equipment should not affect redundancy management",
+      "data_type": "behavioral",
+      "test_hint": "Perform a reset on network devices and ensure redundancy management continues unaffected.",
+      "source_quote": "Reset of any equipment involved in the communication (transmitting End system, receiving End system or the AFDX switch) should not affect this property."
+    },
+    "dual_network_transmission": {
+      "value": "In default mode each frame is sent across both of two networks",
+      "data_type": "behavioral",
+      "test_hint": "Send frames on only one network instead of both networks to violate redundancy requirement",
+      "source_quote": "In default mode each frame is sent across both of two networks."
+    },
+    "duplicate_frame_discard": {
+      "value": "When the second frame is received with this sequence number, it is simply discarded",
+      "data_type": "behavioral",
+      "test_hint": "Send duplicate frames with same sequence number and verify second frame is discarded",
+      "source_quote": "When the second frame is received with this sequence number, it is simply discarded."
+    },
+    "redundancy_management_after_integrity_checking": {
+      "value": "RM (Redundancy Management) is placed after IC (Integrity Checking)",
+      "data_type": "behavioral",
+      "source_quote": "As the flow of frames given in Figure3-14 below indicates, RM (Redundancy Management) is placed after IC (Integrity Checking)."
+    },
+    "maximum_time_difference_between_redundant_frames": {
+      "max": 0.5
+    },
+    "per_vl_redundancy_configuration_capability": {
+      "value": "ES must be configurable per VL to send messages on either or both networks",
+      "data_type": "boolean",
+      "test_hint": "Test ES behavior when VL is configured for single network but frames are sent on both networks",
+      "source_quote": "On a per VL basis, the ES should be able to send messages on either or both networks. This property should be configurable."
+    },
+    "redundant_vl_single_data_delivery_mode": {
+      "value": "ES must be able to receive redundant VL and deliver only one copy of redundant data to partition when RM active",
+      "data_type": "behavioral",
+      "test_hint": "Send redundant frames and verify only one copy is delivered to partition when RM is active",
+      "source_quote": "On a per VL basis, the ES should be able to receive: \u2022 A redundant VL and deliver to the partition one of the redundant data (RM active)"
+    },
+    "redundant_vl_dual_data_delivery_mode": {
+      "value": "ES must be able to receive redundant VL and deliver both copies of redundant data to partition when RM not active",
+      "data_type": "behavioral",
+      "test_hint": "Send redundant frames and verify both copies are delivered to partition when RM is not active",
+      "source_quote": "On a per VL basis, the ES should be able to receive: \u2022 A redundant VL and deliver to the partition both redundant data (RM not active)"
+    },
+    "non_redundant_vl_reception_capability": {
+      "value": "ES must be able to receive non-redundant VL on either interface and submit data to partition regardless of RM state",
+      "data_type": "behavioral",
+      "test_hint": "Send non-redundant frames on single interface and verify proper delivery regardless of RM configuration",
+      "source_quote": "On a per VL basis, the ES should be able to receive: \u2022 A non redundant VL on either interface and submit data from it to the partition (in this case, RM can be active or not)"
+    },
+    "first_win_frame_delivery": {
+      "value": "deliver_first_received_redundant_frame",
+      "data_type": "behavioral",
+      "test_hint": "Send redundant frames with different arrival times and verify only the first received is delivered, or send frames out of order to test if later frames are incorrectly accepted",
+      "source_quote": "When redundancy management is active, it should deliver the first of the redundant frames received."
+    },
+    "copy_frame_loss_due_to_sequencing": {
+      "value": "copy_frame_lost_if_out_of_sequence_after_faster_network_advance",
+      "data_type": "behavioral",
+      "test_hint": "Create scenarios where one network is faster than another and verify that late-arriving copies are dropped when the sequence has already advanced",
+      "source_quote": "As a consequence, in some cases, the loss of one frame on one network could also lead to the loss of its copy."
+    },
+    "single_ds_for_single_threaded_concentrator": {
+      "value": "If all labels are concentrated by single threaded device, single DS should be used with DS status reflected by single FS",
+      "data_type": "behavioral",
+      "test_hint": "Send frames from single threaded concentrators that incorrectly use multiple DS fields or have inconsistent FS-DS relationships",
+      "source_quote": "If all labels are concentrated into a single Ethernet frame by a single threaded device, a single DS should be used, and the DS status is reflected by a single FS"
+    },
+    "multiple_ds_for_partial_failure_scenarios": {
+      "value": "If concentrator can have partial failures affecting some labels while generating valid frame, multiple DS should be used with each DS having own FS",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with partial failures where DS assignments don't properly isolate failed from valid labels, or FS fields don't correctly represent their respective DS status",
+      "source_quote": "If the concentrator device is designed in such a way that a portion of it could fail in some way that causes some labels to be invalid, but a completely legal Ethernet frame is still generated with so"
+    }
+  },
+  "Reliability": {
+    "real_time_communication_link_reliability": true
+  },
+  "SAP Port": {
+    "udp_service_access_point_capacity": "up to 8192 octets/bytes"
+  },
+  "Sub-VL Queue Management": {
+    "maximum_sub_vl_fifo_queues_per_vl": 4
+  },
+  "Sub-VL Scheduling": {
+    "sub_vl_round_robin_scheduling": "one frame per BAG in round-robin sequence"
+  },
+  "Switch Monitoring": {
+    "mib_fault/healthy_update_interval": "100 ms",
+    "fault_indicator_condition": "Fault when at least one used Ethernet port is in fault"
+  },
+  "Switch Operating Modes": {
+    "switch_initialization_time": "Defined by system integrator or ARINC Standard"
+  },
+  "Switch Operational Modes": {
+    "switch_enters_ops_mode_after_initialization": true,
+    "switch_relies_on_ops_configuration_file_in_ops_mode": "Switch performs functions based on OPS_Configuration_File",
+    "switch_enters_dl_mode_from_init_mode": true,
+    "switch_enters_dl_mode_from_ops_mode": true,
+    "switch_enters_passive_mode": true,
+    "switch_enters_quiet_mode_on_catastrophic_failure": true
+  },
+  "Switch Initialization": {
+    "configuration_access_on_power_on": "Configuration information should be accessible through ARINC 615A on switch power on."
+  },
+  "Switch Port Configuration": {
+    "port_speed_configuration": [
+      10,
+      100
+    ]
+  },
+  "Switch Specification": {
+    "frame_filtering": "Each switch port should filter frames of any valid size at wire speed.",
+    "traffic_policing": "Each switch port should police VLs for frames of any valid size at wire speed."
+  },
+  "Switch Processing": {
+    "vl_processing_capacity": "at least 4096",
+    "wire_speed_processing": "Switch must process all frames at wire speed without output port saturation."
+  },
+  "Switch Port Processing": {
+    "mac_layer_frame_reception": "MAC layer of each switch input port should receive frames at wire speed."
+  },
+  "switch_operation": {
+    "frame_filtering_function_requirement": "switches must implement frame filtering functionality",
+    "traffic_policing_function_requirement": "switches must implement traffic policing functionality"
+  },
+  "switch_operating_modes": {
+    "switch_initialization_mode_entry": "switch must enter INIT mode after power rise or reset",
+    "ops_mode_functions": {
+      "value": "in OPS mode, switch must perform frame filtering, traffic filtering, switching, and monitoring functions",
+      "data_type": "behavioral",
+      "test_hint": "Verify that switches in OPS mode reject frames that violate filtering rules or policing constraints",
+      "source_quote": "In this mode, the Switch performs operational functions: frame and traffic filtering function, switching function, monitoring function, etc."
+    },
+    "passive_mode_communication_restriction": {
+      "value": "in PASSIVE mode, switch only communicates with Network Management Function, all other functions stopped",
+      "data_type": "behavioral",
+      "test_hint": "Send normal traffic frames to a switch in PASSIVE mode and verify they are not forwarded",
+      "source_quote": "In PASSIVE MODE, the Switch only offers the capability to communicate with the Network Management Function), all others functions should be stopped"
+    },
+    "switch_initialization_before_subscribers": {
+      "value": "switches should be operational before their connected subscribers to allow subscriber communication during initialization",
+      "data_type": "behavioral",
+      "source_quote": "The Switches should be operational before their subscribers (connected LRUs), to allow subscribers to communicate via AFDX during their own initialization phase"
+    },
+    "fault_indicator_state_during_initialization": {
+      "value": "during INIT mode, Fault/Healthy indicator must stay in Fault state",
+      "data_type": "behavioral",
+      "test_hint": "Monitor switch health indicators during initialization to verify they remain in fault state",
+      "source_quote": "During INIT, the Fault/Healthy indicator should stay in the Fault state"
+    }
+  },
+  "Switching": {
+    "frame_buffering_requirement": "buffer complete frames",
+    "maintain_vl_frame_order": "maintain order",
+    "do_not_modify_fcs": "do not modify",
+    "use_destination_address_for_port_forwarding": "use destination address",
+    "discard_frames_on_congestion": "discard on congestion",
+    "discard_frames_on_link_failure": "discard on link failure",
+    "max_delay_for_frame_transmission": "max delay = time between arrival of last bit on input port and exit of last bit on output port",
+    "traffic_prioritization_by_mac_address": [
+      "High Priority",
+      "Low Priority"
+    ],
+    "minimum_inter_frame_gap": "minimum gap"
+  },
+  "TCP Window Management": {
+    "window_size_as_unsigned_number": "Window size must be treated as an unsigned number"
+  },
+  "TCP Zero Window Probing": {
+    "support_zero_window_probing": "Probing of zero (offered) windows must be supported"
+  },
+  "TCP Urgent Data": {
+    "urgent_pointer_points_to_last_octet": "The urgent pointer points to the sequence number of the LAST octet"
+  },
+  "Traffic Control": {
+    "maximum_bandwidth_allocation": "Lmax / T_GAP",
+    "bounded_arrival_distribution": {
+      "value": "bounded",
+      "data_type": "behavioral",
+      "test_hint": "Introduce frames with varying intervals to check if the network maintains bounded latency.",
+      "source_quote": "frame delivery follows a bounded arrival distribution."
+    },
+    "ordinal_integrity_within_virtual_link": true,
+    "bag_interval_enforcement": [
       1,
       2,
       4,
@@ -10,134 +513,1590 @@
       64,
       128
     ],
-    "constraints": "BAG values are limited to powers of 2, and if a partition needs to transmit data less often than 128 ms, the BAG value 128 will be used."
-  },
-  "frame_structure": {
-    "afdx_fields": {
-      "payload_offset": null,
-      "sequence_num_offset": null,
-      "vl_id_offset": null,
-      "sequence_num_size": "null",
-      "vl_id_size": "null"
-    },
-    "ethernet": {
-      "crc_fcs_required": true,
-      "dest_mac_offset": null,
-      "ethertype_offset": null,
-      "lmax": 1518,
-      "lmin": 64,
-      "smin": 84,
-      "src_mac_offset": null,
-      "dest_mac_size": 6,
-      "ethertype_value": "null",
-      "multicast_bit_rule": "The least significant bit of the first byte indicates the group address (always = 1).",
-      "src_mac_size": 6
-    },
-    "ip_header": {
-      "checksum_required": true,
-      "version": 4,
-      "fragmentation_allowed": "false",
-      "header_validation": "A datagram whose version number is not 4 MUST be silently discarded.",
-      "ttl_rules": "The specification does not clearly define TTL rules for AFDX."
-    },
-    "payload": {
-      "min_size": 18,
-      "max_size": "1471",
-      "vl_specific_ranges": "The specification text provided does not clearly define 'frame_structure.payload.vl_specific_ranges'."
-    },
-    "udp_header": {
-      "checksum_required": false,
-      "length_validation": null,
-      "port_rules": "Transport layer port assignments are not critical and can be assigned by a system integrator using any values in the range 1 to 65535."
-    }
-  },
-  "monitoring": {
-    "mib_required": true,
-    "snmp_required": true,
-    "update_interval_ms": 100,
-    "discard_counters": {
-      "categories": [
-        "traffic policing discards"
-      ],
-      "tracking_required": "true"
-    },
-    "fault_detection": "The specification does not clearly define 'monitoring.fault_detection'.",
-    "statistics": [
-      "arrival of a frame",
-      "failed CRC check",
-      "internal situation"
+    "maximum_frame_size": 1518,
+    "maximum_jitter": [
+      0,
+      "MaxBAG"
     ]
   },
-  "performance": {
-    "link_speed_mbps": 100,
-    "max_switch_delay_us": 100,
-    "max_end_to_end_latency_ms": "null",
-    "max_jitter_fraction": "null"
+  "Traffic Policing": {
+    "byte_based_frame_acceptance": "If Byte ACi is greater than S, the frame is accepted and Byte ACi is debited by S",
+    "frame_based_frame_acceptance": "If Frame ACi is greater than S i max, the frame is accepted and Frame ACi is debited by S i max",
+    "bag_value_range": "[1, 128]",
+    "maximum_jitter_value_range": "[0, 10]",
+    "ethernet_frame_size_handling_range": "[64, 1518]",
+    "traffic_policing_resolution": "less than or equal to 100",
+    "byte_based_traffic_policing": {
+      "value": "Filters out VL in terms of bandwidth usage expressed in bits per second",
+      "data_type": "behavioral",
+      "unit": "bps",
+      "test_hint": "Exceed the bandwidth allocation to test if frames are discarded.",
+      "source_quote": "The byte-based traffic policing filters out the VL in terms of bandwidth usage expressed in bits per second"
+    }
   },
-  "redundancy": {
-    "network_a_b_architecture": true,
-    "accept_first_policy": "When redundancy management is active, it should deliver the first of the redundant frames received.",
-    "discard_duplicate_policy": "The Redundancy Management Algorithm should only use the RSN of a frame as the criterion for rejection or acceptance.",
-    "dual_transmission_required": "The correct value is not clearly defined",
-    "policy": "First Valid wins"
+  "Virtual Link": {
+    "single_source_per_virtual_link": "Only one End System within the Avionics network should be the source of any one VL",
+    "maintain_data_ordering": "The End System should maintain the ordering of data as delivered by a partition, for both transmission and reception.",
+    "dedicated_maximum_bandwidth_per_vl": {
+      "value": "Each Virtual Link has a dedicated maximum bandwidth allocated by the System Integrator.",
+      "data_type": "behavioral",
+      "test_hint": "Configure a VL with excessive bandwidth usage and observe if other VLs are affected or if the network enforces bandwidth limits.",
+      "source_quote": "Each Virtual Link has a dedicated maximum bandwidth. This bandwidth is allocated by the System Integrator."
+    }
   },
-  "sequence_numbers": {
-    "range": [
-      0,
-      255
+  "UDP Protocol Behavior": {
+    "udp_checksum_requirement": false,
+    "icmp_echo_request_handling": [
+      "echo request",
+      "echo reply"
+    ]
+  },
+  "AFDX Communication Ports": {
+    "afdx_communication_port_transmission_link": {
+      "value": "In transmission, an AFDX Communication Port should only be linked to a single set of UDP port source, IP source, VL (MAC destination), IP destination and UDP destination.",
+      "data_type": "behavioral",
+      "test_hint": "Attempt to configure an AFDX Communication Port with multiple sets of transmission parameters.",
+      "source_quote": "In transmission, an AFDX Communication Port should only be linked to a single set UDP port source, IP source, VL (MAC destination), IP destination and UDP destination."
+    }
+  },
+  "Address Mask Handling": {
+    "retransmit_address_mask_request": {
+      "value": "MUST retransmit a small number of times if no immediate reply",
+      "data_type": "behavioral",
+      "test_hint": "Do not send an Address Mask Reply and observe if the system retransmits the request a limited number of times.",
+      "source_quote": "When method 3, it MUST retransmit this message a small number of times if it does not receive an immediate Address Mask Reply."
+    },
+    "assume_default_mask": {
+      "value": "SHOULD assume a mask appropriate for the address class until a reply is received",
+      "data_type": "behavioral",
+      "test_hint": "Do not send an Address Mask Reply and check if the system assumes a default mask based on the IP address class.",
+      "source_quote": "When method 3, until it has received an Address Mask Reply, the host SHOULD assume a mask appropriate for the address class of the IP address."
+    },
+    "update_address_mask_from_first_reply": {
+      "value": "MUST use the first received Address Mask Reply to set the address mask",
+      "data_type": "behavioral",
+      "test_hint": "Send multiple Address Mask Replies and verify that only the first one is used to set the address mask.",
+      "source_quote": "When method 3, the first Address Mask Reply message received MUST be used to set the address mask corresponding to the particular local IP address."
+    },
+    "unauthorized_address_mask_reply": {
+      "value": "MUST NOT send an Address Mask Reply unless authorized",
+      "data_type": "boolean",
+      "test_hint": "Attempt to send an Address Mask Reply without being configured as an authoritative agent and check if it is sent.",
+      "source_quote": "A system MUST NOT send an Address Mask Reply unless it is an authoritative agent for address masks."
+    }
+  },
+  "addressing": {
+    "mac_address_unicast_or_multicast_support": [
+      "unicast",
+      "multicast"
     ],
-    "wraparound": true,
-    "handling_rules": "The frame sequence number should be one octet long with a range of 0 to 255. For each VL, the sequence number should initially be set to 0. The sequence number is always assigned this initial value following a reset of the transmitting ES. The frame sequence number should be incremented by one for each consecutive frame of the same VL and wrap-around to 1 following the value 255.",
-    "missing_frame_detection": "Increment by one makes it possible to detect missing frames",
-    "out_of_window_action": "The specification text does not clearly define the action for out-of-window sequence numbers.",
-    "window_size": "null"
+    "vl_identifier_pin_programming_format": [
+      1,
+      12
+    ],
+    "pin_programming_value_encoding": [
+      0,
+      1
+    ],
+    "source_address_ownership_requirement": {
+      "value": "must_be_own_ip_address_not_broadcast_not_multicast",
+      "data_type": "behavioral",
+      "test_hint": "Configure an end system to send datagrams with source addresses that are not its own, or use broadcast/multicast addresses as source addresses",
+      "source_quote": "When a host sends any datagram, the IP source address MUST be one of its own IP addresses (but not a broadcast or multicast address)."
+    },
+    "destination_address_filtering": {
+      "value": "silently_discard_if_not_destined_for_host",
+      "data_type": "behavioral",
+      "test_hint": "Send datagrams to an end system with destination addresses that do not belong to that end system and verify they are silently discarded",
+      "source_quote": "A host MUST silently discard an incoming datagram that is not destined for the host."
+    },
+    "mac_address_constant_field_format": 20000,
+    "ip_address_class_a_private_format": {
+      "value": "10.0.0.0/8",
+      "data_type": "string",
+      "test_hint": "Generate frames with IP addresses that do not conform to the Class A private address format (not starting with 10.x.x.x)",
+      "source_quote": "Class A 1-bit \"0\" Private IP address 7-bits \"0001010\""
+    }
+  },
+  "address_validation": {
+    "source_address_validation": {
+      "value": "must_define_single_host_not_zero_loopback_broadcast_multicast_or_class",
+      "data_type": "behavioral",
+      "test_hint": "Send IP datagrams with invalid source addresses (0.0.0.0, 127.x.x.x, broadcast addresses, multicast addresses) to verify they are rejected",
+      "source_quote": "a datagram whose source address does not define a single host -- e.g., a zero address, a loopback address, a broadcast address, a multicast address, or a Class address."
+    }
+  },
+  "communication": {
+    "static_addressing_for_intra_afdx_messages": {
+      "value": "addressing is statically defined for each message",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with dynamically changing addresses to verify system rejects non-statically configured addressing",
+      "source_quote": "The principal characteristic of Intra-AFDX communication is the fact that for each message, the addressing is statically defined."
+    },
+    "bidirectional_sap_communication_requires_two_saps": {
+      "value": "two SAPs should be used for bidirectional communication (one Tx, one Rx) with two quintuplets defined",
+      "data_type": "behavioral",
+      "test_hint": "Test bidirectional communication with single SAP to verify it fails or requires proper two-SAP configuration",
+      "source_quote": "To obtain a bi-directional communication, two SAPs should be used (e.g.: SAP 30 000 Tx and SAP 30 000 Rx). In this case, two quintuplets are defined, one for each direction of communication."
+    },
+    "bidirectional_afdx_communication_requires_queuing_mode": {
+      "value": "bidirectional communication ports should be used in queuing mode",
+      "data_type": "behavioral",
+      "test_hint": "Test bidirectional communication in sampling mode to verify it fails or behaves incorrectly without queuing mode",
+      "source_quote": "For a bi-directional communication, the ports should be used in queuing mode."
+    }
+  },
+  "Communication_Ports": {
+    "afdx_communication_port_unidirectional_access": [
+      "Transmission",
+      "Reception"
+    ],
+    "afdx_transmission_port_quintuplet_uniqueness": {
+      "value": "In transmission, only one link between AFDX Communication port and quintuplet (UDP Source Port, Source IP, destination Mac, destination IP, UDP destination port)",
+      "data_type": "behavioral",
+      "test_hint": "Attempt to bind multiple quintuplets to a single AFDX transmission port or bind one quintuplet to multiple transmission ports",
+      "source_quote": "In transmission, there is only one link between \"AFDX Communication port\" and the quintuplet (UDP Source Port, Source IP, destination Mac, destination IP, UDP destination port)."
+    },
+    "afdx_reception_port_quintuplet_uniqueness": {
+      "value": "In reception, only one link between AFDX Communication port and quintuplet (UDP Source Port, Source IP, destination Mac, destination IP, UDP destination port)",
+      "data_type": "behavioral",
+      "test_hint": "Attempt to bind multiple quintuplets to a single AFDX reception port or bind one quintuplet to multiple reception ports",
+      "source_quote": "In reception, there is only one link between \"AFDX Communication port\" and the quintuplet (UDP Source Port, Source IP, destination Mac, destination IP, UDP destination port)."
+    },
+    "afdx_transmission_port_parameter_set_binding": {
+      "value": "AFDX Communication Port linked to single set: UDP port source, IP source, VL (MAC destination), IP destination and UDP destination",
+      "data_type": "behavioral",
+      "test_hint": "Configure an AFDX transmission port with multiple different parameter sets or attempt to use undefined parameter combinations",
+      "source_quote": "In transmission, an AFDX Communication Port should only be linked to a single set UDP port source, IP source, VL (MAC destination), IP destination and UDP destination."
+    },
+    "afdx_reception_port_parameter_set_binding": {
+      "value": "AFDX Communication Port linked to single set (unique UDP port destination, IP destination, VL (MAC destination)) plus Ethernet physical interface if redundancy management disabled",
+      "data_type": "behavioral",
+      "test_hint": "Configure an AFDX reception port with multiple different destination parameter sets or incorrect Ethernet interface bindings",
+      "source_quote": "In reception, an AFDX Communication Port should only be linked to a single set (unique UDP port destination, IP destination, VL (MAC destination)) and additionally to the Ethernet physical interface i"
+    }
+  },
+  "bandwidth_allocation": {
+    "bandwidth_allocation_for_maximum_message_size": {
+      "value": "bandwidth allocated for maximum size message cannot be used by other flows",
+      "data_type": "behavioral",
+      "test_hint": "Attempt to use bandwidth allocated to one Virtual Link for traffic from another Virtual Link to test bandwidth isolation",
+      "source_quote": "The bandwidth has been allocated to this data flow for the maximum size the message can be, and is not useable by any other flow. It is therefore not wasted."
+    }
+  },
+  "Data Alignment": {
+    "reserved_word_alignment": {
+      "value": "Must be aligned on a 32-bit boundary",
+      "data_type": "behavioral",
+      "test_hint": "Create messages where the Reserved word is not aligned on a 32-bit boundary to test if the network detects misalignment.",
+      "source_quote": "The Reserved word at the beginning of the message should be aligned on a 32-bit boundary."
+    },
+    "functional_status_set_alignment": {
+      "value": "Must be aligned on 32-bit boundaries",
+      "data_type": "behavioral",
+      "test_hint": "Create messages where Functional Status Sets are not aligned on 32-bit boundaries to test if the network detects misalignment.",
+      "source_quote": "Functional Status Sets should also be aligned on 32-bit boundaries throughout the message."
+    }
+  },
+  "Connection Management": {
+    "simultaneous_open_support": true,
+    "reject_invalid_remote_ip_address": {
+      "value": "MUST reject as an error a local OPEN call for an invalid remote IP address (e.g., a broadcast or multicast address).",
+      "data_type": "behavioral",
+      "test_hint": "Attempt to open a connection using a broadcast or multicast IP address and verify that it is rejected.",
+      "source_quote": "A TCP implementation MUST reject as an error a local OPEN call for an invalid remote IP address (e.g., a broadcast or multicast address)."
+    },
+    "time_wait_state_duration": {
+      "value": "2xMSL",
+      "data_type": "formula",
+      "unit": "seconds",
+      "test_hint": "Close a connection actively and verify that it remains in TIME-WAIT state for twice the maximum segment lifetime.",
+      "source_quote": "When a connection is closed actively, it MUST linger in TIME-WAIT state for a time 2xMSL."
+    }
+  },
+  "configuration": {
+    "default_configuration_usage_rule": {
+      "value": "used_when_empty_or_dataloading",
+      "data_type": "behavioral",
+      "test_hint": "Test switch behavior during different initialization states to verify correct configuration file selection",
+      "source_quote": "The Default_Configuration_File, corresponding to the resident configuration, that is used when the Switch is empty (no field loadable software yet loaded) or when the Switch is being dataloaded (in bo"
+    }
+  },
+  "configuration_management": {
+    "operational_configuration_file_uniqueness": {
+      "value": "same_ops_file_loaded_in_all_switches",
+      "data_type": "behavioral",
+      "test_hint": "Load different OPS configuration files in switches within the same network to test if inconsistencies are detected or cause forwarding errors",
+      "source_quote": "The same OPS_Configuration_File (same P/N) is loaded in all the Switches of the Avionics Data Communications Network."
+    },
+    "position_based_configuration_table_access": {
+      "value": "switch_accesses_only_position_specific_table",
+      "data_type": "behavioral",
+      "test_hint": "Configure switch to access configuration tables for different positions to test if access control is properly enforced",
+      "source_quote": "Depending of its current position, acquired by pin programming, the Switch only has access to the dedicated table of the OPS_Configuration_File."
+    }
+  },
+  "Data Transmission": {
+    "transfer_syntax_translation": {
+      "value": "Messages must be translated from abstract syntax to transfer syntax before transmission and from transfer syntax to abstract syntax upon reception.",
+      "data_type": "behavioral",
+      "test_hint": "Generate messages that bypass the translation step to see if the network processes them incorrectly.",
+      "source_quote": "The message is forwarded through the network to one or more destination computers where another translation is performed from the transfer syntax to the abstract syntax before the message is passed to"
+    },
+    "message_encapsulation": {
+      "value": "A message must be encapsulated inside an IP datagram for end-to-end transmission.",
+      "data_type": "behavioral",
+      "test_hint": "Attempt to send messages without proper IP encapsulation.",
+      "source_quote": "To be transmitted end-to-end through the AFDX, a message must be encapsulated inside an IP datagram."
+    }
+  },
+  "Data Format": {
+    "transport_layer_payload_format_scope": {
+      "value": "data representation applies from data producer transport layer payload, across network medium, to data consumer transport layer payload",
+      "data_type": "behavioral",
+      "test_hint": "Generate frames with incorrect data format in transport layer payload to test format validation",
+      "source_quote": "This specification only deals with data representation from that presented by a data producer as the transport layer payload, across the network medium, and up to the data consumer transport layer pay"
+    }
+  },
+  "data_integrity": {
+    "virtual_link_ordinal_integrity_requirement": {
+      "value": "ordinal integrity of frames must be maintained within a Virtual Link",
+      "data_type": "behavioral",
+      "test_hint": "Inject frames out of sequence within the same Virtual Link to test ordering enforcement",
+      "source_quote": "For this reason AFDX requires ordinal integrity of frames within a Virtual Link."
+    }
+  },
+  "demultiplexing": {
+    "receiver_demultiplexing_based_on_destination_addresses": {
+      "value": "demultiplexing based only on MAC, IP, UDP destination address",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with same destination addresses but different source addresses to verify receiver processes them identically",
+      "source_quote": "At the receiver, the demultiplexing is based only on the MAC, IP, UDP destination address."
+    }
+  },
+  "data_validation": {
+    "invalid_data_primitive_invalidates_entire_data_set": {
+      "value": "if any data primitive in DS is invalid, mark entire DS as invalid",
+      "data_type": "behavioral",
+      "test_hint": "Generate frames with mixed valid and invalid data primitives in same data set and verify entire set marked invalid",
+      "source_quote": "if one data primitive is invalid, the entire Data Set has to be marked as invalid"
+    },
+    "status_priority_enforcement": {
+      "value": "when multiple conditions exist, encode highest priority condition (Priority 1 = highest, Priority 4 = lowest)",
+      "data_type": "behavioral",
+      "test_hint": "Generate frames with data sets having multiple status conditions and verify only highest priority is encoded",
+      "source_quote": "When computing the functional status for a DS it is possible for more than one condition to exist. In that case the condition with the highest priority should be encoded into the status field. Priorit"
+    }
+  },
+  "datagram_validation": {
+    "ip_version_validation": [
+      4
+    ],
+    "ip_header_checksum_verification": {
+      "value": "must_verify_and_discard_if_invalid",
+      "data_type": "boolean",
+      "test_hint": "Send IP datagrams with intentionally corrupted header checksums and verify they are silently discarded",
+      "source_quote": "A host MUST verify the IP header checksum on every received datagram and silently discard every datagram that has a bad checksum."
+    }
+  },
+  "datagram_transmission": {
+    "maximum_datagram_size_to_off_net_destinations": {
+      "value": "<=576",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "Send IP datagrams larger than 576 bytes to off-network destinations to verify proper size enforcement",
+      "source_quote": "In the absence of actual knowledge of the minimum MTU along the path, the IP layer SHOULD use EMTU_S <= 576 whenever the destination address is not on a connected network"
+    }
+  },
+  "End System Behavior": {
+    "full_duplex_ethernet_requirement": [
+      "Full-duplex"
+    ],
+    "ethernet_frame_compliance": {
+      "value": "Compliant with IEEE 802.3 standard",
+      "data_type": "behavioral",
+      "test_hint": "Generate non-compliant Ethernet frames and observe if they are rejected.",
+      "source_quote": "Any Ethernet Frame generated by the End System should be compliant with IEEE 802.3 standard."
+    },
+    "transmission_during_link_failure": true
+  },
+  "End System": {
+    "unique_sap_port_linkage_for_transmission": {
+      "value": "A SAP Port should only be linked to a single set (UDP port source, IP source, and VL (MAC destination))",
+      "data_type": "behavioral",
+      "test_hint": "Attempt to link a SAP Port to multiple sets in transmission and observe if the system enforces uniqueness.",
+      "source_quote": "In transmission, a SAP Port should only be linked to a single set (UDP port source, IP source and VL (MAC destination))."
+    },
+    "port_number_identification": {
+      "value": "The UDP/TCP port number should identify the Service Access Point",
+      "data_type": "behavioral",
+      "source_quote": "The UDP/TCP port number should identify the Service Access Point."
+    },
+    "port_number_duplication": {
+      "value": "Two identical port numbers cannot be used within a Virtual Link",
+      "data_type": "behavioral",
+      "test_hint": "Attempt to use the same port number within a single Virtual Link and observe if the system prevents this duplication.",
+      "source_quote": "Port number duplication: the only technical limitation regarding port number duplication is that two identical port number cannot be used within a Virtual Link."
+    }
+  },
+  "Fault Tolerance": {
+    "fault_performance_mechanism": {
+      "value": "maintain deterministic characteristics",
+      "data_type": "behavioral",
+      "test_hint": "Simulate a fault in one data link and observe if the rest of the network maintains its deterministic characteristics.",
+      "source_quote": "A mechanism is needed to ensure that if one data link becomes faulty, the deterministic characteristics of the rest of the network are maintained."
+    }
+  },
+  "error_handling": {
+    "reception_buffer_overflow_handling": {
+      "value": "send error message to receiving partition and discard frame",
+      "data_type": "behavioral",
+      "test_hint": "Flood receiver with more frames than buffer capacity and verify error message generation and frame discarding",
+      "source_quote": "If a buffer overflow occurs in reception, an error message should be sent to the receiving partition and the frame should be discarded."
+    },
+    "sap_port_receiver_buffer_overflow_handling": {
+      "value": "send error message to receiving partition and discard frame",
+      "data_type": "behavioral",
+      "test_hint": "Overflow SAP port receiver buffer and verify error message generation and frame discarding",
+      "source_quote": "If receiver buffer overflow occurs, an error message is sent to the receiving partition, and the frame should be discarded."
+    }
+  },
+  "file_transfer": {
+    "tftp_block_size_limit": {
+      "max": 8192
+    }
+  },
+  "ethernet_payload": {
+    "automatic_padding_for_undersized_messages": {
+      "value": "If a message is sent on an AFDX network that is less than 18 bytes long the message will be padded out to 18 bytes before it appears on the medium.",
+      "data_type": "behavioral",
+      "test_hint": "Send messages shorter than 18 bytes and verify they are automatically padded to 18 bytes on the network medium",
+      "source_quote": "If a message is sent on an AFDX network that is less than 18 bytes long the message will be padded out to 18 bytes before it appears on the medium."
+    }
+  },
+  "Frame Filtering": {
+    "frame_check_sequence_validity": {
+      "value": "FCS embedded in the frame must match the calculation upon reception",
+      "data_type": "behavioral",
+      "test_hint": "Alter the FCS of a frame to see if it gets discarded.",
+      "source_quote": "The frame integrity: whether the FCS embedded in the frame matches the calculation upon reception"
+    },
+    "destination_address_validity": {
+      "value": "Destination Address must correspond to a valid VL",
+      "data_type": "behavioral",
+      "test_hint": "Use an invalid destination address to test if the frame is discarded.",
+      "source_quote": "Destination address validity (Ethernet Address corresponds to a valid VL, including constant field)"
+    }
+  },
+  "Fragmentation and Reassembly": {
+    "minimum_datagram_reassembly_size": {
+      "value": ">=576",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "Send IP datagrams requiring reassembly with total size less than 576 bytes to test if the system properly rejects them",
+      "source_quote": "EMTU_R MUST be greater than or equal to 576"
+    }
+  },
+  "frame_processing": {
+    "fragmented_frame_reassembly_requirement": {
+      "value": "no data should be presented to partition until whole message has been reassembled",
+      "data_type": "behavioral",
+      "test_hint": "Send fragmented IP packets and verify that partial data is not delivered to application before all fragments arrive",
+      "source_quote": "In case of fragmentation, no data should be presented to a partition in the queuing services FIFO until whole message has been reassembled."
+    }
+  },
+  "frame_filtering": {
+    "no_budget_consumption_for_invalid_frames": {
+      "value": "budget accounts should not be consumed by frames discarded by filtering mechanisms",
+      "data_type": "behavioral",
+      "test_hint": "Send invalid frames (wrong CRC, wrong size) and verify budget accounts are not debited",
+      "source_quote": "Budget Accounts (Bytes ACi and Frame ACi) should not be consumed by invalid frames, i.e. frames not forwarded by the forwarding function. No budget should be consumed by frames that are discarded by t"
+    }
+  },
+  "frame_structure": {
+    "frame_overhead_components": {
+      "value": "frame_size + 12 + 7 + 1",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "source_quote": "64 bytes (frame) + 12 bytes (IFG) + 7 bytes (Preamble) + 1 byte (SFD) = 84 bytes to transmit at 100 Mbits/s."
+    },
+    "ethernet_frame_composition": {
+      "value": "frame consists of MAC header followed by packet",
+      "data_type": "behavioral",
+      "test_hint": "Generate malformed frames with incorrect MAC header or packet structure to test frame validation",
+      "source_quote": "A frame is the unit of transmission at Ethernet level, and consists of a MAC header followed by a packet."
+    }
+  },
+  "frame_validation": {
+    "frame_size_envelope_validation": {
+      "value": "frame_size_within_envelope",
+      "data_type": "behavioral",
+      "test_hint": "Send frames that exceed the configured size envelope for a VL",
+      "source_quote": "The frame size: whether the frame is either longer or shorter than the envelope allows"
+    },
+    "frame_check_sequence_validation": {
+      "value": "switch should test each frame using CRC field according to IEEE 802.3 and discard frames that fail",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with invalid CRC and verify they are discarded",
+      "source_quote": "In order to guarantee total network robustness, it is important that only uncorrupted frames be forwarded. Therefore, upon arrival, the switch should test each frame by use of the Frame Check Sequence"
+    },
+    "destination_address_validity": {
+      "value": "valid_VL_identifier",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with invalid or non-existent VL identifiers in the destination address",
+      "source_quote": "Destination address validity (Ethernet Address corresponds to a valid VL, including constant field)"
+    },
+    "virtual_link_port_authorization": {
+      "value": "VL_authorized_on_port",
+      "data_type": "behavioral",
+      "test_hint": "Send VL frames to ports that are not configured to receive that specific VL",
+      "source_quote": "This VL is valid to be received on that destination port (according to the switch configuration table)"
+    },
+    "ethernet_frame_alignment": true,
+    "ethernet_frame_size_range": [
+      64,
+      1518
+    ],
+    "frame_size_maximum_constraint": {
+      "value": "L <= Lmax",
+      "data_type": "behavioral",
+      "test_hint": "Send frames larger than the configured Lmax for a VL",
+      "source_quote": "Ethernet frame size (L) less that or equal to Lmax"
+    },
+    "frame_discard_on_validation_failure": {
+      "value": "discard_invalid_frames",
+      "data_type": "behavioral",
+      "test_hint": "Send invalid frames and verify they are discarded rather than forwarded",
+      "source_quote": "If the frame properties do not comply with the configuration parameters, the frame is filtered i.e. discarded, and one or more MIB entries updated"
+    },
+    "ethernet_frame_alignment_check": {
+      "value": "frame size must be integral number of octets",
+      "data_type": "behavioral",
+      "unit": "octets",
+      "test_hint": "Send frames with fractional byte sizes or alignment errors",
+      "source_quote": "The switch should discard incoming frames having an Ethernet frame size that is not an integral number of octets (alignment errors)."
+    },
+    "mac_destination_address_constant_field_validation": {
+      "value": "MAC destination address must have correct 32-bit constant field",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with incorrect 32-bit constant field in MAC destination address",
+      "source_quote": "The switch should discard incoming frames with a MAC destination address that has an erroneous 32-bit constant field."
+    },
+    "vl_id_port_authorization": {
+      "value": "VL id must be allowed on the incoming port",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with VL IDs that are not configured for the specific input port",
+      "source_quote": "The switch should discard incoming frames for which the VL id is not allowed on the incoming port."
+    }
+  },
+  "frame_transmission": {
+    "complete_structure_transmission": {
+      "value": "Entire static structure must be sent in message, not just the used portion",
+      "data_type": "behavioral",
+      "test_hint": "Send frames that only transmit the used portion of variable length structures instead of the complete static structure",
+      "source_quote": "The message is then sent, with the entire static structure, not just the used portion"
+    }
+  },
+  "icmp_layer": {
+    "unknown_icmp_type_silent_discard": {
+      "value": "silently_discard_unknown",
+      "data_type": "behavioral",
+      "test_hint": "Send ICMP messages with undefined or reserved type codes and verify they are silently discarded",
+      "source_quote": "If an ICMP message of unknown type is received, it MUST be silently discarded."
+    },
+    "icmp_error_minimum_data_inclusion": {
+      "value": ">=8",
+      "data_type": "numeric",
+      "unit": "octets",
+      "test_hint": "Generate conditions that should trigger ICMP errors and verify the error messages include at least 8 octets of original datagram data",
+      "source_quote": "Every ICMP error message includes the Internet header and at least the first 8 data octets of the datagram that triggered the error; more than 8 octets MAY be sent."
+    }
+  },
+  "ICMP_Message_Handling": {
+    "unauthorized_address_mask_reply_prohibition": false,
+    "explicit_configuration_requirement_for_address_mask_agent": {
+      "value": "must_be_explicitly_configured",
+      "data_type": "boolean",
+      "test_hint": "Attempt to have a system act as address mask agent without explicit configuration and verify it cannot perform this role",
+      "source_quote": "An authoritative agent may be a host or a gateway, but it MUST be explicitly configured as a address mask agent."
+    },
+    "first_address_mask_reply_priority": {
+      "value": "use_first_reply_only",
+      "data_type": "behavioral",
+      "test_hint": "Send multiple Address Mask Reply messages with different mask values and verify only the first one is used",
+      "source_quote": "When method 3, the first Address Mask Reply message received MUST be used to set the address mask corresponding to the particular local IP address."
+    },
+    "mandatory_address_mask_reply_broadcast_on_initialization": {
+      "value": "must_broadcast_on_init",
+      "data_type": "behavioral",
+      "test_hint": "Monitor network traffic during system initialization of a configured address mask agent and verify Address Mask Reply broadcast occurs",
+      "source_quote": "If it is configured as an agent, the host MUST broadcast an Address Mask Reply for the mask on the appropriate interface when it initializes."
+    }
+  },
+  "integrity_checking": {
+    "valid_sequence_number_range_for_frame_acceptance": {
+      "value": "RSN must be in interval [PSN+1, PSN+2] where PSN is previous sequence number with wrap-around",
+      "data_type": "range",
+      "test_hint": "Send frames with sequence numbers outside the valid range [PSN+1, PSN+2]",
+      "source_quote": "For each network the Integrity Checking tests each frame for a sequence number in the interval: [PSN\"+\"1,PSN\"+\"2] Where Previous Sequence Number (PSN) is the sequence number of the previous frame rece"
+    },
+    "sequence_number_wrap_around_handling": {
+      "value": "sequence numbers wrap around (e.g., if PSN=254 then PSN+1=255 and PSN+2=1)",
+      "data_type": "behavioral",
+      "test_hint": "Test wrap-around behavior by sending frames with sequence numbers near maximum value (254, 255, 0, 1)",
+      "source_quote": "The operator \"+\" takes the wrap-around of Sequence Numbers into account. So, for example if PSN = 254 then PSN\"+\"1= 255 and PSN\"+\"2 = 1."
+    },
+    "invalid_frame_discard_requirement": {
+      "value": "frames that do not meet sequence number criteria must be discarded",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with invalid sequence numbers and verify they are discarded and not forwarded",
+      "source_quote": "Frames that do not meet these criteria are discarded."
+    },
+    "zero_sequence_number_transmission_condition": {
+      "value": "sequence number 0 is transmitted only after reset of transmitting equipment",
+      "data_type": "behavioral",
+      "test_hint": "Send sequence number 0 without prior transmitter reset to test improper zero sequence handling",
+      "source_quote": "The sequence number 0 is transmitted only after a reset of the transmitting equipment."
+    }
+  },
+  "identification": {
+    "unique_message_identification_quintuplet": {
+      "value": "UDP Source Port + Source IP + Destination MAC + Destination IP + UDP Destination Port provides unique identification",
+      "data_type": "behavioral",
+      "test_hint": "Generate frames with duplicate quintuplets to test if network properly identifies them as the same message or rejects duplicates",
+      "source_quote": "Peer-to-peer communications are identified in each frame by UDP Source Port + Source IP + Destination MAC (VL identification) + Destination IP + UDP Destination Port... In the AFDX network, this quint"
+    }
+  },
+  "icmp_restrictions": {
+    "icmp_error_message_prohibition": false,
+    "icmp_redirect_prohibition_from_end_systems": false
+  },
+  "IP Routing": {
+    "forwarding_source_routed_datagram": true
+  },
+  "IP_Addressing": {
+    "ip_address_class_a_private_format_requirement": {
+      "value": "Class A private Internet Unicast Address with first 8 bits as '00001010'",
+      "data_type": "format",
+      "test_hint": "Generate frames with IP addresses that don't match the Class A private format pattern (first 8 bits not '00001010')",
+      "source_quote": "The IP address should be Class A and private Internet Unicast Address (First 8 bits should be '0000 1010')."
+    },
+    "ip_source_address_identifies_transmitting_partition": {
+      "value": "IP source address must identify the transmitting partition associated with the End System",
+      "data_type": "behavioral",
+      "test_hint": "Generate frames where the IP source address doesn't correspond to the actual transmitting partition",
+      "source_quote": "The IP source address should be used to identify the transmitting partition associated with the End System."
+    },
+    "ip_multicast_address_format_requirement": {
+      "value": "Class D with 4 bits '1110', constant field 12 bits '0000 1110 0000', and 16-bit Virtual Link Identifier",
+      "data_type": "format",
+      "test_hint": "Generate multicast frames where the constant field bits don't match the required '0000 1110 0000' pattern",
+      "source_quote": "IP Addressing Format 32 bits 4 bits 28 bits Class D \"1110\" IP Multicast Identifier Constant field 12 bits = \"0000 1110 0000\" Virtual Link Identifier 16 bits"
+    }
+  },
+  "IP_Configuration": {
+    "default_ttl_value": 1
+  },
+  "ip_layer": {
+    "ttl_discard_prohibition": {
+      "value": "must_not_discard_low_ttl",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with TTL=1 and verify they are not discarded solely due to low TTL value",
+      "source_quote": "A host MUST NOT discard a datagram just because it was received with TTL less than 2."
+    },
+    "stream_identifier_option_ignore": {
+      "value": "silently_ignore_if_received",
+      "data_type": "behavioral",
+      "test_hint": "Send frames containing obsolete Stream Identifier options and verify they are silently ignored",
+      "source_quote": "...and it MUST be silently ignored if received."
+    },
+    "multiple_source_route_options_prohibition": {
+      "value": "must_not_send_multiple",
+      "data_type": "behavioral",
+      "test_hint": "Generate frames with multiple Source Route options in the IP header and verify they are rejected or not transmitted",
+      "source_quote": "An IP header containing more than one Source Route option MUST NOT be sent."
+    }
+  },
+  "Latency": {
+    "constant_end_system_latency": {
+      "value": "constant",
+      "data_type": "behavioral",
+      "test_hint": "Introduce variable latency in end system processing to violate the constant latency rule.",
+      "source_quote": "Since the bandwidth is fixed, there are no collisions, and the end system latency is constant, the time taken to deliver a message, through the network, from the emitter to the receiver is constant."
+    },
+    "total_latency_calculation": {
+      "value": "L = Ts + Tm + Tr",
+      "data_type": "formula",
+      "source_quote": "and the total latency, L, is :  L = Ts + Tm + Tr"
+    },
+    "latency_for_first_frame": {
+      "value": "La = Ts + Tm1 + Tsw + (8 x M) / Nbw + Tm2 + Tr",
+      "data_type": "formula",
+      "unit": "seconds",
+      "source_quote": "Latency for the first frame: La = Ts + Tm1 + Tsw + ( 8 x M )/Nbw + Tm2 + Tr"
+    },
+    "latency_for_delayed_frame": {
+      "value": "Lb = La + Tj",
+      "data_type": "formula",
+      "unit": "seconds",
+      "source_quote": "Latency for the delayed frame: Lb = La + Tj"
+    }
+  },
+  "IP_Layer_Requirements": {
+    "no_gateway_operation_required": false
+  },
+  "ip_protocol": {
+    "ip_options_prohibited": false,
+    "broadcast_address_as_source_prohibited": {
+      "value": "source address must not be broadcast address",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with broadcast addresses (255.255.255.255, network broadcast, subnet broadcast) as the IP source address",
+      "source_quote": "Broadcast address as IP source address"
+    },
+    "standard_broadcast_address_recognition": [
+      "limited_broadcast",
+      "directed_broadcast",
+      "subnet_directed_broadcast",
+      "all_subnets_directed_broadcast"
+    ]
+  },
+  "latency_calculation": {
+    "total_latency_formula": {
+      "value": "L = Ts + Tm + Tr",
+      "data_type": "formula",
+      "unit": "seconds",
+      "test_hint": "Measure actual end-to-end latency and verify it matches the calculated value based on source latency, message timing, and receiver latency",
+      "source_quote": "L = Ts + Tm + Tr"
+    },
+    "first_frame_latency_formula": {
+      "value": "La = Ts + Tm1 + Tsw + (8 x M)/Nbw + Tm2 + Tr",
+      "data_type": "formula",
+      "unit": "seconds",
+      "test_hint": "Measure first frame latency in a switch scenario and verify it matches the calculated value including all delay components",
+      "source_quote": "Latency for the first frame: La = Ts + Tm1 + Tsw + ( 8 x M )/Nbw + Tm2 + Tr"
+    },
+    "delayed_frame_latency_formula": {
+      "value": "Lb = La + Tj",
+      "data_type": "formula",
+      "unit": "seconds",
+      "test_hint": "Measure second frame latency when frames arrive simultaneously at a switch and verify it equals first frame latency plus jitter time",
+      "source_quote": "Latency for the delayed frame: Lb = La + Tj"
+    }
+  },
+  "mac_addressing": {
+    "mac_destination_address_lsb_of_first_byte_must_be_1_(group_address)": true,
+    "mac_destination_address_second_lsb_of_first_byte_must_be_1_(locally_administered)": true,
+    "mac_source_address_lsb_of_first_byte_must_be_0_(individual_address)": false,
+    "mac_source_address_second_lsb_of_first_byte_must_be_1_(locally_administered)": true,
+    "interface_id_must_use_only_allowed_values_for_network_identification": [
+      "001",
+      "010"
+    ]
+  },
+  "mac_constraints": {
+    "maximum_frame_rate_processing_requirement": 148800,
+    "minimum_frame_duration": 6.72
+  },
+  "message_format": {
+    "reserved_word_32_bit_boundary_alignment": {
+      "value": "address % 4 == 0",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "Create messages with Reserved word not aligned on 32-bit boundary to test alignment validation",
+      "source_quote": "The Reserved word at the beginning of the message should be aligned on a 32-bit boundary."
+    },
+    "functional_status_sets_32_bit_boundary_alignment": {
+      "value": "address % 4 == 0",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "Generate messages with Functional Status Sets misaligned to test alignment enforcement",
+      "source_quote": "Functional Status Sets should also be aligned on 32-bit boundaries throughout the message."
+    },
+    "string_data_2_byte_boundary_alignment": {
+      "value": "address % 2 == 0",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "Create messages with variable-length strings not aligned on 2-byte boundaries to test alignment handling",
+      "source_quote": "For data primitives whose length can vary, such as a string, it would not be acceptable to expect its address to be divisible by its length as its length could get very large. In cases such as this, p"
+    }
+  },
+  "message_structure": {
+    "data_primitives_placement_constraint": {
+      "value": "Data primitives must be placed one after another with no unused bytes between them except for padding for alignment purposes",
+      "data_type": "behavioral",
+      "test_hint": "Create frames with gaps between data primitives that are not alignment padding and verify network behavior",
+      "source_quote": "Data primitives are placed in the data set one after another with no unused bytes between them except for padding for alignment purposes."
+    },
+    "unused_spare_field_fill_value": [
+      0
+    ],
+    "reserved_field_fill_value": [
+      0
+    ],
+    "global_spare_field_fill_value": [
+      0
+    ],
+    "parameter_removal_replacement_rule": {
+      "value": "When removing a parameter from a data set, replace it with a pad. Do not shift the remainder of the message up and remove the place the parameter was filling.",
+      "data_type": "behavioral",
+      "test_hint": "Generate messages where parameters are removed without proper padding, or where message structure shifts after parameter removal",
+      "source_quote": "When removing a parameter from a data set, replace it with a pad. Do not shift the remainder of the message up and remove the place the parameter was filling."
+    },
+    "minimize_message_impact_on_parameter_insertion": {
+      "value": "Minimize the impact to the message by avoiding a shift of position of the existing message parameters, insert new parameters in spare or pad fields.",
+      "data_type": "behavioral",
+      "test_hint": "Generate messages where new parameters are inserted in ways that shift existing parameter positions instead of using spare/pad fields",
+      "source_quote": "Minimize the impact to the message by avoiding a shift of position of the existing message parameters, insert new parameters in spare or pad fields."
+    },
+    "byte_order_in_data_primitives": {
+      "value": "The boxes that represent a data primitive are intended to represent a group of bytes, the most significant byte on the left, the least significant byte on the right.",
+      "data_type": "behavioral",
+      "test_hint": "Generate messages with incorrect byte order (LSB first instead of MSB first) to test parsing behavior",
+      "source_quote": "The boxes that represent a data primitive are intended to represent a group of bytes, the most significant byte on the left, the least significant byte on the right."
+    },
+    "bit_order_within_bytes": {
+      "value": "The bits in the bytes are most significant bit on the left and least significant bit on the right.",
+      "data_type": "behavioral",
+      "test_hint": "Generate messages with incorrect bit ordering within bytes to test bit-level parsing behavior",
+      "source_quote": "Also, the bits in the bytes are most significant bit on the left and least significant bit on the right."
+    }
+  },
+  "message_formatting": {
+    "single_arinc_429_label_message_structure": {
+      "value": "Single ARINC 429 labels must be placed in fixed length 32-bit opaque data primitive with FS status field",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with ARINC 429 single labels that don't follow the 32-bit fixed length structure or are missing the FS status field",
+      "source_quote": "Place each label in a fixed length 32-bit opaque data primitive"
+    },
+    "multiple_arinc_429_labels_concentration": {
+      "value": "Multiple ARINC 429 labels can be placed in variable length opaque structure with appropriate DS fields",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with multiple ARINC 429 labels that don't use proper variable length opaque structure or have incorrect DS field associations",
+      "source_quote": "Place a varying number of labels in a variable length opaque structure"
+    },
+    "variable_length_structure_maximum_size": {
+      "value": "Maximum size of variable length opaque structure must be established from maximum number of labels that could arrive between transmissions and statically configured",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with variable length structures that exceed the statically configured maximum size or use dynamic sizing instead of static configuration",
+      "source_quote": "The system designer must figure out what the highest or maximum number of labels is that could possibly arrive at the gateway between transmissions. From this maximum number the maximum size of the va"
+    },
+    "variable_length_field_population": {
+      "value": "Labels must be placed sequentially after length and pad fields, length field must contain actual byte count of valid data, unused portion filled with binary zeros",
+      "data_type": "behavioral",
+      "test_hint": "Send frames where labels aren't placed sequentially, length field doesn't match actual data size, or unused portions contain non-zero data",
+      "source_quote": "As labels arrive at the gateway, they are placed one after another in the opaque structure beginning with the byte after the length field and pad field. When it is time for transmission, the gateway w"
+    },
+    "static_length_allocation_for_wrapped_arinc_429_messages": 40,
+    "dynamic_length_for_arinc_429_data_structure": 22
+  },
+  "Network Layer": {
+    "ipv4_version_requirement": [
+      4
+    ],
+    "ipv4_packet_structure_compliance": {
+      "value": "Must comply with specified IPv4 packet structure format",
+      "data_type": "behavioral",
+      "test_hint": "Send packets with incorrect IPv4 header field sizes, wrong field order, or missing mandatory fields",
+      "source_quote": "IPv4 packet structure should be compliant with Figure 3-30."
+    },
+    "ipv4_total_length_field_range_in_afdx": [
+      21,
+      1499
+    ],
+    "unique_data_flow_identification": {
+      "value": "Must be uniquely identified by UDP/TCP destination port, IP destination address, MAC destination address, and physical Ethernet connections",
+      "data_type": "behavioral",
+      "test_hint": "Create flows with duplicate combinations of these identifiers to test uniqueness enforcement",
+      "source_quote": "A data flow is uniquely identified within AFDX network by the set of UDP/TCP destination port, IP destination address, MAC destination address and the physical Ethernet connection(s) of the receiving "
+    },
+    "valid_frame_filtering_criteria": {
+      "value": "Must filter frames based on destination TCP/UDP addresses, IP addresses, MAC addresses, and physical Ethernet connections",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with incorrect destination addresses or on wrong physical connections to test filtering behavior",
+      "source_quote": "Frame based filtering is done such that the receiving End System will only forward valid frames to a communication or a SAP port. Valid frame being defined by analysis of destination (TCP/UDP, IP, MAC"
+    }
+  },
+  "network_architecture": {
+    "switched_ethernet_network_requirement": {
+      "value": "AFDX networks must be implemented as switched Ethernet networks",
+      "data_type": "behavioral",
+      "test_hint": "This is an architectural requirement that cannot be violated by frame generation",
+      "source_quote": "Switched Ethernet Networks"
+    }
+  },
+  "network_hierarchy": {
+    "afdx_network_communication_with_wider_profiled_networks": {
+      "value": "A deterministic network may communicate with a wider profiled network and by inference, with a compliant network through routers or gateways",
+      "data_type": "behavioral",
+      "test_hint": "Test gateway behavior by sending frames between deterministic and profiled network segments to verify proper routing and protocol translation",
+      "source_quote": "A deterministic network may communicate with a wider profiled network and by inference, with a compliant network through routers or gateways."
+    }
+  },
+  "network_behavior": {
+    "constant_message_delivery_time_in_point_to_point_system": {
+      "value": "message delivery time through network from emitter to receiver is constant",
+      "data_type": "behavioral",
+      "test_hint": "Measure delivery times for identical messages and verify they are constant, or introduce conditions that would cause timing variation",
+      "source_quote": "Since the bandwidth is fixed, there are no collisions, and the end system latency is constant, the time taken to deliver a message, through the network, from the emitter to the receiver is constant"
+    }
+  },
+  "Network_Monitoring": {
+    "no_continuous_gateway_pinging": {
+      "value": "no_continuous_pinging_allowed",
+      "data_type": "behavioral",
+      "test_hint": "Generate continuous ping traffic to gateways and verify this behavior is not implemented or is rejected",
+      "source_quote": "hosts MUST NOT actively check the status of a first-hop gateway by simply pinging the gateway continuously"
+    },
+    "conditional_pinging_only_when_sending_traffic": {
+      "value": "ping_only_when_traffic_being_sent_and_no_positive_indication",
+      "data_type": "behavioral",
+      "test_hint": "Send ping packets when no traffic is being transmitted or when positive gateway indications exist, verify this violates the constraint",
+      "source_quote": "Pinging MUST be used only when traffic is being sent to the gateway...and when there is no other positive indication to suggest that the gateway is functioning"
+    }
+  },
+  "Performance": {
+    "system_scalability": {
+      "value": "AFDX networks are designed to scale to accommodate a large number of end systems and virtual links.",
+      "data_type": "behavioral",
+      "source_quote": "2.3 Scalability"
+    }
+  },
+  "physical_port_configuration": {
+    "default_physical_port_designation": [
+      1
+    ],
+    "default_port_speed_configuration": [
+      100
+    ]
+  },
+  "physical_layer": {
+    "port_speed_options": [
+      10,
+      100
+    ],
+    "full_duplex_requirement": [
+      "full_duplex"
+    ],
+    "auto_negotiation_disabled": false
+  },
+  "Port Management": {
+    "port_number_range": [
+      1,
+      65535
+    ]
+  },
+  "Port Binding": {
+    "sap_port_transmission_binding_uniqueness": {
+      "value": "single binding per SAP port to one (UDP port source, IP source, VL MAC destination) tuple",
+      "data_type": "behavioral",
+      "test_hint": "Configure multiple transmission bindings for the same SAP port with different UDP source ports, IP sources, or VL destinations",
+      "source_quote": "In transmission, a SAP Port should only be linked to a single set (UDP port source, IP source and VL (MAC destination))."
+    },
+    "sap_port_reception_binding_uniqueness": {
+      "value": "single binding per SAP port to one (UDP/TCP port destination, IP destination, VL MAC destination) tuple",
+      "data_type": "behavioral",
+      "test_hint": "Configure multiple reception bindings for the same SAP port with different UDP/TCP destination ports, IP destinations, or VL destinations",
+      "source_quote": "In reception, a SAP Port should only be linked to a single set (UDP/TCP port destination, IP destination and VL (MAC destination))"
+    }
+  },
+  "Port Allocation": {
+    "well_known_port_range": [
+      0,
+      1023
+    ],
+    "standard_communication_port_range": [
+      0,
+      1023
+    ],
+    "sap_bidirectional_communication_port_range": [
+      1024,
+      65535
+    ]
+  },
+  "protocol_stack": {
+    "required_protocol_support": [
+      "MAC",
+      "VL_addressing",
+      "IP",
+      "ICMP",
+      "UDP",
+      "Sampling",
+      "Queuing",
+      "SAP",
+      "TFTP",
+      "SNMP"
+    ],
+    "tcp_optional_support": false
+  },
+  "queuing_service": {
+    "fifo_discipline_requirement": [
+      "FIFO"
+    ],
+    "maximum_application_data_size": 8192,
+    "in_order_fragment_transmission": [
+      "in-order"
+    ],
+    "buffer_overflow_frame_discard": {
+      "value": "discard_frame_and_send_error_indication",
+      "data_type": "behavioral",
+      "test_hint": "Continue processing frames after buffer overflow without discarding or sending error indication",
+      "source_quote": "If a buffer overflow occurs in transmission, an error indication should be sent to the transmitting partition and the frame should be discarded"
+    }
+  },
+  "Reception": {
+    "data_presentation_after_reassembly": {
+      "value": "No data should be presented until whole message is reassembled",
+      "data_type": "behavioral",
+      "test_hint": "Send fragmented frames and check if data is presented before reassembly.",
+      "source_quote": "In case of fragmentation, no data should be presented to a partition in the queuing services FIFO until whole message has been reassembled."
+    },
+    "buffer_overflow_handling": {
+      "value": "Send error message and discard frame on buffer overflow",
+      "data_type": "behavioral",
+      "test_hint": "Cause buffer overflow and check if error message is sent and frame is discarded.",
+      "source_quote": "If a buffer overflow occurs in reception, an error message should be sent to the receiving partition and the frame should be discarded."
+    }
+  },
+  "Redundancy": {
+    "redundancy_management_requirement": {
+      "value": "Receiving End Systems must implement redundancy management mechanisms",
+      "data_type": "behavioral",
+      "test_hint": "Send duplicate frames on redundant paths with conflicting data or timing",
+      "source_quote": "Redundancy Management"
+    }
+  },
+  "sampling_service": {
+    "sampling_message_size_constraint": {
+      "value": "\u2264 VL_payload_size",
+      "data_type": "range",
+      "unit": "bytes",
+      "test_hint": "Send sampling messages larger than the associated Virtual Link payload size",
+      "source_quote": "Sampling Com Ports should not use IP fragmentation, therefore the size of each sampling message should be less than or equal to the payload size of the associated Virtual Link."
+    },
+    "sampling_service_multicast_requirement": [
+      "multicast"
+    ],
+    "sampling_service_unidirectional_requirement": [
+      "unidirectional"
+    ],
+    "sampling_service_no_error_control": false,
+    "multiple_partition_access_to_sampling_port": {
+      "value": "\u2265 1",
+      "data_type": "range",
+      "test_hint": "Block multiple partitions from accessing the same sampling port",
+      "source_quote": "The last message stored in a particular sampling port should be able to be read by several partitions (i.e. several partitions may subscribe to this sampling port)."
+    },
+    "freshness_indication_requirement": true
+  },
+  "Routing": {
+    "static_route_definition_required": {
+      "value": "routes_must_be_statically_defined",
+      "data_type": "behavioral",
+      "test_hint": "Attempt dynamic routing operations or expect dynamic route updates when AFDX requires static configuration",
+      "source_quote": "AFDX is statically defined"
+    },
+    "no_gateway_failure_detection": false
+  },
+  "Switch Functionality": {
+    "default_configuration_table_usage": {
+      "value": "Defines default behavior of the End System of the Switch",
+      "data_type": "behavioral",
+      "test_hint": "Test by resetting the switch and verifying that it uses the Default_Configuration_Table for reception and transmission.",
+      "source_quote": "The Default_Configuration_Table is used to define the default behavior of the End System of the Switch: default reception and default transmission."
+    }
+  },
+  "Switch Configuration": {
+    "bandwidth_allocation_gap": {
+      "value": "Defined per VL",
+      "data_type": "numeric",
+      "unit": "ms",
+      "test_hint": "Send frames with BAG values outside the configured range for a VL to test policing.",
+      "source_quote": "Bandwith Allocation Gap (BAGi)"
+    },
+    "maximum_ethernet_frame_size": {
+      "value": "Defined per VL",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "Send frames larger than Smax to test if they are dropped or flagged.",
+      "source_quote": "Maximum allowed Total Ethernet Line size (Smax)"
+    },
+    "minimum_ethernet_frame_size": {
+      "value": "Defined per VL",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "Send frames smaller than Smin to test if they are dropped or flagged.",
+      "source_quote": "Minimum allowed Total Ethernet Line size (Smin)"
+    },
+    "maximum_port_delay": {
+      "value": "Defined per port",
+      "data_type": "numeric",
+      "unit": "ms",
+      "test_hint": "Introduce delays exceeding the maximum to see if frames are dropped or delayed.",
+      "source_quote": "Max delay"
+    }
+  },
+  "Switch Behavior": {
+    "technological_latency_limit": {
+      "value": "<100",
+      "data_type": "numeric",
+      "unit": "\u03bcs",
+      "test_hint": "Introduce delays in the switch processing to exceed 100 \u03bcs and observe network behavior.",
+      "source_quote": "The technological latency of the switch should be less than 100 \u03bcs."
+    },
+    "minimum_output_port_buffer_capacity": {
+      "value": ">=512",
+      "data_type": "numeric",
+      "unit": "frames",
+      "test_hint": "Send a burst of frames to an output port to exceed 512 frames and check if frames are dropped.",
+      "source_quote": "Each output port of the switch should be able to buffer at least 512 frames (balanced between high and low priority)."
+    }
+  },
+  "Sub-VL Queue Exclusivity": {
+    "sub_vl_fifo_queue_exclusivity": {
+      "value": "Sub-VL FIFO queue should only be read by one VL FIFO queue",
+      "data_type": "behavioral",
+      "test_hint": "Configure a Sub-VL FIFO queue to be read by multiple VL FIFO queues and verify this configuration is rejected",
+      "source_quote": "A Sub-VL FIFO queue should only be read by one VL FIFO queue."
+    }
+  },
+  "switch_configuration": {
+    "vl_mac_destination_address_identifier": {
+      "value": "MAC destination address format for VL identifier",
+      "data_type": "string",
+      "test_hint": "Send frames with invalid or malformed MAC destination addresses that don't match configured VL identifiers",
+      "source_quote": "MAC destination address (VL identifier VLi)"
+    },
+    "vl_bandwidth_allocation_gap": {
+      "value": "per-VL bandwidth allocation gap configuration required",
+      "data_type": "numeric",
+      "unit": "ms",
+      "test_hint": "Send frames on VLs with traffic rates that exceed the configured BAG limits",
+      "source_quote": "Bandwith Allocation Gap (BAGi)"
+    },
+    "vl_maximum_allowed_jitter": {
+      "value": "per-VL maximum jitter constraint must be enforced",
+      "data_type": "numeric",
+      "unit": "ms",
+      "test_hint": "Send frames with timing that exceeds the configured maximum jitter for a VL",
+      "source_quote": "Maximum allowed Jitter"
+    },
+    "vl_account_sharing_configuration": {
+      "value": "account can be shared or not shared",
+      "data_type": "boolean",
+      "test_hint": "Configure multiple VLs to use the same account when sharing is disabled, or violate account bandwidth limits",
+      "source_quote": "ACcount (ACi) [specifying if this account is shared or not]"
+    },
+    "vl_maximum_ethernet_frame_size": {
+      "value": "maximum allowed total ethernet line size per VL",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "Send frames larger than the configured Smax for a VL",
+      "source_quote": "Maximum allowed Total Ethernet Line size (Smax)"
+    },
+    "vl_minimum_ethernet_frame_size": {
+      "value": "minimum allowed total ethernet line size per VL",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "Send frames smaller than the configured Smin for a VL",
+      "source_quote": "Minimum allowed Total Ethernet Line size (Smin)"
+    },
+    "vl_priority_classification": [
+      "high",
+      "low"
+    ],
+    "port_maximum_delay_constraint": {
+      "value": "per-port maximum delay limit must be enforced",
+      "data_type": "numeric",
+      "unit": "ms",
+      "test_hint": "Generate traffic patterns that cause port delays to exceed the configured maximum",
+      "source_quote": "Max delay"
+    },
+    "port_operational_state": [
+      "ON",
+      "OFF"
+    ],
+    "low_priority_vl_output_buffer_size": {
+      "value": "per-port output buffer size for low priority VLs must be configured",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "Send bursts of low priority traffic that exceed the configured buffer size",
+      "source_quote": "Output Buffer Size for Low Priority VLs"
+    },
+    "high_priority_vl_output_buffer_size": {
+      "value": "per-port output buffer size for high priority VLs must be configured",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "Send bursts of high priority traffic that exceed the configured buffer size",
+      "source_quote": "Output Buffer Size for High Priority VLs"
+    },
+    "pin_programming_read_timing": {
+      "value": "Hardware program pins should be read during INIT mode only if Switch_Ground_Condition is true and before Safety Test",
+      "data_type": "behavioral",
+      "test_hint": "Send initialization commands when Switch_Ground_Condition is false or attempt to read pins after Safety Test",
+      "source_quote": "Hardware program pins should be read during the initialization (INIT mode) of the SWITCH only if the Switch_Ground_Condition is true and before performing the Safety Test (if any)."
+    },
+    "pin_programming_flight_behavior": {
+      "value": "When Switch_Ground_Condition is false, hardware program pins should not be read and switch should use last memorized values",
+      "data_type": "behavioral",
+      "test_hint": "Force switch to read pin programming when Switch_Ground_Condition is false",
+      "source_quote": "When the Switch_Ground_Condition is false, hardware program pins should not be read. The Switch should use the last memorized values."
+    },
+    "pin_count_requirement": 12,
+    "pin_programming_parity_check": true,
+    "pin_value_encoding": [
+      0,
+      1
+    ]
+  },
+  "switch_buffering": {
+    "minimum_output_port_buffer_capacity": [
+      512,
+      null
+    ],
+    "buffer_priority_balance": {
+      "value": "Output port buffer capacity must be balanced between high and low priority frames",
+      "data_type": "behavioral",
+      "test_hint": "Fill output buffer with only high priority or only low priority frames and verify switch maintains proper priority balance",
+      "source_quote": "Each output port of the switch should be able to buffer at least 512 frames (balanced between high and low priority)."
+    }
+  },
+  "switch_operational_modes": {
+    "ops_mode_normal_functions_requirement": {
+      "value": "Switch must perform frames filtering, traffic policing, switching function, and end system function using activated OPS_Configuration_File data",
+      "data_type": "behavioral",
+      "test_hint": "Send frames when switch is in OPS mode but with invalid OPS_Configuration_File or when switch is not properly filtering/policing according to configuration",
+      "source_quote": "In OPS, the Switch should perform its normal functions (frames filtering and Traffic policing functions, Switching function, End System function) exclusively relying upon the data contained in the act"
+    },
+    "ops_mode_health_indicator_state": [
+      "Healthy"
+    ],
+    "dl_mode_end_system_function_configuration": {
+      "value": "Switch must perform End System function using Default_Configuration_Table data exclusively",
+      "data_type": "behavioral",
+      "test_hint": "Send frames to switch in DL mode that require OPS_Configuration_File data instead of Default_Configuration_Table data",
+      "source_quote": "In DL Mode, the Switch should perform its End System function exclusively relying upon the data contained in its resident configuration table: Default_Configuration_Table."
+    },
+    "passive_mode_switch_functions_disabled": {
+      "value": "All switch functions must be stopped and switch must remain silent",
+      "data_type": "behavioral",
+      "test_hint": "Send frames to switch in PASSIVE mode and verify it does not forward, filter, or police them",
+      "source_quote": "In PASSIVE Mode, the functions of the Switch should be stopped and the switch should keep silent."
+    },
+    "passive_mode_network_management_communication": {
+      "value": "Must maintain capability to communicate with Network Management Function using default VLs unless pin programming parity error",
+      "data_type": "behavioral",
+      "test_hint": "Send network management frames to switch in PASSIVE mode and verify communication works on default VLs",
+      "source_quote": "Nevertheless, the capability to communicate with the Network Management Function should be maintained except if the passive state results from an erroneous parity of the pin programming discretes."
+    },
+    "quiet_mode_frame_forwarding_prohibition": {
+      "value": "Switch must not forward frames and must remain quiet (no message generation)",
+      "data_type": "behavioral",
+      "test_hint": "Send frames through switch in QUIET mode and verify no forwarding or message generation occurs",
+      "source_quote": "The quiet mode ensures that the switch will not forward frames and will remain quiet (not try to generate a message)."
+    }
+  },
+  "TCP Acknowledgment": {
+    "delayed_ack_timing": {
+      "value": "<0.5",
+      "data_type": "numeric",
+      "unit": "seconds",
+      "test_hint": "Test by delaying ACKs beyond 0.5 seconds and observe if the network reacts to the delay.",
+      "source_quote": "The delay MUST be less than 0.5 seconds."
+    },
+    "ack_every_second_full_size_segment": {
+      "value": "In a stream of full-sized segments, there should be an ACK for at least every second segment",
+      "data_type": "behavioral",
+      "test_hint": "Test by sending multiple full-sized segments without sending ACKs for every second segment.",
+      "source_quote": "In a stream of full-sized segments there SHOULD be an ACK for at least every second segment."
+    }
+  },
+  "switching_behavior": {
+    "frame_sequencing_for_simultaneous_reception": {
+      "value": "simultaneous frames must be sequenced for re-transmission",
+      "data_type": "behavioral",
+      "test_hint": "Send simultaneous frames to a switch and verify they are properly sequenced rather than dropped or corrupted",
+      "source_quote": "Simultaneous reception of frames from ESa and ESb at the switch will be dealt with by sequencing the two frames for re-transmission to ES c"
+    }
   },
   "switching": {
-    "split_horizon": null,
-    "forwarding_rules": "The switch forwards frames filtered by the Filtering and Policing function to the appropriate physical output ports.",
-    "static_forwarding": {
-      "enabled": "null",
-      "port_mapping_rules": "The specification does not clearly define the port mapping rules based on the provided text."
+    "switch_forwarding_based_on_mac_destination": {
+      "value": "forwarding decision based on MAC destination field of received frames",
+      "data_type": "behavioral",
+      "test_hint": "Send frames with different MAC destinations to verify switch forwards to correct output ports according to forwarding table",
+      "source_quote": "Switch Forwarding is defined in Table 3-2."
+    },
+    "high_priority_transmission_precedence": {
+      "value": "transmit_high_priority_before_low_priority",
+      "data_type": "behavioral",
+      "test_hint": "Queue both high and low priority frames and verify high priority frames are transmitted first",
+      "source_quote": "For each output port, frames with a priority set to high should be sent prior to the one set to low."
+    },
+    "no_preemption_of_low_priority_frames": false
+  },
+  "switching_function": {
+    "frame_filtering_and_policing_order": {
+      "value": "frames must arrive at Filtering & Policing function before Switching function",
+      "data_type": "behavioral",
+      "source_quote": "All frames arrive at the switch in the Filtering & Policing function stage where they are filtered in various steps that apply rules about frame integrity, frame length, traffic budget and acceptable "
     }
   },
-  "buffer_management": {
-    "buffer_size_rules": "The specification does not clearly define the buffer size rule for output ports of the switch.",
-    "overflow_policy": "If a buffer overflow occurs in reception, an error message should be sent to the receiving partition and the frame should be discarded.",
-    "queue_limits": "The specification does not clearly define buffer_management.queue_limits"
+  "switch_performance": {
+    "maximum_vl_support": 4096,
+    "minimum_interframe_gap": 12,
+    "maximum_frame_rate_100mbps": 148800,
+    "wire_speed_filtering_capability": {
+      "value": "Switch port should filter frames of any valid size arriving at wire speed",
+      "data_type": "behavioral",
+      "test_hint": "Send frames of various sizes at wire speed and verify filtering performance",
+      "source_quote": "Each switch port should be able to filter frames of any valid size that are arriving at wire speed."
+    },
+    "wire_speed_relaying_capability": {
+      "value": "Switch should relay all incoming frames not rejected by filtering and policing at wire speed for deterministic configurations",
+      "data_type": "behavioral",
+      "test_hint": "Send high volumes of frames that pass filtering and policing and verify relaying at wire speed",
+      "source_quote": "Given a deterministic configuration, the switch should be able to relay all incoming frames that are not rejected by filtering and policing, at wire speed and whatever their size."
+    },
+    "mac_layer_wire_speed_transmission": {
+      "value": "MAC layer must transmit frames at wire speed",
+      "data_type": "behavioral",
+      "test_hint": "Generate burst traffic at wire speed and verify switch can maintain transmission rate without frame drops or delays",
+      "source_quote": "The MAC layer of each switch output port should be able to transmit frames at wire speed."
+    },
+    "technological_latency_limit": [
+      0,
+      100
+    ]
   },
-  "filtering_policing": {
-    "bag_enforcement": "The specification does not clearly define the resolution or tolerance for traffic policing.",
-    "drop_conditions": "The specification text provided does not contain sufficient information to determine the correct interpretation for 'filtering_policing.drop_conditions'.",
-    "policing_algorithm": "Traffic policing should be based on parameters: BAG, Jitter, Smax, and eventually Smin.",
-    "token_bucket": {
-      "refill_rate_formula": "The specification does not clearly define the refill rate formula",
-      "size_formula": "null"
+  "tcp_addressing": {
+    "ip_source_address_request": {
+      "value": "must ask IP layer to select local IP address for SYN if necessary",
+      "data_type": "behavioral",
+      "test_hint": "Monitor interactions between TCP and IP layers during SYN transmission to verify proper address selection requests",
+      "source_quote": "The TCP MUST ask the IP layer to select a local IP."
+    },
+    "consistent_local_address_usage": {
+      "value": "must use same local address as previous segments on existing connection",
+      "data_type": "behavioral",
+      "test_hint": "Send segments with different source addresses on an established connection to verify rejection or correction",
+      "source_quote": "At all other times, a previous segment has either been sent Or received on this connection, and TCP MUST use the same local address is used that was used in those previous segments."
+    },
+    "reject_broadcast/multicast_open": {
+      "value": "must reject open call for invalid remote IP address (broadcast or multicast)",
+      "data_type": "behavioral",
+      "test_hint": "Attempt to open TCP connections to broadcast and multicast addresses and verify they are rejected with error",
+      "source_quote": "A TCP implementation MUST reject as an error a local OPEN call for an invalid remote IP address (e.g., a broadcast or multicast address)."
+    },
+    "discard_broadcast/multicast_syn": {
+      "value": "must silently discard incoming SYN addressed to broadcast or multicast address",
+      "data_type": "behavioral",
+      "test_hint": "Send SYN packets to broadcast and multicast addresses and verify they are silently discarded without response",
+      "source_quote": "A TCP implementation MUST silently discard an incoming SYN segment that is addressed to a broadcast or multicast address."
     }
   },
-  "frame_aging": {
-    "aging_rules": "The correct interpretation cannot be determined",
-    "max_age": "The specification does not clearly define 'frame_aging.max_age'.",
-    "ttl_enabled": "null"
+  "TCP_Acknowledgment": {
+    "maximum_ack_delay": 0.5
   },
-  "priority_qos": {
-    "priority_levels": [
-      "High Priority",
-      "Low Priority"
+  "tcp_behavior": {
+    "tcp_data_aggregation_permission": {
+      "value": "may_aggregate_unpushed_data_internally",
+      "data_type": "behavioral",
+      "test_hint": "Send multiple TCP segments without PUSH flag set to test aggregation behavior and timing",
+      "source_quote": "When an application issues a series of SEND calls without setting the PUSH flag, the TCP MAY aggregate the data internally without sending it. Similarly, when a series of Segments is received without "
+    },
+    "tcp_push_flag_requirement_for_last_segment": {
+      "value": "must_set_push_bit_in_last_buffered_segment",
+      "data_type": "behavioral",
+      "test_hint": "Send TCP segments where the last segment in a sequence lacks the PUSH bit to test compliance enforcement",
+      "source_quote": "MUST set the PSH bit in the last buffered segment (i.e., when there is no more queued data to be sent)."
+    },
+    "tcp_maximum_segment_size_requirement": {
+      "value": "should_send_maximum_sized_segment_when_possible",
+      "data_type": "behavioral",
+      "test_hint": "Send TCP segments that are artificially small when larger segments would be possible to test optimization compliance",
+      "source_quote": "However, a TCP SHOULD send a maximum-sized segment whenever possible, to improve performance"
+    }
+  },
+  "tcp_connection": {
+    "clock_driven_isn_selection_requirement": {
+      "value": "use_clock_driven_isn_selection",
+      "data_type": "behavioral",
+      "test_hint": "Monitor ISN values across multiple connections to verify they follow clock-driven selection algorithm",
+      "source_quote": "A TCP MUST use the specified clock-driven selection of initial sequence numbers."
+    }
+  },
+  "tcp_connection_management": {
+    "simultaneous_open_support": {
+      "value": "must support simultaneous open attempts",
+      "data_type": "behavioral",
+      "test_hint": "Send SYN packets from both ends simultaneously to verify proper handling of simultaneous connection establishment",
+      "source_quote": "A TCP MUST support simultaneous open attempts."
+    },
+    "syn_received_state_tracking": {
+      "value": "must track whether connection reached SYN_RCVD via passive or active open",
+      "data_type": "behavioral",
+      "test_hint": "Establish connections via both passive and active opens, then verify the implementation can distinguish between them in SYN_RCVD state",
+      "source_quote": "TCP implementation MUST keep track of whether a connection has reached SYN_RCVD state as the result of a passive OPEN or an active OPEN."
+    },
+    "passive_open_isolation": {
+      "value": "passive open must not affect previously created connection records",
+      "data_type": "behavioral",
+      "test_hint": "Create multiple passive opens on the same port and verify existing connection records remain unaffected",
+      "source_quote": "Every passive OPEN call it MUST NOT affect any previously created connection record."
+    },
+    "concurrent_listen_support": {
+      "value": "must allow listening on port while connection block in SYN-SENT or SYN-RECEIVED state exists",
+      "data_type": "behavioral",
+      "test_hint": "Establish a connection in SYN-SENT state, then attempt to create a LISTEN on the same port to verify concurrent operation",
+      "source_quote": "A TCP that supports multiple concurrent users MUST provide an OPEN call that will functionally allow an application to LISTEN on a port while a connection block with the same local port is in SYN-SENT"
+    },
+    "rst_data_allowance": {
+      "value": "should allow received RST segment to include data",
+      "data_type": "behavioral",
+      "test_hint": "Send RST segments with data payload and verify they are processed correctly",
+      "source_quote": "A TCP SHOULD allow a received RST segment to include data."
+    },
+    "application_close_notification": {
+      "value": "must inform application whether connection closed normally or was aborted",
+      "data_type": "behavioral",
+      "test_hint": "Monitor application notifications when connections are closed normally vs. aborted to verify proper status reporting",
+      "source_quote": "If a TCP connection is closed by the remote site, the local application MUST be informed whether it closed normally or was aborted."
+    },
+    "rst_on_data_loss": {
+      "value": "should send RST when CLOSE called with pending data or new data received after CLOSE",
+      "data_type": "behavioral",
+      "test_hint": "Call CLOSE with pending receive data or send data after CLOSE to verify RST generation indicating data loss",
+      "source_quote": "If such a host issues a CLOSE call while received data is still pending in TCP, or if new data is received after CLOSE is called, its TCP SHOULD send a RST to show that data was lost."
+    },
+    "time_wait_duration": {
+      "value": "2 * MSL",
+      "data_type": "numeric",
+      "unit": "seconds",
+      "test_hint": "Measure the duration connections remain in TIME-WAIT state and verify it equals 2*MSL",
+      "source_quote": "When a connection is closed actively, it MUST linger in TIME-WAIT state for a time 2xMSL."
+    }
+  },
+  "TCP_Configuration": {
+    "initial_rtt_value": 0,
+    "initial_rto_value": 3,
+    "rto_upper_bound": 240
+  },
+  "TCP_Features": {
+    "keep_alive_packet_usage": false
+  },
+  "tcp_windowing": {
+    "window_size_unsigned_integer_constraint": {
+      "value": "unsigned_integer",
+      "data_type": "numeric",
+      "test_hint": "Send TCP segments with window size field set to values that would be negative if interpreted as signed integers",
+      "source_quote": "The window size MUST be treated as an unsigned number."
+    },
+    "window_shrinking_prohibition": {
+      "value": "must_not_shrink_window",
+      "data_type": "behavioral",
+      "test_hint": "Generate TCP segments that advertise progressively smaller window sizes to test window shrinking behavior",
+      "source_quote": "A TCP receiver SHOULD NOT shrink the window, i.e., move the right window edge to the left."
+    },
+    "zero_window_probe_support_requirement": true
+  },
+  "tcp_urgent_data": {
+    "urgent_pointer_sequence_number_constraint": {
+      "value": "points_to_last_octet_not_last_plus_one",
+      "data_type": "behavioral",
+      "test_hint": "Send TCP segments with urgent pointer values that point to LAST+1 instead of LAST octet",
+      "source_quote": "The urgent pointer points to the sequence number of the LAST octet (not LAST+1)"
+    }
+  },
+  "tcp_options": {
+    "unsupported_tcp_option_handling_requirement": {
+      "value": "ignore_unsupported_options_without_error",
+      "data_type": "behavioral",
+      "test_hint": "Include undefined or proprietary TCP options in segments to test error-free ignoring behavior",
+      "source_quote": "A TCP MUST ignore without error any TCP option it does not implement, assuming that the option has a length field."
+    },
+    "illegal_option_length_handling_requirement": {
+      "value": "handle_illegal_option_length",
+      "data_type": "behavioral",
+      "test_hint": "Send TCP segments with malformed option length fields (e.g., length extending beyond segment boundary)",
+      "source_quote": "TCP MUST be prepared to handle an illegal option length."
+    },
+    "default_mss_value_constraint": 536
+  },
+  "tcp_validation": {
+    "tcp_checksum_generation_requirement": true
+  },
+  "TCP_Retransmission": {
+    "r1_retransmission_threshold": 3,
+    "syn_r2_minimum_duration": 180
+  },
+  "timing_requirements": {
+    "timely_delivery_requirement_for_afdx_networks": {
+      "value": "Complete and up to date data must be delivered from source to receiver in a timely fashion",
+      "data_type": "behavioral",
+      "test_hint": "Inject delays or drop frames to test how the network handles violations of timely delivery requirements",
+      "source_quote": "Control systems generally, and avionics systems in particular, rely on having complete and up to date data delivered from source to receiver in a timely fashion."
+    }
+  },
+  "traffic_policing": {
+    "frame_size_minimum_constraint_for_byte_based_policing": {
+      "value": "S >= Smin",
+      "data_type": "behavioral",
+      "test_hint": "When byte-based policing is enabled, send frames smaller than the configured Smin for a VL",
+      "source_quote": "Ethernet frame size (S) greater than or equal to Smin, only in case where byte-based traffic policing is used"
+    },
+    "initial_account_setting": {
+      "value": "ACi = Smax_i * (1 + Ji,switch / BAGi)",
+      "data_type": "numeric",
+      "unit": "bytes",
+      "test_hint": "This is an initialization rule, not directly testable by frame generation",
+      "source_quote": "Initially, the ACcount for VLi (also called ACi, expressed in bytes) is set to"
+    },
+    "account_crediting_rate": {
+      "value": "proportional to Smax_i with upper limit of BAGi",
+      "data_type": "numeric",
+      "unit": "bytes/time",
+      "test_hint": "This is a timing behavior rule that affects policing state, not directly testable by single frame",
+      "source_quote": "ACi is credited as time elapses, proportionally to S i max with an upper limit of BAGi"
+    },
+    "frame_size_consistency_for_shared_accounts": {
+      "value": "all VLs in a shared account must have the same smin and smax values",
+      "data_type": "behavioral",
+      "unit": "octets",
+      "test_hint": "Configure different smin or smax values for VLs sharing the same account",
+      "source_quote": "When one ACi is used by a group of VL, all the VL of this group should have the same BAG and the same minimum (smin) and maximum (smax) total Ethernet line size values."
+    },
+    "default_vl_policing_activation": true
+  },
+  "traffic_regulation": {
+    "virtual_link_bandwidth_allocation_formula": {
+      "value": "Lmax/TGAP",
+      "data_type": "formula",
+      "unit": "bps",
+      "test_hint": "Generate frames that exceed the calculated bandwidth limit Lmax/TGAP for a Virtual Link",
+      "source_quote": "The maximum bandwidth allocated to this VL is: Lmax/T GAP."
+    },
+    "exact_bandwidth_regulated_traffic_control_requirement": {
+      "value": "traffic must follow exact bandwidth regulated control to limit bandwidth usage over any arbitrarily small interval",
+      "data_type": "behavioral",
+      "test_hint": "Send bursts of frames that violate bandwidth limits over small time intervals",
+      "source_quote": "Using exact bandwidth regulated traffic control it is possible to limit the bandwidth usage over any arbitrarily small interval of time."
+    },
+    "bounded_frame_delivery_distribution": {
+      "value": "frame delivery must follow a bounded arrival distribution, not Poisson",
+      "data_type": "behavioral",
+      "test_hint": "Generate frames with Poisson arrival patterns or unbounded intervals between transmissions",
+      "source_quote": "the transmitting end-systems are not synchronized, but that frame delivery follows a bounded arrival distribution"
+    }
+  },
+  "traffic_shaping": {
+    "bag_frame_rate_limit": {
+      "value": "send no more than one frame in each interval of BAG milliseconds",
+      "data_type": "behavioral",
+      "unit": "ms",
+      "test_hint": "Send multiple frames within a single BAG interval and verify they are regulated",
+      "source_quote": "On a per VL basis the traffic regulator (traffic shaping function) should shape the flow to send no more than one frame in each interval of BAG milliseconds"
+    },
+    "bag_value_range": {
+      "value": "1 to 128",
+      "data_type": "range",
+      "unit": "ms",
+      "test_hint": "Configure BAG values outside the 1-128ms range and verify they are rejected",
+      "source_quote": "The Traffic shaping function of the ES should be able to handle BAG values in range 1 ms to 128 ms."
+    }
+  },
+  "transmission_performance": {
+    "transmission_technological_latency_bound": {
+      "value": "<150",
+      "data_type": "numeric",
+      "unit": "\u03bcs",
+      "test_hint": "Generate frames and measure transmission latency from last bit of partition data to last bit transmitted - should exceed 150\u03bcs to violate rule",
+      "source_quote": "The technological latency of the end-system in transmission should be bounded and lower than 150 \u03bcs + frame delay."
+    },
+    "maximum_jitter_constraint_formula_1": {
+      "value": "max_jitter \u2264 40 + (sum of Lmax * 8) / Nbw",
+      "data_type": "numeric",
+      "unit": "\u03bcs",
+      "test_hint": "Generate traffic patterns that would cause jitter exceeding the calculated bound based on VL frame sizes and bandwidth",
+      "source_quote": "In transmission, the maximum allowed jitter on each VL at the output of the end-system should comply with both of the following formulas: max_jitter \u2264 40 + \u2211(Lmax * 8) / Nbw"
+    },
+    "maximum_jitter_absolute_bound": {
+      "value": "\u2264500",
+      "data_type": "numeric",
+      "unit": "\u03bcs",
+      "test_hint": "Create traffic conditions that would cause transmission jitter to exceed 500\u03bcs on any VL",
+      "source_quote": "In all cases, the jitter is bounded at 500\u03bcs to limit the impact on determinism for the whole network."
+    }
+  },
+  "transport_layer_addressing": {
+    "udp/tcp_port_number_valid_range": [
+      1,
+      65535
     ],
-    "queue_separation": "The Switch should have a traffic prioritization mechanism with 2 traffic classes",
-    "scheduling_algorithm": "The specification does not clearly define the scheduling algorithm"
+    "iana_assigned_port_numbers_range": [
+      0,
+      1023
+    ],
+    "iana_registered_port_numbers_range": [
+      1024,
+      49151
+    ],
+    "dynamic/private_port_numbers_range": [
+      49152,
+      65535
+    ]
+  },
+  "ttl_handling": {
+    "ttl_zero_transmission_prohibition": {
+      "min": 1,
+      "max": 255
+    }
+  },
+  "Virtual Link Configuration": {
+    "default_reception_vl_identifier": {
+      "value": "VL (0, position)",
+      "data_type": "string",
+      "test_hint": "Attempt to use a different format for the default reception VL identifier.",
+      "source_quote": "The Switch subscribes by default to one unique reception VL, further called VL (0, position)."
+    }
   },
   "virtual_link": {
-    "configuration_parameters": [
-      "Each Virtual Link has a dedicated maximum bandwidth",
-      "Bandwidth Allocation Gap (BAG)",
-      "Maximum allowed Jitter",
-      "Maximum allowed Total Ethernet Line size (Smax)",
-      "Minimum allowed Total Ethernet Line size (Smin)",
-      "The system integrator is free to configure each Virtual Link with or without redundancy",
-      "integrity checking can be disabled per VL"
+    "vl_bandwidth_and_frame_interval_bounds": {
+      "value": "both bandwidth and frame delivery interval must be bounded for each VL",
+      "data_type": "behavioral",
+      "test_hint": "Configure VLs with unbounded bandwidth or frame delivery intervals",
+      "source_quote": "This is achieved by bounding both the bandwidth and the frame delivery interval for each VL."
+    },
+    "vl_bandwidth_isolation": {
+      "value": "available bandwidth on any VL must be unaffected by attempted utilization of other VLs",
+      "data_type": "behavioral",
+      "test_hint": "Saturate one VL with traffic and verify other VLs maintain their allocated bandwidth",
+      "source_quote": "The ES should provide logical isolation with respect to available bandwidth among the Virtual Link(s) it supports. Regardless of the attempted utilisation of a VL by one partition, the available Bandw"
+    },
+    "vl_partition_exclusivity": {
+      "value": "one VL should not be shared by two or more source partitions",
+      "data_type": "behavioral",
+      "test_hint": "Configure multiple partitions to share the same VL identifier",
+      "source_quote": "One Virtual Link should not be shared by two or more source partitions."
+    }
+  },
+  "UDP_Protocol": {
+    "udp_port_unreachable_suppression": false
+  },
+  "virtual_link_configuration": {
+    "minimum_frame_size_range_constraint": [
+      84,
+      1538
     ],
-    "id_range": "null",
-    "redundancy_required": "null"
+    "default_reception_vl_uniqueness": {
+      "value": "VL(0,position)",
+      "data_type": "string",
+      "test_hint": "Send frames to multiple default reception VLs or wrong VL identifiers to test if switch properly filters to only its designated VL",
+      "source_quote": "the Switch subscribes by default to one unique reception VL, further called VL (0, position)"
+    },
+    "default_transmission_vl_uniqueness": {
+      "value": "VL(1,position)",
+      "data_type": "string",
+      "test_hint": "Configure multiple switches with same transmission VL or invalid VL format to test uniqueness enforcement",
+      "source_quote": "Each Switch has a unique default transmission VL, further called VL (1, position)"
+    }
   }
 }

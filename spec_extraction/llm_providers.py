@@ -57,12 +57,17 @@ class BaseLLMProvider(ABC):
             max_tokens=max_tokens
         )
         
-        # Try to extract JSON from response
+        # Strip markdown code block wrappers (Claude often adds these)
+        import re
+        stripped = response.strip()
+        stripped = re.sub(r'^```(?:json)?\s*\n?', '', stripped)
+        stripped = re.sub(r'\n?```\s*$', '', stripped)
+        stripped = stripped.strip()
+        
         try:
-            return json.loads(response)
+            return json.loads(stripped)
         except json.JSONDecodeError:
-            # Try to find JSON in the response
-            import re
+            # Fallback: find the outermost { ... } in the original response
             json_match = re.search(r'\{[\s\S]*\}', response)
             if json_match:
                 try:

@@ -13,21 +13,26 @@ The project is built on top of ns-3. The ns-3 installation is already in place a
 
 ### Python Dependencies
 ```bash
-pip install openai anthropic google-generativeai pandas numpy boofuzz PyPDF2
+pip install openai anthropic google-generativeai pandas numpy boofuzz PyPDF2 python-dotenv
+```
+
+It's recommended to use a virtual environment:
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install openai anthropic google-generativeai pandas numpy boofuzz PyPDF2 python-dotenv
 ```
 
 ### API Keys
-Create a `.env` file in the project root:
+Create a `.env` file in the project root (loaded automatically by `python-dotenv`):
 ```bash
 OPENAI_API_KEY=sk-...
-ANTHROPIC_API_KEY=sk-ant-...
+CLAUDE_API_KEY=sk-ant-...
 GOOGLE_API_KEY=AI...
 ```
 
-Or export them:
-```bash
-export OPENAI_API_KEY="sk-..."
-```
+The code checks for both `ANTHROPIC_API_KEY` and `CLAUDE_API_KEY`.
+At least 2 providers are needed for cross-validation in multi-model mode.
 
 ---
 
@@ -61,17 +66,28 @@ All commands should be run from the project root: `/home/hodisan1994/ns-3-reset/
 #### Open Discovery Mode (recommended)
 ```bash
 # Step 1: Extract rules with multiple LLMs (each discovers freely)
-python3 spec_extraction/run_multimodel.py --pdf configs/ARINC_664P7.pdf --mode open
+python3 spec_extraction/run_multimodel.py \
+    --pdf configs/ARINC_664P7.pdf \
+    --mode open \
+    --providers openai anthropic
 
-# Step 2: Semantically align rules across models
-python3 spec_extraction/align_rules.py
+# Step 2: Align + resolve conflicts + verify unique (all-in-one)
+python3 spec_extraction/align_rules.py \
+    --input spec_extraction/multimodel_output \
+    --pdf configs/ARINC_664P7.pdf \
+    --full \
+    --judge openai
 
-# Step 3 (optional): Verify rules found by only one model
-python3 spec_extraction/align_rules.py --verify-unique --pdf configs/ARINC_664P7.pdf
-
-# Step 4: Export validated rules
-python3 spec_extraction/export_validated.py --mode open
+# Step 3: Export validated rules (enriched with original extraction data)
+python3 spec_extraction/export_validated.py \
+    --mode open \
+    --extraction-dir spec_extraction/multimodel_output \
+    --output-dir configs
 ```
+
+**Note:** Step 1 takes ~35 minutes (API calls per PDF chunk per provider).
+Step 2 takes ~25 minutes (alignment batches + 464 verification calls).
+Step 3 is instant.
 
 #### Legacy Strict Mode
 ```bash

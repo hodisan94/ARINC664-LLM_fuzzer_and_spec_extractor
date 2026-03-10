@@ -1,148 +1,224 @@
 {
   "metadata": {
-    "generated_at": "2026-01-10T17:34:34.047322",
-    "comparison_source": "spec_extraction/comparison_results.json",
-    "arbitration_source": "spec_extraction/arbitration_results.json",
+    "generated_at": "2026-02-19T19:20:06.248587",
+    "alignment_source": "spec_extraction/alignment_results.json",
     "providers_used": [
       "openai",
       "anthropic"
-    ]
+    ],
+    "extraction_mode": "open"
   },
   "validation_summary": {
-    "methodology": "Multi-Model Cross-Validation with LLM Arbitration",
-    "total_rules": 72,
+    "methodology": "Open Discovery with Semantic Alignment and LLM Verification",
+    "total_rules": 434,
     "confidence_distribution": {
-      "high": 0,
-      "medium": 25,
-      "arbitrated_high": 10,
-      "arbitrated_medium": 12,
-      "arbitrated_low": 25,
-      "low": 0
+      "high": 408,
+      "medium": 24,
+      "low": 2
     },
-    "source_distribution": {
-      "unanimous": 0,
-      "majority": 25,
-      "arbitration": 47,
-      "unresolved": 0
+    "agreement_distribution": {
+      "full": 88,
+      "partial": 21,
+      "resolved": 0,
+      "conflict": 0,
+      "unique_confirmed": 323,
+      "unique_unverified": 2
     },
-    "confidence_rates": {
-      "high_or_arbitrated_high": 0.1388888888888889,
-      "medium_or_better": 0.6527777777777778,
-      "needs_review": 0.3472222222222222
-    }
+    "categories_found": [
+      "AFDX Communication Ports",
+      "Address Mask Handling",
+      "Address Validation",
+      "Addressing",
+      "Broadcast",
+      "Communication Ports",
+      "Communication_Ports",
+      "Configuration Management",
+      "Connection Management",
+      "Data Alignment",
+      "Data Encoding",
+      "Data Format",
+      "Data Transmission",
+      "Data Types",
+      "End System",
+      "End System Behavior",
+      "End System Performance",
+      "Error Handling",
+      "Fault Tolerance",
+      "Filtering and Policing",
+      "Fragmentation",
+      "Fragmentation and Reassembly",
+      "Frame Filtering",
+      "Frame Validation",
+      "ICMP",
+      "ICMP Behavior",
+      "ICMP Handling",
+      "ICMP Restrictions",
+      "ICMP_Message_Handling",
+      "IP Routing",
+      "IP_Addressing",
+      "IP_Configuration",
+      "IP_Layer_Requirements",
+      "Integrity",
+      "Interface",
+      "Jitter",
+      "Latency",
+      "Latency Management",
+      "MAC Addressing",
+      "Message Structure",
+      "Multihoming",
+      "Network Compatibility",
+      "Network Configuration",
+      "Network Interoperability",
+      "Network Layer",
+      "Network Redundancy",
+      "Network_Monitoring",
+      "Options Processing",
+      "Packet Handling",
+      "Performance",
+      "Physical Layer",
+      "Policing",
+      "Port Allocation",
+      "Port Binding",
+      "Port Configuration",
+      "Port Management",
+      "Protocol Compliance",
+      "Quality of Service",
+      "Reassembly and Fragmentation",
+      "Reception",
+      "Redundancy",
+      "Redundancy Management",
+      "Reliability",
+      "Routing",
+      "SAP Port",
+      "Sub-VL Queue Exclusivity",
+      "Sub-VL Queue Management",
+      "Sub-VL Scheduling",
+      "Switch Behavior",
+      "Switch Configuration",
+      "Switch Functionality",
+      "Switch Initialization",
+      "Switch Monitoring",
+      "Switch Operating Modes",
+      "Switch Operational Modes",
+      "Switch Port Configuration",
+      "Switch Port Processing",
+      "Switch Processing",
+      "Switch Specification",
+      "Switching",
+      "TCP Acknowledgment",
+      "TCP Urgent Data",
+      "TCP Window Management",
+      "TCP Zero Window Probing",
+      "TCP_Acknowledgment",
+      "TCP_Configuration",
+      "TCP_Features",
+      "TCP_Retransmission",
+      "TTL Management",
+      "Traffic Control",
+      "Traffic Policing",
+      "UDP Protocol Behavior",
+      "UDP_Protocol",
+      "Virtual Link",
+      "Virtual Link Configuration",
+      "address_validation",
+      "addressing",
+      "bandwidth_allocation",
+      "communication",
+      "configuration",
+      "configuration_management",
+      "data_integrity",
+      "data_validation",
+      "datagram_transmission",
+      "datagram_validation",
+      "demultiplexing",
+      "error_handling",
+      "ethernet_payload",
+      "file_transfer",
+      "frame_construction",
+      "frame_filtering",
+      "frame_processing",
+      "frame_structure",
+      "frame_transmission",
+      "frame_validation",
+      "icmp_layer",
+      "icmp_restrictions",
+      "identification",
+      "integrity_checking",
+      "ip_layer",
+      "ip_protocol",
+      "latency_calculation",
+      "mac_addressing",
+      "mac_constraints",
+      "message_format",
+      "message_formatting",
+      "message_structure",
+      "network_architecture",
+      "network_behavior",
+      "network_hierarchy",
+      "physical_layer",
+      "physical_port_configuration",
+      "protocol_stack",
+      "queuing_service",
+      "sampling_service",
+      "switch_buffering",
+      "switch_configuration",
+      "switch_operating_modes",
+      "switch_operation",
+      "switch_operational_modes",
+      "switch_performance",
+      "switching",
+      "switching_behavior",
+      "switching_function",
+      "tcp_addressing",
+      "tcp_behavior",
+      "tcp_connection",
+      "tcp_connection_management",
+      "tcp_options",
+      "tcp_urgent_data",
+      "tcp_validation",
+      "tcp_windowing",
+      "timing_requirements",
+      "traffic_policing",
+      "traffic_regulation",
+      "traffic_shaping",
+      "transmission_performance",
+      "transport_layer_addressing",
+      "ttl_handling",
+      "virtual_link",
+      "virtual_link_configuration"
+    ]
   },
   "agreement_metrics": {
+    "total_aligned_groups": 109,
+    "full_agreement": 88,
+    "partial_agreement": 21,
+    "conflicts": 0,
+    "unique_rules": 464,
+    "total_distinct_rules": 573,
     "pairwise_agreement": {
-      "openai_vs_anthropic": 0.4027777777777778
+      "anthropic_vs_openai": 1.0,
+      "openai_vs_openai": 1.0,
+      "anthropic_vs_anthropic": 1.0,
+      "ANTHROPIC_vs_OPENAI": 1.0
     },
-    "fleiss_kappa": -0.19444444444444442,
+    "fleiss_kappa": -0.656,
     "kappa_interpretation": "Less than chance agreement"
   },
   "quality_indicators": {
-    "high_confidence_percentage": "13.9%",
-    "validated_percentage": "65.3%",
-    "needs_review_percentage": "34.7%"
+    "high_confidence_percentage": "94.0%",
+    "validated_percentage": "99.5%",
+    "needs_review_percentage": "0.5%"
   },
   "rules_needing_review": [
     {
-      "path": "buffer_management.buffer_size_rules",
-      "issue": "Low confidence"
+      "id": "rule_183",
+      "name": "Source address derivation from pin programming",
+      "reason": "Found by only one model, not yet verified"
     },
     {
-      "path": "buffer_management.queue_limits",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "filtering_policing.bag_enforcement",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "filtering_policing.drop_conditions",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "filtering_policing.token_bucket.refill_rate_formula",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "filtering_policing.token_bucket.size_formula",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "frame_aging.aging_rules",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "frame_aging.max_age",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "frame_aging.ttl_enabled",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "frame_structure.afdx_fields.sequence_num_size",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "frame_structure.afdx_fields.vl_id_size",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "frame_structure.ethernet.ethertype_value",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "frame_structure.ip_header.ttl_rules",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "frame_structure.payload.vl_specific_ranges",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "monitoring.fault_detection",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "performance.max_end_to_end_latency_ms",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "performance.max_jitter_fraction",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "priority_qos.scheduling_algorithm",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "redundancy.dual_transmission_required",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "sequence_numbers.out_of_window_action",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "sequence_numbers.window_size",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "switching.static_forwarding.enabled",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "switching.static_forwarding.port_mapping_rules",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "virtual_link.id_range",
-      "issue": "Low confidence"
-    },
-    {
-      "path": "virtual_link.redundancy_required",
-      "issue": "Low confidence"
+      "id": "rule_307",
+      "name": "Reset Persistence",
+      "reason": "Found by only one model, not yet verified"
     }
   ]
 }

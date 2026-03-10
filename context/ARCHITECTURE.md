@@ -42,6 +42,7 @@ ns-3/
 │   ├── run_multimodel.py      #   Multi-model extraction (--mode open|strict)
 │   ├── prompts_open.py        #   Open-discovery prompts (NEW)
 │   ├── align_rules.py         #   Semantic rule alignment across models (NEW)
+│   ├── filter_rules.py        #   Rule filtering by simulator relevance (NEW)
 │   ├── compare_extractions.py #   Cross-model comparison (auto-detects format)
 │   ├── arbitrate_conflicts.py #   Conflict resolution with judge LLM (legacy)
 │   ├── export_validated.py    #   Export final validated rules (both modes)
@@ -65,8 +66,10 @@ ns-3/
 │   └── generate_latex_tables.py   # LaTeX table generation for paper
 │
 ├── configs/                   # Configuration & Data Files
-│   ├── spec_rules.json            # Extracted protocol rules
-│   ├── spec_rules_validated.json  # Cross-validated rules
+│   ├── spec_rules.json            # Full extracted rules (431)
+│   ├── spec_rules_filtered.json   # Simulator-relevant rules (236)
+│   ├── filter_report.json         # Filter statistics & justifications
+│   ├── spec_rules_validated.json  # Cross-validated rules (full metadata)
 │   ├── test_cases.json            # Violation test cases
 │   ├── ARINC_664P7.pdf            # ARINC 664 Part 7 specification
 │   └── validation_report.json     # Validation metadata
@@ -108,15 +111,39 @@ ns-3/
                     │  Spec Extraction Pipeline    │
                     │  (spec_extraction/)          │
                     │                              │
-                    │  GPT ──┐  Free discovery     │
-                    │  Claude─┼─► Semantic Align   │
-                    │  Gemini─┘  + Verify unique   │
+                    │  1. GPT ──┐  Free discovery  │
+                    │     Claude─┘  (open prompts) │
+                    │                              │
+                    │  2. Semantic Alignment        │
+                    │     (match rules by meaning)  │
+                    │                              │
+                    │  3. Conflict Resolution       │
+                    │     (judge consults spec)     │
+                    │                              │
+                    │  4. Unique Verification       │
+                    │     (judge confirms/rejects)  │
+                    │                              │
+                    │  5. Enriched Export            │
+                    │     (values + test_hint + src) │
                     └──────────────┬──────────────┘
                                    │
                     ┌──────────────▼──────────────┐
-                    │  spec_rules.json             │
-                    │  test_cases.json              │
+                    │  spec_rules.json (434 rules)  │
+                    │  spec_rules_validated.json    │
+                    │  validation_report.json       │
                     │  (configs/)                   │
+                    └──────────────┬──────────────┘
+                                   │
+                    ┌──────────────▼──────────────┐
+                    │  Rule Filter (DONE)           │
+                    │  (filter_rules.py)            │
+                    │                              │
+                    │  LLM analysis of simulator    │
+                    │  → 12 relevant domains        │
+                    │  → 11 excluded domains        │
+                    │                              │
+                    │  431 → 236 rules (54.8%)      │
+                    │  → spec_rules_filtered.json   │
                     └──────────────┬──────────────┘
                                    │
           ┌────────────────────────┼────────────────────────┐
@@ -165,8 +192,11 @@ ns-3/
 - **Output**: `examples/AFDX_V3/output/csv/AFDX-LOG-OUTPUT.csv` — read by `log_parser.py`
 
 ### Spec Extraction → Fuzzer Interface
-- `configs/spec_rules.json` — protocol rules loaded by `spec_loader.py`
+- `configs/spec_rules.json` — 434 validated protocol rules (full extraction)
+- `configs/spec_rules_filtered.json` — 236 simulator-relevant rules loaded by `spec_loader.py`
 - `configs/test_cases.json` — violation test cases loaded by `test_case_loader.py`
+- `configs/spec_rules_validated.json` — full rules with confidence metadata (for analysis)
+- `configs/validation_report.json` — extraction quality summary (for paper)
 
 ### Fuzzer → Evaluation Interface
 - `llm_fuzzer/data/iteration_history.jsonl` — LLM fuzzer results

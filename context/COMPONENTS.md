@@ -102,12 +102,20 @@ python3 llm_fuzzer/main.py --max-iterations 50
 #### Open Mode (recommended, `--mode open`)
 LLMs freely discover and categorize rules — no predefined schema.
 ```
-PDF → run_multimodel.py --mode open (GPT + Claude + Gemini)
+PDF → run_multimodel.py --mode open (GPT + Claude)
    → Each LLM outputs a list of rules it discovered
-   → align_rules.py (semantic matching across models)
+   → align_rules.py --full (semantic align + conflict resolution + verify unique)
    → export_validated.py --mode open → configs/spec_rules.json
-                                      → configs/test_cases.json
+                                      → configs/spec_rules_validated.json
+                                      → configs/validation_report.json
 ```
+
+Full pipeline steps:
+1. **Extract** — each LLM independently discovers rules from spec PDF chunks
+2. **Align** — arbiter LLM semantically matches rules across providers
+3. **Resolve conflicts** — judge LLM consults actual spec text for disagreements
+4. **Verify unique** — judge confirms/rejects rules found by only one model
+5. **Export** — builds clean rules (enriched with test_hint, data_type, unit, source_quote)
 
 #### Strict Mode (legacy, `--mode strict`)
 LLMs fill a predefined JSON schema — 12 hardcoded categories.
@@ -121,31 +129,40 @@ PDF → run_multimodel.py --mode strict
 ### Files
 | File | Purpose |
 |------|---------|
+| `run_multimodel.py` | Multi-provider extraction (supports `--mode open\|strict`) |
+| **`prompts_open.py`** | **Open-discovery prompts + conflict resolution + alignment prompts** |
+| **`align_rules.py`** | **Semantic alignment + conflict resolution + unique verification** |
+| `export_validated.py` | Export final validated outputs (loads original extraction data for enrichment) |
 | `extract_rules.py` | Single-model rule extraction from PDF |
 | `extract_test_cases.py` | LLM-based test case generation per rule |
-| `run_multimodel.py` | Parallel multi-provider extraction (supports `--mode open\|strict`) |
-| **`prompts_open.py`** | **Open-discovery prompts (LLMs freely discover rules)** |
-| **`align_rules.py`** | **Semantic alignment of rules across models** |
 | `compare_extractions.py` | Cross-model comparison (legacy strict + auto-detect) |
 | `arbitrate_conflicts.py` | Conflict resolution via judge LLM (legacy strict) |
-| `export_validated.py` | Export final validated outputs (supports both modes) |
 | `llm_client.py` | OpenAI API wrapper |
-| `llm_providers.py` | Multi-provider abstraction (GPT/Claude/Gemini) |
-| `pdf_utils.py` | PDF text extraction utilities |
+| `llm_providers.py` | Multi-provider abstraction (GPT/Claude/Gemini) + markdown JSON fix |
+| `pdf_utils.py` | PDF text extraction utilities (chapter-based chunking) |
 | `prompts.py` | Discovery + extraction prompts (Phase 1/2) |
 | `prompts_strict.py` | Strict schema prompts (legacy) |
 | `test_case_prompts.py` | Test case generation prompts |
 | `validate_test_cases.py` | Test case validation logic |
 
+### Key Prompts in `prompts_open.py`
+| Prompt | Purpose |
+|--------|---------|
+| `SYSTEM_PROMPT_OPEN_EXTRACTION` | Instructs LLMs to find network-behavior rules, skip irrelevant content |
+| `SYSTEM_PROMPT_OPEN_AGGREGATION` | Deduplicates rules across chunks from a single provider |
+| `SYSTEM_PROMPT_RULE_ALIGNMENT` | Semantically matches rules across providers |
+| `SYSTEM_PROMPT_RESOLVE_CONFLICT` | Judge resolves disagreements using actual spec text |
+| `SYSTEM_PROMPT_VERIFY_UNIQUE` | Judge confirms/rejects rules found by only one model |
+
 ### Inputs
 - `configs/ARINC_664P7.pdf` — the ARINC 664 Part 7 specification
 
 ### Outputs
-- `configs/spec_rules.json` — extracted and validated protocol rules
-- `configs/spec_rules_validated.json` — rules with confidence metadata
-- `configs/test_cases.json` — violation test cases
-- `multimodel_output/` — per-provider extraction results
-- `alignment_results.json` — semantic alignment output (open mode)
+- `configs/spec_rules.json` — 434 validated protocol rules for fuzzer consumption
+- `configs/spec_rules_validated.json` — rules with confidence and agreement metadata
+- `configs/validation_report.json` — academic reporting summary
+- `multimodel_output/` — per-provider extraction results (`rules_openai.json`, `rules_anthropic.json`)
+- `alignment_results.json` — semantic alignment, conflict resolution, and verification output
 
 ---
 
@@ -217,10 +234,10 @@ Systematic, exhaustive testing of all violations in predefined order. No learnin
 
 | File | Description |
 |------|-------------|
-| `spec_rules.json` | Protocol rules (10 rules covering BAG, frame structure, SN, etc.) |
-| `spec_rules_validated.json` | Rules with cross-model validation metadata and confidence scores |
-| `test_cases.json` | 96 violation test cases organized by parameter type |
+| `spec_rules.json` | 434 validated protocol rules — enriched with test_hint, data_type, unit, source_quote |
+| `spec_rules_validated.json` | Full rules with agreement level, confidence, provider info, judge decisions |
+| `validation_report.json` | Academic reporting — confidence distribution, agreement metrics, quality indicators |
+| `test_cases.json` | Violation test cases organized by parameter type (needs regeneration with new rules) |
 | `test_cases_validation.json` | Validation report for test cases |
-| `validation_report.json` | Multi-model validation summary |
-| `spec_rules_old.json` | Backup of older rule extraction |
+| `spec_rules_old.json` | Backup of original strict-mode extraction (~10 rules) |
 | `ARINC_664P7.pdf` | ARINC 664 Part 7 specification document |

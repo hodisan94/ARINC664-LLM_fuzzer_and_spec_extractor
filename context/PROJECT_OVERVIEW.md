@@ -18,24 +18,26 @@ Demonstrate that LLM-guided fuzzing achieves better **protocol rule coverage**, 
 
 ## Two-Stage Architecture
 
-### Stage 1: Specification Knowledge Extraction
+### Stage 1: Specification Knowledge Extraction (Open Discovery)
 - Parse the ARINC 664 Part 7 PDF specification
-- Use multiple LLM providers (GPT, Claude, Gemini) to extract protocol rules
-- Cross-validate extractions and arbitrate conflicts between models
-- Output: `configs/spec_rules.json` and `configs/test_cases.json`
+- Use multiple LLM providers (GPT + Claude) to independently extract protocol rules — each LLM freely discovers and categorizes rules without a predefined schema
+- Semantically align rules across models to find agreements and disagreements
+- Resolve conflicts by having a judge LLM consult the actual spec text
+- Verify rules found by only one model (confirm or reject)
+- Output: `configs/spec_rules.json` (434 validated rules, enriched with test hints and source quotes)
 
 ### Stage 2: LLM-Guided Iterative Fuzzing
 An iterative loop with 4 components per iteration:
-1. **LLM Strategy Planner** — decides which Virtual Link to target and what mutation to apply
-2. **Test Generator** — creates concrete AFDX frames from the strategy
+1. **LLM Strategy Planner** — reads all protocol rules, decides which Virtual Link to target and what mutation to apply
+2. **Test Generator** — creates concrete AFDX frames from the strategy (predefined test cases or custom LLM mutations)
 3. **Simulator Runner** — executes the ns-3 AFDX simulation with mutated frames
 4. **Feedback Analyzer** — analyzes results and computes a reward score
 
-The reward feeds back to the LLM in the next iteration, enabling learning over time.
+The reward feeds back to the LLM in the next iteration, enabling learning over time. The LLM has full freedom to choose which rules to target, what values to use, and whether to use predefined test cases or propose its own mutations.
 
 ## Key Technologies
 - **ns-3** (C++) — Network simulator framework
 - **AFDX model** (C++) — Custom AFDX switch, end-system, and virtual link models
 - **Python** — Fuzzing orchestration, LLM integration, evaluation
-- **OpenAI GPT / Anthropic Claude / Google Gemini** — LLM providers
+- **OpenAI GPT / Anthropic Claude** — LLM providers for extraction and fuzzing
 - **boofuzz** — Systematic fuzzing baseline

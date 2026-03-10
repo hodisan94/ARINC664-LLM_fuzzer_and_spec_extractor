@@ -19,9 +19,11 @@ import pandas as pd
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
+from dotenv import load_dotenv
 
 # Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 from llm_fuzzer.core.feedback_analyzer import FeedbackAnalyzer
 from llm_fuzzer.core.strategy_planner import LLMStrategyPlanner
@@ -38,7 +40,7 @@ class LLMFuzzer:
     
     def __init__(
         self,
-        spec_rules_path: str = "configs/spec_rules.json",
+        spec_rules_path: str = "configs/spec_rules_filtered.json",
         test_cases_path: str = "configs/test_cases.json",
         seed_frames_path: str = "llm_fuzzer/data/seed_frames.json",
         history_path: str = "llm_fuzzer/data/iteration_history.jsonl",
@@ -493,6 +495,13 @@ Examples:
     )
     
     parser.add_argument(
+        '--spec-rules',
+        type=str,
+        default='configs/spec_rules_filtered.json',
+        help='Path to protocol rules JSON (default: configs/spec_rules_filtered.json)'
+    )
+    
+    parser.add_argument(
         '--resume',
         action='store_true',
         help='Resume from previous run (load existing history)'
@@ -502,6 +511,7 @@ Examples:
     
     # Create fuzzer
     fuzzer = LLMFuzzer(
+        spec_rules_path=args.spec_rules,
         max_iterations=args.max_iterations,
         available_vls=args.vls,
         output_dir=args.output_dir

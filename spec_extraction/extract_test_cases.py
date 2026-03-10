@@ -16,6 +16,9 @@ import os
 from typing import Dict, Any, List
 from pathlib import Path
 
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).parent.parent / ".env")
+
 from llm_client import LLMClient
 from test_case_prompts import (
     SYSTEM_PROMPT_TEST_CASE_EXTRACTION,
@@ -34,7 +37,8 @@ def extract_test_cases_for_rule(
     llm_client: LLMClient,
     rule_name: str,
     rule_data: Any,
-    checkpoint_file: str = None
+    checkpoint_file: str = None,
+    timeout_seconds: int = 90
 ) -> Dict[str, Any]:
     """
     Extract test cases for a single rule using LLM.
@@ -44,24 +48,29 @@ def extract_test_cases_for_rule(
         rule_name: Name of the rule
         rule_data: Rule specification data
         checkpoint_file: Optional checkpoint file for resuming
+        timeout_seconds: Max seconds to wait for a single API call
         
     Returns:
         Dictionary containing extracted test cases
     """
+    import signal
+
+    def _timeout_handler(signum, frame):
+        raise TimeoutError(f"API call timed out after {timeout_seconds}s")
+
     print(f"\nExtracting test cases for: {rule_name}")
     
-    # Generate prompt
     user_prompt = get_test_case_extraction_prompt(rule_name, rule_data)
     
-    # Query LLM
+    old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
+    signal.alarm(timeout_seconds)
     try:
-        # Use query_json to automatically get JSON response
         test_cases = llm_client.query_json(
             system_prompt=SYSTEM_PROMPT_TEST_CASE_EXTRACTION,
             user_prompt=user_prompt
         )
+        signal.alarm(0)
         
-        # Save checkpoint if specified
         if checkpoint_file:
             with open(checkpoint_file, 'a') as f:
                 checkpoint_entry = {
@@ -72,32 +81,73 @@ def extract_test_cases_for_rule(
         
         return test_cases
     
+    except TimeoutError:
+        signal.alarm(0)
+        print(f"  TIMEOUT extracting test cases for {rule_name} — skipping")
+        if checkpoint_file:
+            with open(checkpoint_file, 'a') as f:
+                f.write(json.dumps({"rule_name": rule_name, "test_cases": {}}) + "\n")
+        return {}
     except Exception as e:
+        signal.alarm(0)
         print(f"Error extracting test cases for {rule_name}: {e}")
         return {}
+    finally:
+        signal.signal(signal.SIGALRM, old_handler)
 
 
 def flatten_rules(rules: Dict[str, Any], prefix: str = "") -> List[tuple]:
     """
     Flatten nested rule structure into a list of (name, data) tuples.
     
-    Supports two formats:
-    1. Legacy nested format: {"bag": {"allowed_values_ms": [...]}, ...}
-    2. Open list format: {"rules": [{"id": "rule_001", "name": "...", ...}, ...]}
+    Supports three formats:
+    1. Open list format: {"rules": [{"id": "rule_001", ...}, ...]}
+    2. Clean 2-level format: {"Category": {"rule_name": value_or_dict, ...}, ...}
+    3. Legacy nested format: {"bag": {"allowed_values_ms": [...]}, ...}
     
-    Args:
-        rules: Rules dictionary (either format)
-        prefix: Current key prefix (for legacy format)
-        
     Returns:
         List of (full_key_path, rule_data) tuples
     """
-    # Detect open format
     if "rules" in rules and isinstance(rules["rules"], list):
         return _flatten_open_format(rules["rules"])
 
-    # Legacy nested format
+    if _is_clean_format(rules):
+        return _flatten_clean_format(rules)
+
     return _flatten_legacy_format(rules, prefix)
+
+
+def _is_clean_format(rules: Dict[str, Any]) -> bool:
+    """
+    Detect whether rules are in the clean 2-level format produced by
+    export_validated.py: {category: {rule_name: value_or_enriched_dict}}.
+    
+    Heuristic: all top-level values are dicts, and at least some of their
+    sub-values are enriched dicts (containing 'value' or 'test_hint' keys)
+    or simple scalar/list values (not deeply nested category dicts).
+    """
+    if not rules or not all(isinstance(v, dict) for v in rules.values()):
+        return False
+    enriched_keys = {"value", "data_type", "test_hint", "source_quote", "unit"}
+    for cat_fields in rules.values():
+        for v in cat_fields.values():
+            if isinstance(v, dict) and enriched_keys & set(v.keys()):
+                return True
+            if isinstance(v, (str, int, float, bool, list)):
+                return True
+    return False
+
+
+def _flatten_clean_format(rules: Dict[str, Any]) -> List[tuple]:
+    """Flatten clean {category: {rule_name: value}} format."""
+    flattened = []
+    for category, fields in rules.items():
+        if not isinstance(fields, dict):
+            continue
+        for rule_name, rule_data in fields.items():
+            full_key = f"{category}.{rule_name}"
+            flattened.append((full_key, rule_data))
+    return flattened
 
 
 def _flatten_open_format(rules_list: List[Dict[str, Any]]) -> List[tuple]:
@@ -111,7 +161,6 @@ def _flatten_open_format(rules_list: List[Dict[str, Any]]) -> List[tuple]:
         category = rule.get("category", "")
         full_key = f"{category}.{name}" if category else name
 
-        # Build a data dict that the test case extractor can work with
         constraint = rule.get("constraint", {})
         data = {
             "name": rule.get("name", name),
@@ -123,7 +172,6 @@ def _flatten_open_format(rules_list: List[Dict[str, Any]]) -> List[tuple]:
             "source_quote": rule.get("source_quote", "")
         }
 
-        # Also include raw constraint fields for backward compatibility
         if isinstance(constraint.get("value"), list):
             data["allowed_values"] = constraint["value"]
         elif isinstance(constraint.get("value"), (int, float)):
@@ -233,13 +281,37 @@ def main():
         print("ERROR: OPENAI_API_KEY not found in environment")
         return 1
     
-    llm_client = LLMClient(api_key=api_key, model="gpt-5")
+    model = os.getenv("TEST_CASE_MODEL", "gpt-4o")
+    llm_client = LLMClient(api_key=api_key, model=model)
+    print(f"Using model: {model}")
     
+    # Load checkpoint if exists (for resume support)
+    already_done = set()
+    all_test_cases = []
+    if os.path.exists(args.checkpoint):
+        print(f"\nResuming from checkpoint: {args.checkpoint}")
+        with open(args.checkpoint) as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    entry = json.loads(line)
+                    already_done.add(entry["rule_name"])
+                    if entry.get("test_cases"):
+                        all_test_cases.append(entry["test_cases"])
+                except (json.JSONDecodeError, KeyError):
+                    continue
+        print(f"  Loaded {len(already_done)} already-processed rules")
+
     # Extract test cases for each rule
     print("\nExtracting test cases...")
-    all_test_cases = []
     
     for idx, (rule_name, rule_data) in enumerate(flattened_rules, 1):
+        if rule_name in already_done:
+            print(f"\n[{idx}/{len(flattened_rules)}] SKIP (done): {rule_name}")
+            continue
+
         print(f"\n[{idx}/{len(flattened_rules)}] Processing: {rule_name}")
         
         test_cases = extract_test_cases_for_rule(
@@ -251,7 +323,6 @@ def main():
         
         if test_cases:
             all_test_cases.append(test_cases)
-            # Print summary of extracted test cases
             total_cases = sum(
                 len(data.get("test_cases", []))
                 for data in test_cases.values()
