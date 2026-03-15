@@ -104,7 +104,7 @@ class BoofuzzFuzzer:
             self.simulator_runner = MockSimulatorRunner()
         else:
             from llm_fuzzer.utils.simulator_runner import SimulatorRunner
-            self.simulator_runner = SimulatorRunner(skip_ns3_check=True)
+            self.simulator_runner = SimulatorRunner()
         
         # History tracking
         self.history_file = self.output_dir.parent / "data" / "iteration_history.jsonl"
@@ -157,45 +157,80 @@ class BoofuzzFuzzer:
                 test_file = self.output_dir / f"iteration_{iteration:03d}_test.json"
                 self.test_generator.save_to_file(test_inputs, str(test_file))
                 
-                # 3. Run simulator
-                sim_result = self.simulator_runner.run(str(test_file))
-                
-                if not sim_result.get('success', False):
-                    print(f"  Simulation failed!")
-                    consecutive_failures += 1
-                    
-                    if consecutive_failures >= 5:
-                        print("\n5 consecutive failures - stopping")
-                        break
-                    continue
-                
+                # 3. Run simulator + 4. Analyze results
+                history_df = pd.DataFrame(self.iteration_history) if self.iteration_history else None
+
+                if self.use_mock_simulator:
+                    sim_result = self.simulator_runner.run(str(test_file))
+
+                    if not sim_result.get('success', False):
+                        print(f"  Simulation failed!")
+                        consecutive_failures += 1
+                        if consecutive_failures >= 5:
+                            print("\n5 consecutive failures - stopping")
+                            break
+                        continue
+
+                    policing_rate = sim_result.get('policing_rate', 0)
+                    forward_rate = sim_result.get('forward_rate', 0)
+                    bugs_found = sim_result.get('bugs_found', 0)
+                    frames_received = sim_result.get('frames_sent', 20)
+                    frames_dropped = sim_result.get('frames_dropped', 0)
+
+                    metrics = {
+                        'frames_received': frames_received,
+                        'frames_forwarded': int(frames_received * forward_rate / 100),
+                        'frames_dropped_policing': frames_dropped,
+                        'policing_rate': policing_rate,
+                        'forward_rate': forward_rate,
+                        'malformed_accepted': 0,
+                        'parsing_success': True,
+                    }
+                    reward = self.reward_calculator.calculate(
+                        metrics=metrics, strategy=strategy, history=history_df
+                    )
+
+                else:
+                    # Real ns-3 simulator — same pattern as random baseline
+                    sim_result = self.simulator_runner.run_simulation(
+                        test_inputs=test_inputs,
+                        run_id=f"boofuzz_iter_{iteration:03d}",
+                        timeout=120,
+                    )
+
+                    if not sim_result.get('success', False):
+                        print(f"  Simulation failed: {sim_result.get('error', 'unknown')}")
+                        consecutive_failures += 1
+                        if consecutive_failures >= 5:
+                            print("\n5 consecutive failures - stopping")
+                            break
+                        continue
+
+                    print(f"  Simulation completed in {sim_result['duration']:.2f}s")
+
+                    analysis_content = sim_result.get('csv_content') or sim_result['log_content']
+                    feedback = self.feedback_analyzer.analyze(
+                        log_content=analysis_content,
+                        strategy=strategy,
+                        history=history_df,
+                    )
+
+                    policing_rate = feedback.get('metrics', {}).get('policing_rate', 0.0)
+                    forward_rate = feedback.get('metrics', {}).get('forward_rate', 0.0)
+                    bugs_found = feedback.get('analysis', {}).get('bugs_found', False)
+                    frames_received = feedback.get('metrics', {}).get('frames_received', 0)
+                    frames_dropped = feedback.get('metrics', {}).get('frames_dropped_policing', 0)
+                    reward = {
+                        'reward': feedback.get('reward', 0.0),
+                        'components': feedback.get('reward_components', {}),
+                    }
+
                 consecutive_failures = 0
                 
-                # 4. Analyze results
-                analysis = self.feedback_analyzer.analyze(sim_result)
-                
-                # 5. Calculate reward - extract metrics from analysis
-                metrics = {
-                    'policing_rate': analysis.get('policing_rate', 0),
-                    'forward_rate': analysis.get('forward_rate', 0),
-                    'frames_sent': analysis.get('frames_sent', 20),
-                    'frames_dropped': analysis.get('frames_dropped', 0),
-                    'bugs_found': analysis.get('bugs_found', 0)
-                }
-                
-                # Convert history to DataFrame if needed
-                history_df = pd.DataFrame(self.iteration_history) if self.iteration_history else None
-                
-                reward = self.reward_calculator.calculate(
-                    metrics=metrics,
-                    strategy=strategy,
-                    history=history_df
-                )
-                
                 print(f"  Reward: {reward['reward']:.3f}")
-                print(f"  Policing rate: {analysis.get('policing_rate', 0):.1f}%")
+                print(f"  Policing rate: {policing_rate:.1f}%")
                 
-                # 6. Record iteration
+                # 5. Record iteration
                 iteration_record = {
                     'iteration': iteration,
                     'timestamp': datetime.now().isoformat(),
@@ -212,16 +247,16 @@ class BoofuzzFuzzer:
                     'reasoning': strategy['reasoning'],
                     'simulation_success': True,
                     'reward': reward['reward'],
-                    'policing_rate': analysis.get('policing_rate', 0),
-                    'forward_rate': analysis.get('forward_rate', 0),
-                    'bugs_found': analysis.get('bugs_found', 0),
-                    'frames_sent': analysis.get('frames_sent', 0),
-                    'frames_dropped': analysis.get('frames_dropped', 0)
+                    'policing_rate': policing_rate,
+                    'forward_rate': forward_rate,
+                    'bugs_found': bugs_found,
+                    'frames_received': frames_received,
+                    'frames_dropped_policing': frames_dropped,
                 }
                 
                 self.iteration_history.append(iteration_record)
                 
-                # 7. Save to history file
+                # 6. Save to history file
                 with open(self.history_file, 'a') as f:
                     f.write(json.dumps(iteration_record) + '\n')
             
@@ -230,6 +265,8 @@ class BoofuzzFuzzer:
                 break
             except Exception as e:
                 print(f"  Error: {e}")
+                import traceback
+                traceback.print_exc()
                 consecutive_failures += 1
                 
                 if consecutive_failures >= 5:
@@ -265,7 +302,7 @@ class BoofuzzFuzzer:
             'reward_max': float(df['reward'].max()),
             'reward_min': float(df['reward'].min()),
             'reward_std': float(df['reward'].std()),
-            'total_bugs_found': int(df['bugs_found'].sum()),
+            'total_bugs_found': int(df['bugs_found'].astype(int).sum()),
             'avg_policing_rate': float(df['policing_rate'].mean()),
             'vls_tested': df['target_vl'].nunique(),
             'rules_tested': df['protocol_rule'].nunique(),

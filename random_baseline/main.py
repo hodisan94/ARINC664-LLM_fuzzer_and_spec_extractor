@@ -41,7 +41,7 @@ class RandomFuzzer:
     
     def __init__(
         self,
-        spec_rules_path: str = "configs/spec_rules.json",
+        spec_rules_path: str = "configs/spec_rules_filtered.json",
         test_cases_path: str = "configs/test_cases.json",
         seed_frames_path: str = "llm_fuzzer/data/seed_frames.json",
         history_path: str = "random_baseline/data/iteration_history.jsonl",

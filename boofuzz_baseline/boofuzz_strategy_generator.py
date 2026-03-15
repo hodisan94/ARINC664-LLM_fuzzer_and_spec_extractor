@@ -40,7 +40,7 @@ class BoofuzzStrategyGenerator:
     def __init__(
         self,
         test_cases_path: str = "configs/test_cases.json",
-        spec_rules_path: str = "configs/spec_rules.json"
+        spec_rules_path: str = "configs/spec_rules_filtered.json"
     ):
         """
         Initialize boofuzz strategy generator.
