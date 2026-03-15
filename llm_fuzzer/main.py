@@ -199,10 +199,9 @@ class LLMFuzzer:
             
             # Step 4: Feedback Analyzer
             print("\n[4/4] Analyzing Feedback...")
-            # Use CSV content if available, otherwise fallback to log content
-            analysis_content = sim_result.get('csv_content') or sim_result['log_content']
             feedback = self.feedback_analyzer.analyze(
-                log_content=analysis_content,
+                log_content=sim_result.get('log_content', ''),
+                csv_content=sim_result.get('csv_content', ''),
                 strategy=strategy,
                 history=history
             )

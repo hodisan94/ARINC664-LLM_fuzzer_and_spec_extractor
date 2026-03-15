@@ -49,6 +49,7 @@ class FeedbackAnalyzer:
         self,
         log_file: Optional[str] = None,
         log_content: Optional[str] = None,
+        csv_content: Optional[str] = None,
         strategy: Optional[Dict[str, Any]] = None,
         history: Optional[pd.DataFrame] = None
     ) -> Dict[str, Any]:
@@ -57,42 +58,16 @@ class FeedbackAnalyzer:
         
         Args:
             log_file: Path to simulator log file (optional)
-            log_content: Raw log content (optional, used if log_file not provided)
+            log_content: Simulator stdout text (contains ExportMIB data)
+            csv_content: CSV text from AFDX-LOG-OUTPUT.csv (optional)
             strategy: Test strategy that was executed (optional)
             history: DataFrame of previous iterations (optional)
-            
-        Returns:
-            Complete feedback dictionary:
-            {
-                "metrics": {
-                    "frames_received": int,
-                    "frames_forwarded": int,
-                    "frames_dropped_policing": int,
-                    "frames_dropped_invalid_vl": int,
-                    "malformed_accepted": int,
-                    "forward_rate": float,
-                    "drop_rate": float,
-                    "policing_rate": float,
-                    ...
-                },
-                "reward": float,
-                "reward_components": {...},
-                "reward_breakdown": str,
-                "analysis": {
-                    "policing_effectiveness": str,
-                    "bugs_found": bool,
-                    "edge_case_tested": bool,
-                    "recommendation": str
-                },
-                "success": bool
-            }
         """
-        # Parse simulator log
         try:
             if log_file:
-                log_parser = SimulatorLogParser(log_file=log_file)
+                log_parser = SimulatorLogParser(log_file=log_file, csv_content=csv_content)
             elif log_content:
-                log_parser = SimulatorLogParser(log_content=log_content)
+                log_parser = SimulatorLogParser(log_content=log_content, csv_content=csv_content)
             else:
                 raise ValueError("Either log_file or log_content must be provided")
             
