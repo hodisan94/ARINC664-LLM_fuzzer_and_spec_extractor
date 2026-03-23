@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-23T23:06:47.393583",
+  "generated": "2026-03-24T00:25:10.151797",
   "total_rules": 72,
   "iterations": {
     "LLM": 200,
@@ -18,6 +18,23 @@
     "Boofuzz": {
       "unique_rules_tested": 34,
       "coverage_percent": 47.2
+    }
+  },
+  "normalized_spec_coverage": {
+    "LLM": {
+      "covered": 27,
+      "total": 72,
+      "pct": 37.5
+    },
+    "Random": {
+      "covered": 26,
+      "total": 72,
+      "pct": 36.1
+    },
+    "Boofuzz": {
+      "covered": 3,
+      "total": 72,
+      "pct": 4.2
     }
   },
   "time_to_coverage": {

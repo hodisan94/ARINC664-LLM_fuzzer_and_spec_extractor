@@ -1,0 +1,33 @@
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 50
+Successful: 50
+Failed: 0
+
+Reward Statistics:
+  Mean: 2.080
+  Max: 2.710
+  Min: 1.180
+
+Bugs Found: 0
+
+VLs Tested: 8 / 8
+  VL IDs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+
+Mutation Types Tested: 41
+  Types: ['Address', 'Addressing.frame_based_filtering', 'Addressing.location_id_coding', 'Boolean', 'Broadcast Address', 'Byte ACi', 'Communication Ports.no_ip_fragmentation_for_sampling_com_ports', 'Communication Ports.unidirectional_multicast_for_sampling', 'Communication_Ports.afdx_reception_port_quintuplet_uniqueness', 'Communication_Ports.afdx_transmission_port_quintuplet_uniqueness', 'Connection Management.time_wait_state_duration', 'Fragmentation.do_not_exceed_mms_s', 'Frame Validation.maximum_frame_size_for_vl', 'ICMP Handling.echo_reply_forwarding_requirement', 'ICMP Handling.echo_reply_source_address', 'ICMP Handling.multicast_echo_request_discard_allowance', 'ICMP Handling.reverse_source_route_for_echo_reply', 'ICMP.generate_icmp_destination_unreachable', 'ICMP_Echo_Request_Response', 'ICMP_Message_Handling.explicit_configuration_requirement_for_address_mask_agent', 'ICMP_message_type', 'IP_Addressing.ip_address_class_a_private_format_requirement', 'IP_Addressing.ip_multicast_address_format_requirement', 'IP_Addressing.ip_source_address_identifies_transmitting_partition', 'IP_Layer_Requirements.no_gateway_operation_required', 'Jitter.jitter_time_calculation', 'Network Layer.unique_data_flow_identification', 'Network Layer.valid_frame_filtering_criteria', 'Options Processing', 'address_validation', 'bag_interval_enforcement', 'default_ttl_value', 'domain_id_coding', 'ethernet_frame_size_handling_range', 'integrity_checking.valid_sequence_number_range_for_frame_acceptance', 'mac_destination_address_constant_field', 'mac_destination_address_format', 'maximum_frame_size_for_vl', 'maximum_jitter_value', 'sub_vl_fifo_queue_exclusivity', 'vl_id_port_authorization']
+
+Strategy Distribution:
+  edge-case: 49
+  conformance: 1
+
+Top 5 Iterations (by reward):
+  Iter 1: VL=2001, mutation=maximum_frame_size_for_vl, reward=2.710
+  Iter 23: VL=3001, mutation=Jitter.jitter_time_calculation, reward=2.710
+  Iter 36: VL=2002, mutation=Frame Validation.maximum_frame_size_for_vl, reward=2.710
+  Iter 24: VL=1001, mutation=Fragmentation.do_not_exceed_mms_s, reward=2.530
+  Iter 3: VL=2002, mutation=bag_interval_enforcement, reward=2.380
+
+======================================================================

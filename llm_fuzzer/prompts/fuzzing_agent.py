@@ -36,11 +36,11 @@ def _build_coverage_section(coverage_stats: Optional[Dict[str, Any]], iteration:
                 lines.append(f"  '{mt}' — used {count} times (PENALTY applied!)")
 
     if uncovered:
-        lines.append(f"\nUNTESTED RULES ({len(uncovered)} remaining — high reward bonus for testing new ones!):")
-        for rule in uncovered[:30]:
+        lines.append(f"\nUNTESTED RULES ({len(uncovered)} remaining — +1.0 BONUS for each new one!):")
+        for rule in uncovered[:50]:
             lines.append(f"  - {rule}")
-        if len(uncovered) > 30:
-            lines.append(f"  ... and {len(uncovered) - 30} more")
+        if len(uncovered) > 50:
+            lines.append(f"  ... and {len(uncovered) - 50} more")
 
     if covered:
         lines.append(f"\nALREADY TESTED ({len(covered)} rules — no new-rule bonus):")
@@ -158,28 +158,42 @@ def _build_protocol_rules_section(spec_rules: Dict[str, Any]) -> str:
 
 
 def _build_test_cases_section(test_cases: Dict[str, Any]) -> str:
-    """Format test cases for the prompt."""
+    """Format test cases for the prompt.
+
+    Shows ALL rule names with summary + case count so the LLM can pick
+    any of them, plus detailed examples for a handful of rules.
+    """
     lines = ["\n" + "=" * 70]
-    lines.append("PREDEFINED TEST CASES (You can use these OR propose your own):")
+    lines.append("PREDEFINED TEST CASES (You can use ANY of these by name):")
     lines.append("=" * 70)
-    
-    for rule_name, rule_data in sorted(test_cases.items())[:10]:
-        if "test_cases" not in rule_data:
+
+    sorted_items = sorted(test_cases.items())
+
+    lines.append(f"\nTotal rule categories with test cases: {len(sorted_items)}")
+    lines.append("Pick any rule below as your 'protocol_rule' and reference its TC indices.\n")
+
+    DETAILED_COUNT = 5
+    for idx, (rule_name, rule_data) in enumerate(sorted_items):
+        cases = rule_data.get("test_cases", [])
+        summary = rule_data.get("rule_summary", "")
+        if not cases:
             continue
-            
-        cases = rule_data["test_cases"]
-        lines.append(f"\n{rule_name}: ({len(cases)} test cases available)")
-        
-        # Show first 3-4 examples
-        for idx, tc in enumerate(cases[:4]):
-            lines.append(f"  TC{idx}: {tc.get('violation_type', 'unknown')}")
-            lines.append(f"       value={tc.get('value')}, reason: {tc.get('reason', '')[:50]}...")
-        
-        if len(cases) > 4:
-            lines.append(f"  ... and {len(cases) - 4} more test cases")
-    
-    lines.append("\nNOTE: You can also propose CUSTOM mutations beyond these test cases!")
-    
+
+        if idx < DETAILED_COUNT:
+            lines.append(f"\n{rule_name}: ({len(cases)} TCs) — {summary[:100]}")
+            for tc_idx, tc in enumerate(cases[:3]):
+                lines.append(f"  TC{tc_idx}: {tc.get('violation_type', '?')} "
+                             f"value={tc.get('value', '?')}")
+            if len(cases) > 3:
+                lines.append(f"  ... +{len(cases) - 3} more TCs")
+        else:
+            short_summary = f" — {summary[:80]}" if summary else ""
+            lines.append(f"  {rule_name} ({len(cases)} TCs){short_summary}")
+
+    lines.append("\nTo use a test case: set protocol_rule to the rule name above "
+                 "and test_cases to e.g. [\"TC0\", \"TC1\"].")
+    lines.append("You can ALSO propose CUSTOM mutations beyond these test cases!")
+
     return "\n".join(lines)
 
 
@@ -268,54 +282,50 @@ def _build_decision_guidelines(iteration: int, coverage_stats: Optional[Dict[str
     """Provide decision-making guidelines to the LLM."""
     uncovered_count = len(coverage_stats.get("uncovered_rules", [])) if coverage_stats else "unknown"
     covered_count = len(coverage_stats.get("covered_rules", [])) if coverage_stats else 0
+    total_rules = coverage_stats.get("total_rules", 1) if coverage_stats else 1
+    coverage_pct = (covered_count / total_rules * 100) if isinstance(covered_count, int) and total_rules > 0 else 0
 
-    exploration_priority = "HIGH" if (isinstance(covered_count, int) and covered_count < 40) else "MEDIUM"
+    if coverage_pct < 50:
+        phase = "EXPLORE"
+        phase_msg = "Coverage is LOW — pick UNTESTED rules from the list above for +1.0 bonus each!"
+    elif coverage_pct < 90:
+        phase = "FILL GAPS"
+        phase_msg = f"Good progress! {uncovered_count} rules remain. Keep picking from UNTESTED list."
+    else:
+        phase = "DEEPEN"
+        phase_msg = ("Coverage is HIGH — most rules tested. Now DEEPEN: re-test rules with "
+                     "DIFFERENT VLs, parameters, and strategies. Overuse penalty is reduced.")
 
     return f"""
 {"=" * 70}
-DECISION GUIDELINES:
+DECISION GUIDELINES — Phase: {phase} (coverage {coverage_pct:.0f}%)
 {"=" * 70}
 
-*** MOST IMPORTANT RULE ***
-You MUST test a DIFFERENT protocol rule each iteration. You get +1.0 bonus
-for each NEW rule and a HARSH PENALTY for reusing mutation_types you already tried.
-Check the COVERAGE STATUS section and pick from UNTESTED RULES.
-Remaining untested: {uncovered_count}. Exploration priority: {exploration_priority}.
+{phase_msg}
 
-1. COVERAGE-FIRST STRATEGY:
-   - Look at the UNTESTED RULES list above
-   - Pick a rule name from that list as your mutation_type
-   - Use predefined test cases when available for that rule
-   - This is the FASTEST way to maximize your reward
+1. PICK YOUR RULE:
+   - If UNTESTED rules remain: pick one from the UNTESTED list above (you get +1.0 bonus)
+   - Set your 'mutation_type' to EXACTLY the rule name from the list
+   - If all rules are tested: pick a rule you want to DEEPEN with different params
 
-2. TEST CASE SELECTION:
-   You have TWO options (PREFER OPTION A for untested rules):
-   
-   A) USE PREDEFINED TEST CASES (RECOMMENDED for broad coverage):
-      - Choose 1-3 test cases from the "PREDEFINED TEST CASES" section
-      - Match the rule name to find relevant test cases
-      - Specify test case IDs like ["TC0", "TC2"]
-   
-   B) PROPOSE CUSTOM MUTATIONS:
-      - Only use this for rules where no test cases exist
-      - Or to go deeper on a rule that found bugs
+2. USE PREDEFINED TEST CASES (STRONGLY RECOMMENDED):
+   - Look at the "PREDEFINED TEST CASES" section — there are {total_rules}+ rules available
+   - Match your chosen rule name to find its test cases
+   - Set test_cases to e.g. ["TC0", "TC1"] to use those specific cases
+   - This is the FASTEST way to cover new rules
 
-3. STRATEGY TYPES:
-   - "conformance": Test protocol compliance with valid parameters
-   - "edge-case": Test boundary values, invalid identifiers (recommended)
-   - "adversarial": Test extreme violations, stress testing
+3. CUSTOM MUTATIONS (use when no test cases exist):
+   - Propose specific values: bag_value, frame_size, sequence_number, timing_jitter_ms
+   - Especially useful for deepening investigation of interesting rules
 
-4. LEARNING FROM HISTORY:
-   - If bug was found: Continue testing that area
-   - If reward was high on a NEW rule: Good, now move to another new rule
-   - If reward was high on a REPEATED rule: STOP — you already tested it, move on!
+4. STRATEGY TYPES:
+   - "conformance": valid parameters, verify compliance
+   - "edge-case": boundary values (RECOMMENDED — most findings come from here)
+   - "adversarial": extreme violations, stress testing
 
-5. DIVERSITY:
-   - NEVER repeat the same mutation_type more than 2 times total
-   - Rotate through VLs: each VL should be tested roughly equally
-   - Vary strategy types: mix conformance, edge-case, adversarial
+5. VL ROTATION: spread tests across VLs (1001-3002) for broader coverage
 
-ITERATION {iteration}: {"Early exploration — test as many NEW rules as possible!" if iteration < 15 else "Active coverage — fill remaining gaps in untested rules!" if iteration < 35 else "Late phase — revisit high-reward rules or go deeper on bug areas."}
+ITERATION {iteration}: {phase_msg}
 """
 
 

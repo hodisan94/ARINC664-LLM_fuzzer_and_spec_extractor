@@ -130,6 +130,39 @@ def plot_rule_coverage(
     print(f"  Saved: {out_path}")
 
 
+def normalized_spec_coverage(df: pd.DataFrame, spec_categories: List[str]) -> Dict[str, Any]:
+    """Map each fuzzer's protocol_rule to the closest spec category and count
+    how many of the 72 spec categories are covered.
+
+    Matching strategy: normalize both sides, then check if the fuzzer rule
+    *starts with* or *equals* a normalized spec category (handles
+    'frame_validation.discard_frames_smaller_than_minimum_size' matching
+    the 'Frame Validation' category).
+    """
+    if df.empty:
+        return {"covered": 0, "total": len(spec_categories), "pct": 0.0, "matched": []}
+
+    norm_cats = {normalize_rule_name(c): c for c in spec_categories}
+    rules = get_rule_field(df)
+
+    matched_cats: set = set()
+    for raw_rule in rules:
+        norm = normalize_rule_name(raw_rule)
+        for nc, original in norm_cats.items():
+            if norm == nc or norm.startswith(nc + "_") or nc.startswith(norm + "_"):
+                matched_cats.add(original)
+
+    total = len(spec_categories)
+    covered = len(matched_cats)
+    return {
+        "covered": covered,
+        "total": total,
+        "pct": round(covered / total * 100, 1) if total > 0 else 0.0,
+        "matched": sorted(matched_cats),
+        "unmatched": sorted(set(spec_categories) - matched_cats),
+    }
+
+
 # ---------------------------------------------------------------------------
 # Metric 2 — Time to Coverage (80% / 100%)
 # ---------------------------------------------------------------------------
@@ -643,6 +676,21 @@ def main():
     if coverage_curves:
         plot_rule_coverage(coverage_curves, total_rules, FIGURES_DIR / "rule_coverage.png")
     report["rule_coverage"] = coverage_results
+
+    # Metric 1b — Normalized Spec Coverage (maps to 72 spec categories)
+    print("\n  Normalized Spec Coverage (mapped to spec categories):")
+    spec_categories = list(spec_rules.keys())
+    norm_cov = {}
+    for name, df in data.items():
+        nc = normalized_spec_coverage(df, spec_categories)
+        norm_cov[name] = nc
+        print(f"    {name}: {nc['covered']}/{nc['total']} spec categories = {nc['pct']}%")
+        if nc["unmatched"]:
+            print(f"      Unmatched: {nc['unmatched'][:5]}{'...' if len(nc['unmatched']) > 5 else ''}")
+    report["normalized_spec_coverage"] = {
+        n: {"covered": v["covered"], "total": v["total"], "pct": v["pct"]}
+        for n, v in norm_cov.items()
+    }
 
     # -----------------------------------------------------------------------
     # Metric 2 — Time to Coverage

@@ -199,11 +199,17 @@ class LLMFuzzer:
             
             # Step 4: Feedback Analyzer
             print("\n[4/4] Analyzing Feedback...")
+            cov_pct = 0.0
+            if not history.empty and "protocol_rule" in history.columns:
+                n_unique = history["protocol_rule"].dropna().nunique()
+                total_known = len(self.strategy_planner.spec_rules) + len(self.strategy_planner.test_cases)
+                cov_pct = (n_unique / total_known * 100) if total_known > 0 else 0.0
             feedback = self.feedback_analyzer.analyze(
                 log_content=sim_result.get('log_content', ''),
                 csv_content=sim_result.get('csv_content', ''),
                 strategy=strategy,
-                history=history
+                history=history,
+                coverage_pct=cov_pct
             )
             
             print(f"  Reward: {feedback.get('reward', 0.0):.3f}")

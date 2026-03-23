@@ -53,7 +53,8 @@ class RewardCalculator:
         self,
         metrics: Dict[str, Any],
         strategy: Dict[str, Any],
-        history: Optional[pd.DataFrame] = None
+        history: Optional[pd.DataFrame] = None,
+        coverage_pct: float = 0.0
     ) -> Dict[str, Any]:
         r_impact = self._compute_impact_score(metrics)
         r_new_violations = self._compute_new_violations_score(metrics)
@@ -61,7 +62,7 @@ class RewardCalculator:
         r_repeat = self._compute_repeat_penalty(strategy, history)
         bonus_edge = self._compute_edge_bonus(strategy, metrics)
         bonus_mutation = self._compute_mutation_bonus(metrics)
-        penalty_overuse = self._compute_overuse_penalty(strategy, history)
+        penalty_overuse = self._compute_overuse_penalty(strategy, history, coverage_pct)
         bonus_new_rule = self._compute_new_rule_bonus(strategy, history)
 
         reward = (
@@ -211,9 +212,15 @@ class RewardCalculator:
         return 0.0
 
     def _compute_overuse_penalty(
-        self, strategy: Dict[str, Any], history: Optional[pd.DataFrame]
+        self, strategy: Dict[str, Any], history: Optional[pd.DataFrame],
+        coverage_pct: float = 0.0
     ) -> float:
-        """Harsh penalty for reusing the same mutation_type too many times across ALL history."""
+        """Penalty for reusing the same mutation_type, reduced when coverage is high.
+
+        When coverage > 90%, most rules are explored so re-testing with different
+        parameters is expected.  The penalty scales down to let the LLM deepen
+        its investigation instead of being punished for having no new rules left.
+        """
         if history is None or len(history) == 0:
             return 0.0
 
@@ -222,10 +229,18 @@ class RewardCalculator:
             return 0.0
 
         times_used = int((history["mutation_type"] == mutation_type).sum())
-        if times_used >= self.overuse_threshold:
-            excess = times_used - self.overuse_threshold + 1
-            return min(self.penalty_overuse * excess, 2.0)
-        return 0.0
+        if times_used < self.overuse_threshold:
+            return 0.0
+
+        excess = times_used - self.overuse_threshold + 1
+        raw_penalty = min(self.penalty_overuse * excess, 2.0)
+
+        if coverage_pct >= 90:
+            raw_penalty *= 0.2
+        elif coverage_pct >= 70:
+            raw_penalty *= 0.5
+
+        return raw_penalty
 
     def _compute_new_rule_bonus(
         self, strategy: Dict[str, Any], history: Optional[pd.DataFrame]

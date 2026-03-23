@@ -51,7 +51,8 @@ class FeedbackAnalyzer:
         log_content: Optional[str] = None,
         csv_content: Optional[str] = None,
         strategy: Optional[Dict[str, Any]] = None,
-        history: Optional[pd.DataFrame] = None
+        history: Optional[pd.DataFrame] = None,
+        coverage_pct: float = 0.0
     ) -> Dict[str, Any]:
         """
         Analyze feedback from a simulator run.
@@ -62,6 +63,7 @@ class FeedbackAnalyzer:
             csv_content: CSV text from AFDX-LOG-OUTPUT.csv (optional)
             strategy: Test strategy that was executed (optional)
             history: DataFrame of previous iterations (optional)
+            coverage_pct: Current rule coverage percentage (0-100)
         """
         try:
             if log_file:
@@ -86,7 +88,8 @@ class FeedbackAnalyzer:
         reward_result = self.reward_calculator.calculate(
             metrics=metrics,
             strategy=strategy,
-            history=history
+            history=history,
+            coverage_pct=coverage_pct
         )
         
         # Perform analysis (pass history for coverage-aware recommendations)
