@@ -353,12 +353,18 @@ struct MutationConfig
     int payloadClampCount;
     int txProbDrops;           // Count of frames dropped by probability
     int macSpoofCount;         // NEW: Count of MAC spoofing mutations applied
+    int sequenceNumberOverride; // 0 = no override, >0 = force this seq num on target VL
+    int seqMutationCount;       // Count of sequence-number mutations applied
+    std::string destMacMutation; // "none", "corrupt_prefix", "wrong_vl", "zero"
+    int destMacMutationCount;   // Count of dest-MAC mutations applied
     
     MutationConfig() : 
         targetVL(0), probability(0.0), payloadDeltaBytes(0), 
         timingJitterMs(0), macMutation("none"), isExtremeTest(false), isActive(false),
         payloadAppliedBytes(0), jitterAppliedMs(0), payloadClampCount(0), 
-        txProbDrops(0), macSpoofCount(0) {}
+        txProbDrops(0), macSpoofCount(0),
+        sequenceNumberOverride(0), seqMutationCount(0),
+        destMacMutation("none"), destMacMutationCount(0) {}
 };
 
 // Global mutation config (accessible from traffic generator)
@@ -445,12 +451,35 @@ bool LoadMutations(const std::string& mutationsFile, MutationConfig& config)
         }
     }
     
+    // Parse sequence_number_override (0 = disabled)
+    size_t seqPos = content.find("\"sequence_number_override\"");
+    if (seqPos != std::string::npos)
+    {
+        size_t colonPos = content.find(":", seqPos);
+        size_t commaPos = content.find(",", colonPos);
+        if (commaPos == std::string::npos) commaPos = content.find("}", colonPos);
+        std::string seqStr = content.substr(colonPos + 1, commaPos - colonPos - 1);
+        config.sequenceNumberOverride = std::stoi(seqStr);
+    }
+    
+    // Parse dest_mac_mutation ("none", "corrupt_prefix", "wrong_vl", "zero")
+    size_t destMacPos = content.find("\"dest_mac_mutation\"");
+    if (destMacPos != std::string::npos)
+    {
+        size_t colonPos = content.find(":", destMacPos);
+        size_t quoteStart = content.find("\"", colonPos);
+        size_t quoteEnd = content.find("\"", quoteStart + 1);
+        config.destMacMutation = content.substr(quoteStart + 1, quoteEnd - quoteStart - 1);
+    }
+    
     config.isActive = true;
     NS_LOG_INFO("Loaded mutations: VL=" << config.targetVL 
                 << ", prob=" << config.probability
                 << ", payload_delta=" << config.payloadDeltaBytes
                 << ", timing_jitter=" << config.timingJitterMs
                 << ", mac_mutation=" << config.macMutation
+                << ", seq_override=" << config.sequenceNumberOverride
+                << ", dest_mac_mutation=" << config.destMacMutation
                 << ", extreme_test=" << (config.isExtremeTest ? "YES" : "NO"));
     
     return true;
@@ -738,23 +767,39 @@ int main(int argc, char* argv[])
         
         if (g_mutationConfig.isActive && g_mutationConfig.targetVL == vlConfig.vlId)
         {
-            // Apply payload delta mutation
             int64_t candidate = static_cast<int64_t>(baseSize) + static_cast<int64_t>(g_mutationConfig.payloadDeltaBytes);
             
-            // Clamp to valid range
-            if (candidate < static_cast<int64_t>(vlConfig.minFrameSize))
+            if (g_mutationConfig.isExtremeTest)
             {
-                frameSize = vlConfig.minFrameSize;
-                g_mutationConfig.payloadClampCount++;
-            }
-            else if (candidate > static_cast<int64_t>(vlConfig.maxFrameSize))
-            {
-                frameSize = vlConfig.maxFrameSize;
-                g_mutationConfig.payloadClampCount++;
+                // FUZZ MODE: allow out-of-range sizes so the switch can
+                // exercise its ValidateFrame() checks.  Clamp only to
+                // absolute Ethernet limits (17 header bytes … 1518 total).
+                if (candidate < 17)  candidate = 17;
+                if (candidate > 9000) candidate = 9000;   // jumbo-safe cap
+                frameSize = static_cast<uint32_t>(candidate);
+                if (candidate < static_cast<int64_t>(vlConfig.minFrameSize) ||
+                    candidate > static_cast<int64_t>(vlConfig.maxFrameSize))
+                {
+                    g_mutationConfig.payloadClampCount = 0; // not clamped
+                }
             }
             else
             {
-                frameSize = static_cast<uint32_t>(candidate);
+                // NORMAL MODE: clamp to VL-configured range (spec-compliant ES behavior)
+                if (candidate < static_cast<int64_t>(vlConfig.minFrameSize))
+                {
+                    frameSize = vlConfig.minFrameSize;
+                    g_mutationConfig.payloadClampCount++;
+                }
+                else if (candidate > static_cast<int64_t>(vlConfig.maxFrameSize))
+                {
+                    frameSize = vlConfig.maxFrameSize;
+                    g_mutationConfig.payloadClampCount++;
+                }
+                else
+                {
+                    frameSize = static_cast<uint32_t>(candidate);
+                }
             }
             
             g_mutationConfig.payloadAppliedBytes = static_cast<int>(frameSize) - static_cast<int>(baseSize);
@@ -762,7 +807,8 @@ int main(int argc, char* argv[])
             NS_LOG_INFO("  Mutation applied to VL " << vlConfig.vlId 
                         << ": base=" << baseSize << " frameSize=" << frameSize 
                         << " (requested delta=" << g_mutationConfig.payloadDeltaBytes 
-                        << ", applied delta=" << g_mutationConfig.payloadAppliedBytes << ")");
+                        << ", applied delta=" << g_mutationConfig.payloadAppliedBytes 
+                        << ", extreme=" << (g_mutationConfig.isExtremeTest ? "YES" : "NO") << ")");
         }
         
         gen->AddVirtualLink(vl, frameSize);
@@ -917,6 +963,19 @@ int main(int argc, char* argv[])
     switchB->ExportMIB(ossB);
     std::cout << ossB.str();
 
+    // End System statistics (aggregate across ES1, ES2, ES3 receivers)
+    std::cout << "\n=== END SYSTEM STATISTICS ===\n";
+    {
+        uint32_t totalSent = es1->GetFramesSent() + es2->GetFramesSent() + es3->GetFramesSent();
+        uint32_t totalRecv = es1->GetFramesReceived() + es2->GetFramesReceived() + es3->GetFramesReceived();
+        uint32_t totalRej  = es1->GetFramesRejected() + es2->GetFramesRejected() + es3->GetFramesRejected();
+        uint32_t totalDup  = es1->GetDuplicatesDiscarded() + es2->GetDuplicatesDiscarded() + es3->GetDuplicatesDiscarded();
+        std::cout << "esFramesSent = " << totalSent << "\n";
+        std::cout << "esFramesReceived = " << totalRecv << "\n";
+        std::cout << "esFramesRejected = " << totalRej << "\n";
+        std::cout << "esDuplicatesDiscarded = " << totalDup << "\n";
+    }
+
     // Export mutation metrics (for AI fuzzer parsing)
     if (g_mutationConfig.isActive)
     {
@@ -926,12 +985,16 @@ int main(int argc, char* argv[])
         std::cout << "AfdxMutation.payloadClampCount = " << g_mutationConfig.payloadClampCount << "\n";
         std::cout << "AfdxMutation.txProbDrops = " << g_mutationConfig.txProbDrops << "\n";
         std::cout << "AfdxMutation.macSpoofCount = " << g_mutationConfig.macSpoofCount << "\n";
+        std::cout << "AfdxMutation.seqMutationCount = " << g_mutationConfig.seqMutationCount << "\n";
+        std::cout << "AfdxMutation.destMacMutationCount = " << g_mutationConfig.destMacMutationCount << "\n";
         NS_LOG_INFO("\n--- Mutation Metrics ---");
         NS_LOG_INFO("Payload Applied (bytes): " << g_mutationConfig.payloadAppliedBytes);
         NS_LOG_INFO("Jitter Applied (ms): " << g_mutationConfig.jitterAppliedMs);
         NS_LOG_INFO("Payload Clamp Count: " << g_mutationConfig.payloadClampCount);
         NS_LOG_INFO("TX Probability Drops: " << g_mutationConfig.txProbDrops);
         NS_LOG_INFO("MAC Spoof Count: " << g_mutationConfig.macSpoofCount);
+        NS_LOG_INFO("Seq Mutation Count: " << g_mutationConfig.seqMutationCount);
+        NS_LOG_INFO("Dest MAC Mutation Count: " << g_mutationConfig.destMacMutationCount);
     }
     
     // Cleanup

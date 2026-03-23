@@ -221,6 +221,7 @@ class LLMFuzzer:
                 'duration': (datetime.now() - iteration_start).total_seconds(),
                 'target_vl': strategy['target_vl'],
                 'mutation_type': strategy['mutation_type'],
+                'protocol_rule': strategy.get('protocol_rule', strategy['mutation_type']),
                 'test_cases': strategy.get('test_cases'),  # LLM can choose test cases
                 'bag_value': strategy.get('bag_value'),    # Or specific values
                 'frame_size': strategy.get('frame_size'),  # Or both!
@@ -237,6 +238,11 @@ class LLMFuzzer:
                 'frames_forwarded': feedback['metrics'].get('frames_forwarded', 0),
                 'policing_rate': feedback['metrics'].get('policing_rate', 0.0),
                 'forward_rate': feedback['metrics'].get('forward_rate', 0.0),
+                'frames_dropped_frame_error': feedback['metrics'].get('frames_dropped_frame_error', 0),
+                'frames_dropped_mac_error': feedback['metrics'].get('frames_dropped_mac_error', 0),
+                'es_frames_rejected': feedback['metrics'].get('es_frames_rejected', 0),
+                'es_duplicates_discarded': feedback['metrics'].get('es_duplicates_discarded', 0),
+                'es_rejection_rate': feedback['metrics'].get('es_rejection_rate', 0.0),
                 'bugs_found': feedback.get('analysis', {}).get('bugs_found', False),
                 'recommendation': feedback.get('analysis', {}).get('recommendation', 'No recommendation')
             }
@@ -256,6 +262,7 @@ class LLMFuzzer:
                 'duration': (datetime.now() - iteration_start).total_seconds(),
                 'target_vl': strategy.get('target_vl', -1) if 'strategy' in locals() else -1,
                 'mutation_type': strategy.get('mutation_type', 'unknown') if 'strategy' in locals() else 'unknown',
+                'protocol_rule': strategy.get('protocol_rule', strategy.get('mutation_type', 'unknown')) if 'strategy' in locals() else 'unknown',
                 'test_cases': None,
                 'bag_value': None,
                 'frame_size': None,

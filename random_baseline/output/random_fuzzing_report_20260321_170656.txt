@@ -1,0 +1,39 @@
+======================================================================
+RANDOM BASELINE FUZZER - FINAL REPORT
+======================================================================
+
+Total Iterations: 3
+Successful: 3
+Failed: 0
+
+Reward Statistics:
+  Mean: 1.357
+  Max: 1.710
+  Min: 1.180
+  Std: 0.306
+
+Bugs Found: 0
+
+VLs Tested: 2 / 8
+  VL IDs: [2001, 3001]
+
+Protocol Rules Tested: 3
+  Rules: ['frame_validation.frame_discard_on_validation_failure', 'tcp_behavior.tcp_data_aggregation_permission', 'variable_length_field_population']
+
+Strategy Distribution:
+  adversarial: 1
+  edge-case: 1
+  conformance: 1
+
+Test Mode Distribution:
+  custom: 2
+  custom_fallback: 1
+
+Top 5 Iterations (by reward):
+  Iter 1: VL=3001, rule=tcp_behavior.tcp_data_aggregation_permission, reward=1.710
+  Iter 0: VL=2001, rule=frame_validation.frame_discard_on_validation_failure, reward=1.180
+  Iter 2: VL=2001, rule=variable_length_field_population, reward=1.180
+
+======================================================================
+NOTE: This is a RANDOM baseline - no learning or adaptation
+======================================================================

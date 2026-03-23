@@ -1,0 +1,38 @@
+======================================================================
+RANDOM BASELINE FUZZER - FINAL REPORT
+======================================================================
+
+Total Iterations: 3
+Successful: 3
+Failed: 0
+
+Reward Statistics:
+  Mean: 1.407
+  Max: 1.530
+  Min: 1.180
+  Std: 0.197
+
+Bugs Found: 0
+
+VLs Tested: 2 / 8
+  VL IDs: [1003, 2001]
+
+Protocol Rules Tested: 3
+  Rules: ['Communication_Ports.afdx_reception_port_quintuplet_uniqueness', 'network_architecture', 'switch_enters_passive_mode']
+
+Strategy Distribution:
+  conformance: 2
+  edge-case: 1
+
+Test Mode Distribution:
+  custom: 2
+  custom_fallback: 1
+
+Top 5 Iterations (by reward):
+  Iter 0: VL=1003, rule=network_architecture, reward=1.530
+  Iter 2: VL=2001, rule=switch_enters_passive_mode, reward=1.510
+  Iter 1: VL=1003, rule=Communication_Ports.afdx_reception_port_quintuplet_uniqueness, reward=1.180
+
+======================================================================
+NOTE: This is a RANDOM baseline - no learning or adaptation
+======================================================================

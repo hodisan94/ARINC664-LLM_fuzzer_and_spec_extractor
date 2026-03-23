@@ -1,0 +1,11 @@
+iteration,timestamp,duration,fuzzer_type,target_vl,protocol_rule,test_mode,strategy,test_cases,custom_mutation,num_frames,simulation_success,reward,frames_received,frames_dropped_policing,frames_forwarded,policing_rate,forward_rate,bugs_found
+0,2025-11-17T05:21:50.204137,10.117761,RANDOM_BASELINE,3002,frame_aging.discard_conditions,predefined,conformance,['TC0'],,0,True,0.0,0,0,0,0.0,0.0,False
+1,2025-11-17T05:22:00.345214,10.139469,RANDOM_BASELINE,2002,monitoring.discard_counters.categories,predefined,conformance,"['TC0', 'TC1', 'TC2']",,0,True,0.0,0,0,0,0.0,0.0,False
+2,2025-11-17T05:22:10.524087,10.177778,RANDOM_BASELINE,2001,sequence_number_field,predefined,adversarial,['TC0'],,20,True,0.0,0,0,0,0.0,0.0,False
+3,2025-11-17T05:22:20.679619,10.153477,RANDOM_BASELINE,1001,monitoring.statistics,predefined,adversarial,['TC0'],,20,True,0.0,0,0,0,0.0,0.0,False
+4,2025-11-17T05:22:30.790868,10.10918,RANDOM_BASELINE,1002,virtual_link.id_range,custom,edge-case,,Test virtual_link.id_range with unexpected type,20,True,0.0,0,0,0,0.0,0.0,False
+5,2025-11-17T05:22:40.966832,10.173826,RANDOM_BASELINE,1002,virtual_link.configuration_parameters,custom,adversarial,,Test extreme virtual_link.configuration_parameters boundary,20,True,0.0,0,0,0,0.0,0.0,False
+6,2025-11-17T05:22:51.134195,10.164154,RANDOM_BASELINE,1003,frame_structure.ip_header.header_validation,predefined,adversarial,['TC0'],,0,True,0.0,0,0,0,0.0,0.0,False
+7,2025-11-17T05:23:01.245530,10.109407,RANDOM_BASELINE,2002,output_buffer_size_high_priority_vls,custom,edge-case,,Test extreme output_buffer_size_high_priority_vls boundary,20,True,0.0,0,0,0,0.0,0.0,False
+8,2025-11-17T05:23:11.392691,10.145984,RANDOM_BASELINE,1003,frame_structure.ip_header.header_validation,custom,adversarial,,Use malformed frame_structure.ip_header.header_validation,20,True,0.0,0,0,0,0.0,0.0,False
+9,2025-11-17T05:23:21.573355,10.177662,RANDOM_BASELINE,3001,switching.forwarding_rules,custom,adversarial,,Set switching.forwarding_rules to random invalid value,20,True,0.0,0,0,0,0.0,0.0,False

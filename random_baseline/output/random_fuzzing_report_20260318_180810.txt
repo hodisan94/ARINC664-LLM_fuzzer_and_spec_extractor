@@ -1,0 +1,41 @@
+======================================================================
+RANDOM BASELINE FUZZER - FINAL REPORT
+======================================================================
+
+Total Iterations: 10
+Successful: 10
+Failed: 0
+
+Reward Statistics:
+  Mean: 1.267
+  Max: 1.593
+  Min: 1.007
+  Std: 0.274
+
+Bugs Found: 0
+
+VLs Tested: 6 / 8
+  VL IDs: [1001, 1002, 1003, 2002, 2003, 3002]
+
+Protocol Rules Tested: 10
+  Rules: ['Broadcast Address', 'Communication_Ports.afdx_reception_port_quintuplet_uniqueness', 'Network Layer.valid_frame_filtering_criteria', 'Redundancy Management.copy_frame_loss_due_to_sequencing', 'Reliability.real_time_communication_link_reliability', 'Signed_32', 'message_structure', 'minimum_ethernet_frame_size', 'switch_buffering.minimum_output_port_buffer_capacity', 'ttl_handling']
+
+Strategy Distribution:
+  conformance: 4
+  edge-case: 4
+  adversarial: 2
+
+Test Mode Distribution:
+  custom: 5
+  custom_fallback: 5
+
+Top 5 Iterations (by reward):
+  Iter 6: VL=3002, rule=message_structure, reward=1.593
+  Iter 3: VL=2002, rule=ttl_handling, reward=1.590
+  Iter 8: VL=3002, rule=minimum_ethernet_frame_size, reward=1.576
+  Iter 4: VL=1003, rule=Reliability.real_time_communication_link_reliability, reward=1.576
+  Iter 2: VL=1001, rule=Network Layer.valid_frame_filtering_criteria, reward=1.096
+
+======================================================================
+NOTE: This is a RANDOM baseline - no learning or adaptation
+======================================================================

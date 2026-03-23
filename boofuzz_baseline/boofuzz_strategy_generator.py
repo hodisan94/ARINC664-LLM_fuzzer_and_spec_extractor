@@ -101,9 +101,9 @@ class BoofuzzStrategyGenerator:
         vl_index = (iteration) % len(available_vls)
         target_vl = available_vls[vl_index]
         
-        # Map violation to strategy format (compatible with TestGenerator)
         rule_id = violation['rule_id']
-        
+        value = violation['value']
+
         # Determine mutation type from rule_id
         if 'bag' in rule_id.lower():
             mutation_type = 'bag'
@@ -117,46 +117,67 @@ class BoofuzzStrategyGenerator:
             mutation_type = 'vl_id'
         elif 'priority' in rule_id.lower():
             mutation_type = 'priority'
+        elif 'mac' in rule_id.lower() or 'address' in rule_id.lower():
+            mutation_type = 'mac_address'
         else:
             mutation_type = 'generic'
-        
-        # Extract value for direct application
-        value = violation['value']
+
+        # Extract concrete values for TestGenerator
         bag_value = None
         frame_size = None
         sequence_number = None
-        
+        sequence_number_override = None
+        dest_mac_mutation = None
+        mac_mutation_type = None
+        prob = None
+
         if mutation_type == 'bag' and isinstance(value, (int, float)):
             bag_value = int(value)
         elif mutation_type == 'frame_size' and isinstance(value, int):
             frame_size = value
-        elif mutation_type == 'sequence_number' and isinstance(value, int):
-            sequence_number = value
-        
-        # Create strategy (deterministic - no intelligence)
+        elif mutation_type == 'sequence_number':
+            if isinstance(value, int):
+                sequence_number = value
+            sequence_number_override = value if isinstance(value, int) else 0
+        elif mutation_type == 'mac_address':
+            mac_mutation_type = 'spoof_src'
+            dest_mac_mutation = 'corrupt_prefix'
+
+        # Cycle dest_mac_mutation variants on successive MAC violations
+        if dest_mac_mutation is not None:
+            dest_mac_variants = ['corrupt_prefix', 'wrong_vl', 'zero']
+            dest_mac_mutation = dest_mac_variants[iteration % len(dest_mac_variants)]
+
+        # Create strategy (deterministic, compatible with TestGenerator)
+        tc_idx = violation['id'].split('_TC')[-1] if '_TC' in violation['id'] else '0'
         strategy = {
             "target_vl": target_vl,
-            "mutation_type": mutation_type,
+            "mutation_type": rule_id,
             "protocol_rule": rule_id,
-            "test_mode": "predefined",  # Always predefined for boofuzz
-            "test_cases": [f"TC{self.current_index - 1}"],  # Reference to test case
+            "test_mode": "predefined",
+            "test_cases": [f"TC{tc_idx}"],
             "custom_mutation": None,
-            "strategy": "edge-case",  # boofuzz is always systematic
+            "strategy": "edge-case",
             "bag_value": bag_value,
             "frame_size": frame_size,
             "sequence_number": sequence_number,
+            "sequence_number_override": sequence_number_override,
+            "dest_mac_mutation": dest_mac_mutation,
+            "mac_mutation_type": mac_mutation_type,
+            "prob": prob,
+            "timing_jitter_ms": None,
+            "payload_pattern": None,
             "reasoning": (
                 f"boofuzz baseline: iteration {iteration}. "
                 f"Systematically testing violation '{violation['id']}' "
                 f"({violation['violation_type']}) on VL {target_vl}. "
                 f"No learning or adaptation - exhaustive sequential testing."
             ),
-            # Additional metadata for analysis
             "violation_id": violation['id'],
             "violation_type": violation['violation_type'],
             "expected_behavior": violation.get('expected_behavior', 'N/A')
         }
-        
+
         return strategy
     
     def get_progress(self) -> Dict[str, Any]:

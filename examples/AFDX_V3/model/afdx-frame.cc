@@ -74,14 +74,17 @@ AfdxFrame::SetSourceAddress(Mac48Address src)
       break;
     }
   }
-  NS_ASSERT_MSG(!isBroadcast, "Source MAC cannot be broadcast address (FF:FF:FF:FF:FF:FF)");
+  if (isBroadcast)
+  {
+    NS_LOG_WARN("Source MAC is broadcast (FF:FF:FF:FF:FF:FF) — will be caught by switch validation");
+  }
   
-  // Check 2: Source cannot be multicast (bit 0 of first octet must be 0)
-  // Multicast addresses have the least significant bit of the first byte set to 1
   bool isMulticast = (srcBuf[0] & 0x01) != 0;
-  NS_ASSERT_MSG(!isMulticast, "Source MAC cannot be multicast address (bit 0 of first octet is set)");
+  if (isMulticast)
+  {
+    NS_LOG_WARN("Source MAC is multicast — will be caught by switch validation");
+  }
   
-  // Check 3: Source cannot be all zeros (00:00:00:00:00:00)
   bool isAllZeros = true;
   for (int i = 0; i < 6; i++)
   {
@@ -91,7 +94,10 @@ AfdxFrame::SetSourceAddress(Mac48Address src)
       break;
     }
   }
-  NS_ASSERT_MSG(!isAllZeros, "Source MAC cannot be all zeros (00:00:00:00:00:00)");
+  if (isAllZeros)
+  {
+    NS_LOG_WARN("Source MAC is all zeros — will be caught by switch validation");
+  }
   
   m_sourceAddress = src;
 }
@@ -101,8 +107,10 @@ AfdxFrame::SetVirtualLinkId(uint16_t vlId)
 {
   // AFDX VL ID is a 12-bit field (0-4095)
   // ARINC 664 Part 7 specification
-  NS_ASSERT_MSG(vlId <= 4095, 
-                "Virtual Link ID must be 12-bit (0-4095). Received: " << vlId);
+  if (vlId > 4095)
+  {
+    NS_LOG_WARN("VL ID " << vlId << " exceeds 12-bit range (0-4095)");
+  }
   
   m_vlId = vlId;
 }
@@ -121,10 +129,20 @@ AfdxFrame::SetPayload(const uint8_t* data, uint32_t length)
   // But ARINC allows payloads down to 1 byte with padding
   // Maximum is 1471 bytes (to make 1488-byte frame with 17-byte header)
   
-  NS_ASSERT_MSG(length >= 1, 
-                "Payload must be at least 1 byte (ARINC 664 Part 7). Received: " << length);
-  NS_ASSERT_MSG(length <= 1471, 
-                "Payload exceeds maximum AFDX frame size (1471 bytes). Received: " << length);
+  if (length < 1)
+  {
+    NS_LOG_WARN("Payload is 0 bytes — padding to 1 byte");
+    length = 1;
+  }
+  if (length > 8983)
+  {
+    NS_LOG_WARN("Payload " << length << " exceeds buffer — capping at 8983");
+    length = 8983;
+  }
+  if (length > 1471)
+  {
+    NS_LOG_WARN("Payload " << length << " exceeds AFDX max (1471) — switch will validate");
+  }
   
   m_payloadSize = length;
   memcpy(m_payload, data, length);
@@ -137,9 +155,12 @@ AfdxFrame::SetPayloadWithVlRange(const AfdxVirtualLink& vl, const uint8_t* data,
   uint32_t minPayload = vl.GetMinPayloadSize();
   uint32_t maxPayload = vl.GetMaxPayloadSize();
   
-  NS_ASSERT_MSG(length >= minPayload && length <= maxPayload,
-                "Payload length (" << length << ") must be within VL payload range [" 
-                << minPayload << "," << maxPayload << "] for VL " << vl.GetVlId());
+  if (length < minPayload || length > maxPayload)
+  {
+    NS_LOG_WARN("Payload " << length << " outside VL " << vl.GetVlId()
+                << " range [" << minPayload << "," << maxPayload
+                << "] — allowing for fuzz testing, switch will validate");
+  }
   
   // Use standard SetPayload for actual storage
   SetPayload(data, length);
@@ -209,28 +230,29 @@ AfdxFrame::Serialize(Buffer::Iterator start) const
 {
   // Pre-serialization validation checks
   
-  // Check 1: Source and destination cannot be the same (loopback not allowed)
-  NS_ASSERT_MSG(m_sourceAddress != m_destinationAddress,
-                "Source and destination MAC addresses cannot be identical (no loopback)");
+  if (m_sourceAddress == m_destinationAddress)
+  {
+    NS_LOG_WARN("Source == Destination MAC (loopback) — switch will validate");
+  }
   
-  // Check 2: VL ID consistency with destination MAC (AFDX requirement)
-  // In AFDX, the last 2 bytes of destination MAC should match the VL ID
   uint8_t dstBuf[6];
   m_destinationAddress.CopyTo(dstBuf);
   uint16_t macVlId = (dstBuf[4] << 8) | dstBuf[5];
-  
   if (macVlId != m_vlId)
   {
-    NS_LOG_WARN("VL ID (" << m_vlId << ") does not match destination MAC last 2 bytes (" 
-                << macVlId << "). AFDX requires consistency.");
+    NS_LOG_WARN("VL ID (" << m_vlId << ") != destination MAC VL field ("
+                << macVlId << ")");
   }
   
-  // Check 3: Frame size validation
   uint32_t totalSize = 6 + 6 + 2 + 2 + 1 + m_payloadSize;
-  NS_ASSERT_MSG(totalSize >= 64, 
-                "Total frame size (" << totalSize << " bytes) is below Ethernet minimum (64 bytes)");
-  NS_ASSERT_MSG(totalSize <= 1518, 
-                "Total frame size (" << totalSize << " bytes) exceeds Ethernet maximum (1518 bytes)");
+  if (totalSize < 64)
+  {
+    NS_LOG_WARN("Frame " << totalSize << "B < 64B Ethernet minimum — switch will drop");
+  }
+  if (totalSize > 1518)
+  {
+    NS_LOG_WARN("Frame " << totalSize << "B > 1518B Ethernet maximum — switch will drop");
+  }
   
   // Serialize frame fields
   
@@ -260,15 +282,12 @@ AfdxFrame::Serialize(Buffer::Iterator start) const
 uint32_t
 AfdxFrame::Deserialize(Buffer::Iterator start)
 {
-  // Check if we have enough data for minimum AFDX frame
   uint32_t availableSize = start.GetRemainingSize();
-  uint32_t minFrameSize = 64;  // Ethernet minimum
+  uint32_t headerSize_min = 6 + 6 + 2 + 2 + 1; // 17 bytes minimum to read header
   
-  if (availableSize < minFrameSize)
+  if (availableSize < headerSize_min)
   {
-    NS_LOG_WARN("Buffer too small for valid AFDX frame. Available: " 
-                << availableSize << " bytes, Minimum: " << minFrameSize << " bytes");
-    // Return 0 to indicate deserialization failure
+    NS_LOG_WARN("Buffer too small for AFDX header: " << availableSize << "B < " << headerSize_min << "B");
     return 0;
   }
   
@@ -309,12 +328,14 @@ AfdxFrame::Deserialize(Buffer::Iterator start)
   uint32_t headerSize = 6 + 6 + 2 + 2 + 1;
   m_payloadSize = start.GetRemainingSize();
   
-  // Validate payload size
+  if (m_payloadSize > 8983)
+  {
+    NS_LOG_WARN("Payload " << m_payloadSize << "B exceeds buffer — truncating to 8983");
+    m_payloadSize = 8983;
+  }
   if (m_payloadSize > 1471)
   {
-    NS_LOG_ERROR("Payload size (" << m_payloadSize 
-                 << " bytes) exceeds AFDX maximum (1471 bytes)");
-    m_payloadSize = 1471;  // Truncate to maximum
+    NS_LOG_WARN("Payload " << m_payloadSize << "B exceeds AFDX max (1471) — switch will validate");
   }
   
   if (m_payloadSize > 0)

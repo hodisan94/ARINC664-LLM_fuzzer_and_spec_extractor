@@ -371,6 +371,7 @@ private:
   uint64_t m_framesDroppedPolicing;
   uint64_t m_framesDroppedInvalidVL;
   uint64_t m_framesDroppedFrameError;
+  uint64_t m_framesDroppedMACError;        ///< Frames dropped due to source MAC mismatch
   uint64_t m_framesDroppedBufferOverflow;  ///< Frames dropped due to queue overflow
   uint64_t m_framesDroppedAgedOut;         ///< Frames dropped due to age timeout
 

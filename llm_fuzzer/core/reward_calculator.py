@@ -1,390 +1,265 @@
 #!/usr/bin/env python3
 """
-Reward Calculator
+Reward Calculator (v2 — Impact-Based)
 
-Calculates reward scores for fuzzing iterations based on the paper's formula:
-
-    Reward = A1·r_policing - A2·r_forward + A3·r_novelty - A4·r_repeat
-           + bonus_edge + bonus_safety
+Reward = A1·r_impact + A2·r_new_violations + A3·r_novelty
+       - A4·r_repeat + bonus_edge + bonus_mutation_applied
 
 Where:
-- r_policing: proportion of frames dropped due to legitimate AFDX policing
-- r_forward: fraction of frames successfully forwarded
-- r_novelty: reward for testing strategies that differ from previous ones
-- r_repeat: penalty for tests that closely resemble recently executed tests
-- bonus_edge: additional reward for edge-case testing
-- bonus_safety: bonus when system doesn't crash under malformed inputs
-
-This module does NOT impose constraints - it evaluates based on observed results.
+- r_impact: how much the mutation changed simulator output vs baseline
+- r_new_violations: bonus for triggering FrameError, MACError, InvalidVL (beyond policing)
+- r_novelty: reward for exploring new (VL, rule, parameter) combinations
+- r_repeat: penalty for repeating recent tests
+- bonus_edge: bonus for edge-case strategies
+- bonus_mutation_applied: bonus when mutation wasn't clamped/ignored
 """
 
 import pandas as pd
 from typing import Dict, Any, Optional
 
 
+BASELINE_RECEIVED = 3559
+BASELINE_FORWARDED = 1757
+BASELINE_POLICING = 1802
+BASELINE_ES_REJECTED = 130
+BASELINE_ES_DUPLICATES = 1644
+
+
 class RewardCalculator:
-    """
-    Calculates reward scores for fuzzing iterations.
-    
-    The reward function guides the LLM toward effective testing strategies
-    by rewarding behaviors that expose vulnerabilities and penalizing
-    redundant or ineffective tests.
-    """
-    
+
     def __init__(
         self,
-        lambda_policing: float = 0.6,
-        lambda_forward: float = 0.2,
-        lambda_novelty: float = 0.4,
+        lambda_impact: float = 0.5,
+        lambda_new_violations: float = 0.6,
+        lambda_novelty: float = 0.3,
         lambda_repeat: float = 0.2,
-        bonus_edge_max: float = 1.0,
-        bonus_safety: float = 0.3
+        bonus_edge_max: float = 0.5,
+        bonus_mutation_applied: float = 0.2,
+        penalty_overuse: float = 0.5,
+        bonus_new_rule: float = 1.0,
+        overuse_threshold: int = 3
     ):
-        """
-        Initialize reward calculator with weights.
-        
-        Args:
-            lambda_policing: Weight for policing rate (default: 0.6)
-            lambda_forward: Weight for forward rate penalty (default: 0.2)
-            lambda_novelty: Weight for novelty bonus (default: 0.4)
-            lambda_repeat: Weight for repeat penalty (default: 0.2)
-            bonus_edge_max: Maximum edge-case bonus (default: 1.0)
-            bonus_safety: Safety bonus value (default: 0.3)
-        """
-        self.lambda_policing = lambda_policing
-        self.lambda_forward = lambda_forward
+        self.lambda_impact = lambda_impact
+        self.lambda_new_violations = lambda_new_violations
         self.lambda_novelty = lambda_novelty
         self.lambda_repeat = lambda_repeat
         self.bonus_edge_max = bonus_edge_max
-        self.bonus_safety = bonus_safety
-    
+        self.bonus_mutation_applied = bonus_mutation_applied
+        self.penalty_overuse = penalty_overuse
+        self.bonus_new_rule = bonus_new_rule
+        self.overuse_threshold = overuse_threshold
+
     def calculate(
         self,
         metrics: Dict[str, Any],
         strategy: Dict[str, Any],
         history: Optional[pd.DataFrame] = None
     ) -> Dict[str, Any]:
-        """
-        Calculate complete reward score.
-        
-        Args:
-            metrics: Performance metrics from SimulatorLogParser
-            strategy: Test strategy that was executed
-            history: DataFrame of previous iterations (optional)
-            
-        Returns:
-            Dictionary containing:
-            {
-                "reward": float,  # Total reward score
-                "components": {
-                    "r_policing": float,
-                    "r_forward": float,
-                    "r_novelty": float,
-                    "r_repeat": float,
-                    "bonus_edge": float,
-                    "bonus_safety": float
-                },
-                "breakdown": str  # Human-readable explanation
-            }
-        """
-        # Calculate individual components
-        r_policing = self._compute_policing_score(metrics)
-        r_forward = self._compute_forward_score(metrics)
+        r_impact = self._compute_impact_score(metrics)
+        r_new_violations = self._compute_new_violations_score(metrics)
         r_novelty = self._compute_novelty_score(strategy, history)
         r_repeat = self._compute_repeat_penalty(strategy, history)
         bonus_edge = self._compute_edge_bonus(strategy, metrics)
-        bonus_safety = self._compute_safety_bonus(metrics)
-        
-        # Calculate total reward
+        bonus_mutation = self._compute_mutation_bonus(metrics)
+        penalty_overuse = self._compute_overuse_penalty(strategy, history)
+        bonus_new_rule = self._compute_new_rule_bonus(strategy, history)
+
         reward = (
-            self.lambda_policing * r_policing
-            - self.lambda_forward * r_forward
+            self.lambda_impact * r_impact
+            + self.lambda_new_violations * r_new_violations
             + self.lambda_novelty * r_novelty
             - self.lambda_repeat * r_repeat
             + bonus_edge
-            + bonus_safety
+            + bonus_mutation
+            - penalty_overuse
+            + bonus_new_rule
         )
-        
-        # Build breakdown
+
         breakdown = self._build_breakdown(
-            reward, r_policing, r_forward, r_novelty, 
-            r_repeat, bonus_edge, bonus_safety
+            reward, r_impact, r_new_violations, r_novelty,
+            r_repeat, bonus_edge, bonus_mutation,
+            penalty_overuse, bonus_new_rule
         )
-        
+
         return {
             "reward": reward,
             "components": {
-                "r_policing": r_policing,
-                "r_forward": r_forward,
+                "r_impact": r_impact,
+                "r_new_violations": r_new_violations,
                 "r_novelty": r_novelty,
                 "r_repeat": r_repeat,
                 "bonus_edge": bonus_edge,
-                "bonus_safety": bonus_safety
+                "bonus_mutation": bonus_mutation,
+                "penalty_overuse": penalty_overuse,
+                "bonus_new_rule": bonus_new_rule,
             },
             "breakdown": breakdown
         }
-    
-    def _compute_policing_score(self, metrics: Dict[str, Any]) -> float:
-        """
-        Calculate policing score (proportion of frames dropped by policing).
-        
-        High policing rate is good - it means the system correctly rejects
-        invalid frames according to AFDX rules.
-        
-        Args:
-            metrics: Performance metrics
-            
-        Returns:
-            Policing score in range [0.0, 1.0]
-        """
-        frames_received = metrics.get("frames_received", 0)
-        if frames_received == 0:
+
+    def _compute_impact_score(self, metrics: Dict[str, Any]) -> float:
+        """How much did the mutation change simulator output vs baseline?"""
+        recv = metrics.get("frames_received", 0)
+        fwd = metrics.get("frames_forwarded", 0)
+        pol = metrics.get("frames_dropped_policing", 0)
+        es_rej = metrics.get("es_frames_rejected", 0)
+        es_dup = metrics.get("es_duplicates_discarded", 0)
+
+        if recv == 0:
             return 0.0
-        
-        frames_dropped_policing = metrics.get("frames_dropped_policing", 0)
-        return frames_dropped_policing / frames_received
-    
-    def _compute_forward_score(self, metrics: Dict[str, Any]) -> float:
-        """
-        Calculate forward score (fraction of frames successfully forwarded).
-        
-        High forwarding under malformed conditions is BAD - it indicates
-        overly permissive behavior that should be penalized.
-        
-        Args:
-            metrics: Performance metrics
-            
-        Returns:
-            Forward score in range [0.0, 1.0]
-        """
-        frames_received = metrics.get("frames_received", 0)
-        if frames_received == 0:
-            return 0.0
-        
-        frames_forwarded = metrics.get("frames_forwarded", 0)
-        return frames_forwarded / frames_received
-    
+
+        delta_recv = abs(recv - BASELINE_RECEIVED) / max(BASELINE_RECEIVED, 1)
+        delta_fwd = abs(fwd - BASELINE_FORWARDED) / max(BASELINE_FORWARDED, 1)
+        delta_pol = abs(pol - BASELINE_POLICING) / max(BASELINE_POLICING, 1)
+        delta_es_rej = abs(es_rej - BASELINE_ES_REJECTED) / max(BASELINE_ES_REJECTED, 1)
+        delta_es_dup = abs(es_dup - BASELINE_ES_DUPLICATES) / max(BASELINE_ES_DUPLICATES, 1)
+
+        all_deltas = [delta_recv, delta_fwd, delta_pol, delta_es_rej, delta_es_dup]
+        return min(1.0, sum(all_deltas) / len(all_deltas) * 5.0)
+
+    def _compute_new_violations_score(self, metrics: Dict[str, Any]) -> float:
+        """Bonus for triggering non-baseline drop categories (switch + ES)."""
+        score = 0.0
+        fe = metrics.get("frames_dropped_frame_error", 0)
+        mac = metrics.get("frames_dropped_mac_error", 0)
+        inv = metrics.get("frames_dropped_invalid_vl", 0)
+        es_rej = metrics.get("es_frames_rejected", 0)
+
+        if fe > 0:
+            score += 0.3
+        if mac > 0:
+            score += 0.3
+        if inv > 0:
+            score += 0.1
+        if es_rej > BASELINE_ES_REJECTED:
+            score += 0.3
+        return min(1.0, score)
+
     def _compute_novelty_score(
-        self,
-        strategy: Dict[str, Any],
-        history: Optional[pd.DataFrame]
+        self, strategy: Dict[str, Any], history: Optional[pd.DataFrame]
     ) -> float:
-        """
-        Calculate novelty score (how different is this test from previous ones).
-        
-        Rewards testing strategies that explore new areas.
-        
-        Args:
-            strategy: Current test strategy
-            history: DataFrame of previous iterations
-            
-        Returns:
-            Novelty score in range [0.0, 1.0]
-        """
         if history is None or len(history) == 0:
-            # First test is always novel
             return 1.0
-        
-        # Extract key strategy components
+
         target_vl = strategy.get("target_vl")
         protocol_rule = strategy.get("protocol_rule")
-        test_cases = strategy.get("test_cases", [])
-        
-        # Check how many times this VL was tested
-        if "target_vl" in history.columns:
-            vl_count = len(history[history["target_vl"] == target_vl])
-            vl_novelty = max(0.0, 1.0 - (vl_count / 10.0))  # Decreases as VL is tested more
-        else:
-            vl_novelty = 1.0
-        
-        # Check how many times this rule was tested
-        if "protocol_rule" in history.columns:
-            rule_count = len(history[history["protocol_rule"] == protocol_rule])
-            rule_novelty = max(0.0, 1.0 - (rule_count / 10.0))
-        else:
-            rule_novelty = 1.0
-        
-        # Combined novelty
-        novelty = (vl_novelty + rule_novelty) / 2.0
-        
-        return novelty
-    
+        mutation_type = strategy.get("mutation_type", "")
+        bag_value = strategy.get("bag_value")
+        frame_size = strategy.get("frame_size")
+
+        key = (target_vl, protocol_rule, mutation_type, bag_value, frame_size)
+
+        match_count = 0
+        for _, row in history.iterrows():
+            row_key = (
+                row.get("target_vl"),
+                row.get("protocol_rule"),
+                row.get("mutation_type", ""),
+                row.get("bag_value"),
+                row.get("frame_size"),
+            )
+            if row_key == key:
+                match_count += 1
+
+        return max(0.0, 1.0 - match_count / 5.0)
+
     def _compute_repeat_penalty(
-        self,
-        strategy: Dict[str, Any],
-        history: Optional[pd.DataFrame]
+        self, strategy: Dict[str, Any], history: Optional[pd.DataFrame]
     ) -> float:
-        """
-        Calculate repeat penalty (penalize tests similar to recent ones).
-        
-        Discourages repetitive testing in the last N iterations.
-        
-        Args:
-            strategy: Current test strategy
-            history: DataFrame of previous iterations
-            
-        Returns:
-            Repeat penalty in range [0.0, 1.0]
-        """
         if history is None or len(history) == 0:
             return 0.0
-        
-        # Look at last 5 iterations
-        recent_history = history.tail(5)
-        
+
+        recent = history.tail(5)
         target_vl = strategy.get("target_vl")
         protocol_rule = strategy.get("protocol_rule")
-        
-        # Count exact matches in recent history
+
         matches = 0
-        for _, row in recent_history.iterrows():
-            if (row.get("target_vl") == target_vl and 
-                row.get("protocol_rule") == protocol_rule):
+        for _, row in recent.iterrows():
+            if (row.get("target_vl") == target_vl
+                    and row.get("protocol_rule") == protocol_rule):
                 matches += 1
-        
-        # Penalty increases with number of recent matches
-        penalty = min(1.0, matches / 3.0)
-        
-        return penalty
-    
+
+        return min(1.0, matches / 3.0)
+
     def _compute_edge_bonus(
-        self,
-        strategy: Dict[str, Any],
-        metrics: Dict[str, Any]
+        self, strategy: Dict[str, Any], metrics: Dict[str, Any]
     ) -> float:
-        """
-        Calculate edge-case bonus.
-        
-        Rewards testing edge cases like:
-        - Invalid VL IDs
-        - Boundary values
-        - Malformed MAC addresses
-        - Extreme parameter values
-        
-        Args:
-            strategy: Test strategy
-            metrics: Performance metrics
-            
-        Returns:
-            Edge-case bonus in range [0.0, bonus_edge_max]
-        """
         bonus = 0.0
-        
-        # Check if strategy is marked as edge-case or attack
         strategy_type = strategy.get("strategy", "normal")
-        if strategy_type in ["edge-case", "attack"]:
-            bonus += 0.5
-        
-        # Check if invalid VL was tested
-        frames_dropped_invalid_vl = metrics.get("frames_dropped_invalid_vl", 0)
-        if frames_dropped_invalid_vl > 0:
-            bonus += 0.3
-        
-        # Check if test cases include boundary/extreme violations
-        test_cases = strategy.get("test_cases", [])
-        if test_cases:
-            # Assume test_cases is a list of test case IDs or objects
+        if strategy_type in ("edge-case", "attack", "adversarial"):
             bonus += 0.2
-        
+
+        if metrics.get("frames_dropped_invalid_vl", 0) > 0:
+            bonus += 0.15
+        if metrics.get("frames_dropped_frame_error", 0) > 0:
+            bonus += 0.15
+
         return min(bonus, self.bonus_edge_max)
-    
-    def _compute_safety_bonus(self, metrics: Dict[str, Any]) -> float:
-        """
-        Calculate safety bonus.
-        
-        Rewards system robustness - bonus if system didn't crash or
-        incorrectly accept malformed frames.
-        
-        Args:
-            metrics: Performance metrics
-            
-        Returns:
-            Safety bonus (0.0 or bonus_safety)
-        """
-        # Check if system accepted malformed frames (BUG!)
-        malformed_accepted = metrics.get("malformed_accepted", 0)
-        if malformed_accepted > 0:
-            # System accepted invalid frames - no safety bonus
-            return 0.0
-        
-        # Check if simulation completed successfully
-        parsing_success = metrics.get("parsing_success", False)
-        if parsing_success:
-            return self.bonus_safety
-        
+
+    def _compute_mutation_bonus(self, metrics: Dict[str, Any]) -> float:
+        """Reward when the mutation was actually applied (not clamped/ignored)."""
+        clamp = metrics.get("mutation_clamp_count", 0)
+        payload_applied = abs(metrics.get("mutation_payload_applied", 0))
+        mac_spoof = metrics.get("mutation_mac_spoof_count", 0)
+        tx_drops = metrics.get("mutation_tx_prob_drops", 0)
+
+        if clamp > 0:
+            return -0.1
+
+        if payload_applied > 0 or mac_spoof > 0 or tx_drops > 0:
+            return self.bonus_mutation_applied
+
         return 0.0
-    
+
+    def _compute_overuse_penalty(
+        self, strategy: Dict[str, Any], history: Optional[pd.DataFrame]
+    ) -> float:
+        """Harsh penalty for reusing the same mutation_type too many times across ALL history."""
+        if history is None or len(history) == 0:
+            return 0.0
+
+        mutation_type = strategy.get("mutation_type", "")
+        if "mutation_type" not in history.columns:
+            return 0.0
+
+        times_used = int((history["mutation_type"] == mutation_type).sum())
+        if times_used >= self.overuse_threshold:
+            excess = times_used - self.overuse_threshold + 1
+            return min(self.penalty_overuse * excess, 2.0)
+        return 0.0
+
+    def _compute_new_rule_bonus(
+        self, strategy: Dict[str, Any], history: Optional[pd.DataFrame]
+    ) -> float:
+        """Large bonus for testing a protocol_rule never seen before in history."""
+        if history is None or len(history) == 0:
+            return self.bonus_new_rule
+
+        protocol_rule = strategy.get("protocol_rule", strategy.get("mutation_type", ""))
+        if "protocol_rule" not in history.columns:
+            return self.bonus_new_rule
+
+        seen_rules = set(history["protocol_rule"].dropna().unique())
+        if protocol_rule not in seen_rules:
+            return self.bonus_new_rule
+        return 0.0
+
     def _build_breakdown(
-        self,
-        reward: float,
-        r_policing: float,
-        r_forward: float,
-        r_novelty: float,
-        r_repeat: float,
-        bonus_edge: float,
-        bonus_safety: float
+        self, reward, r_impact, r_new_violations, r_novelty,
+        r_repeat, bonus_edge, bonus_mutation,
+        penalty_overuse=0.0, bonus_new_rule=0.0
     ) -> str:
-        """
-        Build human-readable reward breakdown.
-        
-        Args:
-            reward: Total reward
-            r_policing: Policing component
-            r_forward: Forward component
-            r_novelty: Novelty component
-            r_repeat: Repeat component
-            bonus_edge: Edge bonus
-            bonus_safety: Safety bonus
-            
-        Returns:
-            Formatted breakdown string
-        """
         lines = [
             "Reward Breakdown:",
             f"  Total: {reward:.3f}",
             "",
             "Components:",
-            f"  + {self.lambda_policing:.1f} × policing ({r_policing:.2f}) = {self.lambda_policing * r_policing:.3f}",
-            f"  - {self.lambda_forward:.1f} × forward ({r_forward:.2f}) = {-self.lambda_forward * r_forward:.3f}",
-            f"  + {self.lambda_novelty:.1f} × novelty ({r_novelty:.2f}) = {self.lambda_novelty * r_novelty:.3f}",
-            f"  - {self.lambda_repeat:.1f} × repeat ({r_repeat:.2f}) = {-self.lambda_repeat * r_repeat:.3f}",
+            f"  + {self.lambda_impact:.1f} x impact ({r_impact:.2f}) = {self.lambda_impact * r_impact:.3f}",
+            f"  + {self.lambda_new_violations:.1f} x new_violations ({r_new_violations:.2f}) = {self.lambda_new_violations * r_new_violations:.3f}",
+            f"  + {self.lambda_novelty:.1f} x novelty ({r_novelty:.2f}) = {self.lambda_novelty * r_novelty:.3f}",
+            f"  - {self.lambda_repeat:.1f} x repeat ({r_repeat:.2f}) = {-self.lambda_repeat * r_repeat:.3f}",
             f"  + edge bonus = {bonus_edge:.3f}",
-            f"  + safety bonus = {bonus_safety:.3f}"
+            f"  + mutation bonus = {bonus_mutation:.3f}",
+            f"  - overuse penalty = {-penalty_overuse:.3f}",
+            f"  + new rule bonus = {bonus_new_rule:.3f}",
         ]
-        
         return "\n".join(lines)
-
-
-if __name__ == "__main__":
-    # Quick test
-    calculator = RewardCalculator()
-    
-    # Mock metrics
-    metrics = {
-        "frames_received": 1000,
-        "frames_forwarded": 100,
-        "frames_dropped_policing": 800,
-        "frames_dropped_invalid_vl": 50,
-        "malformed_accepted": 0,
-        "parsing_success": True
-    }
-    
-    # Mock strategy
-    strategy = {
-        "target_vl": 2001,
-        "protocol_rule": "bag",
-        "test_cases": ["tc1", "tc2"],
-        "strategy": "edge-case"
-    }
-    
-    result = calculator.calculate(metrics, strategy, history=None)
-    
-    print("=" * 70)
-    print("REWARD CALCULATOR TEST")
-    print("=" * 70)
-    print(f"\nReward: {result['reward']:.3f}")
-    print(f"\nComponents:")
-    for key, value in result['components'].items():
-        print(f"  {key}: {value:.3f}")
-    print(f"\n{result['breakdown']}")
-

@@ -33,6 +33,16 @@ class SimulatorLogParser:
         "frames_dropped_total":    r"afdxFramesDropped\.\d+\s*=\s*(\d+)",
         "frames_dropped_policing": r"afdxFramesDroppedPolicing\.\d+\s*=\s*(\d+)",
         "frames_dropped_invalid_vl": r"afdxFramesDroppedInvalidVL\.\d+\s*=\s*(\d+)",
+        "frames_dropped_frame_error": r"afdxFramesDroppedFrameError\.\d+\s*=\s*(\d+)",
+        "frames_dropped_mac_error": r"afdxFramesDroppedMACError\.\d+\s*=\s*(\d+)",
+    }
+
+    # End System statistics
+    ES_PATTERNS = {
+        "es_frames_sent":          r"esFramesSent\s*=\s*(\d+)",
+        "es_frames_received":      r"esFramesReceived\s*=\s*(\d+)",
+        "es_frames_rejected":      r"esFramesRejected\s*=\s*(\d+)",
+        "es_duplicates_discarded": r"esDuplicatesDiscarded\s*=\s*(\d+)",
     }
 
     # Mutation metrics printed by the C++ demo when mutations are active
@@ -42,6 +52,8 @@ class SimulatorLogParser:
         "mutation_clamp_count":     r"AfdxMutation\.payloadClampCount\s*=\s*(\d+)",
         "mutation_tx_prob_drops":   r"AfdxMutation\.txProbDrops\s*=\s*(\d+)",
         "mutation_mac_spoof_count": r"AfdxMutation\.macSpoofCount\s*=\s*(\d+)",
+        "mutation_seq_count":       r"AfdxMutation\.seqMutationCount\s*=\s*(\d+)",
+        "mutation_dest_mac_count":  r"AfdxMutation\.destMacMutationCount\s*=\s*(\d+)",
     }
 
     # Legacy text-format patterns (kept for backward compatibility)
@@ -127,6 +139,11 @@ class SimulatorLogParser:
             if total > 0:
                 metrics[key] = total
 
+        for key, pattern in self.ES_PATTERNS.items():
+            m = re.search(pattern, self.log_content)
+            if m:
+                metrics[key] = int(m.group(1))
+
         for key, pattern in self.MUTATION_PATTERNS.items():
             m = re.search(pattern, self.log_content)
             if m:
@@ -165,9 +182,15 @@ class SimulatorLogParser:
             "frames_forwarded": 0,
             "frames_dropped_policing": 0,
             "frames_dropped_invalid_vl": 0,
+            "frames_dropped_frame_error": 0,
+            "frames_dropped_mac_error": 0,
             "frames_dropped_total": 0,
             "malformed_accepted": 0,
             "simulation_time_sec": 0.0,
+            "es_frames_sent": 0,
+            "es_frames_received": 0,
+            "es_frames_rejected": 0,
+            "es_duplicates_discarded": 0,
         }
 
         csv_metrics = self._parse_csv()
@@ -198,24 +221,40 @@ class SimulatorLogParser:
             merged["frames_dropped_policing"] = mib_metrics["frames_dropped_policing"]
         if mib_metrics.get("frames_dropped_invalid_vl"):
             merged["frames_dropped_invalid_vl"] = mib_metrics["frames_dropped_invalid_vl"]
+        if mib_metrics.get("frames_dropped_frame_error"):
+            merged["frames_dropped_frame_error"] = mib_metrics["frames_dropped_frame_error"]
+        if mib_metrics.get("frames_dropped_mac_error"):
+            merged["frames_dropped_mac_error"] = mib_metrics["frames_dropped_mac_error"]
         if mib_metrics.get("frames_dropped_total"):
             merged["frames_dropped_total"] = mib_metrics["frames_dropped_total"]
 
-        # Copy mutation metrics if present
         for key in self.MUTATION_PATTERNS:
             if key in mib_metrics:
                 merged[key] = mib_metrics[key]
 
-        # Derived rates
+        for key in self.ES_PATTERNS:
+            if key in mib_metrics:
+                merged[key] = mib_metrics[key]
+
         total = merged["frames_received"]
         if total > 0:
             merged["forward_rate"] = (merged["frames_forwarded"] / total) * 100.0
             merged["drop_rate"] = (merged["frames_dropped_total"] / total) * 100.0
             merged["policing_rate"] = (merged["frames_dropped_policing"] / total) * 100.0
+            merged["frame_error_rate"] = (merged["frames_dropped_frame_error"] / total) * 100.0
+            merged["mac_error_rate"] = (merged["frames_dropped_mac_error"] / total) * 100.0
         else:
             merged["forward_rate"] = 0.0
             merged["drop_rate"] = 0.0
             merged["policing_rate"] = 0.0
+            merged["frame_error_rate"] = 0.0
+            merged["mac_error_rate"] = 0.0
+
+        es_total = merged["es_frames_received"] + merged["es_frames_rejected"]
+        if es_total > 0:
+            merged["es_rejection_rate"] = (merged["es_frames_rejected"] / es_total) * 100.0
+        else:
+            merged["es_rejection_rate"] = 0.0
 
         merged["parsing_success"] = merged["frames_received"] > 0
 

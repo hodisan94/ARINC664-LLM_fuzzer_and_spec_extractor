@@ -118,44 +118,77 @@ class LLMStrategyPlanner:
                 "llm_raw_response": str
             }
         """
-        # Build VL statistics
         vl_stats = format_vl_statistics(history) if history is not None else {}
+        recent_results = self._prepare_recent_results(history, n=10)
+        coverage_stats = self._compute_coverage_stats(history)
         
-        # Prepare recent results
-        recent_results = self._prepare_recent_results(history)
-        
-        # Default system config
         if system_config is None:
             system_config = {
                 "available_vls": [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
             }
         
-        # Build prompt
         prompt = build_fuzzing_prompt(
             spec_rules=self.spec_rules,
             test_cases=self.test_cases,
             recent_results=recent_results,
             vl_statistics=vl_stats,
             system_config=system_config,
-            iteration=iteration
+            iteration=iteration,
+            coverage_stats=coverage_stats
         )
         
-        # Query LLM
         llm_response = self._query_llm(prompt)
-        
-        # Parse and validate strategy
         strategy = self._parse_strategy(llm_response)
         strategy["llm_raw_response"] = llm_response
-        
-        # Validate strategy
-        self._validate_strategy(strategy)
+        self._validate_strategy(strategy, system_config)
         
         return strategy
+    
+    def _compute_coverage_stats(self, history: Optional[pd.DataFrame]) -> Dict[str, Any]:
+        """
+        Compute which rules have been covered vs uncovered.
+        
+        Uses the full spec_rules list as the universe, and checks which
+        protocol_rule / mutation_type values appear in history.
+        """
+        all_rule_names = sorted(self.spec_rules.keys())
+        all_tc_names = sorted(self.test_cases.keys())
+        all_known = set(all_rule_names) | set(all_tc_names)
+        
+        if history is None or len(history) == 0:
+            return {
+                "covered_rules": [],
+                "uncovered_rules": sorted(all_known),
+                "mutation_type_counts": {},
+                "total_rules": len(all_known),
+            }
+        
+        seen_rules = set()
+        mt_counts = {}
+        
+        if "protocol_rule" in history.columns:
+            for val in history["protocol_rule"].dropna().unique():
+                seen_rules.add(str(val))
+        if "mutation_type" in history.columns:
+            for val in history["mutation_type"].dropna().unique():
+                seen_rules.add(str(val))
+            for val in history["mutation_type"].dropna():
+                mt_counts[str(val)] = mt_counts.get(str(val), 0) + 1
+        
+        covered = sorted(seen_rules & all_known)
+        uncovered = sorted(all_known - seen_rules)
+        
+        return {
+            "covered_rules": covered,
+            "uncovered_rules": uncovered,
+            "mutation_type_counts": mt_counts,
+            "total_rules": len(all_known),
+        }
     
     def _prepare_recent_results(
         self,
         history: Optional[pd.DataFrame],
-        n: int = 5
+        n: int = 10
     ) -> List[Dict[str, Any]]:
         """
         Prepare recent iteration results for prompt.
@@ -180,7 +213,8 @@ class LLMStrategyPlanner:
                 "protocol_rule": str(row.get("protocol_rule", "")),
                 "strategy": str(row.get("strategy", "")),
                 "reward": float(row.get("reward", 0.0)),
-                "bugs_found": bool(row.get("bugs_found", False))
+                "bugs_found": bool(row.get("bugs_found", False)),
+                "recommendation": str(row.get("recommendation", ""))
             })
         
         return results
@@ -265,19 +299,21 @@ class LLMStrategyPlanner:
         
         # Ensure all parameter fields exist (can be null) - HYBRID SUPPORT
         all_params = ["test_cases", "bag_value", "frame_size", "sequence_number", 
-                     "timing_jitter_ms", "payload_pattern"]
+                     "timing_jitter_ms", "payload_pattern", "mac_mutation_type", "prob",
+                     "sequence_number_override", "dest_mac_mutation"]
         for param in all_params:
             if param not in strategy:
                 strategy[param] = None
         
         return strategy
     
-    def _validate_strategy(self, strategy: Dict[str, Any]) -> None:
+    def _validate_strategy(self, strategy: Dict[str, Any], system_config: Optional[Dict[str, Any]] = None) -> None:
         """
-        Validate strategy components (HYBRID - LLM has full freedom).
+        Validate strategy components.
         
         Args:
             strategy: Parsed strategy dictionary
+            system_config: System configuration with available_vls
             
         Raises:
             ValueError: If strategy contains invalid values
@@ -285,6 +321,15 @@ class LLMStrategyPlanner:
         # Validate target_vl is an integer
         if not isinstance(strategy["target_vl"], int):
             raise ValueError(f"target_vl must be integer, got {type(strategy['target_vl'])}")
+        
+        # Validate target_vl exists in the simulator
+        if system_config and 'available_vls' in system_config:
+            valid_vls = system_config['available_vls']
+            if strategy["target_vl"] not in valid_vls:
+                import random
+                corrected_vl = random.choice(valid_vls)
+                print(f"  [WARN] LLM chose invalid VL {strategy['target_vl']}, correcting to {corrected_vl}")
+                strategy["target_vl"] = corrected_vl
         
         # Validate strategy type
         valid_strategies = ["conformance", "edge-case", "adversarial"]
@@ -298,14 +343,12 @@ class LLMStrategyPlanner:
         # Validate at least SOMETHING is set (test_cases OR mutation params)
         has_test_cases = strategy.get("test_cases") and len(strategy.get("test_cases", [])) > 0
         mutation_params = ["bag_value", "frame_size", "sequence_number", 
-                          "timing_jitter_ms", "payload_pattern"]
+                          "timing_jitter_ms", "payload_pattern", "mac_mutation_type", "prob",
+                          "sequence_number_override", "dest_mac_mutation"]
         has_mutation_params = any(strategy.get(p) is not None for p in mutation_params)
         
         if not has_test_cases and not has_mutation_params:
             raise ValueError("LLM must specify either test_cases OR mutation parameters (or both)")
-        
-        # Note: We don't validate if VL exists in system config here,
-        # because the LLM might intentionally choose invalid VL for edge-case testing
 
 
 if __name__ == "__main__":

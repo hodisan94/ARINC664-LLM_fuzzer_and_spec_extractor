@@ -55,6 +55,7 @@ AfdxSwitch::AfdxSwitch()
     m_framesDroppedPolicing(0),
     m_framesDroppedInvalidVL(0),
     m_framesDroppedFrameError(0),
+    m_framesDroppedMACError(0),
     m_framesDroppedBufferOverflow(0),
     m_framesDroppedAgedOut(0)
 {
@@ -153,13 +154,10 @@ AfdxSwitch::StartApplication(void)
   NS_LOG_FUNCTION(this);
   NS_LOG_INFO("Switch " << m_switchId << " starting with " << m_ports.size() << " ports");
   
-  // Set up promiscuous receive callbacks on all ports to see all traffic
+  // Use ONLY promiscuous receive — registering both callbacks causes
+  // each frame to be processed twice (double-counting bug).
   for (size_t i = 0; i < m_ports.size(); i++)
   {
-    // Regular receive callback (for directed traffic)
-    m_ports[i]->SetReceiveCallback(MakeCallback(&AfdxSwitch::ReceiveFromDevice, this));
-    
-    // Promiscuous callback to receive ALL packets on the channel
     Ptr<CsmaNetDevice> csmaPort = DynamicCast<CsmaNetDevice>(m_ports[i]);
     if (csmaPort)
     {
@@ -284,6 +282,23 @@ AfdxSwitch::ProcessFrame(Ptr<const Packet> packet, uint32_t inPort)
     m_framesDroppedInvalidVL++;
     LogDrop(vlId, "Invalid_VL");
     return false;
+  }
+  
+  // Step 2b: Source MAC validation (ARINC 664 Part 7 §6.4.3)
+  {
+    Mac48Address frameSrcMac = frame.GetSourceAddress();
+    Mac48Address expectedSrcMac = m_vlConfig[vlId].GetSourceMac();
+    if (frameSrcMac != expectedSrcMac)
+    {
+      m_framesDropped++;
+      m_framesDroppedMACError++;
+      if (m_vlStats.find(vlId) != m_vlStats.end())
+      {
+        m_vlStats[vlId].framesDropped++;
+      }
+      LogDrop(vlId, "MAC_Source_Mismatch");
+      return false;
+    }
   }
   
   // Step 3: BAG policing check
@@ -739,6 +754,7 @@ AfdxSwitch::PrintStatistics(std::ostream& os) const
   os << "  Frames Forwarded:       " << m_framesForwarded << "\n";
   os << "  Frames Dropped:         " << m_framesDropped << "\n";
   os << "    - Frame Errors:       " << m_framesDroppedFrameError << "\n";
+  os << "    - MAC Errors:         " << m_framesDroppedMACError << "\n";
   os << "    - Invalid VL:         " << m_framesDroppedInvalidVL << "\n";
   os << "    - Policing:           " << m_framesDroppedPolicing << "\n";
   os << "    - Buffer Overflow:    " << m_framesDroppedBufferOverflow << "\n";
@@ -866,7 +882,7 @@ AfdxSwitch::ProcessQueues()
         queue.pop();
         
         // Transmit the frame
-        m_ports[port]->Send(qf.packet, m_ports[port]->GetBroadcast(), 0x0800);
+        m_ports[port]->Send(qf.packet, m_ports[port]->GetBroadcast(), 0x88B5);
         
         m_queueTx[priority]++;
         transmitted = true;
@@ -974,6 +990,7 @@ AfdxSwitch::ResetStatistics()
   m_framesDroppedPolicing = 0;
   m_framesDroppedInvalidVL = 0;
   m_framesDroppedFrameError = 0;
+  m_framesDroppedMACError = 0;
   m_framesDroppedBufferOverflow = 0;
   m_framesDroppedAgedOut = 0;
   
@@ -1029,7 +1046,8 @@ AfdxSwitch::ExportMIB(std::ostream& os) const
   os << "afdxFramesDropped.0 = " << m_framesDropped << "\n";
   os << "afdxFramesDroppedPolicing.0 = " << m_framesDroppedPolicing << "\n";
   os << "afdxFramesDroppedInvalidVL.0 = " << m_framesDroppedInvalidVL << "\n";
-  os << "afdxFramesDroppedFrameError.0 = " << m_framesDroppedFrameError << "\n\n";
+  os << "afdxFramesDroppedFrameError.0 = " << m_framesDroppedFrameError << "\n";
+  os << "afdxFramesDroppedMACError.0 = " << m_framesDroppedMACError << "\n\n";
   
   // Per-VL statistics (OID: 1.3.6.1.4.1.AFDX.3.VL_ID)
   os << "# Per-VL Statistics\n";

@@ -1,0 +1,5 @@
+{"iteration": 0, "timestamp": "2025-11-17T05:04:40.687063", "fuzzer_type": "RANDOM_BASELINE", "error": "'mutation_type'", "success": false}
+{"iteration": 1, "timestamp": "2025-11-17T05:04:40.687717", "fuzzer_type": "RANDOM_BASELINE", "error": "'mutation_type'", "success": false}
+{"iteration": 2, "timestamp": "2025-11-17T05:04:40.688350", "fuzzer_type": "RANDOM_BASELINE", "error": "'mutation_type'", "success": false}
+{"iteration": 3, "timestamp": "2025-11-17T05:04:40.688943", "fuzzer_type": "RANDOM_BASELINE", "error": "'mutation_type'", "success": false}
+{"iteration": 4, "timestamp": "2025-11-17T05:04:40.689511", "fuzzer_type": "RANDOM_BASELINE", "error": "'mutation_type'", "success": false}

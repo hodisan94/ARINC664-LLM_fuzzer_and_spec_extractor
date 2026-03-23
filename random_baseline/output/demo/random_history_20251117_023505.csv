@@ -1,0 +1,4 @@
+iteration,timestamp,duration,fuzzer_type,target_vl,protocol_rule,test_mode,strategy,test_cases,custom_mutation,num_frames,simulation_success,reward,frames_received,frames_dropped_policing,frames_forwarded,policing_rate,forward_rate,bugs_found
+0,2025-11-17T02:35:05.111269,0.001609,RANDOM_BASELINE,1002,bag,custom,conformance,,Test extreme bag boundary,20,True,0.5800000000000001,20,2,18,0.1,0.9,False
+1,2025-11-17T02:35:05.113999,0.001579,RANDOM_BASELINE,1002,output_buffer_size_high_priority_vls,predefined,conformance,"['TC0', 'TC1', 'TC2']",,60,True,0.76,60,6,54,0.1,0.9,False
+2,2025-11-17T02:35:05.116173,0.001241,RANDOM_BASELINE,2001,priority_qos.priority_levels,predefined,edge-case,"['TC0', 'TC1', 'TC2']",,60,True,1.2933333333333332,60,7,53,0.11666666666666667,0.8833333333333333,False

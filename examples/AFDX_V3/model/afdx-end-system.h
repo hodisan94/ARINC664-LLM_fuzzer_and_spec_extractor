@@ -73,7 +73,7 @@ private:
   bool ValidateFrame(const AfdxFrame& frame, uint32_t frameSize);
   bool CheckVLSubscription(uint16_t vlId);
   bool CheckSequenceNumber(uint16_t vlId, uint8_t seqNum);
-  bool ApplyFirstValidFrameWins(uint16_t vlId, const std::string& networkId);
+  bool ApplyFirstValidFrameWins(uint16_t vlId, uint8_t seqNum, const std::string& networkId);
 
   // CSV Logging
   void InitializeCsvFile();
@@ -112,11 +112,17 @@ private:
   };
   std::map<uint16_t, FrameReceptionState> m_receptionState;
 
-  // Statistics
+  // Statistics (public getters below)
   uint32_t m_framesSent;
   uint32_t m_framesReceived;
   uint32_t m_framesRejected;
   uint32_t m_duplicatesDiscarded;
+
+public:
+  uint32_t GetFramesSent() const { return m_framesSent; }
+  uint32_t GetFramesReceived() const { return m_framesReceived; }
+  uint32_t GetFramesRejected() const { return m_framesRejected; }
+  uint32_t GetDuplicatesDiscarded() const { return m_duplicatesDiscarded; }
 };
 
 } // namespace ns3

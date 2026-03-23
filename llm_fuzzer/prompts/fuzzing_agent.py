@@ -11,13 +11,57 @@ from typing import Dict, List, Any, Optional
 import pandas as pd
 
 
+def _build_coverage_section(coverage_stats: Optional[Dict[str, Any]], iteration: int) -> str:
+    """Build coverage awareness section showing which rules are tested/untested."""
+    if not coverage_stats:
+        return ""
+
+    lines = ["\n" + "=" * 70]
+    lines.append("COVERAGE STATUS (CRITICAL — READ THIS FIRST!):")
+    lines.append("=" * 70)
+
+    covered = coverage_stats.get("covered_rules", [])
+    uncovered = coverage_stats.get("uncovered_rules", [])
+    mt_counts = coverage_stats.get("mutation_type_counts", {})
+    total_rules = len(covered) + len(uncovered)
+    coverage_pct = (len(covered) / total_rules * 100) if total_rules > 0 else 0
+
+    lines.append(f"\nCoverage: {len(covered)}/{total_rules} rules = {coverage_pct:.1f}%")
+
+    if mt_counts:
+        overused = {k: v for k, v in sorted(mt_counts.items(), key=lambda x: -x[1]) if v >= 3}
+        if overused:
+            lines.append("\nOVERUSED mutation_types (AVOID THESE — you lose reward for repeating):")
+            for mt, count in list(overused.items())[:10]:
+                lines.append(f"  '{mt}' — used {count} times (PENALTY applied!)")
+
+    if uncovered:
+        lines.append(f"\nUNTESTED RULES ({len(uncovered)} remaining — high reward bonus for testing new ones!):")
+        for rule in uncovered[:30]:
+            lines.append(f"  - {rule}")
+        if len(uncovered) > 30:
+            lines.append(f"  ... and {len(uncovered) - 30} more")
+
+    if covered:
+        lines.append(f"\nALREADY TESTED ({len(covered)} rules — no new-rule bonus):")
+        for rule in covered[:15]:
+            count = mt_counts.get(rule, "?")
+            lines.append(f"  - {rule} (tested ~{count}x)" if isinstance(count, int) else f"  - {rule}")
+        if len(covered) > 15:
+            lines.append(f"  ... and {len(covered) - 15} more")
+
+    lines.append(f"\nYOUR GOAL: Maximize coverage by testing UNTESTED rules. You get a +1.0 BONUS for each new rule!")
+    return "\n".join(lines)
+
+
 def build_fuzzing_prompt(
     spec_rules: Dict[str, Any],
     test_cases: Dict[str, Any],
     recent_results: List[Dict[str, Any]],
     vl_statistics: Dict[int, Dict[str, Any]],
     system_config: Dict[str, Any],
-    iteration: int
+    iteration: int,
+    coverage_stats: Optional[Dict[str, Any]] = None
 ) -> str:
     """
     Build complete prompt for LLM-guided fuzzing.
@@ -25,6 +69,7 @@ def build_fuzzing_prompt(
     The prompt gives the LLM:
     - Complete visibility into protocol rules and test cases
     - Recent performance history
+    - Coverage statistics (which rules tested, which untested)
     - Freedom to choose predefined test cases OR propose custom mutations
     - Guidelines for exploration vs exploitation
     
@@ -35,23 +80,25 @@ def build_fuzzing_prompt(
         vl_statistics: Statistics per VL (times tested, avg reward, etc.)
         system_config: System configuration (available VLs, etc.)
         iteration: Current iteration number
+        coverage_stats: Dict with covered_rules, uncovered_rules, mutation_type_counts
         
     Returns:
         Complete prompt string for LLM
     """
     
-    # Build prompt sections
     role_definition = _build_role_definition()
+    coverage_section = _build_coverage_section(coverage_stats, iteration)
     protocol_rules_section = _build_protocol_rules_section(spec_rules)
     test_cases_section = _build_test_cases_section(test_cases)
     recent_performance = _build_recent_performance_section(recent_results)
     vl_stats_section = _build_vl_statistics_section(vl_statistics, system_config)
-    decision_guidelines = _build_decision_guidelines(iteration)
+    decision_guidelines = _build_decision_guidelines(iteration, coverage_stats)
     output_format = _build_output_format()
     
-    # Combine all sections
     prompt = f"""
 {role_definition}
+
+{coverage_section}
 
 {protocol_rules_section}
 
@@ -147,17 +194,19 @@ def _build_recent_performance_section(recent_results: List[Dict[str, Any]]) -> s
         return "\n".join(lines)
     
     lines.append("")
-    for result in recent_results[-5:]:  # Last 5
+    for result in recent_results[-10:]:
         iteration = result.get('iteration', '?')
         vl = result.get('target_vl', '?')
         rule = result.get('protocol_rule', '?')
         strategy = result.get('strategy', '?')
         reward = result.get('reward', 0)
         bugs = result.get('bugs_found', False)
+        recommendation = result.get('recommendation', '')
         
-        bug_indicator = " 🚨 BUG!" if bugs else ""
-        lines.append(f"Iteration {iteration}: VL={vl}, rule={rule}, strategy={strategy}")
-        lines.append(f"  → Reward: {reward:.2f}{bug_indicator}")
+        bug_indicator = " [BUG FOUND!]" if bugs else ""
+        lines.append(f"Iter {iteration}: VL={vl}, rule={rule}, strategy={strategy}, reward={reward:.2f}{bug_indicator}")
+        if recommendation and len(recommendation) > 10:
+            lines.append(f"  Feedback: {recommendation[:120]}")
     
     return "\n".join(lines)
 
@@ -168,13 +217,38 @@ def _build_vl_statistics_section(
 ) -> str:
     """Format VL testing statistics."""
     lines = ["\n" + "=" * 70]
-    lines.append("VIRTUAL LINK (VL) STATISTICS:")
+    lines.append("VIRTUAL LINK (VL) CONFIGURATION & STATISTICS:")
     lines.append("=" * 70)
+    
+    available_vls = system_config.get('available_vls', [1001, 1002, 2001, 2002, 3001, 3002])
+    lines.append(f"\nAVAILABLE VLs (you MUST choose ONLY from this list): {available_vls}")
+    lines.append("WARNING: Any VL not in this list does not exist and will be IGNORED!")
+    
+    lines.append("\nVL CONFIGURATION (use this to choose effective mutation values):")
+    lines.append("  VL    | BAG(ms) | MaxFrame | MinFrame | Source | MaxPayload")
+    lines.append("  ------|---------|----------|----------|--------|----------")
+    lines.append("  1001  |   4     |   512    |    64    |  ES1   |   495")
+    lines.append("  1002  |   4     |   512    |    64    |  ES1   |   495")
+    lines.append("  1003  |   8     |   512    |    64    |  ES1   |   495")
+    lines.append("  2001  |   8     |   256    |    64    |  ES2   |   239")
+    lines.append("  2002  |  16     |   256    |    64    |  ES2   |   239")
+    lines.append("  2003  |  16     |   512    |    64    |  ES2   |   495")
+    lines.append("  3001  |  32     |  1024    |    64    |  ES3   |  1007")
+    lines.append("  3002  |  32     |  1024    |    64    |  ES3   |  1007")
+    
+    lines.append("\nMUTATION PARAMETERS THAT ACTUALLY AFFECT THE SIMULATOR:")
+    lines.append("  1. frame_size: frames exceeding MaxFrame trigger FrameError drop at switch")
+    lines.append("  2. timing_jitter_ms: changes send timing (negative=faster, positive=slower)")
+    lines.append("  3. bag_value: converted to jitter relative to BAG (e.g. bag_value=2 on VL with BAG=4 => jitter=-2)")
+    lines.append("  4. mac_mutation_type: 'spoof_src'|'spoof_dst'|'broadcast'|'invalid_src'|'zero_mac' => source MAC error drop at switch")
+    lines.append("  5. prob: 0.0-1.0 TX-drop probability (frames silently dropped before sending)")
+    lines.append("  6. sequence_number_override: force a specific seq num (e.g. 0=invalid, 255=stale) => rejection at receiving ES")
+    lines.append("  7. dest_mac_mutation: 'corrupt_prefix'|'wrong_vl'|'zero' => constant field rejection at receiving ES")
+    lines.append("")
+    lines.append("  NOTE: payload_pattern is NOT yet supported by the simulator.")
     
     if not vl_statistics:
         lines.append("\nNo VL statistics yet (first iteration)")
-        available_vls = system_config.get('available_vls', [1001, 1002, 2001, 2002, 3001, 3002])
-        lines.append(f"Available VLs: {available_vls}")
         return "\n".join(lines)
     
     lines.append("")
@@ -190,47 +264,58 @@ def _build_vl_statistics_section(
     return "\n".join(lines)
 
 
-def _build_decision_guidelines(iteration: int) -> str:
+def _build_decision_guidelines(iteration: int, coverage_stats: Optional[Dict[str, Any]] = None) -> str:
     """Provide decision-making guidelines to the LLM."""
+    uncovered_count = len(coverage_stats.get("uncovered_rules", [])) if coverage_stats else "unknown"
+    covered_count = len(coverage_stats.get("covered_rules", [])) if coverage_stats else 0
+
+    exploration_priority = "HIGH" if (isinstance(covered_count, int) and covered_count < 40) else "MEDIUM"
+
     return f"""
 {"=" * 70}
 DECISION GUIDELINES:
 {"=" * 70}
 
-1. EXPLORATION vs EXPLOITATION:
-   - If a VL has been tested < 3 times: Consider testing it (exploration)
-   - If a VL has high avg_reward (>0.8): Consider testing it more (exploitation)
-   - If last 3 tests all used same VL: Try a different VL (diversity)
+*** MOST IMPORTANT RULE ***
+You MUST test a DIFFERENT protocol rule each iteration. You get +1.0 bonus
+for each NEW rule and a HARSH PENALTY for reusing mutation_types you already tried.
+Check the COVERAGE STATUS section and pick from UNTESTED RULES.
+Remaining untested: {uncovered_count}. Exploration priority: {exploration_priority}.
+
+1. COVERAGE-FIRST STRATEGY:
+   - Look at the UNTESTED RULES list above
+   - Pick a rule name from that list as your mutation_type
+   - Use predefined test cases when available for that rule
+   - This is the FASTEST way to maximize your reward
 
 2. TEST CASE SELECTION:
-   You have TWO options:
+   You have TWO options (PREFER OPTION A for untested rules):
    
-   A) USE PREDEFINED TEST CASES:
+   A) USE PREDEFINED TEST CASES (RECOMMENDED for broad coverage):
       - Choose 1-3 test cases from the "PREDEFINED TEST CASES" section
-      - Good for systematic protocol violation testing
+      - Match the rule name to find relevant test cases
       - Specify test case IDs like ["TC0", "TC2"]
    
-   B) PROPOSE CUSTOM MUTATIONS (Advanced - use your judgment!):
-      - If you learned patterns from previous iterations
-      - If you see gaps in the predefined test cases
-      - Describe the mutation in natural language
-      - Example: "Set BAG to 5ms (not in allowed list) and frame size to 2000 bytes"
+   B) PROPOSE CUSTOM MUTATIONS:
+      - Only use this for rules where no test cases exist
+      - Or to go deeper on a rule that found bugs
 
 3. STRATEGY TYPES:
-   - "conformance": Test protocol compliance with valid parameters (baseline)
+   - "conformance": Test protocol compliance with valid parameters
    - "edge-case": Test boundary values, invalid identifiers (recommended)
-   - "adversarial": Test extreme violations, stress testing (aggressive)
+   - "adversarial": Test extreme violations, stress testing
 
 4. LEARNING FROM HISTORY:
-   - If recent test had high reward (>0.8): Similar approach might work
-   - If bug was found: Continue testing that area/rule
-   - If reward was low (<0.4): Try different approach
+   - If bug was found: Continue testing that area
+   - If reward was high on a NEW rule: Good, now move to another new rule
+   - If reward was high on a REPEATED rule: STOP — you already tested it, move on!
 
-5. NOVELTY:
-   - Prefer testing protocols/VLs you haven't tested recently
-   - But if you found bugs, dig deeper in that area
+5. DIVERSITY:
+   - NEVER repeat the same mutation_type more than 2 times total
+   - Rotate through VLs: each VL should be tested roughly equally
+   - Vary strategy types: mix conformance, edge-case, adversarial
 
-ITERATION {iteration}: {"Early exploration phase" if iteration < 5 else "Active learning phase"}
+ITERATION {iteration}: {"Early exploration — test as many NEW rules as possible!" if iteration < 15 else "Active coverage — fill remaining gaps in untested rules!" if iteration < 35 else "Late phase — revisit high-reward rules or go deeper on bug areas."}
 """
 
 
@@ -251,6 +336,10 @@ You have FULL CONTROL over testing approach. Choose what makes most sense:
   "frame_size": <int or null>,
   "sequence_number": <int or null>,
   "timing_jitter_ms": <int or null>,
+  "mac_mutation_type": "<spoof_src|spoof_dst|broadcast|invalid_src|zero_mac or null>",
+  "prob": <float 0.0-1.0 or null>,
+  "sequence_number_override": <int 0-255 or null>,
+  "dest_mac_mutation": "<corrupt_prefix|wrong_vl|zero or null>",
   "payload_pattern": "<pattern or null>",
   "strategy": "conformance" OR "edge-case" OR "adversarial",
   "reasoning": "<brief explanation of your choice>"
@@ -286,16 +375,16 @@ Example 1 - Using PREDEFINED test cases:
 
 Example 2 - Using SPECIFIC values (your choice):
 {
-  "target_vl": 9999,
-  "mutation_type": "vl_validation",
+  "target_vl": 2002,
+  "mutation_type": "bag_boundary",
   "test_cases": null,
-  "bag_value": 8,
-  "frame_size": 128,
-  "sequence_number": 1,
+  "bag_value": 3,
+  "frame_size": 1519,
+  "sequence_number": null,
   "timing_jitter_ms": null,
   "payload_pattern": null,
   "strategy": "adversarial",
-  "reasoning": "Testing invalid VL 9999 with otherwise valid parameters. I chose 8ms BAG (valid) to isolate VL validation."
+  "reasoning": "BAG=3ms is not in the allowed discrete set [1,2,4,8,...128] and frame size 1519 exceeds 1518 max. Isolating policing behavior on VL 2002."
 }
 
 Example 3 - COMBINING test cases + custom values:

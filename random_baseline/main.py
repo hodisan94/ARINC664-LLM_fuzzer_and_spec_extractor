@@ -156,6 +156,24 @@ class RandomFuzzer:
             print("\n[2/4] Generating Test Inputs...")
             test_inputs = self.test_generator.generate_test_inputs(strategy)
             
+            # Fallback: if predefined mode produced 0 frames, retry with mutation params
+            if test_inputs['metadata']['num_frames'] == 0 and strategy.get('test_mode') == 'predefined':
+                import random as _rng
+                print("  [WARN] Predefined mode produced 0 frames, falling back to mutation params")
+                strategy['test_cases'] = None
+                strategy['test_mode'] = 'custom_fallback'
+                rule = strategy.get('protocol_rule', '').lower()
+                if 'bag' in rule:
+                    strategy['bag_value'] = _rng.choice([0, 1, 2, 3, 4, 16, 32, 64, 128])
+                elif 'frame' in rule or 'ethernet' in rule:
+                    strategy['frame_size'] = _rng.choice([0, 17, 63, 65, 1518, 1519, 2000, 10000])
+                elif 'sequence' in rule:
+                    strategy['sequence_number'] = _rng.choice([-1, 0, 256, 65535, 99999])
+                else:
+                    strategy['bag_value'] = _rng.choice([0, 1, 2, 3])
+                    strategy['frame_size'] = _rng.choice([0, 63, 1519, 5000])
+                test_inputs = self.test_generator.generate_test_inputs(strategy)
+            
             print(f"  Generated {test_inputs['metadata']['num_frames']} frames")
             print(f"  VL ID: {test_inputs['vl_id']}")
             
@@ -212,6 +230,11 @@ class RandomFuzzer:
                 'frames_forwarded': feedback['metrics'].get('frames_forwarded', 0),
                 'policing_rate': feedback['metrics'].get('policing_rate', 0.0),
                 'forward_rate': feedback['metrics'].get('forward_rate', 0.0),
+                'frames_dropped_frame_error': feedback['metrics'].get('frames_dropped_frame_error', 0),
+                'frames_dropped_mac_error': feedback['metrics'].get('frames_dropped_mac_error', 0),
+                'es_frames_rejected': feedback['metrics'].get('es_frames_rejected', 0),
+                'es_duplicates_discarded': feedback['metrics'].get('es_duplicates_discarded', 0),
+                'es_rejection_rate': feedback['metrics'].get('es_rejection_rate', 0.0),
                 'bugs_found': bugs_found,
             }
             

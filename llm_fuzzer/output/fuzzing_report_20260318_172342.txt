@@ -1,0 +1,33 @@
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 50
+Successful: 50
+Failed: 0
+
+Reward Statistics:
+  Mean: 1.587
+  Max: 1.796
+  Min: 1.094
+
+Bugs Found: 0
+
+VLs Tested: 10 / 8
+  VL IDs: [2001, 3001, 4001, 5001, 6001, 7001, 8001, 9001, 10001, 11001]
+
+Mutation Types Tested: 38
+  Types: ['Addressing.frame_based_filtering + policing_budget_interaction', 'aggressive_stress', 'filtering_vs_policing_budget', 'filtering_vs_policing_budget_invalid_fcs', 'frame_based_filtering_vs_policing_budget', 'frame_filtering_vs_policing_budget', 'redundancy_filtering_policing_interaction', 'redundancy_first_win_skew_exceed_and_wrap', 'redundancy_first_win_skew_exceed_with_rsn0', 'redundancy_first_win_wrap_skew_exceed', 'redundancy_ic_budget_skew', 'redundancy_ic_policing_interaction', 'redundancy_ic_rm_interplay', 'redundancy_ic_rm_interplay_bad_fcs_first_wraparound_skewmax', 'redundancy_ic_rm_interplay_bad_fcs_second_wraparound_exceed_skewmax', 'redundancy_ic_rm_interplay_skewmax_wraparound_bad_crc', 'redundancy_ic_rm_interplay_with_skew_and_rsn0', 'redundancy_ic_rm_skew_wraparound', 'redundancy_rsn0_without_reset_and_skew_violation', 'redundancy_rsn_skew_crc_interplay', 'redundancy_rsn_wrap_skewmax_crc', 'redundancy_rsn_zero_and_skew_threshold', 'redundancy_sequence_and_budget_interaction', 'redundancy_sequence_policing_interaction', 'redundancy_sequence_skew_boundary', 'redundancy_sequence_skew_violation', 'redundancy_sequence_skewmax', 'redundancy_skew_exceed_rsn0_wrap_crc_interplay', 'redundancy_skew_exceeded_rsn0_ic_order', 'redundancy_skew_ic_rsn0', 'redundancy_skew_wrap_window_conflict', 'redundancy_skewmax_exceed_and_rsn0_without_reset', 'redundancy_skewmax_exceeded_rsn_jump', 'redundancy_skewmax_out_of_sequence_wraparound', 'redundancy_skewmax_wrap_crc_interplay', 'redundancy_wrap_skewmax_boundary', 'redundancy_zero_seq_skewmax_ic_interplay', 'sequence_redundancy_wraparound_test']
+
+Strategy Distribution:
+  edge-case: 49
+  adversarial: 1
+
+Top 5 Iterations (by reward):
+  Iter 31: VL=9001, mutation=filtering_vs_policing_budget, reward=1.796
+  Iter 34: VL=10001, mutation=frame_based_filtering_vs_policing_budget, reward=1.796
+  Iter 33: VL=9001, mutation=filtering_vs_policing_budget, reward=1.756
+  Iter 36: VL=10001, mutation=frame_based_filtering_vs_policing_budget, reward=1.756
+  Iter 37: VL=8001, mutation=frame_based_filtering_vs_policing_budget, reward=1.736
+
+======================================================================

@@ -211,7 +211,7 @@ def shannon_entropy(counts: Counter) -> float:
 
 def violation_diversity(df: pd.DataFrame) -> Dict[str, Any]:
     if df.empty:
-        return {"entropy": 0.0, "max_entropy": 0.0, "normalized": 0.0, "n_types": 0}
+        return {"entropy": 0.0, "max_entropy": 0.0, "normalized_entropy": 0.0, "n_types": 0, "top_5": []}
 
     rules = get_rule_field(df)
     counts = Counter(rules)
@@ -740,6 +740,37 @@ def main():
     if ce_results:
         plot_cost_effectiveness(ce_results, FIGURES_DIR / "cost_effectiveness.png")
     report["cost_effectiveness"] = ce_results
+
+    # -----------------------------------------------------------------------
+    # Metric 9 — Effective Mutation Rate (NEW)
+    # -----------------------------------------------------------------------
+    print("\n" + "=" * 60)
+    print("METRIC 9: Effective Mutation Rate")
+    print("=" * 60)
+    print("  (Counts iterations where policing_rate differs from baseline ~74.5%)")
+
+    BASELINE_POLICING = 74.53
+    TOLERANCE = 0.5
+    effective_results = {}
+    for name, df in data.items():
+        if df.empty or "policing_rate" not in df.columns:
+            effective_results[name] = {"error": "No policing data"}
+            continue
+        rates = df["policing_rate"].dropna()
+        total = len(rates)
+        effective = int(((rates - BASELINE_POLICING).abs() > TOLERANCE).sum())
+        zero_frame_count = int((df.get("num_frames", pd.Series([1]*total)) == 0).sum()) if "num_frames" in df.columns else 0
+        effective_results[name] = {
+            "total_iterations": total,
+            "effective_mutations": effective,
+            "effective_rate_percent": round(effective / total * 100, 1) if total > 0 else 0,
+            "zero_frame_iterations": zero_frame_count,
+            "baseline_policing": BASELINE_POLICING,
+            "tolerance": TOLERANCE,
+        }
+        print(f"  {name}: {effective}/{total} effective ({effective_results[name]['effective_rate_percent']}%), "
+              f"zero-frame iters: {zero_frame_count}")
+    report["effective_mutation_rate"] = effective_results
 
     # -----------------------------------------------------------------------
     # Summary

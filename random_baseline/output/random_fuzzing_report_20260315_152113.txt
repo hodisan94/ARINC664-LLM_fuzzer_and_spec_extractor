@@ -1,0 +1,34 @@
+======================================================================
+RANDOM BASELINE FUZZER - FINAL REPORT
+======================================================================
+
+Total Iterations: 1
+Successful: 1
+Failed: 0
+
+Reward Statistics:
+  Mean: 1.067
+  Max: 1.067
+  Min: 1.067
+  Std: nan
+
+Bugs Found: 0
+
+VLs Tested: 1 / 8
+  VL IDs: [1002]
+
+Protocol Rules Tested: 1
+  Rules: ['Broadcast Address']
+
+Strategy Distribution:
+  conformance: 1
+
+Test Mode Distribution:
+  custom: 1
+
+Top 5 Iterations (by reward):
+  Iter 0: VL=1002, rule=Broadcast Address, reward=1.067
+
+======================================================================
+NOTE: This is a RANDOM baseline - no learning or adaptation
+======================================================================

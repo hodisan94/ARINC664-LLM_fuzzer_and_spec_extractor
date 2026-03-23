@@ -64,7 +64,7 @@ private:
   uint16_t m_etherType;               ///< EtherType = 0x88B5
   uint16_t m_vlId;                    ///< Virtual Link ID
   uint8_t m_sequenceNumber;           ///< Sequence number (0-255)
-  uint8_t m_payload[1471];            ///< Maximum AFDX payload
+  uint8_t m_payload[9000];            ///< Buffer sized for fuzz testing (normal max: 1471)
   uint32_t m_payloadSize;             ///< Actual payload size
 };
 

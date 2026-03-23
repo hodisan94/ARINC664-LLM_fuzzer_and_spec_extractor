@@ -15,6 +15,35 @@
 #include <cstring>
 #include <algorithm>
 
+struct MutationConfig
+{
+    uint16_t targetVL;
+    double probability;
+    int payloadDeltaBytes;
+    int timingJitterMs;
+    std::string macMutation;
+    bool isExtremeTest;
+    bool isActive;
+    int payloadAppliedBytes;
+    int jitterAppliedMs;
+    int payloadClampCount;
+    int txProbDrops;
+    int macSpoofCount;
+    int sequenceNumberOverride;
+    int seqMutationCount;
+    std::string destMacMutation;
+    int destMacMutationCount;
+    
+    MutationConfig() : 
+        targetVL(0), probability(0.0), payloadDeltaBytes(0), 
+        timingJitterMs(0), macMutation("none"), isExtremeTest(false), isActive(false),
+        payloadAppliedBytes(0), jitterAppliedMs(0), payloadClampCount(0), 
+        txProbDrops(0), macSpoofCount(0),
+        sequenceNumberOverride(0), seqMutationCount(0),
+        destMacMutation("none"), destMacMutationCount(0) {}
+};
+extern MutationConfig g_mutationConfig;
+
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE("AfdxEndSystem");
@@ -182,12 +211,55 @@ AfdxEndSystem::SendFrame(uint16_t vlId)
   // Get current sequence number
   uint8_t seqNum = m_sequenceNumbers[vlId];
   
+  // Apply sequence number mutation if active
+  uint8_t effectiveSeqNum = seqNum;
+  if (g_mutationConfig.isActive &&
+      g_mutationConfig.targetVL == vlId &&
+      g_mutationConfig.sequenceNumberOverride > 0)
+  {
+    effectiveSeqNum = static_cast<uint8_t>(g_mutationConfig.sequenceNumberOverride & 0xFF);
+    g_mutationConfig.seqMutationCount++;
+  }
+  
+  // Apply dest MAC mutation if active
+  Mac48Address dstMac = vl.GetDestinationMac();
+  if (g_mutationConfig.isActive &&
+      g_mutationConfig.targetVL == vlId &&
+      g_mutationConfig.destMacMutation != "none")
+  {
+    if (g_mutationConfig.destMacMutation == "corrupt_prefix")
+    {
+      uint8_t mac[6];
+      dstMac.CopyTo(mac);
+      mac[0] = 0x04;
+      char macStr[18];
+      sprintf(macStr, "%02x:%02x:%02x:%02x:%02x:%02x",
+              mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+      dstMac = Mac48Address(macStr);
+    }
+    else if (g_mutationConfig.destMacMutation == "wrong_vl")
+    {
+      uint8_t mac[6];
+      dstMac.CopyTo(mac);
+      mac[4] = static_cast<uint8_t>((mac[4] + 1) & 0xFF);
+      char macStr[18];
+      sprintf(macStr, "%02x:%02x:%02x:%02x:%02x:%02x",
+              mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+      dstMac = Mac48Address(macStr);
+    }
+    else if (g_mutationConfig.destMacMutation == "zero")
+    {
+      dstMac = Mac48Address("00:00:00:00:00:00");
+    }
+    g_mutationConfig.destMacMutationCount++;
+  }
+  
   // Create AFDX frame
   AfdxFrame frame;
   frame.SetVirtualLinkId(vlId);
-  frame.SetSequenceNumber(seqNum);
+  frame.SetSequenceNumber(effectiveSeqNum);
   frame.SetSourceAddress(vl.GetSourceMac());
-  frame.SetDestinationAddress(vl.GetDestinationMac());
+  frame.SetDestinationAddress(dstMac);
   
   // Determine payload size: use VL's max payload size (or derive from max frame size)
   // ARINC 664 Part 7: Payload can vary within VL's configured range
@@ -328,7 +400,27 @@ AfdxEndSystem::ProcessReceivedFrame(Ptr<const Packet> packet, const std::string&
   }
   
   // ====================================================================
-  // AFDX VALIDATION STEP 2: VL Subscription Check
+  // AFDX VALIDATION STEP 2: Constant Field Check (ARINC 664 P7 §3.1.1.3.3)
+  // First 4 octets of dest MAC must be 03:00:00:00
+  // ====================================================================
+  {
+    Mac48Address dest = frame.GetDestinationAddress();
+    uint8_t mac[6];
+    dest.CopyTo(mac);
+    if (mac[0] != 0x03 || mac[1] != 0x00 || mac[2] != 0x00 || mac[3] != 0x00)
+    {
+      m_framesRejected++;
+      LogRxEvent(vlId, seqNum, networkId, "REJECTED", "Constant field mismatch");
+      NS_LOG_WARN("ES" << m_nodeId << " rejected VL" << vlId
+                  << " - constant field mismatch (first 4 bytes: "
+                  << std::hex << (int)mac[0] << ":" << (int)mac[1] << ":"
+                  << (int)mac[2] << ":" << (int)mac[3] << std::dec << ")");
+      return;
+    }
+  }
+  
+  // ====================================================================
+  // AFDX VALIDATION STEP 3: VL Subscription Check
   // ====================================================================
   if (!CheckVLSubscription(vlId))
   {
@@ -339,25 +431,27 @@ AfdxEndSystem::ProcessReceivedFrame(Ptr<const Packet> packet, const std::string&
   }
   
   // ====================================================================
-  // AFDX VALIDATION STEP 3: Sequence Number Check
+  // AFDX VALIDATION STEP 4: First Valid Frame Wins (Redundancy Management)
+  // Must run before sequence check — duplicates from Network B have the
+  // same seq as the already-accepted Network A copy.
+  // ====================================================================
+  if (!ApplyFirstValidFrameWins(vlId, seqNum, networkId))
+  {
+    m_duplicatesDiscarded++;
+    LogRxEvent(vlId, seqNum, networkId, "DUPLICATE", "First Valid Frame Wins");
+    NS_LOG_DEBUG("ES" << m_nodeId << " discarded VL" << vlId 
+                 << " duplicate from " << networkId);
+    return;
+  }
+  
+  // ====================================================================
+  // AFDX VALIDATION STEP 5: Sequence Number Check
   // ====================================================================
   if (!CheckSequenceNumber(vlId, seqNum))
   {
     m_framesRejected++;
     LogRxEvent(vlId, seqNum, networkId, "REJECTED", "Invalid sequence number");
     NS_LOG_WARN("ES" << m_nodeId << " rejected VL" << vlId << " - sequence error");
-    return;
-  }
-  
-  // ====================================================================
-  // AFDX VALIDATION STEP 4: First Valid Frame Wins (Redundancy Management)
-  // ====================================================================
-  if (!ApplyFirstValidFrameWins(vlId, networkId))
-  {
-    m_duplicatesDiscarded++;
-    LogRxEvent(vlId, seqNum, networkId, "DUPLICATE", "First Valid Frame Wins");
-    NS_LOG_DEBUG("ES" << m_nodeId << " discarded VL" << vlId 
-                 << " duplicate from " << networkId);
     return;
   }
   
@@ -440,66 +534,82 @@ AfdxEndSystem::CheckSequenceNumber(uint16_t vlId, uint8_t seqNum)
   auto it = m_receptionState.find(vlId);
   if (it == m_receptionState.end())
   {
-    return true;  // First frame, accept any sequence number
+    return true;
+  }
+  
+  // Sequence number 0 is never valid (ARINC 664 P7: range is 1-255)
+  if (seqNum == 0)
+  {
+    NS_LOG_WARN("ES" << m_nodeId << " VL" << vlId 
+                << " sequence error: seq=0 is invalid");
+    return false;
   }
   
   uint8_t lastSeqNum = it->second.lastValidSeqNum;
   
-  // First frame for this VL
-  if (lastSeqNum == 255 && !it->second.frameReceived)
+  // First frame for this VL — accept any non-zero seq
+  if (!it->second.frameReceived)
   {
     return true;
   }
   
-  // Expected next sequence number (wraps at 256)
-  uint8_t expectedSeqNum = (lastSeqNum + 1) % 256;
-  
-  // Allow the expected sequence number
-  // In real systems, might allow small gaps for skipped frames
-  if (seqNum == expectedSeqNum)
+  // Same sequence as last accepted → duplicate (shouldn't get here after FVFW,
+  // but guard against it). Accept so FVFW handles the dedup.
+  if (seqNum == lastSeqNum)
   {
     return true;
   }
   
-  // Sequence number error
-  NS_LOG_WARN("ES" << m_nodeId << " VL" << vlId 
-              << " sequence error: expected " << (uint32_t)expectedSeqNum
-              << " got " << (uint32_t)seqNum);
+  // Forward progress: accept if seq is ahead of lastSeqNum (with wrapping).
+  // In a network with policing/drops, gaps are expected.
+  // Detect "backwards" sequences: if seqNum is more than 128 behind lastSeqNum
+  // (in circular 1-255 space), treat it as stale/invalid.
+  int diff = (int)seqNum - (int)lastSeqNum;
+  if (diff < 0) diff += 255; // wrap around 1-255 space
   
-  // Update to new sequence number (recovery)
-  return true;  // Still accept but log the error
+  if (diff > 128)
+  {
+    // Backwards / stale sequence
+    NS_LOG_WARN("ES" << m_nodeId << " VL" << vlId 
+                << " sequence error: stale seq=" << (uint32_t)seqNum
+                << " (last accepted=" << (uint32_t)lastSeqNum << ")");
+    return false;
+  }
+  
+  return true;
 }
 
 bool
-AfdxEndSystem::ApplyFirstValidFrameWins(uint16_t vlId, const std::string& networkId)
+AfdxEndSystem::ApplyFirstValidFrameWins(uint16_t vlId, uint8_t seqNum, const std::string& networkId)
 {
   auto it = m_receptionState.find(vlId);
   if (it == m_receptionState.end())
   {
-    return true;  // Should not happen, but accept
+    return true;
   }
   
   FrameReceptionState& state = it->second;
   
-  // First frame with this sequence number?
-  if (!state.frameReceived || state.acceptedNetwork.empty())
+  // New sequence number → reset state and accept as the first copy
+  if (!state.frameReceived || seqNum != state.lastValidSeqNum)
   {
-    // Accept and mark which network it came from
     state.acceptedNetwork = networkId;
     state.frameReceived = true;
     return true;
   }
   
-  // Duplicate from redundant network - discard
+  // Same seq from the other network → duplicate, discard
   if (state.acceptedNetwork != networkId)
   {
     NS_LOG_DEBUG("ES" << m_nodeId << " VL" << vlId 
-                 << " duplicate from " << networkId 
+                 << " duplicate seq=" << (int)seqNum << " from " << networkId 
                  << " (already accepted from " << state.acceptedNetwork << ")");
     return false;
   }
   
-  // Same network sending duplicate - should not happen in normal operation
+  // Same seq, same network → unexpected retransmission, discard
+  NS_LOG_DEBUG("ES" << m_nodeId << " VL" << vlId 
+               << " unexpected retransmit seq=" << (int)seqNum << " on " << networkId);
   return false;
 }
 

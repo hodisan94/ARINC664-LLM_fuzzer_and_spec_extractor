@@ -1,0 +1,28 @@
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 1
+Successful: 1
+Failed: 0
+
+Reward Statistics:
+  Mean: 1.582
+  Max: 1.582
+  Min: 1.582
+
+Bugs Found: 0
+
+VLs Tested: 1 / 8
+  VL IDs: [2001]
+
+Mutation Types Tested: 1
+  Types: ['sequence_zero_without_reset']
+
+Strategy Distribution:
+  edge-case: 1
+
+Top 5 Iterations (by reward):
+  Iter 0: VL=2001, mutation=sequence_zero_without_reset, reward=1.582
+
+======================================================================

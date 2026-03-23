@@ -159,38 +159,53 @@ class SimulatorRunner:
         vl_id = test_inputs.get('vl_id', 0)
         metadata = test_inputs.get('metadata', {})
         
+        # Get VL config, with sensible defaults for unknown VLs
+        if vl_id in self.vl_configs:
+            vl_cfg = self.vl_configs[vl_id]
+        else:
+            vl_cfg = {'base_size': 288, 'bag_ms': 8, 'min_size': 64, 'max_size': 512}
+        
         # payload_delta_bytes: C++ applies base + delta, where base = (min+max)/2
         payload_delta = 0
         frame_size = metadata.get('frame_size')
-        if frame_size and vl_id in self.vl_configs:
-            base = self.vl_configs[vl_id]['base_size']
-            payload_delta = int(frame_size) - base
+        if frame_size:
+            payload_delta = int(frame_size) - vl_cfg['base_size']
         
         timing_jitter = metadata.get('timing_jitter_ms') or 0
         
         # BAG violation: if a non-standard bag_value is specified, express it as
         # negative jitter so the C++ traffic generator sends frames faster than BAG
         bag_value = metadata.get('bag_value')
-        if bag_value and vl_id in self.vl_configs and timing_jitter == 0:
-            normal_bag = self.vl_configs[vl_id]['bag_ms']
-            if int(bag_value) < normal_bag:
+        if bag_value is not None and timing_jitter == 0:
+            normal_bag = vl_cfg['bag_ms']
+            if int(bag_value) != normal_bag:
                 timing_jitter = int(bag_value) - normal_bag
         
         mutation_type = metadata.get('mutation_type', '')
         mac_mutation = "none"
-        if mutation_type in ('mac_address', 'mac_spoofing', 'mac'):
+        explicit_mac = metadata.get('mac_mutation_type', '')
+        if explicit_mac in ('spoof_src', 'spoof_dst', 'broadcast', 'invalid_src', 'zero_mac'):
+            mac_mutation = explicit_mac
+        elif mutation_type in ('mac_address', 'mac_spoofing', 'mac'):
             mac_mutation = "spoof_src"
         
+        prob = float(metadata.get('prob') or 0.0)
+        
         strategy_type = metadata.get('strategy_type', '')
-        is_extreme = strategy_type in ('adversarial', 'edge-case')
+        is_extreme = True  # always enable fuzz mode so switch can validate
+        
+        seq_override = int(metadata.get('sequence_number_override') or 0)
+        dest_mac_mut = metadata.get('dest_mac_mutation') or 'none'
         
         return {
             "vlId": vl_id,
-            "prob": 1.0,
+            "prob": prob,
             "payload_delta_bytes": payload_delta,
             "timing_jitter_ms": int(timing_jitter),
             "mac_mutation": mac_mutation,
             "is_extreme_test": is_extreme,
+            "sequence_number_override": seq_override,
+            "dest_mac_mutation": dest_mac_mut,
         }
     
     def _write_mutations_file(self, test_inputs: Dict[str, Any]):

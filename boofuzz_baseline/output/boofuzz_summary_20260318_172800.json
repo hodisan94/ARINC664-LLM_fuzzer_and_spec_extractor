@@ -1,0 +1,17 @@
+{
+  "fuzzer_type": "boofuzz",
+  "total_iterations": 50,
+  "duration_seconds": 128.228321,
+  "violations_tested": 50,
+  "total_violations": 2703,
+  "coverage_percent": 1.849796522382538,
+  "reward_mean": 1.5749015641097686,
+  "reward_max": 1.796234897443102,
+  "reward_min": 1.4095682307764352,
+  "reward_std": 0.09983205852478978,
+  "total_bugs_found": 0,
+  "avg_policing_rate": 74.52936218038775,
+  "vls_tested": 4,
+  "rules_tested": 7,
+  "violation_types_tested": 14
+}

@@ -1,0 +1,32 @@
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 6
+Successful: 6
+Failed: 0
+
+Reward Statistics:
+  Mean: 1.655
+  Max: 1.710
+  Min: 1.380
+
+Bugs Found: 0
+
+VLs Tested: 6 / 8
+  VL IDs: [1001, 2001, 2002, 2003, 3001, 3002]
+
+Mutation Types Tested: 5
+  Types: ['dest_mac_constant_field_violation', 'integrity_seq0_boundary_frame', 'oversize_boundary_with_bag_breach', 'oversize_frame', 'oversize_with_bag_violation']
+
+Strategy Distribution:
+  edge-case: 6
+
+Top 5 Iterations (by reward):
+  Iter 0: VL=2001, mutation=oversize_frame, reward=1.710
+  Iter 1: VL=2002, mutation=integrity_seq0_boundary_frame, reward=1.710
+  Iter 3: VL=3001, mutation=oversize_boundary_with_bag_breach, reward=1.710
+  Iter 4: VL=2003, mutation=oversize_with_bag_violation, reward=1.710
+  Iter 5: VL=3002, mutation=oversize_with_bag_violation, reward=1.710
+
+======================================================================

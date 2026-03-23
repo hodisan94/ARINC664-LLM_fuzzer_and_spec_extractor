@@ -89,8 +89,8 @@ class FeedbackAnalyzer:
             history=history
         )
         
-        # Perform analysis
-        analysis = self._analyze_results(metrics, strategy, reward_result)
+        # Perform analysis (pass history for coverage-aware recommendations)
+        analysis = self._analyze_results(metrics, strategy, reward_result, history)
         
         return {
             "success": True,
@@ -105,7 +105,8 @@ class FeedbackAnalyzer:
         self,
         metrics: Dict[str, Any],
         strategy: Dict[str, Any],
-        reward_result: Dict[str, Any]
+        reward_result: Dict[str, Any],
+        history: Optional[pd.DataFrame] = None
     ) -> Dict[str, Any]:
         """
         Perform high-level analysis of results.
@@ -114,6 +115,7 @@ class FeedbackAnalyzer:
             metrics: Performance metrics
             strategy: Test strategy
             reward_result: Reward calculation result
+            history: DataFrame of previous iterations
             
         Returns:
             Analysis dictionary with recommendations
@@ -122,7 +124,6 @@ class FeedbackAnalyzer:
         forward_rate = metrics.get("forward_rate", 0.0)
         malformed_accepted = metrics.get("malformed_accepted", 0)
         
-        # Analyze policing effectiveness
         if policing_rate >= 0.8:
             policing_effectiveness = "Excellent - System correctly rejects most invalid frames"
         elif policing_rate >= 0.5:
@@ -132,16 +133,13 @@ class FeedbackAnalyzer:
         else:
             policing_effectiveness = "Poor - System is too permissive"
         
-        # Check for bugs
         bugs_found = malformed_accepted > 0
-        
-        # Check if edge case was tested
         strategy_type = strategy.get("strategy", "normal")
-        edge_case_tested = strategy_type in ["edge-case", "attack"]
+        edge_case_tested = strategy_type in ["edge-case", "attack", "adversarial"]
         
-        # Generate recommendation
         recommendation = self._generate_recommendation(
-            policing_rate, forward_rate, bugs_found, edge_case_tested, reward_result
+            policing_rate, forward_rate, bugs_found, edge_case_tested,
+            reward_result, strategy, history
         )
         
         return {
@@ -157,42 +155,53 @@ class FeedbackAnalyzer:
         forward_rate: float,
         bugs_found: bool,
         edge_case_tested: bool,
-        reward_result: Dict[str, Any]
+        reward_result: Dict[str, Any],
+        strategy: Dict[str, Any] = None,
+        history: Optional[pd.DataFrame] = None
     ) -> str:
         """
-        Generate testing recommendation based on results.
-        
-        Args:
-            policing_rate: Rate of frames dropped by policing
-            forward_rate: Rate of frames forwarded
-            bugs_found: Whether bugs were detected
-            edge_case_tested: Whether edge cases were tested
-            reward_result: Reward calculation result
-            
-        Returns:
-            Recommendation string
+        Generate coverage-aware testing recommendation.
         """
+        strategy = strategy or {}
         reward = reward_result["reward"]
         
         if bugs_found:
             return "BUG FOUND! Continue testing this area to identify root cause."
         
-        if reward > 0.8:
-            return "Excellent test! Continue exploring similar strategies."
+        parts = []
         
-        if reward > 0.4:
-            return "Good test. Consider testing different protocol rules or VLs."
+        mutation_type = strategy.get("mutation_type", "")
+        if history is not None and len(history) > 0 and "mutation_type" in history.columns:
+            times_used = int((history["mutation_type"] == mutation_type).sum())
+            if times_used >= 3:
+                parts.append(
+                    f"WARNING: mutation_type '{mutation_type}' used {times_used} times already. "
+                    f"Switch to a DIFFERENT rule to improve coverage."
+                )
+
+            seen_rules = set(history["protocol_rule"].dropna().unique()) if "protocol_rule" in history.columns else set()
+            n_seen = len(seen_rules)
+            parts.append(f"Coverage so far: {n_seen} unique rules tested.")
+            
+            if n_seen < 20:
+                parts.append("Coverage is LOW. Prioritize untested rules.")
+            
+            if not strategy.get("test_cases"):
+                parts.append("TIP: Try using predefined test_cases for broader rule coverage.")
         
-        if not edge_case_tested:
-            return "Try edge-case testing to find boundary violations."
+        if reward > 1.5:
+            parts.append("High reward, but ensure you are not repeating the same mutation.")
+        elif reward > 0.8:
+            parts.append("Good reward. Try a different protocol rule next.")
+        elif reward > 0.4:
+            parts.append("Moderate reward. Consider edge-case or adversarial strategies.")
+        else:
+            if not edge_case_tested:
+                parts.append("Try edge-case testing to find boundary violations.")
+            else:
+                parts.append("Low reward. Try a completely different approach.")
         
-        if policing_rate < 0.3:
-            return "Low policing rate. Test more aggressive violations."
-        
-        if forward_rate > 0.7:
-            return "High forward rate under test conditions. Investigate permissiveness."
-        
-        return "Continue systematic exploration of protocol rules."
+        return " ".join(parts) if parts else "Continue systematic exploration of protocol rules."
     
     def analyze_batch(
         self,

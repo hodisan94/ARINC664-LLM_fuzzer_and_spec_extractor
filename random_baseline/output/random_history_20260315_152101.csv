@@ -1,0 +1,51 @@
+iteration,timestamp,duration,fuzzer_type,target_vl,protocol_rule,test_mode,strategy,test_cases,custom_mutation,num_frames,simulation_success,reward,frames_received,frames_dropped_policing,frames_forwarded,policing_rate,forward_rate,bugs_found
+0,2026-03-11T17:20:59.968587,0.331955,RANDOM_BASELINE,1003,window_size,custom,conformance,,Test window_size with unexpected type,20,True,0.5,14370,0,14370,0.0,100.0,False
+1,2026-03-11T17:21:00.183231,0.209778,RANDOM_BASELINE,3002,traffic_policing,custom,conformance,,Test extreme traffic_policing boundary,20,True,0.5,14370,0,14370,0.0,100.0,False
+2,2026-03-11T17:21:00.389545,0.205155,RANDOM_BASELINE,2003,Fragmentation.do_not_exceed_mms_s,custom,adversarial,,Test extreme Fragmentation.do_not_exceed_mms_s boundary,20,True,0.5,14370,0,14370,0.0,100.0,False
+3,2026-03-11T17:21:00.597763,0.207083,RANDOM_BASELINE,2002,functional_status_set_alignment,predefined,conformance,"['TC0', 'TC1', 'TC2']",,0,True,0.7,14370,0,14370,0.0,100.0,False
+4,2026-03-11T17:21:00.803011,0.204205,RANDOM_BASELINE,2003,switch_configuration.pin_programming_parity_check,predefined,conformance,"['TC0', 'TC1']",,0,True,0.6799999999999999,14370,0,14370,0.0,100.0,False
+5,2026-03-11T17:21:01.011340,0.207335,RANDOM_BASELINE,1001,ops_mode_health_indicator_state,predefined,adversarial,"['TC0', 'TC1']",,0,True,0.7,14370,0,14370,0.0,100.0,False
+6,2026-03-11T17:21:01.200237,0.187499,RANDOM_BASELINE,1002,ICMP_Message_Handling,custom,conformance,,Apply random corruption to ICMP_Message_Handling,20,True,0.5,14370,0,14370,0.0,100.0,False
+7,2026-03-11T17:21:01.380461,0.17911,RANDOM_BASELINE,3002,frame_filtering_function_requirement,custom,adversarial,,Apply random corruption to frame_filtering_function_requirement,20,True,0.48,14370,0,14370,0.0,100.0,False
+8,2026-03-11T17:21:01.563741,0.18209,RANDOM_BASELINE,2001,ICMP.generate_icmp_destination_unreachable,custom,edge-case,,Use malformed ICMP.generate_icmp_destination_unreachable,20,True,1.0,14370,0,14370,0.0,100.0,False
+9,2026-03-11T17:21:01.776819,0.211437,RANDOM_BASELINE,2002,in_order_fragment_transmission,custom,edge-case,,Test in_order_fragment_transmission with unexpected type,20,True,0.98,14370,0,14370,0.0,100.0,False
+10,2026-03-11T17:21:02.009935,0.231469,RANDOM_BASELINE,1001,TCP_Retransmission.syn_r2_minimum_duration,predefined,conformance,"['TC0', 'TC1']",,0,True,0.6799999999999999,14370,0,14370,0.0,100.0,False
+11,2026-03-11T17:21:02.207300,0.196287,RANDOM_BASELINE,3002,bidirectional_sap_communication,custom,conformance,,Use malformed bidirectional_sap_communication,20,True,0.46,14370,0,14370,0.0,100.0,False
+12,2026-03-11T17:21:02.391267,0.182973,RANDOM_BASELINE,2002,frame_transmission.complete_structure_transmission,predefined,adversarial,['TC0'],,0,True,0.66,14370,0,14370,0.0,100.0,False
+13,2026-03-11T17:21:02.587678,0.19526,RANDOM_BASELINE,3001,minimum_interframe_gap,custom,adversarial,,Test minimum_interframe_gap with unexpected type,20,True,0.5,14370,0,14370,0.0,100.0,False
+14,2026-03-11T17:21:02.772340,0.183669,RANDOM_BASELINE,2003,ip_layer.stream_identifier_option_ignore,predefined,conformance,"['TC0', 'TC1', 'TC2']",,0,True,0.66,14370,0,14370,0.0,100.0,False
+15,2026-03-11T17:21:02.992231,0.218693,RANDOM_BASELINE,3001,signed_64_integer,predefined,edge-case,"['TC0', 'TC1', 'TC2']",,0,True,1.18,14370,0,14370,0.0,100.0,False
+16,2026-03-11T17:21:03.197097,0.203739,RANDOM_BASELINE,2002,tcp_addressing.consistent_local_address_usage,custom,conformance,,Set tcp_addressing.consistent_local_address_usage to random invalid value,20,True,0.44,14370,0,14370,0.0,100.0,False
+17,2026-03-11T17:21:03.399954,0.201782,RANDOM_BASELINE,1001,maximum_frame_size_for_vl,predefined,adversarial,"['TC0', 'TC1', 'TC2']",,0,True,0.66,14370,0,14370,0.0,100.0,False
+18,2026-03-11T17:21:03.603977,0.201696,RANDOM_BASELINE,2002,virtual_link_configuration.minimum_frame_size_range_constraint,predefined,conformance,"['TC0', 'TC1', 'TC2']",,0,True,0.6200000000000001,14370,0,14370,0.0,100.0,False
+19,2026-03-11T17:21:03.789781,0.184761,RANDOM_BASELINE,2001,switch_configuration.vl_maximum_ethernet_frame_size,predefined,edge-case,['TC0'],,0,True,1.18,14370,0,14370,0.0,100.0,False
+20,2026-03-11T17:21:03.987513,0.196244,RANDOM_BASELINE,2003,ip_layer.stream_identifier_option_ignore,predefined,conformance,"['TC0', 'TC1', 'TC2']",,0,True,0.6200000000000001,14370,0,14370,0.0,100.0,False
+21,2026-03-11T17:21:04.162385,0.173784,RANDOM_BASELINE,1003,message_structure.data_primitives_placement_constraint,predefined,conformance,['TC0'],,0,True,0.6799999999999999,14370,0,14370,0.0,100.0,False
+22,2026-03-11T17:21:04.341568,0.178057,RANDOM_BASELINE,3001,minimum_ethernet_frame_size,predefined,conformance,"['TC0', 'TC1', 'TC2']",,0,True,0.66,14370,0,14370,0.0,100.0,False
+23,2026-03-11T17:21:04.508232,0.165598,RANDOM_BASELINE,1001,tcp_urgent_data.urgent_pointer_sequence_number_constraint,predefined,conformance,['TC0'],,0,True,0.64,14370,0,14370,0.0,100.0,False
+24,2026-03-11T17:21:04.688139,0.178878,RANDOM_BASELINE,3002,End System.unique_sap_port_linkage_for_transmission,custom,conformance,,Apply random corruption to End System.unique_sap_port_linkage_for_transmission,20,True,0.44,14370,0,14370,0.0,100.0,False
+25,2026-03-11T17:21:04.856055,0.166809,RANDOM_BASELINE,1003,default_port_speed,predefined,edge-case,"['TC0', 'TC1', 'TC2']",,0,True,1.16,14370,0,14370,0.0,100.0,False
+26,2026-03-11T17:21:05.022383,0.165228,RANDOM_BASELINE,3002,SAP Port.udp_service_access_point_capacity,predefined,adversarial,"['TC0', 'TC1']",,0,True,0.6200000000000001,14370,0,14370,0.0,100.0,False
+27,2026-03-11T17:21:05.192951,0.169557,RANDOM_BASELINE,2001,error_handling.reception_buffer_overflow_handling,predefined,conformance,"['TC0', 'TC1', 'TC2']",,0,True,0.66,14370,0,14370,0.0,100.0,False
+28,2026-03-11T17:21:05.357543,0.163628,RANDOM_BASELINE,2001,TCP_Features.keep_alive_packet_usage,custom,conformance,,Test extreme TCP_Features.keep_alive_packet_usage boundary,20,True,0.44,14370,0,14370,0.0,100.0,False
+29,2026-03-11T17:21:05.527619,0.169127,RANDOM_BASELINE,3002,switching_behavior.frame_sequencing_for_simultaneous_reception,predefined,adversarial,['TC0'],,0,True,0.6000000000000001,14370,0,14370,0.0,100.0,False
+30,2026-03-11T17:21:05.703117,0.174421,RANDOM_BASELINE,2002,mac_layer_wire_speed_transmission,predefined,conformance,"['TC0', 'TC1', 'TC2']",,0,True,0.6000000000000001,14370,0,14370,0.0,100.0,False
+31,2026-03-11T17:21:05.875977,0.171835,RANDOM_BASELINE,1003,mac_source_address_format,custom,conformance,,Test mac_source_address_format with unexpected type,20,True,0.44,14370,0,14370,0.0,100.0,False
+32,2026-03-11T17:21:06.049289,0.172141,RANDOM_BASELINE,2001,redundancy_management_after_integrity_checking,custom,adversarial,,Test redundancy_management_after_integrity_checking with unexpected type,20,True,0.42000000000000004,14370,0,14370,0.0,100.0,False
+33,2026-03-11T17:21:06.223006,0.172399,RANDOM_BASELINE,1003,tcp_connection_management.time_wait_duration,predefined,conformance,"['TC0', 'TC1']",,0,True,0.6200000000000001,14370,0,14370,0.0,100.0,False
+34,2026-03-11T17:21:06.428828,0.204674,RANDOM_BASELINE,2003,Physical Layer.physical_layer_specification,custom,edge-case,,Set Physical Layer.physical_layer_specification to random invalid value,20,True,0.9200000000000002,14370,0,14370,0.0,100.0,False
+35,2026-03-11T17:21:06.649509,0.219607,RANDOM_BASELINE,1003,guaranteed_bandwidth_requirement,custom,conformance,,Test extreme guaranteed_bandwidth_requirement boundary,20,True,0.4,14370,0,14370,0.0,100.0,False
+36,2026-03-11T17:21:06.838785,0.188294,RANDOM_BASELINE,1002,switch_configuration.pin_value_encoding,predefined,adversarial,"['TC0', 'TC1']",,0,True,0.6799999999999999,14370,0,14370,0.0,100.0,False
+37,2026-03-11T17:21:07.009670,0.169247,RANDOM_BASELINE,1002,latency,predefined,conformance,['TC0'],,20,True,0.66,14370,0,14370,0.0,100.0,False
+38,2026-03-11T17:21:07.159032,0.148033,RANDOM_BASELINE,3002,destination_address,custom,adversarial,,Test extreme destination_address boundary,20,True,0.37999999999999995,14370,0,14370,0.0,100.0,False
+39,2026-03-11T17:21:07.311440,0.151499,RANDOM_BASELINE,3001,tcp_options.unsupported_tcp_option_handling_requirement,custom,conformance,,Set tcp_options.unsupported_tcp_option_handling_requirement to random invalid value,20,True,0.44,14370,0,14370,0.0,100.0,False
+40,2026-03-11T17:21:07.474001,0.161592,RANDOM_BASELINE,3002,port_number,predefined,edge-case,['TC0'],,0,True,1.06,14370,0,14370,0.0,100.0,False
+41,2026-03-11T17:21:07.626002,0.151118,RANDOM_BASELINE,3002,tcp_checksum,predefined,conformance,"['TC0', 'TC1', 'TC2']",,0,True,0.54,14370,0,14370,0.0,100.0,False
+42,2026-03-11T17:21:07.783154,0.156267,RANDOM_BASELINE,1002,frame_structure.frame_overhead_components,custom,conformance,,Use malformed frame_structure.frame_overhead_components,20,True,0.44,14370,0,14370,0.0,100.0,False
+43,2026-03-11T17:21:07.936822,0.152487,RANDOM_BASELINE,1003,Float_64,predefined,conformance,"['TC0', 'TC1']",,0,True,0.58,14370,0,14370,0.0,100.0,False
+44,2026-03-11T17:21:08.080594,0.142925,RANDOM_BASELINE,1002,maximum_technological_latency_in_transmission,predefined,conformance,['TC0'],,0,True,0.6200000000000001,14370,0,14370,0.0,100.0,False
+45,2026-03-11T17:21:08.229899,0.148204,RANDOM_BASELINE,3001,Address,predefined,conformance,['TC0'],,20,True,0.6200000000000001,14370,0,14370,0.0,100.0,False
+46,2026-03-11T17:21:08.384795,0.15394,RANDOM_BASELINE,3001,functional_status_set_alignment,predefined,conformance,"['TC0', 'TC1', 'TC2']",,0,True,0.58,14370,0,14370,0.0,100.0,False
+47,2026-03-11T17:21:08.524229,0.138081,RANDOM_BASELINE,2001,TCP_Retransmission.r1_retransmission_threshold,custom,conformance,,Test TCP_Retransmission.r1_retransmission_threshold with unexpected type,20,True,0.4,14370,0,14370,0.0,100.0,False
+48,2026-03-11T17:21:08.671178,0.145963,RANDOM_BASELINE,2002,afdx_reception_port_parameter_set_binding,custom,edge-case,,Apply random corruption to afdx_reception_port_parameter_set_binding,20,True,0.8799999999999999,14370,0,14370,0.0,100.0,False
+49,2026-03-11T17:21:08.812119,0.140008,RANDOM_BASELINE,2003,minimum_ethernet_frame_size,custom,conformance,,Test minimum_ethernet_frame_size with unexpected type,20,True,0.37999999999999995,14370,0,14370,0.0,100.0,False

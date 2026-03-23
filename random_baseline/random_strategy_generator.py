@@ -115,6 +115,7 @@ class RandomStrategyGenerator:
         # 4. Random test cases or custom mutation
         test_cases = None
         custom_mutation = None
+        strategy_extra = {}
         
         if test_mode == "predefined":
             # Get test cases for this rule
@@ -122,19 +123,35 @@ class RandomStrategyGenerator:
             if rule_test_cases:
                 # Random number of test cases (1-3)
                 num_cases = random.randint(1, min(3, len(rule_test_cases)))
-                # Random selection
-                selected_cases = random.sample(rule_test_cases, num_cases)
-                test_cases = [f"TC{i}" for i, tc in enumerate(selected_cases)]
+                # Random selection — use original indices so TestGenerator picks the right cases
+                selected_indices = random.sample(range(len(rule_test_cases)), num_cases)
+                test_cases = [f"TC{i}" for i in selected_indices]
         else:
-            # Random custom mutation (simple examples)
-            custom_mutations = [
-                f"Set {protocol_rule} to random invalid value",
-                f"Test extreme {protocol_rule} boundary",
-                f"Apply random corruption to {protocol_rule}",
-                f"Use malformed {protocol_rule}",
-                f"Test {protocol_rule} with unexpected type"
-            ]
-            custom_mutation = random.choice(custom_mutations)
+            # Custom mode: generate concrete mutation parameters that TestGenerator understands
+            if 'bag' in protocol_rule.lower():
+                strategy_extra['bag_value'] = random.choice([0, 1, 2, 3, 4, 16, 32, 64, 128])
+            elif 'frame' in protocol_rule.lower() or 'ethernet' in protocol_rule.lower():
+                strategy_extra['frame_size'] = random.choice([0, 17, 63, 65, 1518, 1519, 2000, 10000])
+            elif 'sequence' in protocol_rule.lower():
+                strategy_extra['sequence_number'] = random.choice([-1, 0, 256, 65535, 99999])
+            elif 'mac' in protocol_rule.lower() or 'address' in protocol_rule.lower():
+                strategy_extra['mac_mutation_type'] = random.choice(
+                    ['spoof_src', 'spoof_dst', 'broadcast', 'invalid_src', 'zero_mac'])
+            else:
+                strategy_extra['bag_value'] = random.choice([0, 1, 2, 3])
+                strategy_extra['frame_size'] = random.choice([0, 63, 1519, 5000])
+        
+        # Randomly add prob, mac_mutation_type, seq override, or dest MAC mutation (10% each)
+        if random.random() < 0.10:
+            strategy_extra['prob'] = random.choice([0.1, 0.3, 0.5, 0.7, 1.0])
+        if random.random() < 0.10:
+            strategy_extra['mac_mutation_type'] = random.choice(
+                ['spoof_src', 'broadcast', 'zero_mac'])
+        if random.random() < 0.10:
+            strategy_extra['sequence_number_override'] = random.choice([0, 1, 127, 255])
+        if random.random() < 0.10:
+            strategy_extra['dest_mac_mutation'] = random.choice(
+                ['corrupt_prefix', 'wrong_vl', 'zero'])
         
         # 5. Random strategy type
         strategy_type = random.choice(self.strategy_types)
@@ -147,7 +164,7 @@ class RandomStrategyGenerator:
             f"No learning or adaptation - purely random exploration."
         )
         
-        return {
+        result = {
             "target_vl": target_vl,
             "mutation_type": protocol_rule,  # Use protocol_rule as mutation_type
             "protocol_rule": protocol_rule,  # Keep for compatibility
@@ -157,6 +174,8 @@ class RandomStrategyGenerator:
             "strategy": strategy_type,
             "reasoning": reasoning
         }
+        result.update(strategy_extra)
+        return result
 
 
 if __name__ == "__main__":

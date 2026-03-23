@@ -59,12 +59,22 @@ void
 AfdxVirtualLink::SetMaxFrameSize(uint32_t maxSize)
 {
   m_maxFrameSize = maxSize;
+  uint32_t headerSize = 17; // 6+6+2+2+1
+  if (maxSize > headerSize)
+  {
+    m_maxPayloadSize = maxSize - headerSize;
+  }
 }
 
 void
 AfdxVirtualLink::SetMinFrameSize(uint32_t minSize)
 {
   m_minFrameSize = minSize;
+  uint32_t headerSize = 17;
+  if (minSize > headerSize)
+  {
+    m_minPayloadSize = minSize - headerSize;
+  }
 }
 
 void

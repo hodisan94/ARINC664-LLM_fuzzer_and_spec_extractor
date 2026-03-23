@@ -1,0 +1,11 @@
+iteration,timestamp,duration,fuzzer_type,target_vl,protocol_rule,test_mode,strategy,test_cases,custom_mutation,num_frames,simulation_success,reward,frames_received,frames_dropped_policing,frames_forwarded,policing_rate,forward_rate,bugs_found
+0,2026-03-18T18:07:48.194943,1.801436,RANDOM_BASELINE,1002,Broadcast Address,custom,conformance,,,20,True,1.066891674702668,12444,8818,3626,70.8614593378335,29.138540662166506,False
+1,2026-03-18T18:07:49.846322,1.64866,RANDOM_BASELINE,1002,switch_buffering.minimum_output_port_buffer_capacity,custom_fallback,conformance,,,20,True,1.046891674702668,12444,8818,3626,70.8614593378335,29.138540662166506,False
+2,2026-03-18T18:07:51.657198,1.809491,RANDOM_BASELINE,1001,Network Layer.valid_frame_filtering_criteria,custom_fallback,conformance,,,20,True,1.096234897443102,14236,10610,3626,74.52936218038775,25.47063781961225,False
+3,2026-03-18T18:07:53.872261,2.214062,RANDOM_BASELINE,2002,ttl_handling,custom_fallback,edge-case,,,20,True,1.5896141572381781,13788,10162,3626,73.70176965477226,26.298230345227736,False
+4,2026-03-18T18:07:55.966521,2.092536,RANDOM_BASELINE,1003,Reliability.real_time_communication_link_reliability,custom,edge-case,,,20,True,1.575832083958021,13340,9602,3738,71.97901049475263,28.02098950524738,False
+5,2026-03-18T18:07:58.057537,2.090001,RANDOM_BASELINE,1002,Communication_Ports.afdx_reception_port_quintuplet_uniqueness,custom,adversarial,,,20,True,1.026891674702668,12444,8818,3626,70.8614593378335,29.138540662166506,False
+6,2026-03-18T18:08:00.216509,2.15745,RANDOM_BASELINE,3002,message_structure,custom_fallback,edge-case,,,20,True,1.5930365296803652,14016,10390,3626,74.12956621004567,25.87043378995434,False
+7,2026-03-18T18:08:03.441197,3.223789,RANDOM_BASELINE,1002,Signed_32,custom_fallback,conformance,,,20,True,1.006891674702668,12444,8818,3626,70.8614593378335,29.138540662166506,False
+8,2026-03-18T18:08:07.023207,3.580942,RANDOM_BASELINE,3002,minimum_ethernet_frame_size,custom,edge-case,,,20,True,1.576234897443102,14236,10610,3626,74.52936218038775,25.47063781961225,False
+9,2026-03-18T18:08:10.886144,3.861481,RANDOM_BASELINE,2003,Redundancy Management.copy_frame_loss_due_to_sequencing,custom,adversarial,,,20,True,1.096234897443102,14236,10610,3626,74.52936218038775,25.47063781961225,False

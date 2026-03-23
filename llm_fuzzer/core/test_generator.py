@@ -97,12 +97,16 @@ class TestGenerator:
             'frames': frames,
             'metadata': {
                 'mutation_type': strategy['mutation_type'],
-                'test_cases': strategy.get('test_cases'),         # LLM can choose test cases
-                'bag_value': strategy.get('bag_value'),           # Or specific values
-                'frame_size': strategy.get('frame_size'),         # Or both!
+                'test_cases': strategy.get('test_cases'),
+                'bag_value': strategy.get('bag_value'),
+                'frame_size': strategy.get('frame_size'),
                 'sequence_number': strategy.get('sequence_number'),
                 'timing_jitter_ms': strategy.get('timing_jitter_ms'),
                 'payload_pattern': strategy.get('payload_pattern'),
+                'mac_mutation_type': strategy.get('mac_mutation_type'),
+                'prob': strategy.get('prob'),
+                'sequence_number_override': strategy.get('sequence_number_override'),
+                'dest_mac_mutation': strategy.get('dest_mac_mutation'),
                 'strategy_type': strategy.get('strategy', 'unknown'),
                 'num_frames': len(frames)
             }

@@ -24,20 +24,26 @@ struct MutationConfig
     double probability;
     int payloadDeltaBytes;
     int timingJitterMs;
-    std::string macMutation;  // NEW: MAC mutation type
-    bool isExtremeTest;        // NEW: Extreme testing flag
+    std::string macMutation;
+    bool isExtremeTest;
     bool isActive;
     int payloadAppliedBytes;
     int jitterAppliedMs;
     int payloadClampCount;
-    int txProbDrops;           // Count of frames dropped by probability
-    int macSpoofCount;         // NEW: Count of MAC spoofing mutations
+    int txProbDrops;
+    int macSpoofCount;
+    int sequenceNumberOverride;
+    int seqMutationCount;
+    std::string destMacMutation;
+    int destMacMutationCount;
     
     MutationConfig() : 
         targetVL(0), probability(0.0), payloadDeltaBytes(0), 
         timingJitterMs(0), macMutation("none"), isExtremeTest(false), isActive(false),
         payloadAppliedBytes(0), jitterAppliedMs(0), payloadClampCount(0), 
-        txProbDrops(0), macSpoofCount(0) {}
+        txProbDrops(0), macSpoofCount(0),
+        sequenceNumberOverride(0), seqMutationCount(0),
+        destMacMutation("none"), destMacMutationCount(0) {}
 };
 extern MutationConfig g_mutationConfig;
 
@@ -106,13 +112,21 @@ AfdxTrafficGenerator::AddVirtualLink(const AfdxVirtualLink& vl, uint32_t payload
 {
   NS_LOG_FUNCTION(this << vl.GetVlId() << payloadSize);
   
-  // Validate payload size
   if (payloadSize < vl.GetMinPayloadSize() || payloadSize > vl.GetMaxPayloadSize())
   {
-    NS_LOG_ERROR("Payload size " << payloadSize << " out of range [" 
-                 << vl.GetMinPayloadSize() << "-" << vl.GetMaxPayloadSize() 
-                 << "] for VL " << vl.GetVlId());
-    return;
+    if (g_mutationConfig.isActive && g_mutationConfig.isExtremeTest)
+    {
+      NS_LOG_WARN("Fuzz mode: payload " << payloadSize << " outside VL "
+                  << vl.GetVlId() << " range [" << vl.GetMinPayloadSize()
+                  << "-" << vl.GetMaxPayloadSize() << "] — allowing for switch validation test");
+    }
+    else
+    {
+      NS_LOG_ERROR("Payload size " << payloadSize << " out of range ["
+                   << vl.GetMinPayloadSize() << "-" << vl.GetMaxPayloadSize()
+                   << "] for VL " << vl.GetVlId());
+      return;
+    }
   }
   
   VLTrafficConfig config;
@@ -290,10 +304,22 @@ AfdxTrafficGenerator::TransmitFrame(uint16_t vlId)
     config.sequenceNumber = 1;
   }
   
+  // Sequence-number mutation: override with fuzzer-supplied value
+  uint8_t effectiveSeqNum = config.sequenceNumber;
+  if (g_mutationConfig.isActive &&
+      g_mutationConfig.targetVL == vlId &&
+      g_mutationConfig.sequenceNumberOverride > 0)
+  {
+    effectiveSeqNum = static_cast<uint8_t>(g_mutationConfig.sequenceNumberOverride & 0xFF);
+    g_mutationConfig.seqMutationCount++;
+    NS_LOG_INFO("SEQ MUTATION: VL " << vlId << " seq overridden from "
+                << (int)config.sequenceNumber << " to " << (int)effectiveSeqNum);
+  }
+  
   // Create AFDX frame
   AfdxFrame frame;
   frame.SetVirtualLinkId(config.vl.GetVlId());
-  frame.SetSequenceNumber(config.sequenceNumber);
+  frame.SetSequenceNumber(effectiveSeqNum);
   
   // Apply MAC mutation if active (EXTREME MODE - for AI fuzzer edge case testing)
   Mac48Address srcMac = config.vl.GetSourceMac();
@@ -368,6 +394,44 @@ AfdxTrafficGenerator::TransmitFrame(uint16_t vlId)
           g_mutationConfig.macSpoofCount++;
           NS_LOG_WARN("MAC SPOOF VIOLATION: Set MACs to all zeros (invalid!)");
       }
+  }
+  
+  // Destination MAC mutation: corrupt the constant-field prefix (triggers ES rejection)
+  if (g_mutationConfig.isActive &&
+      g_mutationConfig.targetVL == config.vl.GetVlId() &&
+      g_mutationConfig.destMacMutation != "none")
+  {
+    if (g_mutationConfig.destMacMutation == "corrupt_prefix")
+    {
+      // ARINC 664 constant field is 03:00:00:00 in first 4 octets.
+      // Corrupt it to 04:00:00:00 so ValidateConstantField() fails.
+      uint8_t mac[6];
+      dstMac.CopyTo(mac);
+      mac[0] = 0x04;
+      char macStr[18];
+      sprintf(macStr, "%02x:%02x:%02x:%02x:%02x:%02x",
+              mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+      dstMac = Mac48Address(macStr);
+      NS_LOG_INFO("DEST_MAC MUTATION: corrupted prefix to 04:xx for VL " << vlId);
+    }
+    else if (g_mutationConfig.destMacMutation == "wrong_vl")
+    {
+      // Use a valid AFDX prefix but with a different VL's lower bytes
+      uint8_t mac[6];
+      dstMac.CopyTo(mac);
+      mac[4] = static_cast<uint8_t>((mac[4] + 1) & 0xFF);
+      char macStr[18];
+      sprintf(macStr, "%02x:%02x:%02x:%02x:%02x:%02x",
+              mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+      dstMac = Mac48Address(macStr);
+      NS_LOG_INFO("DEST_MAC MUTATION: wrong_vl dest MAC for VL " << vlId);
+    }
+    else if (g_mutationConfig.destMacMutation == "zero")
+    {
+      dstMac = Mac48Address("00:00:00:00:00:00");
+      NS_LOG_INFO("DEST_MAC MUTATION: zeroed dest MAC for VL " << vlId);
+    }
+    g_mutationConfig.destMacMutationCount++;
   }
   
   frame.SetSourceAddress(srcMac);

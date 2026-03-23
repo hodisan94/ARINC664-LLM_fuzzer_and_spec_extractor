@@ -1,0 +1,41 @@
+======================================================================
+RANDOM BASELINE FUZZER - FINAL REPORT
+======================================================================
+
+Total Iterations: 30
+Successful: 30
+Failed: 0
+
+Reward Statistics:
+  Mean: 0.763
+  Max: 1.160
+  Min: 0.420
+  Std: 0.234
+
+Bugs Found: 0
+
+VLs Tested: 8 / 8
+  VL IDs: [np.int64(1001), np.int64(1002), np.int64(1003), np.int64(2001), np.int64(2002), np.int64(2003), np.int64(3001), np.int64(3002)]
+
+Protocol Rules Tested: 11
+  Rules: ['bag', 'frame_aging.discard_conditions', 'frame_structure.ip_header.header_validation', 'monitoring.discard_counters.categories', 'monitoring.statistics', 'output_buffer_size_high_priority_vls', 'output_buffer_size_low_priority_vls', 'priority_qos.priority_levels', 'sequence_number_field', 'switching.forwarding_rules', 'virtual_link.configuration_parameters']
+
+Strategy Distribution:
+  edge-case: 14
+  adversarial: 10
+  conformance: 6
+
+Test Mode Distribution:
+  custom: 16
+  predefined: 14
+
+Top 5 Iterations (by reward):
+  Iter 11: VL=1002, rule=virtual_link.configuration_parameters, reward=1.160
+  Iter 29: VL=1001, rule=frame_structure.ip_header.header_validation, reward=1.120
+  Iter 28: VL=1001, rule=priority_qos.priority_levels, reward=1.060
+  Iter 16: VL=2003, rule=priority_qos.priority_levels, reward=1.060
+  Iter 24: VL=2001, rule=output_buffer_size_high_priority_vls, reward=1.060
+
+======================================================================
+NOTE: This is a RANDOM baseline - no learning or adaptation
+======================================================================

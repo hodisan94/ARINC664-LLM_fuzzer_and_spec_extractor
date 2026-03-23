@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-11T17:24:58.028803",
+  "generated": "2026-03-23T17:03:54.333415",
   "total_rules": 72,
   "iterations": {
     "LLM": 50,
@@ -12,8 +12,8 @@
       "coverage_percent": 51.4
     },
     "Random": {
-      "unique_rules_tested": 47,
-      "coverage_percent": 65.3
+      "unique_rules_tested": 46,
+      "coverage_percent": 63.9
     },
     "Boofuzz": {
       "unique_rules_tested": 7,
@@ -29,7 +29,7 @@
     "Random": {
       "80%": null,
       "100%": null,
-      "max_coverage": 0.6527777777777778
+      "max_coverage": 0.6388888888888888
     },
     "Boofuzz": {
       "80%": null,
@@ -78,57 +78,57 @@
   },
   "violation_diversity": {
     "LLM": {
-      "entropy": 4.9557,
+      "entropy": 5.0786,
       "max_entropy": 5.2095,
-      "normalized_entropy": 0.9513,
+      "normalized_entropy": 0.9749,
       "n_types": 37,
       "top_5": [
         {
-          "rule": "combined_test",
-          "count": 7
-        },
-        {
-          "rule": "redundancy_sequence_wrap_skew",
+          "rule": "Frame Validation.maximum_frame_size_for_vl",
           "count": 3
         },
         {
-          "rule": "bag_and_sequence_violation",
+          "rule": "Frame Validation.discard_frames_with_erroneous_mac_destination_address",
+          "count": 3
+        },
+        {
+          "rule": "Frame Validation.discard_frames_smaller_than_minimum_size",
+          "count": 3
+        },
+        {
+          "rule": "traffic_shaping.bag_value_range",
           "count": 2
         },
         {
-          "rule": "frame_based_filtering",
-          "count": 2
-        },
-        {
-          "rule": "aggressive_stress",
+          "rule": "frame_validation.mac_destination_address_constant_field_validation",
           "count": 2
         }
       ]
     },
     "Random": {
-      "entropy": 5.5239,
-      "max_entropy": 5.5546,
-      "normalized_entropy": 0.9945,
-      "n_types": 47,
+      "entropy": 5.4839,
+      "max_entropy": 5.5236,
+      "normalized_entropy": 0.9928,
+      "n_types": 46,
       "top_5": [
         {
-          "rule": "functional_status_set_alignment",
+          "rule": "switching_traffic_prioritization_by_mac_address",
           "count": 2
         },
         {
-          "rule": "ip_layer.stream_identifier_option_ignore",
+          "rule": "latency_calculation",
           "count": 2
         },
         {
-          "rule": "minimum_ethernet_frame_size",
+          "rule": "Redundancy Management.single_ds_for_single_threaded_concentrator",
           "count": 2
         },
         {
-          "rule": "window_size",
-          "count": 1
+          "rule": "network_data_element_byte_order_requirement",
+          "count": 2
         },
         {
-          "rule": "traffic_policing",
+          "rule": "Broadcast Address",
           "count": 1
         }
       ]
@@ -164,58 +164,58 @@
   },
   "unique_findings": {
     "LLM_only_count": 38,
-    "Random_only_count": 47,
+    "Random_only_count": 48,
     "Boofuzz_only_count": 31,
     "LLM_and_Random": 0,
     "LLM_and_Boofuzz": 0,
     "Random_and_Boofuzz": 0,
     "all_three": 0,
     "LLM_total": 38,
-    "Random_total": 47,
+    "Random_total": 48,
     "Boofuzz_total": 31,
     "LLM_only": [
-      "aggressive_stress|adversarial",
-      "bag_and_frame_size_violation_with_jitter|edge-case",
-      "bag_and_rsn_edge_skew|edge-case",
-      "bag_and_sequence_violation|edge-case",
-      "bag_rsn_and_size_boundary|edge-case",
-      "bag_size_seq_jitter_violation|edge-case",
-      "combined_test|adversarial",
-      "combined_test|edge-case",
-      "frame_based_filtering|edge-case",
-      "integrity_redundancy_and_policing_combo|adversarial",
-      "integrity_sequence_zero|edge-case",
-      "policing_and_validation_combo|adversarial",
-      "redundancy_rsn_skew_edge|edge-case",
-      "redundancy_rsn_skewmax_edge|edge-case",
-      "redundancy_rsn_violation|edge-case",
-      "redundancy_rsn_wrap_and_skewmax_violation|edge-case",
-      "redundancy_rsn_wrap_and_skewmax|edge-case",
-      "redundancy_rsn_wrap_and_skew|edge-case",
-      "redundancy_rsn_wrap_skew|edge-case",
-      "redundancy_sequence_and_skew_violation|edge-case"
+      "Address Validation.reject_invalid_ip_address_on_open|edge-case",
+      "Addressing.frame_based_filtering|edge-case",
+      "Addressing.location_id_coding|edge-case",
+      "Address|edge-case",
+      "Boolean|edge-case",
+      "Broadcast Address|edge-case",
+      "Byte ACi|edge-case",
+      "Communication Ports.no_ip_fragmentation_for_sampling_com_ports|edge-case",
+      "Communication Ports.unidirectional_multicast_for_sampling|edge-case",
+      "Communication_Ports.afdx_reception_port_quintuplet_uniqueness|edge-case",
+      "Communication_Ports.unidirectional_multicast_for_sampling|edge-case",
+      "Communication_Ports|edge-case",
+      "End System Performance.maximum_allowed_jitter|edge-case",
+      "Frame Filtering.destination_address_validity|edge-case",
+      "Frame Validation.discard_frames_smaller_than_minimum_size|edge-case",
+      "Frame Validation.discard_frames_with_disallowed_vl_id|edge-case",
+      "Frame Validation.discard_frames_with_erroneous_mac_destination_address|edge-case",
+      "Frame Validation.maximum_frame_size_for_vl|edge-case",
+      "MAC Addressing.mac_destination_address_format|edge-case",
+      "MAC Addressing.mac_source_address_format|edge-case"
     ],
     "Random_only": [
-      "Address|conformance",
-      "End System.unique_sap_port_linkage_for_transmission|conformance",
-      "Float_64|conformance",
-      "Fragmentation.do_not_exceed_mms_s|adversarial",
-      "ICMP.generate_icmp_destination_unreachable|edge-case",
-      "ICMP_Message_Handling|conformance",
-      "Physical Layer.physical_layer_specification|edge-case",
-      "SAP Port.udp_service_access_point_capacity|adversarial",
-      "TCP_Features.keep_alive_packet_usage|conformance",
-      "TCP_Retransmission.r1_retransmission_threshold|conformance",
-      "TCP_Retransmission.syn_r2_minimum_duration|conformance",
-      "afdx_reception_port_parameter_set_binding|edge-case",
-      "bidirectional_sap_communication|conformance",
-      "default_port_speed|edge-case",
-      "destination_address|adversarial",
-      "error_handling.reception_buffer_overflow_handling|conformance",
-      "frame_filtering_function_requirement|adversarial",
-      "frame_structure.frame_overhead_components|conformance",
-      "frame_transmission.complete_structure_transmission|adversarial",
-      "functional_status_set_alignment|conformance"
+      "Broadcast Address|conformance",
+      "Communication_Ports|conformance",
+      "Connection Management.simultaneous_open_support|edge-case",
+      "ICMP_message_type|adversarial",
+      "Interface.full_access_to_ip_mechanisms|adversarial",
+      "Network Interoperability.interoperable_functional_elements|adversarial",
+      "Redundancy Management.single_ds_for_single_threaded_concentrator|edge-case",
+      "Signed_32|edge-case",
+      "Switching.discard_frames_on_link_failure|conformance",
+      "bandwidth|edge-case",
+      "data_presentation_after_reassembly|conformance",
+      "destination_address_validity|conformance",
+      "ethernet_bit_order|adversarial",
+      "frame_buffering_requirement|edge-case",
+      "frame_check_sequence|conformance",
+      "implicit_message_structure|adversarial",
+      "ip_header_checksum|adversarial",
+      "ip_layer.ttl_discard_prohibition|edge-case",
+      "latency_calculation|adversarial",
+      "mac_layer_frame_reception|conformance"
     ],
     "Boofuzz_only": [
       "Addressing.frame_based_filtering|above_max_length",
@@ -242,32 +242,32 @@
   },
   "reward_convergence": {
     "LLM": {
-      "early_mean_reward": 0.8661,
-      "late_mean_reward": 0.8748,
-      "improvement_percent": 1.0,
-      "final_ma": 0.7933
+      "early_mean_reward": 2.2999,
+      "late_mean_reward": 1.8423,
+      "improvement_percent": -19.9,
+      "final_ma": 1.774
     },
     "Random": {
-      "early_mean_reward": 0.6598,
-      "late_mean_reward": 0.6067,
-      "improvement_percent": -8.0,
-      "final_ma": 0.572
+      "early_mean_reward": 1.3612,
+      "late_mean_reward": 1.4167,
+      "improvement_percent": 4.1,
+      "final_ma": 1.558
     },
     "Boofuzz": {
-      "early_mean_reward": 1.034,
-      "late_mean_reward": 0.9469,
-      "improvement_percent": -8.4,
-      "final_ma": 0.888
+      "early_mean_reward": 1.5154,
+      "late_mean_reward": 1.3958,
+      "improvement_percent": -7.9,
+      "final_ma": 1.38
     }
   },
   "ratio_valid_messages": {
     "LLM": {
       "total_iterations": 50,
-      "successful_injections": 50,
-      "injection_success_rate": 1.0,
-      "injection_success_percent": "100.0%",
-      "avg_forward_rate": 100.0,
-      "avg_policing_rate": 0.0,
+      "successful_injections": 49,
+      "injection_success_rate": 0.98,
+      "injection_success_percent": "98.0%",
+      "avg_forward_rate": 51.55,
+      "avg_policing_rate": 47.39,
       "interpretation": "High injection success = frames are structurally valid. High policing rate = frames trigger rule violations (good for fuzzer). High forward rate = frames pass unchallenged (fuzzer not finding violations)."
     },
     "Random": {
@@ -275,8 +275,8 @@
       "successful_injections": 50,
       "injection_success_rate": 1.0,
       "injection_success_percent": "100.0%",
-      "avg_forward_rate": 100.0,
-      "avg_policing_rate": 0.0,
+      "avg_forward_rate": 53.85,
+      "avg_policing_rate": 45.52,
       "interpretation": "High injection success = frames are structurally valid. High policing rate = frames trigger rule violations (good for fuzzer). High forward rate = frames pass unchallenged (fuzzer not finding violations)."
     },
     "Boofuzz": {
@@ -284,8 +284,8 @@
       "successful_injections": 50,
       "injection_success_rate": 1.0,
       "injection_success_percent": "100.0%",
-      "avg_forward_rate": 100.0,
-      "avg_policing_rate": 0.0,
+      "avg_forward_rate": 53.45,
+      "avg_policing_rate": 45.64,
       "interpretation": "High injection success = frames are structurally valid. High policing rate = frames trigger rule violations (good for fuzzer). High forward rate = frames pass unchallenged (fuzzer not finding violations)."
     }
   },
@@ -305,7 +305,7 @@
       "api_calls": 0,
       "cost_per_call_usd": 0.0,
       "total_cost_usd": 0.0,
-      "unique_findings": 47,
+      "unique_findings": 48,
       "cost_per_finding_usd": 0.0,
       "findings_per_dollar": "inf (free)",
       "cost_per_iteration_usd": 0.0
@@ -319,6 +319,32 @@
       "cost_per_finding_usd": 0.0,
       "findings_per_dollar": "inf (free)",
       "cost_per_iteration_usd": 0.0
+    }
+  },
+  "effective_mutation_rate": {
+    "LLM": {
+      "total_iterations": 50,
+      "effective_mutations": 50,
+      "effective_rate_percent": 100.0,
+      "zero_frame_iterations": 7,
+      "baseline_policing": 74.53,
+      "tolerance": 0.5
+    },
+    "Random": {
+      "total_iterations": 50,
+      "effective_mutations": 50,
+      "effective_rate_percent": 100.0,
+      "zero_frame_iterations": 0,
+      "baseline_policing": 74.53,
+      "tolerance": 0.5
+    },
+    "Boofuzz": {
+      "total_iterations": 50,
+      "effective_mutations": 50,
+      "effective_rate_percent": 100.0,
+      "zero_frame_iterations": 0,
+      "baseline_policing": 74.53,
+      "tolerance": 0.5
     }
   }
 }

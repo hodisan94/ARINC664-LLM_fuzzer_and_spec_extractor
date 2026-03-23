@@ -1,0 +1,31 @@
+iteration,timestamp,duration,fuzzer_type,target_vl,protocol_rule,test_mode,strategy,test_cases,custom_mutation,num_frames,simulation_success,reward,frames_received,frames_dropped_policing,frames_forwarded,policing_rate,forward_rate,bugs_found
+0,2026-01-10T18:27:30.053690,0.22233,RANDOM_BASELINE,2002,bag,predefined,adversarial,"['TC0', 'TC1']",,40,True,0.7,14370,0,14370,0.0,100.0,False
+1,2026-01-10T18:27:30.258821,0.202845,RANDOM_BASELINE,3002,frame_structure.ip_header.header_validation,custom,adversarial,,Test frame_structure.ip_header.header_validation with unexpected type,20,True,0.5,14370,0,14370,0.0,100.0,False
+2,2026-01-10T18:27:30.446091,0.186068,RANDOM_BASELINE,1002,frame_aging.discard_conditions,custom,adversarial,,Test frame_aging.discard_conditions with unexpected type,20,True,0.5,14370,0,14370,0.0,100.0,False
+3,2026-01-10T18:27:30.648637,0.201568,RANDOM_BASELINE,2002,priority_qos.priority_levels,predefined,conformance,"['TC0', 'TC1', 'TC2']",,0,True,0.6799999999999999,14370,0,14370,0.0,100.0,False
+4,2026-01-10T18:27:30.913659,0.263683,RANDOM_BASELINE,1002,monitoring.discard_counters.categories,predefined,conformance,"['TC0', 'TC1', 'TC2']",,0,True,0.6799999999999999,14370,0,14370,0.0,100.0,False
+5,2026-01-10T18:27:31.127485,0.21203,RANDOM_BASELINE,2003,frame_aging.discard_conditions,predefined,adversarial,"['TC0', 'TC1', 'TC2']",,0,True,0.6799999999999999,14370,0,14370,0.0,100.0,False
+6,2026-01-10T18:27:31.310041,0.178943,RANDOM_BASELINE,2003,frame_aging.discard_conditions,predefined,adversarial,['TC0'],,0,True,0.5733333333333335,14370,0,14370,0.0,100.0,False
+7,2026-01-10T18:27:31.482855,0.171787,RANDOM_BASELINE,2003,switching.forwarding_rules,custom,conformance,,Test extreme switching.forwarding_rules boundary,20,True,0.46,14370,0,14370,0.0,100.0,False
+8,2026-01-10T18:27:31.654123,0.169128,RANDOM_BASELINE,2002,priority_qos.priority_levels,custom,edge-case,,Use malformed priority_qos.priority_levels,20,True,0.8733333333333333,14370,0,14370,0.0,100.0,False
+9,2026-01-10T18:27:31.829867,0.174806,RANDOM_BASELINE,2001,switching.forwarding_rules,predefined,adversarial,"['TC0', 'TC1', 'TC2']",,0,True,0.6799999999999999,14370,0,14370,0.0,100.0,False
+10,2026-01-10T18:27:32.032750,0.201797,RANDOM_BASELINE,2003,bag,custom,edge-case,,Test extreme bag boundary,20,True,0.9200000000000002,14370,0,14370,0.0,100.0,False
+11,2026-01-10T18:27:32.196381,0.161882,RANDOM_BASELINE,1002,virtual_link.configuration_parameters,predefined,edge-case,"['TC0', 'TC1', 'TC2']",,0,True,1.16,14370,0,14370,0.0,100.0,False
+12,2026-01-10T18:27:32.369954,0.172652,RANDOM_BASELINE,1003,priority_qos.priority_levels,custom,adversarial,,Apply random corruption to priority_qos.priority_levels,20,True,0.46,14370,0,14370,0.0,100.0,False
+13,2026-01-10T18:27:32.532237,0.161195,RANDOM_BASELINE,2001,virtual_link.configuration_parameters,custom,conformance,,Test extreme virtual_link.configuration_parameters boundary,20,True,0.46,14370,0,14370,0.0,100.0,False
+14,2026-01-10T18:27:32.695331,0.161658,RANDOM_BASELINE,2001,output_buffer_size_high_priority_vls,custom,edge-case,,Use malformed output_buffer_size_high_priority_vls,20,True,0.96,14370,0,14370,0.0,100.0,False
+15,2026-01-10T18:27:32.869549,0.173248,RANDOM_BASELINE,1001,monitoring.statistics,custom,edge-case,,Test extreme monitoring.statistics boundary,20,True,1.0,14370,0,14370,0.0,100.0,False
+16,2026-01-10T18:27:33.142344,0.271727,RANDOM_BASELINE,2003,priority_qos.priority_levels,predefined,edge-case,['TC0'],,0,True,1.0599999999999998,14370,0,14370,0.0,100.0,False
+17,2026-01-10T18:27:33.317694,0.174232,RANDOM_BASELINE,1002,sequence_number_field,custom,edge-case,,Apply random corruption to sequence_number_field,20,True,0.94,14370,0,14370,0.0,100.0,False
+18,2026-01-10T18:27:33.499837,0.180769,RANDOM_BASELINE,1002,output_buffer_size_high_priority_vls,custom,edge-case,,Test output_buffer_size_high_priority_vls with unexpected type,20,True,0.9000000000000001,14370,0,14370,0.0,100.0,False
+19,2026-01-10T18:27:33.676760,0.175861,RANDOM_BASELINE,1003,output_buffer_size_low_priority_vls,predefined,conformance,"['TC0', 'TC1']",,0,True,0.6799999999999999,14370,0,14370,0.0,100.0,False
+20,2026-01-10T18:27:33.858392,0.180353,RANDOM_BASELINE,3002,frame_structure.ip_header.header_validation,predefined,adversarial,['TC0'],,0,True,0.66,14370,0,14370,0.0,100.0,False
+21,2026-01-10T18:27:34.060515,0.200788,RANDOM_BASELINE,2001,monitoring.discard_counters.categories,custom,adversarial,,Test extreme monitoring.discard_counters.categories boundary,20,True,0.42000000000000004,14370,0,14370,0.0,100.0,False
+22,2026-01-10T18:27:34.261033,0.199021,RANDOM_BASELINE,3002,switching.forwarding_rules,custom,edge-case,,Test switching.forwarding_rules with unexpected type,20,True,0.9200000000000002,14370,0,14370,0.0,100.0,False
+23,2026-01-10T18:27:34.439403,0.177327,RANDOM_BASELINE,1003,output_buffer_size_high_priority_vls,custom,conformance,,Test extreme output_buffer_size_high_priority_vls boundary,20,True,0.42000000000000004,14370,0,14370,0.0,100.0,False
+24,2026-01-10T18:27:34.609703,0.168853,RANDOM_BASELINE,2001,output_buffer_size_high_priority_vls,predefined,edge-case,"['TC0', 'TC1']",,0,True,1.0599999999999998,14370,0,14370,0.0,100.0,False
+25,2026-01-10T18:27:34.798737,0.187791,RANDOM_BASELINE,3001,priority_qos.priority_levels,custom,edge-case,,Test priority_qos.priority_levels with unexpected type,20,True,0.9200000000000002,14370,0,14370,0.0,100.0,False
+26,2026-01-10T18:27:34.966150,0.166371,RANDOM_BASELINE,3002,priority_qos.priority_levels,predefined,adversarial,['TC0'],,0,True,0.54,14370,0,14370,0.0,100.0,False
+27,2026-01-10T18:27:35.174669,0.207461,RANDOM_BASELINE,1003,monitoring.discard_counters.categories,custom,edge-case,,Test extreme monitoring.discard_counters.categories boundary,20,True,0.9000000000000001,14370,0,14370,0.0,100.0,False
+28,2026-01-10T18:27:35.356787,0.180627,RANDOM_BASELINE,1001,priority_qos.priority_levels,predefined,edge-case,['TC0'],,0,True,1.06,14370,0,14370,0.0,100.0,False
+29,2026-01-10T18:27:35.526207,0.168288,RANDOM_BASELINE,1001,frame_structure.ip_header.header_validation,predefined,edge-case,"['TC0', 'TC1', 'TC2']",,0,True,1.12,14370,0,14370,0.0,100.0,False
