@@ -22,7 +22,7 @@ import math
 import argparse
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, List, Tuple, Set
+from typing import Dict, Any, List, Optional, Tuple, Set
 from collections import Counter
 
 import numpy as np
@@ -255,8 +255,34 @@ def plot_diversity(diversities: Dict[str, Dict], out_path: Path):
 # Metric 5 — Unique Findings (Venn Diagram)
 # ---------------------------------------------------------------------------
 
+def normalize_rule_name(raw: str) -> str:
+    """Normalize a rule name to a canonical form for cross-fuzzer comparison.
+
+    Steps:
+      1. Lowercase
+      2. Replace spaces, dots, hyphens with underscores
+      3. Collapse repeated underscores
+      4. Strip leading/trailing underscores
+    This maps 'Frame Filtering.destination_address_validity',
+    'frame_filtering_destination_address_validity', and
+    'Destination Address Validity' to comparable forms.
+    """
+    s = raw.lower().replace(" ", "_").replace(".", "_").replace("-", "_")
+    while "__" in s:
+        s = s.replace("__", "_")
+    return s.strip("_")
+
+
 def build_finding_set(df: pd.DataFrame) -> Set[str]:
-    """Build a set of (rule, violation_type) strings from history."""
+    """Build a set of normalized rule names from history (for overlap/Venn)."""
+    if df.empty:
+        return set()
+    rules = get_rule_field(df)
+    return {normalize_rule_name(r) for r in rules}
+
+
+def build_detailed_finding_set(df: pd.DataFrame) -> Set[str]:
+    """Build a set of (rule|violation_type) strings for per-fuzzer listing."""
     if df.empty:
         return set()
     rules = get_rule_field(df)
@@ -347,10 +373,35 @@ def reward_moving_average(df: pd.DataFrame, window: int = 5) -> List[float]:
     return ma
 
 
+def compute_base_reward(df: pd.DataFrame, new_rule_bonus: float = 1.0) -> List[float]:
+    """Compute reward with exploration bonus removed.
+
+    For each iteration, if the protocol_rule appears for the first time
+    in history up to that point, subtract ``new_rule_bonus`` from the reward.
+    This gives the "base" reward that reflects actual fuzzing impact only.
+    """
+    if df.empty or "reward" not in df.columns:
+        return []
+    rules = get_rule_field(df)
+    rewards = df["reward"].tolist()
+
+    seen: set = set()
+    base = []
+    for rule, reward in zip(rules, rewards):
+        norm = normalize_rule_name(str(rule))
+        if norm not in seen:
+            seen.add(norm)
+            base.append(reward - new_rule_bonus)
+        else:
+            base.append(reward)
+    return base
+
+
 def plot_reward_convergence(
     ma_curves: Dict[str, List[float]],
     out_path: Path,
     window: int = 5,
+    base_ma_curves: Optional[Dict[str, List[float]]] = None,
 ):
     fig, ax = plt.subplots(figsize=(10, 6))
     colors = {"LLM": "#2563eb", "Random": "#f59e0b", "Boofuzz": "#10b981"}
@@ -360,14 +411,25 @@ def plot_reward_convergence(
         ax.plot(
             range(1, len(ma) + 1),
             ma,
-            label=name,
+            label=f"{name} (total)",
             linewidth=2.2,
             color=colors.get(name, None),
         )
+        if base_ma_curves and name in base_ma_curves and base_ma_curves[name]:
+            bma = base_ma_curves[name]
+            ax.plot(
+                range(1, len(bma) + 1),
+                bma,
+                label=f"{name} (base, excl. exploration bonus)",
+                linewidth=1.5,
+                color=colors.get(name, None),
+                linestyle="--",
+                alpha=0.7,
+            )
     ax.set_xlabel("Iteration", fontsize=13)
     ax.set_ylabel(f"Reward (rolling avg, window={window})", fontsize=13)
     ax.set_title("Reward Convergence — Learning Curve", fontsize=14)
-    ax.legend(fontsize=12)
+    ax.legend(fontsize=10, loc="best")
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
     fig.savefig(out_path, dpi=150)
@@ -653,6 +715,7 @@ def main():
     print("=" * 60)
 
     finding_sets = {name: build_finding_set(df) for name, df in data.items()}
+    detailed_sets = {name: build_detailed_finding_set(df) for name, df in data.items()}
     venn_data = compute_venn_data(finding_sets)
 
     for name in data:
@@ -662,6 +725,11 @@ def main():
 
     if "all_three" in venn_data:
         print(f"  Shared by all three: {venn_data['all_three']}")
+    for i, ni in enumerate(list(data.keys())):
+        for nj in list(data.keys())[i+1:]:
+            key = f"{ni}_and_{nj}"
+            if key in venn_data:
+                print(f"  Shared {ni} & {nj}: {venn_data[key]}")
 
     if finding_sets:
         plot_venn(finding_sets, FIGURES_DIR / "unique_findings_venn.png")
@@ -671,6 +739,8 @@ def main():
         key = f"{name}_only"
         if key in venn_data:
             venn_serializable[key] = venn_data[key][:20]
+        detail_key = f"{name}_detailed"
+        venn_serializable[detail_key] = sorted(detailed_sets.get(name, set()))[:20]
     report["unique_findings"] = venn_serializable
 
     # -----------------------------------------------------------------------
@@ -681,27 +751,50 @@ def main():
     print("=" * 60)
 
     ma_curves = {}
+    base_ma_curves = {}
     convergence_results = {}
     for name, df in data.items():
         ma = reward_moving_average(df, window=args.window)
         ma_curves[name] = ma
+
+        base_rewards = compute_base_reward(df)
+        if base_rewards:
+            base_ma = pd.Series(base_rewards).rolling(
+                window=min(args.window, max(1, len(base_rewards))),
+                min_periods=1
+            ).mean().tolist()
+        else:
+            base_ma = []
+        base_ma_curves[name] = base_ma
+
         if ma:
             first_half = ma[: len(ma) // 2] if len(ma) >= 4 else ma
             second_half = ma[len(ma) // 2 :] if len(ma) >= 4 else ma
             early = np.mean(first_half)
             late = np.mean(second_half)
             improvement = ((late - early) / abs(early) * 100) if early != 0 else 0
+
+            base_early = np.mean(base_ma[: len(base_ma) // 2]) if len(base_ma) >= 4 else (np.mean(base_ma) if base_ma else 0)
+            base_late = np.mean(base_ma[len(base_ma) // 2 :]) if len(base_ma) >= 4 else (np.mean(base_ma) if base_ma else 0)
+            base_improvement = ((base_late - base_early) / abs(base_early) * 100) if base_early != 0 else 0
+
             convergence_results[name] = {
                 "early_mean_reward": round(float(early), 4),
                 "late_mean_reward": round(float(late), 4),
                 "improvement_percent": round(float(improvement), 1),
                 "final_ma": round(ma[-1], 4),
+                "base_early_mean": round(float(base_early), 4),
+                "base_late_mean": round(float(base_late), 4),
+                "base_improvement_percent": round(float(base_improvement), 1),
             }
             print(f"  {name}: early={early:.3f}, late={late:.3f}, "
                   f"improvement={improvement:+.1f}%, final_ma={ma[-1]:.3f}")
+            print(f"    base (excl. exploration bonus): early={base_early:.3f}, "
+                  f"late={base_late:.3f}, improvement={base_improvement:+.1f}%")
 
     if ma_curves:
-        plot_reward_convergence(ma_curves, FIGURES_DIR / "reward_convergence.png", args.window)
+        plot_reward_convergence(ma_curves, FIGURES_DIR / "reward_convergence.png",
+                                args.window, base_ma_curves)
     report["reward_convergence"] = convergence_results
 
     # -----------------------------------------------------------------------

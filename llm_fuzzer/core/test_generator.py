@@ -91,7 +91,12 @@ class TestGenerator:
         # Generate frames based on mutation parameters
         frames = self._generate_mutation_frames(seed_frame, strategy)
         
-        # Create output structure (HYBRID - includes both test_cases and params)
+        # Fallback: if no frames were generated, create a generic varied sequence
+        fallback_used = False
+        if len(frames) == 0:
+            frames = self._create_generic_varied_sequence(seed_frame, {})
+            fallback_used = True
+        
         output = {
             'vl_id': strategy['target_vl'],
             'frames': frames,
@@ -108,7 +113,8 @@ class TestGenerator:
                 'sequence_number_override': strategy.get('sequence_number_override'),
                 'dest_mac_mutation': strategy.get('dest_mac_mutation'),
                 'strategy_type': strategy.get('strategy', 'unknown'),
-                'num_frames': len(frames)
+                'num_frames': len(frames),
+                'fallback': fallback_used
             }
         }
         
