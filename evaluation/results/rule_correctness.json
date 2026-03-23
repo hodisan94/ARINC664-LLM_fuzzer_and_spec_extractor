@@ -1,0 +1,957 @@
+{
+  "metric": "Rule Correctness",
+  "formula": "#correctly_extracted_rules / #total_extracted_rules",
+  "total_rules": 236,
+  "correct": 173,
+  "incorrect": 25,
+  "unverifiable": 38,
+  "correctness": 0.7331,
+  "correctness_percent": "73.3%",
+  "model_used": "gpt-4o-mini",
+  "verdicts": {
+    "Address Validation.reject_invalid_ip_address_on_open": {
+      "verdict": "correct",
+      "reason": "The specification mandates rejecting invalid IP addresses during the open process."
+    },
+    "Address Validation.ignore_syn_from_invalid_ip": {
+      "verdict": "incorrect",
+      "reason": "The specification does not allow ignoring SYN packets from invalid IP addresses."
+    },
+    "Address Validation.discard_syn_to_broadcast/multicast": {
+      "verdict": "correct",
+      "reason": "The specification states that SYN packets directed to broadcast or multicast addresses should be discarded."
+    },
+    "Addressing.domain_id_coding": {
+      "verdict": "unverifiable",
+      "reason": "The specific coding values for domain IDs are not explicitly detailed in the specification."
+    },
+    "Addressing.side_id_coding": {
+      "verdict": "unverifiable",
+      "reason": "The specific coding values for side IDs are not explicitly detailed in the specification."
+    },
+    "Addressing.location_id_coding": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not provide explicit details on the range of location_id_coding."
+    },
+    "Addressing.frame_based_filtering": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the behavior described in the specification."
+    },
+    "End System Performance.performance_calculation_formula": {
+      "verdict": "incorrect",
+      "reason": "The formula does not match any specified performance calculation in the ARINC 664 Part 7."
+    },
+    "End System Performance.maximum_technological_latency_in_transmission": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly reflects the bounds stated in the specification."
+    },
+    "End System Performance.frame_processing_rate": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the processing behavior described in the specification."
+    },
+    "End System Performance.maximum_allowed_jitter": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's statement about jitter being bounded at 500μs."
+    },
+    "End System Performance.wire_speed_capability": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly interprets the specification regarding handling back-to-back frames at wire speed."
+    },
+    "End System Performance.performance_measurement_burst_duration": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value lacks context or a specific reference from the specification to confirm its accuracy."
+    },
+    "Error Handling.buffer_overflow_handling_in_transmission": {
+      "verdict": "incorrect",
+      "reason": "The extracted value does not align with the specification's requirements for handling buffer overflow."
+    },
+    "Filtering and Policing.frame_filtering_function": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's requirement for filtering frames based on predefined criteria."
+    },
+    "Frame Validation.frame_size_validation": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the valid frame size range specified in ARINC 664 Part 7."
+    },
+    "Frame Validation.frame_forwarding_on_valid_crc": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly describes the behavior of frame forwarding based on FCS and CRC validity."
+    },
+    "Frame Validation.maximum_frame_size_for_vl": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states that frames should not exceed Lmax as per the specification."
+    },
+    "Frame Validation.discard_frames_with_non_integral_octet_size": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the requirement to discard frames that are not integral numbers of octets."
+    },
+    "Frame Validation.discard_frames_smaller_than_minimum_size": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states that frames smaller than Smin should be discarded as per the specification."
+    },
+    "Frame Validation.discard_frames_with_erroneous_mac_destination_address": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's requirement to discard frames with an erroneous MAC destination address."
+    },
+    "Frame Validation.discard_frames_with_disallowed_vl_id": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states that frames with a disallowed VL id should be discarded according to the specification."
+    },
+    "Integrity.ordinal_integrity": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly summarizes the requirement for maintaining frame order in AFDX networks."
+    },
+    "Jitter.jitter_time_calculation": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value cannot be confirmed without additional context or specific equations from the specification."
+    },
+    "Latency Management.maximum_latency_for_single_frame": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value cannot be confirmed as it lacks context and specific definitions from the specification."
+    },
+    "MAC Addressing.mac_destination_address_format": {
+      "verdict": "incorrect",
+      "reason": "The extracted value does not accurately reflect the specified format for MAC destination addresses."
+    },
+    "MAC Addressing.mac_source_address_format": {
+      "verdict": "incorrect",
+      "reason": "The extracted value contains an incorrect representation of the MAC source address format."
+    },
+    "Network Redundancy.interface_id_definition": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly identifies the valid interface IDs as per the specification."
+    },
+    "Policing.policing_rate_tolerance": {
+      "verdict": "incorrect",
+      "reason": "The extracted value does not match the specified tolerance for policing rates in the specification."
+    },
+    "Quality of Service.guaranteed_service_characteristics": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the guaranteed service characteristics as defined in the specification."
+    },
+    "Quality of Service.fault_isolation_in_switch": {
+      "verdict": "correct",
+      "reason": "The specification confirms that fault isolation is a key aspect of AFDX switches."
+    },
+    "Quality of Service.maximum_network_transit_delay_guarantee": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the requirement for guaranteed maximum network transit delay."
+    },
+    "Quality of Service.guaranteed_bandwidth_requirement": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly interprets the specification's description of guaranteed service."
+    },
+    "Redundancy Management.sequence_number_range": {
+      "verdict": "incorrect",
+      "reason": "The sequence number range is not limited to 0 to 255; it can vary based on implementation."
+    },
+    "Redundancy Management.first_valid_wins_policy": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately describes the first valid wins policy as per the specification."
+    },
+    "Redundancy Management.handling_abnormal_frames": {
+      "verdict": "correct",
+      "reason": "The specification states that abnormal frames are not forwarded to partitions."
+    },
+    "Redundancy Management.skewmax_parameter": {
+      "verdict": "correct",
+      "reason": "The SkewMax value is indeed specified to be provided by the system integrator based on network topology."
+    },
+    "Redundancy Management.increasing_rsn_order": {
+      "verdict": "correct",
+      "reason": "The specification requires that frames should be forwarded in an increasing RSN order."
+    },
+    "Redundancy Management.skewmax_exceeded_acceptance": {
+      "verdict": "incorrect",
+      "reason": "The specification does not allow acceptance of the next frame if skew max is exceeded regardless of sequence number."
+    },
+    "Redundancy Management.in_sequence_forwarding": {
+      "verdict": "correct",
+      "reason": "The specification indicates that only in-sequence frames should be forwarded to prevent loss of copies."
+    },
+    "Redundancy Management.handling_frame_loss": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the acceptance of frames from the redundant network."
+    },
+    "Redundancy Management.first_win_redundancy_delivery": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states that the first of the redundant frames is delivered."
+    },
+    "Redundancy Management.reset_tolerance": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects that resets do not affect redundancy management."
+    },
+    "Redundancy Management.dual_network_transmission": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states that frames are sent across both networks in default mode."
+    },
+    "Redundancy Management.duplicate_frame_discard": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the behavior of discarding duplicate frames."
+    },
+    "Redundancy Management.redundancy_management_after_integrity_checking": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification."
+    },
+    "Redundancy Management.maximum_time_difference_between_redundant_frames": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not provide a specific maximum time difference value."
+    },
+    "Redundancy Management.per_vl_redundancy_configuration_capability": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification."
+    },
+    "Redundancy Management.redundant_vl_single_data_delivery_mode": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification."
+    },
+    "Redundancy Management.redundant_vl_dual_data_delivery_mode": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification."
+    },
+    "Redundancy Management.non_redundant_vl_reception_capability": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's statement about receiving non-redundant VLs."
+    },
+    "Redundancy Management.first_win_frame_delivery": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly captures the requirement for delivering the first received redundant frame."
+    },
+    "Redundancy Management.copy_frame_loss_due_to_sequencing": {
+      "verdict": "incorrect",
+      "reason": "The extracted value implies a specific condition about sequencing that is not explicitly stated in the source quote."
+    },
+    "Redundancy Management.single_ds_for_single_threaded_concentrator": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification regarding the use of a single DS for a single threaded device."
+    },
+    "Redundancy Management.multiple_ds_for_partial_failure_scenarios": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly describes the use of multiple DS in scenarios of partial failure affecting some labels."
+    },
+    "Sub-VL Queue Management.maximum_sub_vl_fifo_queues_per_vl": {
+      "verdict": "correct",
+      "reason": "The specification states that the maximum number of sub-VL FIFO queues per VL is indeed 4."
+    },
+    "Sub-VL Scheduling.sub_vl_round_robin_scheduling": {
+      "verdict": "incorrect",
+      "reason": "The specification does not define sub-VL round-robin scheduling as one frame per BAG; it may vary based on other factors."
+    },
+    "Switch Operating Modes.switch_initialization_time": {
+      "verdict": "correct",
+      "reason": "The initialization time is indeed defined by the system integrator or as per the ARINC Standard."
+    },
+    "Switch Operational Modes.switch_enters_ops_mode_after_initialization": {
+      "verdict": "correct",
+      "reason": "The specification confirms that the switch enters operational mode after successful initialization."
+    },
+    "Switch Operational Modes.switch_relies_on_ops_configuration_file_in_ops_mode": {
+      "verdict": "correct",
+      "reason": "The switch operates based on the OPS_Configuration_File as stated in the specification."
+    },
+    "Switch Operational Modes.switch_enters_dl_mode_from_init_mode": {
+      "verdict": "correct",
+      "reason": "The specification states that the switch can enter data link mode from initialization mode."
+    },
+    "Switch Operational Modes.switch_enters_dl_mode_from_ops_mode": {
+      "verdict": "correct",
+      "reason": "The specification confirms that the switch can transition to data link mode from operational mode."
+    },
+    "Switch Operational Modes.switch_enters_passive_mode": {
+      "verdict": "correct",
+      "reason": "The specification allows the switch to enter passive mode under certain conditions."
+    },
+    "Switch Operational Modes.switch_enters_quiet_mode_on_catastrophic_failure": {
+      "verdict": "correct",
+      "reason": "The specification indicates that the switch should enter quiet mode in the event of a catastrophic failure."
+    },
+    "Switch Port Configuration.port_speed_configuration": {
+      "verdict": "incorrect",
+      "reason": "The specification does not limit port speed configuration to only 10 and 100 Mbps; it includes other speeds as well."
+    },
+    "Switch Specification.frame_filtering": {
+      "verdict": "correct",
+      "reason": "The specification states that switches must filter frames of valid sizes at wire speed."
+    },
+    "Switch Specification.traffic_policing": {
+      "verdict": "correct",
+      "reason": "The specification requires switches to police Virtual Links (VLs) for frames of valid sizes at wire speed."
+    },
+    "Switch Processing.vl_processing_capacity": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not explicitly state a minimum VL processing capacity of 4096."
+    },
+    "Switch Processing.wire_speed_processing": {
+      "verdict": "correct",
+      "reason": "The specification mandates that switches process all frames at wire speed without output port saturation."
+    },
+    "Switch Port Processing.mac_layer_frame_reception": {
+      "verdict": "correct",
+      "reason": "The specification indicates that the MAC layer of each switch input port must receive frames at wire speed."
+    },
+    "switch_operation.frame_filtering_function_requirement": {
+      "verdict": "correct",
+      "reason": "The specification requires switches to implement frame filtering functionality."
+    },
+    "switch_operation.traffic_policing_function_requirement": {
+      "verdict": "correct",
+      "reason": "The specification mandates that switches must implement traffic policing functionality."
+    },
+    "switch_operating_modes.switch_initialization_mode_entry": {
+      "verdict": "correct",
+      "reason": "The specification states that the switch must enter INIT mode after power rise or reset."
+    },
+    "switch_operating_modes.ops_mode_functions": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the operational functions of the switch in OPS mode as per the specification."
+    },
+    "switch_operating_modes.passive_mode_communication_restriction": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly describes the communication restrictions in PASSIVE mode according to the specification."
+    },
+    "switch_operating_modes.switch_initialization_before_subscribers": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's requirement for switch operational status before subscriber initialization."
+    },
+    "switch_operating_modes.fault_indicator_state_during_initialization": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states that the Fault/Healthy indicator must remain in the Fault state during INIT mode."
+    },
+    "Switching.frame_buffering_requirement": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value lacks context and specific details from the spec regarding frame buffering requirements."
+    },
+    "Switching.maintain_vl_frame_order": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value is too vague and does not provide enough detail to confirm its accuracy against the specification."
+    },
+    "Switching.do_not_modify_fcs": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value is a general statement and lacks specific reference to the context in the specification."
+    },
+    "Switching.use_destination_address_for_port_forwarding": {
+      "verdict": "correct",
+      "reason": "The specification states that destination addresses are used for port forwarding."
+    },
+    "Switching.discard_frames_on_congestion": {
+      "verdict": "correct",
+      "reason": "The specification allows for frame discarding during congestion."
+    },
+    "Switching.discard_frames_on_link_failure": {
+      "verdict": "correct",
+      "reason": "The specification indicates that frames should be discarded on link failure."
+    },
+    "Switching.max_delay_for_frame_transmission": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately describes the maximum delay for frame transmission as per the specification."
+    },
+    "Switching.traffic_prioritization_by_mac_address": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not explicitly define traffic prioritization by MAC address in terms of 'High Priority' and 'Low Priority'."
+    },
+    "Switching.minimum_inter_frame_gap": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not explicitly define a 'minimum gap' value."
+    },
+    "Traffic Control.maximum_bandwidth_allocation": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the formula for maximum bandwidth allocation."
+    },
+    "Traffic Control.bounded_arrival_distribution": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states that frame delivery follows a bounded arrival distribution."
+    },
+    "Traffic Control.ordinal_integrity_within_virtual_link": {
+      "verdict": "incorrect",
+      "reason": "The specification does not state that ordinal integrity is always true."
+    },
+    "Traffic Control.bag_interval_enforcement": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not provide a definitive list of values for bag interval enforcement."
+    },
+    "Traffic Control.maximum_frame_size": {
+      "verdict": "incorrect",
+      "reason": "The maximum frame size specified in ARINC 664 Part 7 is 1522 bytes, not 1518."
+    },
+    "Traffic Control.maximum_jitter": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification allowing for jitter values up to 'MaxBAG'."
+    },
+    "Traffic Policing.byte_based_frame_acceptance": {
+      "verdict": "correct",
+      "reason": "The rule correctly describes the acceptance condition for byte-based frame policing."
+    },
+    "Traffic Policing.frame_based_frame_acceptance": {
+      "verdict": "correct",
+      "reason": "The rule accurately reflects the acceptance condition for frame-based frame policing."
+    },
+    "Traffic Policing.bag_value_range": {
+      "verdict": "incorrect",
+      "reason": "The valid range for bag values is [1, 255], not [1, 128]."
+    },
+    "Traffic Policing.maximum_jitter_value_range": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not explicitly define the maximum jitter value range."
+    },
+    "Traffic Policing.ethernet_frame_size_handling_range": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the valid Ethernet frame size range specified in ARINC 664 Part 7."
+    },
+    "Traffic Policing.traffic_policing_resolution": {
+      "verdict": "incorrect",
+      "reason": "The specification does not limit traffic policing resolution to less than or equal to 100."
+    },
+    "Traffic Policing.byte_based_traffic_policing": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly reflects the behavior described in the specification regarding byte-based traffic policing."
+    },
+    "Virtual Link.single_source_per_virtual_link": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the requirement that only one End System should be the source of any one VL."
+    },
+    "Virtual Link.maintain_data_ordering": {
+      "verdict": "correct",
+      "reason": "The rule accurately reflects the requirement for maintaining data ordering in AFDX."
+    },
+    "Virtual Link.dedicated_maximum_bandwidth_per_vl": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states that the maximum bandwidth is allocated by the System Integrator."
+    },
+    "addressing.mac_address_unicast_or_multicast_support": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly identifies the supported address types as per the specification."
+    },
+    "addressing.vl_identifier_pin_programming_format": {
+      "verdict": "unverifiable",
+      "reason": "The specific pin programming format details cannot be confirmed without additional context from the spec."
+    },
+    "addressing.pin_programming_value_encoding": {
+      "verdict": "unverifiable",
+      "reason": "The encoding values for pin programming cannot be verified without further specification details."
+    },
+    "addressing.source_address_ownership_requirement": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the requirement for the source address."
+    },
+    "addressing.destination_address_filtering": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states the behavior for incoming datagrams not destined for the host."
+    },
+    "addressing.mac_address_constant_field_format": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value lacks context and cannot be confirmed from the spec alone."
+    },
+    "addressing.ip_address_class_a_private_format": {
+      "verdict": "incorrect",
+      "reason": "The extracted value does not accurately reflect the specification's description of Class A private IP addresses."
+    },
+    "address_validation.source_address_validation": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly summarizes the conditions for valid source addresses."
+    },
+    "bandwidth_allocation.bandwidth_allocation_for_maximum_message_size": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification regarding bandwidth allocation."
+    },
+    "data_integrity.virtual_link_ordinal_integrity_requirement": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states the requirement for ordinal integrity within a Virtual Link."
+    },
+    "End System Behavior.full_duplex_ethernet_requirement": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value lacks a source quote to confirm the requirement for full-duplex operation."
+    },
+    "End System Behavior.ethernet_frame_compliance": {
+      "verdict": "correct",
+      "reason": "The extracted value is consistent with the specification's requirement for compliance with IEEE 802.3."
+    },
+    "End System Behavior.transmission_during_link_failure": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value cannot be confirmed without specific reference to the behavior during link failure in the spec."
+    },
+    "error_handling.reception_buffer_overflow_handling": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's guidance on handling reception buffer overflow."
+    },
+    "error_handling.sap_port_receiver_buffer_overflow_handling": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states the action to be taken in case of receiver buffer overflow as per the specification."
+    },
+    "ethernet_payload.automatic_padding_for_undersized_messages": {
+      "verdict": "correct",
+      "reason": "The extracted value is a direct and accurate quote from the specification regarding message padding."
+    },
+    "Frame Filtering.frame_check_sequence_validity": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly summarizes the requirement for frame check sequence validity as stated in the specification."
+    },
+    "Frame Filtering.destination_address_validity": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's requirement for destination address validity."
+    },
+    "frame_processing.fragmented_frame_reassembly_requirement": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification regarding fragmented frame reassembly."
+    },
+    "frame_filtering.no_budget_consumption_for_invalid_frames": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states that budget accounts should not be consumed by invalid frames."
+    },
+    "frame_structure.frame_overhead_components": {
+      "verdict": "incorrect",
+      "reason": "The extracted value incorrectly sums the components; the total should be 84 bytes, not just the components listed."
+    },
+    "frame_structure.ethernet_frame_composition": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately describes the composition of an Ethernet frame as per the specification."
+    },
+    "frame_validation.frame_size_envelope_validation": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value is vague and does not provide enough detail to confirm its accuracy against the specification."
+    },
+    "frame_validation.frame_check_sequence_validation": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the requirement for switches to test frames using the Frame Check Sequence."
+    },
+    "frame_validation.destination_address_validity": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly indicates that the destination address must correspond to a valid VL."
+    },
+    "frame_validation.virtual_link_port_authorization": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects that a VL must be authorized on the destination port according to the switch configuration."
+    },
+    "frame_validation.ethernet_frame_alignment": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value lacks context and cannot be confirmed as correct or incorrect without additional specification details."
+    },
+    "frame_validation.ethernet_frame_size_range": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly specifies the valid range for Ethernet frame sizes as per the specification."
+    },
+    "frame_validation.frame_size_maximum_constraint": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's requirement on frame size."
+    },
+    "frame_validation.frame_discard_on_validation_failure": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly describes the action taken when frame properties do not comply."
+    },
+    "frame_validation.ethernet_frame_alignment_check": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states the requirement for frame size alignment."
+    },
+    "frame_validation.mac_destination_address_constant_field_validation": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification regarding the MAC destination address."
+    },
+    "frame_validation.vl_id_port_authorization": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states the requirement for VL id authorization on the incoming port."
+    },
+    "frame_transmission.complete_structure_transmission": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's requirement to send the entire static structure."
+    },
+    "integrity_checking.valid_sequence_number_range_for_frame_acceptance": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly describes the valid range for the RSN based on the PSN."
+    },
+    "integrity_checking.sequence_number_wrap_around_handling": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly explains the wrap-around behavior of sequence numbers."
+    },
+    "integrity_checking.invalid_frame_discard_requirement": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately states that frames not meeting criteria are discarded."
+    },
+    "integrity_checking.zero_sequence_number_transmission_condition": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly indicates that sequence number 0 is transmitted only after a reset."
+    },
+    "IP_Addressing.ip_address_class_a_private_format_requirement": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's requirement for Class A private IP addresses."
+    },
+    "IP_Addressing.ip_source_address_identifies_transmitting_partition": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly captures the specification's intent regarding the identification of the transmitting partition."
+    },
+    "IP_Addressing.ip_multicast_address_format_requirement": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the format requirements for Class D multicast addresses as specified."
+    },
+    "IP_Configuration.default_ttl_value": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not provide a specific default TTL value, making it impossible to confirm the extracted value."
+    },
+    "Latency.constant_end_system_latency": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly reflects the specification's statement about constant end system latency."
+    },
+    "Latency.total_latency_calculation": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the formula provided in the specification."
+    },
+    "Latency.latency_for_first_frame": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly represents the formula for latency for the first frame as stated in the specification."
+    },
+    "Latency.latency_for_delayed_frame": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the formula for the delayed frame as specified."
+    },
+    "IP_Layer_Requirements.no_gateway_operation_required": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not explicitly state whether gateway operation is required or not."
+    },
+    "latency_calculation.total_latency_formula": {
+      "verdict": "correct",
+      "reason": "The extracted value is a correct representation of the total latency formula as per the specification."
+    },
+    "latency_calculation.first_frame_latency_formula": {
+      "verdict": "correct",
+      "reason": "The extracted formula matches the specification for first frame latency."
+    },
+    "latency_calculation.delayed_frame_latency_formula": {
+      "verdict": "correct",
+      "reason": "The extracted formula accurately reflects the specification for delayed frame latency."
+    },
+    "mac_addressing.mac_destination_address_lsb_of_first_byte_must_be_1_(group_address)": {
+      "verdict": "correct",
+      "reason": "The specification states that the least significant bit must be 1 for group addresses."
+    },
+    "mac_addressing.mac_destination_address_second_lsb_of_first_byte_must_be_1_(locally_administered)": {
+      "verdict": "correct",
+      "reason": "The specification indicates that the second least significant bit must be 1 for locally administered addresses."
+    },
+    "mac_addressing.mac_source_address_lsb_of_first_byte_must_be_0_(individual_address)": {
+      "verdict": "correct",
+      "reason": "The specification requires the least significant bit to be 0 for individual addresses."
+    },
+    "mac_addressing.mac_source_address_second_lsb_of_first_byte_must_be_1_(locally_administered)": {
+      "verdict": "correct",
+      "reason": "The specification states that the second least significant bit of the first byte must be set to 1 for locally administered addresses."
+    },
+    "mac_addressing.interface_id_must_use_only_allowed_values_for_network_identification": {
+      "verdict": "incorrect",
+      "reason": "The allowed values for network identification include more than just '001' and '010'."
+    },
+    "mac_constraints.maximum_frame_rate_processing_requirement": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not explicitly define a maximum frame rate processing requirement of 148800."
+    },
+    "mac_constraints.minimum_frame_duration": {
+      "verdict": "incorrect",
+      "reason": "The extracted value of 6.72 does not match the minimum frame duration specified in the document."
+    },
+    "Network Layer.ipv4_version_requirement": {
+      "verdict": "correct",
+      "reason": "The specification confirms that only IPv4 (version 4) is required for the network layer."
+    },
+    "Network Layer.ipv4_packet_structure_compliance": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the requirement for compliance with the specified IPv4 packet structure format."
+    },
+    "Network Layer.ipv4_total_length_field_range_in_afdx": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value cannot be confirmed as the specification does not explicitly define the range for the total length field."
+    },
+    "Network Layer.unique_data_flow_identification": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly identifies the criteria for unique data flow identification as stated in the specification."
+    },
+    "Network Layer.valid_frame_filtering_criteria": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the filtering criteria for valid frames as described in the specification."
+    },
+    "queuing_service.fifo_discipline_requirement": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value cannot be confirmed without additional context from the specification regarding queuing discipline requirements."
+    },
+    "queuing_service.maximum_application_data_size": {
+      "verdict": "correct",
+      "reason": "The extracted value of 8192 matches the specification for maximum application data size."
+    },
+    "queuing_service.in_order_fragment_transmission": {
+      "verdict": "incorrect",
+      "reason": "The extracted value does not accurately reflect the specification, which allows for both in-order and out-of-order transmission."
+    },
+    "queuing_service.buffer_overflow_frame_discard": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification regarding buffer overflow handling."
+    },
+    "Reception.data_presentation_after_reassembly": {
+      "verdict": "correct",
+      "reason": "The extracted value is consistent with the specification's requirement for data presentation after reassembly."
+    },
+    "Reception.buffer_overflow_handling": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly summarizes the specification's directive on handling buffer overflow."
+    },
+    "Redundancy.redundancy_management_requirement": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the requirement for redundancy management mechanisms in receiving End Systems."
+    },
+    "Switch Functionality.default_configuration_table_usage": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly describes the purpose of the Default_Configuration_Table as per the specification."
+    },
+    "Switch Configuration.bandwidth_allocation_gap": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states that the Bandwidth Allocation Gap is defined per Virtual Link (VL)."
+    },
+    "Switch Configuration.maximum_ethernet_frame_size": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects that the maximum Ethernet frame size is defined per Virtual Link (VL)."
+    },
+    "Switch Configuration.minimum_ethernet_frame_size": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly indicates that the minimum Ethernet frame size is defined per Virtual Link (VL)."
+    },
+    "Switch Configuration.maximum_port_delay": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not provide specific details on how maximum port delay is defined per port."
+    },
+    "Switch Behavior.technological_latency_limit": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's requirement for switch latency."
+    },
+    "Switch Behavior.minimum_output_port_buffer_capacity": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states the minimum buffer capacity as specified."
+    },
+    "Sub-VL Queue Exclusivity.sub_vl_fifo_queue_exclusivity": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the exclusivity requirement stated in the specification."
+    },
+    "switch_configuration.vl_mac_destination_address_identifier": {
+      "verdict": "incorrect",
+      "reason": "The extracted value is vague and does not accurately represent the specification's description of the MAC destination address."
+    },
+    "switch_configuration.vl_bandwidth_allocation_gap": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the requirement for per-VL bandwidth allocation gap configuration."
+    },
+    "switch_configuration.vl_maximum_allowed_jitter": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states that a per-VL maximum jitter constraint must be enforced."
+    },
+    "switch_configuration.vl_account_sharing_configuration": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification regarding account sharing."
+    },
+    "switch_configuration.vl_maximum_ethernet_frame_size": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly describes the maximum allowed total Ethernet line size per VL."
+    },
+    "switch_configuration.vl_minimum_ethernet_frame_size": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the minimum allowed total Ethernet line size per VL."
+    },
+    "switch_configuration.vl_priority_classification": {
+      "verdict": "incorrect",
+      "reason": "The specification does not limit priority classification to only 'high' and 'low'."
+    },
+    "switch_configuration.port_maximum_delay_constraint": {
+      "verdict": "correct",
+      "reason": "The specification states that a maximum delay limit must be enforced per port."
+    },
+    "switch_configuration.port_operational_state": {
+      "verdict": "correct",
+      "reason": "The specification defines operational states as 'ON' and 'OFF'."
+    },
+    "switch_configuration.low_priority_vl_output_buffer_size": {
+      "verdict": "correct",
+      "reason": "The specification requires configuration of output buffer size for low priority VLs."
+    },
+    "switch_configuration.high_priority_vl_output_buffer_size": {
+      "verdict": "correct",
+      "reason": "The specification requires configuration of output buffer size for high priority VLs."
+    },
+    "switch_configuration.pin_programming_read_timing": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's requirements for reading hardware program pins."
+    },
+    "switch_configuration.pin_programming_flight_behavior": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states the behavior when Switch_Ground_Condition is false as per the specification."
+    },
+    "switch_configuration.pin_count_requirement": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not provide a specific number for pin count requirements."
+    },
+    "switch_configuration.pin_programming_parity_check": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not explicitly mention whether parity check should be true or false."
+    },
+    "switch_configuration.pin_value_encoding": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not detail the encoding values for pin values."
+    },
+    "switch_buffering.minimum_output_port_buffer_capacity": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the minimum output port buffer capacity requirement."
+    },
+    "switch_buffering.buffer_priority_balance": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly interprets the requirement for balancing buffer capacity between high and low priority frames."
+    },
+    "switch_operational_modes.ops_mode_normal_functions_requirement": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the requirement for the switch to perform its functions using activated OPS_Configuration_File data."
+    },
+    "switch_operational_modes.ops_mode_health_indicator_state": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not provide explicit details on the health indicator states."
+    },
+    "switch_operational_modes.dl_mode_end_system_function_configuration": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the requirement for the switch to use Default_Configuration_Table data exclusively in DL Mode."
+    },
+    "switch_operational_modes.passive_mode_switch_functions_disabled": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's statement about passive mode."
+    },
+    "switch_operational_modes.passive_mode_network_management_communication": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly captures the condition for maintaining communication with the Network Management Function."
+    },
+    "switch_operational_modes.quiet_mode_frame_forwarding_prohibition": {
+      "verdict": "correct",
+      "reason": "The extracted value is consistent with the specification regarding the quiet mode's behavior."
+    },
+    "switching_behavior.frame_sequencing_for_simultaneous_reception": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's description of handling simultaneous frame reception."
+    },
+    "switching.switch_forwarding_based_on_mac_destination": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value lacks specific details from the specification to confirm the forwarding decision process."
+    },
+    "switching.high_priority_transmission_precedence": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's requirement for high priority frame transmission."
+    },
+    "switching.no_preemption_of_low_priority_frames": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not explicitly state whether low priority frames can be preempted or not."
+    },
+    "switching_function.frame_filtering_and_policing_order": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly describes the order of operations as stated in the specification."
+    },
+    "switch_performance.maximum_vl_support": {
+      "verdict": "incorrect",
+      "reason": "The extracted value does not match the specification's defined maximum value for virtual links."
+    },
+    "switch_performance.minimum_interframe_gap": {
+      "verdict": "incorrect",
+      "reason": "The extracted value does not align with the specification's defined minimum interframe gap."
+    },
+    "switch_performance.maximum_frame_rate_100mbps": {
+      "verdict": "incorrect",
+      "reason": "The extracted value of 148800 does not match the specified maximum frame rate for 100 Mbps in the ARINC 664 Part 7 specification."
+    },
+    "switch_performance.wire_speed_filtering_capability": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's requirement for filtering frames at wire speed."
+    },
+    "switch_performance.wire_speed_relaying_capability": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly captures the specification's requirement for relaying frames at wire speed in deterministic configurations."
+    },
+    "switch_performance.mac_layer_wire_speed_transmission": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's requirement for MAC layer transmission at wire speed."
+    },
+    "switch_performance.technological_latency_limit": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value cannot be confirmed as the specification does not provide a clear limit for technological latency."
+    },
+    "timing_requirements.timely_delivery_requirement_for_afdx_networks": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's emphasis on timely delivery of data."
+    },
+    "traffic_policing.frame_size_minimum_constraint_for_byte_based_policing": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states the requirement for Ethernet frame size in relation to byte-based traffic policing."
+    },
+    "traffic_policing.initial_account_setting": {
+      "verdict": "unverifiable",
+      "reason": "The extracted formula lacks context and cannot be fully verified without additional details from the specification."
+    },
+    "traffic_policing.account_crediting_rate": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately describes the crediting rate for ACi as per the specification."
+    },
+    "traffic_policing.frame_size_consistency_for_shared_accounts": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly reflects the requirement for consistency in smin and smax values among VLs in a shared account."
+    },
+    "traffic_policing.default_vl_policing_activation": {
+      "verdict": "unverifiable",
+      "reason": "The specification does not explicitly state the default value for VL policing activation."
+    },
+    "traffic_regulation.virtual_link_bandwidth_allocation_formula": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the formula provided in the specification."
+    },
+    "traffic_regulation.exact_bandwidth_regulated_traffic_control_requirement": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly captures the essence of the quoted statement from the specification."
+    },
+    "traffic_regulation.bounded_frame_delivery_distribution": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification's statement regarding frame delivery distribution."
+    },
+    "traffic_shaping.bag_frame_rate_limit": {
+      "verdict": "correct",
+      "reason": "The extracted value is consistent with the specification's guidance on frame sending limits."
+    },
+    "traffic_shaping.bag_value_range": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specified range of BAG values."
+    },
+    "transmission_performance.transmission_technological_latency_bound": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states the latency bound as being lower than 150 μs."
+    },
+    "transmission_performance.maximum_jitter_constraint_formula_1": {
+      "verdict": "correct",
+      "reason": "The extracted formula matches the specification for maximum allowed jitter."
+    },
+    "transmission_performance.maximum_jitter_absolute_bound": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly reflects the absolute bound on jitter as stated in the spec."
+    },
+    "Virtual Link Configuration.default_reception_vl_identifier": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately represents the default reception VL identifier as per the specification."
+    },
+    "virtual_link.vl_bandwidth_and_frame_interval_bounds": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the requirement to bound both bandwidth and frame delivery interval for each VL."
+    },
+    "virtual_link.vl_bandwidth_isolation": {
+      "verdict": "correct",
+      "reason": "The extracted value correctly states that available bandwidth on any VL must remain unaffected by the utilization of other VLs."
+    },
+    "virtual_link.vl_partition_exclusivity": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification that one VL should not be shared by multiple source partitions."
+    },
+    "virtual_link_configuration.minimum_frame_size_range_constraint": {
+      "verdict": "unverifiable",
+      "reason": "The extracted value does not provide a source quote from the spec to confirm the specific range of [84, 1538]."
+    },
+    "virtual_link_configuration.default_reception_vl_uniqueness": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification regarding the default unique reception VL."
+    },
+    "virtual_link_configuration.default_transmission_vl_uniqueness": {
+      "verdict": "correct",
+      "reason": "The extracted value accurately reflects the specification stating that each switch has a unique default transmission VL."
+    }
+  }
+}

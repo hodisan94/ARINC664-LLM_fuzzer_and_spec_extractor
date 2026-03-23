@@ -1,4 +1,0 @@
-iteration,timestamp,duration,target_vl,protocol_rule,test_mode,strategy,reasoning,test_cases,custom_mutation,num_frames,simulation_success,reward,frames_received,frames_dropped_policing,frames_forwarded,policing_rate,forward_rate,bugs_found,recommendation,error,success
-0,2025-11-17T02:26:09.604113,22.668325,1001.0,bag,predefined,edge-case,"Early exploration on VL 1001 targeting BAG enforcement with below-min (0 ms), not-in-list (3 ms), and above-max (129 ms) to validate policing of invalid transmission intervals.","['TC0', 'TC1', 'TC2']",,60.0,True,1.24,60.0,3.0,57.0,0.05,0.95,False,Excellent test! Continue exploring similar strategies.,,
-1,2025-11-17T02:26:47.553558,,,,,,,,,,,,,,,,,,,LLM response is not valid JSON: Expecting value: line 1 column 1 (char 0),False
-2,2025-11-17T02:26:47.556951,,,,,,,,,,,,,,,,,,,cannot convert float NaN to integer,False

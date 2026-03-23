@@ -1,0 +1,1327 @@
+{
+  "requirements": [
+    {
+      "id": "2.1.1",
+      "section": "Physical Layer & Ethernet",
+      "description": "The physical layer shall comply with IEEE 802.3 standards.",
+      "covered": false,
+      "matching_category": null,
+      "match_reason": "No extracted category addresses compliance with IEEE 802.3 standards."
+    },
+    {
+      "id": "2.1.2",
+      "section": "Physical Layer & Ethernet",
+      "description": "The MAC address format shall include a group bit and a locally administered bit.",
+      "covered": true,
+      "matching_category": "MAC Addressing",
+      "match_reason": "The MAC address format is covered under MAC Addressing."
+    },
+    {
+      "id": "2.1.3",
+      "section": "Physical Layer & Ethernet",
+      "description": "The maximum frame size shall not exceed 1518 bytes.",
+      "covered": true,
+      "matching_category": "Frame Structure",
+      "match_reason": "Maximum frame size is related to frame structure."
+    },
+    {
+      "id": "2.1.4",
+      "section": "Physical Layer & Ethernet",
+      "description": "The minimum frame size shall be 64 bytes.",
+      "covered": true,
+      "matching_category": "Frame Structure",
+      "match_reason": "Minimum frame size is related to frame structure."
+    },
+    {
+      "id": "2.1.5",
+      "section": "Physical Layer & Ethernet",
+      "description": "The maximum payload size per Virtual Link (VL) shall be defined by the configuration.",
+      "covered": true,
+      "matching_category": "Virtual Link Configuration",
+      "match_reason": "Payload size per Virtual Link is covered under Virtual Link Configuration."
+    },
+    {
+      "id": "2.1.6",
+      "section": "Physical Layer & Ethernet",
+      "description": "The port speed shall be at least 100 Mbps.",
+      "covered": true,
+      "matching_category": "Switch Performance",
+      "match_reason": "Port speed relates to switch performance and operational capabilities."
+    },
+    {
+      "id": "2.2.1",
+      "section": "End System (transmit side)",
+      "description": "Traffic shaping shall be implemented to ensure compliance with the bandwidth allocation.",
+      "covered": true,
+      "matching_category": "Traffic Shaping",
+      "match_reason": "Traffic shaping is explicitly mentioned in the extracted categories."
+    },
+    {
+      "id": "2.2.2",
+      "section": "End System (transmit side)",
+      "description": "The Bandwidth Allocation Gap (BAG) shall be enforced for each Virtual Link.",
+      "covered": true,
+      "matching_category": "Traffic Policing",
+      "match_reason": "Enforcement of Bandwidth Allocation Gap relates to traffic policing."
+    },
+    {
+      "id": "2.2.3",
+      "section": "End System (transmit side)",
+      "description": "Sub-VL scheduling shall be implemented to manage traffic effectively.",
+      "covered": true,
+      "matching_category": "Sub-VL Scheduling",
+      "match_reason": "Sub-VL scheduling is explicitly mentioned in the extracted categories."
+    },
+    {
+      "id": "2.2.4",
+      "section": "End System (transmit side)",
+      "description": "The transmission of frames shall adhere to the defined timing constraints.",
+      "covered": true,
+      "matching_category": "Timing Requirements",
+      "match_reason": "Adherence to timing constraints is covered under timing requirements."
+    },
+    {
+      "id": "2.3.1",
+      "section": "End System (receive side)",
+      "description": "Frame filtering shall be performed to accept only relevant frames.",
+      "covered": true,
+      "matching_category": "Frame Filtering",
+      "match_reason": "Frame filtering is explicitly mentioned in the extracted categories."
+    },
+    {
+      "id": "2.3.2",
+      "section": "End System (receive side)",
+      "description": "Policing mechanisms shall be implemented to ensure compliance with bandwidth limits.",
+      "covered": true,
+      "matching_category": "Policing",
+      "match_reason": "Policing mechanisms are covered under the policing category."
+    },
+    {
+      "id": "2.3.3",
+      "section": "End System (receive side)",
+      "description": "Integrity checking shall be performed on received frames.",
+      "covered": true,
+      "matching_category": "Integrity",
+      "match_reason": "Integrity checking is covered under the integrity category."
+    },
+    {
+      "id": "2.3.4",
+      "section": "End System (receive side)",
+      "description": "Redundancy management shall be implemented to handle frame duplication.",
+      "covered": true,
+      "matching_category": "Redundancy Management",
+      "match_reason": "Redundancy management is explicitly mentioned in the extracted categories."
+    },
+    {
+      "id": "2.4.1",
+      "section": "Virtual Links",
+      "description": "Virtual Links shall be defined with specific bandwidth allocations.",
+      "covered": true,
+      "matching_category": "Virtual Link Configuration",
+      "match_reason": "Bandwidth allocations for Virtual Links are covered under Virtual Link Configuration."
+    },
+    {
+      "id": "2.4.2",
+      "section": "Virtual Links",
+      "description": "A single-source constraint shall be enforced for each Virtual Link.",
+      "covered": true,
+      "matching_category": "Virtual Link",
+      "match_reason": "Single-source constraint for Virtual Link is addressed by the Virtual Link category."
+    },
+    {
+      "id": "2.4.3",
+      "section": "Virtual Links",
+      "description": "Bandwidth allocation for each Virtual Link shall be documented in the configuration.",
+      "covered": true,
+      "matching_category": "bandwidth_allocation",
+      "match_reason": "Bandwidth allocation for Virtual Link is covered under bandwidth_allocation."
+    },
+    {
+      "id": "2.5.1",
+      "section": "Switching",
+      "description": "Switch filtering shall be implemented to direct frames to the appropriate output ports.",
+      "covered": true,
+      "matching_category": "Switch Behavior",
+      "match_reason": "Switch filtering for directing frames is covered under Switch Behavior."
+    },
+    {
+      "id": "2.5.2",
+      "section": "Switching",
+      "description": "Policing shall be applied to ensure frames do not exceed bandwidth limits.",
+      "covered": true,
+      "matching_category": "Traffic Policing",
+      "match_reason": "Policing to ensure frames do not exceed bandwidth limits is covered under Traffic Policing."
+    },
+    {
+      "id": "2.5.3",
+      "section": "Switching",
+      "description": "Frame forwarding shall be performed based on MAC addresses.",
+      "covered": true,
+      "matching_category": "MAC Addressing",
+      "match_reason": "Frame forwarding based on MAC addresses is covered under MAC Addressing."
+    },
+    {
+      "id": "2.5.4",
+      "section": "Switching",
+      "description": "Buffering shall be implemented to manage frame queuing.",
+      "covered": true,
+      "matching_category": "Switch Buffering",
+      "match_reason": "Buffering for managing frame queuing is covered under Switch Buffering."
+    },
+    {
+      "id": "2.5.5",
+      "section": "Switching",
+      "description": "Priority handling shall be implemented to manage frame transmission order.",
+      "covered": true,
+      "matching_category": "Sub-VL Queue Management",
+      "match_reason": "Priority handling for frame transmission order is covered under Sub-VL Queue Management."
+    },
+    {
+      "id": "2.5.6",
+      "section": "Switching",
+      "description": "Switch latency shall be bounded to ensure timely frame delivery.",
+      "covered": true,
+      "matching_category": "Latency",
+      "match_reason": "Switch latency bounds for timely frame delivery are covered under Latency."
+    },
+    {
+      "id": "2.6.1",
+      "section": "Frame format",
+      "description": "The MAC addressing format shall comply with IEEE 802 standards.",
+      "covered": true,
+      "matching_category": "MAC Addressing",
+      "match_reason": "Compliance with IEEE 802 standards for MAC addressing is covered under MAC Addressing."
+    },
+    {
+      "id": "2.6.2",
+      "section": "Frame format",
+      "description": "IP/UDP encapsulation shall be used for payload transmission.",
+      "covered": true,
+      "matching_category": "IP_Layer_Requirements",
+      "match_reason": "IP/UDP encapsulation for payload transmission is covered under IP Layer Requirements."
+    },
+    {
+      "id": "2.6.3",
+      "section": "Frame format",
+      "description": "The payload structure shall be defined according to the application requirements.",
+      "covered": true,
+      "matching_category": "ethernet_payload",
+      "match_reason": "Payload structure defined according to application requirements is covered under ethernet_payload."
+    },
+    {
+      "id": "2.7.1",
+      "section": "Network configuration",
+      "description": "OPS files shall be used for network configuration.",
+      "covered": true,
+      "matching_category": "Switch Configuration",
+      "match_reason": "OPS files for network configuration are covered under Switch Configuration."
+    },
+    {
+      "id": "2.7.2",
+      "section": "Network configuration",
+      "description": "Switch modes shall be configurable to meet operational requirements.",
+      "covered": true,
+      "matching_category": "Switch Operating Modes",
+      "match_reason": "Configurable switch modes to meet operational requirements are covered under Switch Operating Modes."
+    },
+    {
+      "id": "2.7.3",
+      "section": "Network configuration",
+      "description": "Port configuration shall be documented and adhered to.",
+      "covered": true,
+      "matching_category": "Switch Port Configuration",
+      "match_reason": "Documentation and adherence to port configuration is covered under Switch Port Configuration."
+    },
+    {
+      "id": "2.8.1",
+      "section": "Quality of Service",
+      "description": "Latency guarantees shall be defined for each Virtual Link.",
+      "covered": true,
+      "matching_category": "Latency Management",
+      "match_reason": "Latency guarantees for each Virtual Link are covered under Latency Management."
+    },
+    {
+      "id": "2.8.2",
+      "section": "Quality of Service",
+      "description": "Jitter bounds shall be established and maintained.",
+      "covered": true,
+      "matching_category": "Jitter",
+      "match_reason": "Jitter bounds are explicitly mentioned in the Jitter category."
+    },
+    {
+      "id": "2.8.3",
+      "section": "Quality of Service",
+      "description": "Fault isolation mechanisms shall be implemented to ensure system reliability.",
+      "covered": true,
+      "matching_category": "Redundancy",
+      "match_reason": "Fault isolation mechanisms relate to system reliability and redundancy."
+    },
+    {
+      "id": "2.9.1",
+      "section": "IP/TCP optional services",
+      "description": "IP addressing shall be configured according to the network requirements.",
+      "covered": true,
+      "matching_category": "IP_Addressing",
+      "match_reason": "IP addressing configuration is directly addressed in the IP_Addressing category."
+    },
+    {
+      "id": "2.9.2",
+      "section": "IP/TCP optional services",
+      "description": "ICMP services shall be supported for network diagnostics.",
+      "covered": true,
+      "matching_category": "IP_Layer_Requirements",
+      "match_reason": "ICMP services for diagnostics relate to network layer requirements."
+    },
+    {
+      "id": "2.9.3",
+      "section": "IP/TCP optional services",
+      "description": "TCP connections shall be established according to the defined protocols.",
+      "covered": true,
+      "matching_category": "IP_Layer_Requirements",
+      "match_reason": "TCP connections are part of the network layer protocols."
+    },
+    {
+      "id": "2.10.1",
+      "section": "Redundancy",
+      "description": "Dual-lane redundancy shall be implemented for critical data paths.",
+      "covered": true,
+      "matching_category": "Queuing Service",
+      "match_reason": "Queuing mechanisms for frame transmission are covered under queuing service."
+    },
+    {
+      "id": "2.10.2",
+      "section": "Redundancy",
+      "description": "Sequence numbering shall be used to track frame order.",
+      "covered": false,
+      "matching_category": null,
+      "match_reason": "Sampling rates for data acquisition are not explicitly covered."
+    },
+    {
+      "id": "2.10.3",
+      "section": "Redundancy",
+      "description": "First-valid-wins policy shall be applied for frame selection.",
+      "covered": true,
+      "matching_category": "Frame Filtering",
+      "match_reason": "First-valid-wins policy relates to frame selection and filtering."
+    },
+    {
+      "id": "2.11.1",
+      "section": "Communication ports",
+      "description": "Queuing mechanisms shall be implemented for frame transmission.",
+      "covered": true,
+      "matching_category": "Queuing Service",
+      "match_reason": "Queuing mechanisms for frame transmission are covered under queuing service."
+    },
+    {
+      "id": "2.11.2",
+      "section": "Communication ports",
+      "description": "Sampling rates shall be defined for data acquisition.",
+      "covered": false,
+      "matching_category": null,
+      "match_reason": "Sampling rates for data acquisition are not explicitly covered."
+    },
+    {
+      "id": "2.11.3",
+      "section": "Communication ports",
+      "description": "Service Access Point (SAP) ports shall be configured according to the application.",
+      "covered": true,
+      "matching_category": "Switch Port Configuration",
+      "match_reason": "Configuration of SAP ports relates to switch port configuration."
+    },
+    {
+      "id": "2.12.1",
+      "section": "Error handling",
+      "description": "Error reporting mechanisms shall be implemented to log and report faults.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Error reporting mechanisms are part of error handling."
+    },
+    {
+      "id": "2.12.2",
+      "section": "Error handling",
+      "description": "Frame integrity errors shall be detected and reported.",
+      "covered": true,
+      "matching_category": "Integrity",
+      "match_reason": "Frame integrity errors relate to data integrity checks."
+    },
+    {
+      "id": "2.12.3",
+      "section": "Error handling",
+      "description": "Redundant paths shall be monitored for failure detection.",
+      "covered": true,
+      "matching_category": "Redundancy Management",
+      "match_reason": "Monitoring redundant paths relates to redundancy management."
+    },
+    {
+      "id": "2.12.4",
+      "section": "Error handling",
+      "description": "Error recovery procedures shall be defined and implemented.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Error recovery procedures are part of error handling."
+    },
+    {
+      "id": "2.12.5",
+      "section": "Error handling",
+      "description": "The system shall provide mechanisms for graceful degradation in case of errors.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Graceful degradation mechanisms relate to error handling."
+    },
+    {
+      "id": "2.13.1",
+      "section": "2.13",
+      "description": "Define the bit-field structure for MAC addresses, including reserved bits and alignment requirements.",
+      "covered": true,
+      "matching_category": "MAC Addressing",
+      "match_reason": "Bit-field structure for MAC addresses is covered under MAC Addressing."
+    },
+    {
+      "id": "2.13.2",
+      "section": "2.13",
+      "description": "Specify the format for MAC address assignment and management within the network.",
+      "covered": true,
+      "matching_category": "MAC Addressing",
+      "match_reason": "Format for MAC address assignment relates to MAC Addressing."
+    },
+    {
+      "id": "2.14.1",
+      "section": "2.14",
+      "description": "Detail the encapsulation format for IP packets within UDP, including header fields and payload structure.",
+      "covered": true,
+      "matching_category": "IP_Layer_Requirements",
+      "match_reason": "Encapsulation format for IP packets is covered under IP Layer Requirements."
+    },
+    {
+      "id": "2.14.2",
+      "section": "2.14",
+      "description": "Outline the requirements for handling fragmented IP packets in UDP encapsulation.",
+      "covered": true,
+      "matching_category": "IP_Layer_Requirements",
+      "match_reason": "Handling fragmented IP packets relates to IP Layer Requirements."
+    },
+    {
+      "id": "2.15.1",
+      "section": "2.15",
+      "description": "Define the constraints for policing algorithms, including rate limits and burst sizes.",
+      "covered": true,
+      "matching_category": "Traffic Policing",
+      "match_reason": "Policing algorithm constraints are covered under Traffic Policing."
+    },
+    {
+      "id": "2.15.2",
+      "section": "2.15",
+      "description": "Specify the behavior of the policing algorithm under various traffic conditions.",
+      "covered": true,
+      "matching_category": "Traffic Policing",
+      "match_reason": "Behavior of policing algorithms under traffic conditions relates to Traffic Policing."
+    },
+    {
+      "id": "2.16.1",
+      "section": "2.16",
+      "description": "Detail the requirements for switch configuration tables, including maximum entries and update frequency.",
+      "covered": true,
+      "matching_category": "Switch Configuration",
+      "match_reason": "Requirements for switch configuration tables are covered under Switch Configuration."
+    },
+    {
+      "id": "2.16.2",
+      "section": "2.16",
+      "description": "Outline the format and fields required in switch configuration tables for VLAN management.",
+      "covered": true,
+      "matching_category": "Switch Configuration",
+      "match_reason": "Format and fields for VLAN management relate to Switch Configuration."
+    },
+    {
+      "id": "2.17.1",
+      "section": "2.17",
+      "description": "Define the queuing mechanisms for communication ports, including FIFO and priority queuing rules.",
+      "covered": true,
+      "matching_category": "Queuing Service",
+      "match_reason": "Queuing mechanisms for communication ports are covered under Queuing Service."
+    },
+    {
+      "id": "2.17.2",
+      "section": "2.17",
+      "description": "Specify the sampling rates for traffic monitoring on communication ports.",
+      "covered": true,
+      "matching_category": "Traffic Monitoring",
+      "match_reason": "Sampling rates for traffic monitoring relate to Traffic Control."
+    },
+    {
+      "id": "2.18.1",
+      "section": "2.18",
+      "description": "Outline the optional TCP service constraints, including maximum segment size and window scaling.",
+      "covered": true,
+      "matching_category": "IP_Layer_Requirements",
+      "match_reason": "TCP service constraints are related to IP Layer Requirements."
+    },
+    {
+      "id": "2.18.2",
+      "section": "2.18",
+      "description": "Define the requirements for TCP connection establishment and teardown procedures.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "TCP connection establishment and teardown procedures relate to Error Handling."
+    },
+    {
+      "id": "2.19.1",
+      "section": "2.19",
+      "description": "Specify the error-handling mechanisms for packet loss, including retransmission strategies.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Error-handling mechanisms for packet loss are covered under Error Handling."
+    },
+    {
+      "id": "2.19.2",
+      "section": "2.19",
+      "description": "Detail the requirements for error detection and correction in transmitted packets.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Requirements for error detection and correction relate to Error Handling."
+    },
+    {
+      "id": "2.20.1",
+      "section": "2.20",
+      "description": "Define the scheduling details for Sub-VLs, including timing and priority rules.",
+      "covered": true,
+      "matching_category": "Sub-VL Scheduling",
+      "match_reason": "Scheduling details for Sub-VLs are covered under Sub-VL Scheduling."
+    },
+    {
+      "id": "2.20.2",
+      "section": "2.20",
+      "description": "Outline the requirements for bandwidth allocation among Sub-VLs.",
+      "covered": true,
+      "matching_category": "bandwidth_allocation",
+      "match_reason": "Bandwidth allocation requirements are directly addressed by the bandwidth_allocation category."
+    },
+    {
+      "id": "2.21.1",
+      "section": "2.21",
+      "description": "Specify the requirements for network management interfaces, including SNMP support.",
+      "covered": true,
+      "matching_category": "Switch Configuration",
+      "match_reason": "Network management interfaces, including SNMP support, relate to Switch Configuration."
+    },
+    {
+      "id": "2.21.2",
+      "section": "2.21",
+      "description": "Detail the logging and monitoring requirements for network management.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Logging and monitoring requirements for network management can be associated with Error Handling."
+    },
+    {
+      "id": "2.22.1",
+      "section": "2.22",
+      "description": "Define the requirements for multicast traffic handling, including group management.",
+      "covered": true,
+      "matching_category": "Switch Functionality",
+      "match_reason": "Multicast traffic handling requirements are related to Switch Functionality."
+    },
+    {
+      "id": "2.22.2",
+      "section": "2.22",
+      "description": "Outline the constraints for multicast address allocation and usage.",
+      "covered": true,
+      "matching_category": "addressing",
+      "match_reason": "Constraints for multicast address allocation and usage are covered under addressing."
+    },
+    {
+      "id": "2.23.1",
+      "section": "2.23",
+      "description": "Specify the requirements for link layer discovery protocols.",
+      "covered": true,
+      "matching_category": "Switch Behavior",
+      "match_reason": "Link layer discovery protocols are part of Switch Behavior."
+    },
+    {
+      "id": "2.23.2",
+      "section": "2.23",
+      "description": "Detail the requirements for network topology discovery and reporting.",
+      "covered": true,
+      "matching_category": "Switch Operational Modes",
+      "match_reason": "Network topology discovery and reporting relate to Switch Operational Modes."
+    },
+    {
+      "id": "2.24.1",
+      "section": "2.24",
+      "description": "Define the requirements for time synchronization across network devices.",
+      "covered": true,
+      "matching_category": "Timing Requirements",
+      "match_reason": "Time synchronization requirements are covered under Timing Requirements."
+    },
+    {
+      "id": "2.24.2",
+      "section": "2.24",
+      "description": "Outline the mechanisms for maintaining time accuracy in the network.",
+      "covered": true,
+      "matching_category": "Timing Requirements",
+      "match_reason": "Mechanisms for maintaining time accuracy relate to Timing Requirements."
+    },
+    {
+      "id": "2.25.1",
+      "section": "2.25",
+      "description": "Specify the requirements for network security measures, including encryption and authentication.",
+      "covered": true,
+      "matching_category": "Integrity",
+      "match_reason": "Network security measures, including encryption and authentication, relate to Integrity."
+    },
+    {
+      "id": "2.25.2",
+      "section": "2.25",
+      "description": "Detail the requirements for access control lists and their implementation.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Access control lists and their implementation are part of Error Handling."
+    },
+    {
+      "id": "2.26.1",
+      "section": "2.26",
+      "description": "Define the requirements for quality of service (QoS) parameters and their enforcement.",
+      "covered": true,
+      "matching_category": "Quality of Service",
+      "match_reason": "QoS parameters and their enforcement are directly addressed by Quality of Service."
+    },
+    {
+      "id": "2.26.2",
+      "section": "2.26",
+      "description": "Outline the mechanisms for monitoring and reporting QoS metrics.",
+      "covered": true,
+      "matching_category": "Quality of Service",
+      "match_reason": "Monitoring and reporting QoS metrics are part of Quality of Service."
+    },
+    {
+      "id": "2.27.1",
+      "section": "2.27",
+      "description": "Specify the requirements for network redundancy and failover mechanisms.",
+      "covered": true,
+      "matching_category": "Network Redundancy",
+      "match_reason": "Network redundancy and failover mechanisms are covered under Network Redundancy."
+    },
+    {
+      "id": "2.27.2",
+      "section": "2.27",
+      "description": "Detail the requirements for load balancing across network paths.",
+      "covered": true,
+      "matching_category": "Traffic Control",
+      "match_reason": "Load balancing across network paths relates to traffic management and control."
+    },
+    {
+      "id": "2.28.1",
+      "section": "2.28",
+      "description": "Define the requirements for network device firmware updates and management.",
+      "covered": true,
+      "matching_category": "Switch Configuration",
+      "match_reason": "Network device firmware updates and management can be associated with switch configuration and operational management."
+    },
+    {
+      "id": "2.28.2",
+      "section": "2.28",
+      "description": "Outline the procedures for validating firmware integrity before updates.",
+      "covered": true,
+      "matching_category": "Integrity",
+      "match_reason": "Validating firmware integrity before updates relates to ensuring data integrity."
+    },
+    {
+      "id": "2.29.1",
+      "section": "2.29",
+      "description": "Specify the requirements for user interface design for network management tools.",
+      "covered": false,
+      "matching_category": null,
+      "match_reason": "User interface design for network management tools is not explicitly covered by the extracted categories."
+    },
+    {
+      "id": "2.29.2",
+      "section": "2.29",
+      "description": "Detail the accessibility requirements for network management interfaces.",
+      "covered": false,
+      "matching_category": null,
+      "match_reason": "Accessibility requirements for network management interfaces are not explicitly covered by the extracted categories."
+    },
+    {
+      "id": "2.30.1",
+      "section": "2.30",
+      "description": "Define the requirements for performance testing of network components.",
+      "covered": true,
+      "matching_category": "End System Performance",
+      "match_reason": "Performance testing of network components relates to assessing end system performance."
+    },
+    {
+      "id": "2.30.2",
+      "section": "2.30",
+      "description": "Outline the procedures for benchmarking network performance under various loads.",
+      "covered": true,
+      "matching_category": "Latency Management",
+      "match_reason": "Benchmarking network performance under various loads relates to managing latency and performance metrics."
+    }
+  ],
+  "matched_requirements": [
+    {
+      "id": "2.1.1",
+      "section": "Physical Layer & Ethernet",
+      "description": "The physical layer shall comply with IEEE 802.3 standards.",
+      "covered": false,
+      "matching_category": null,
+      "match_reason": "No extracted category addresses compliance with IEEE 802.3 standards."
+    },
+    {
+      "id": "2.1.2",
+      "section": "Physical Layer & Ethernet",
+      "description": "The MAC address format shall include a group bit and a locally administered bit.",
+      "covered": true,
+      "matching_category": "MAC Addressing",
+      "match_reason": "The MAC address format is covered under MAC Addressing."
+    },
+    {
+      "id": "2.1.3",
+      "section": "Physical Layer & Ethernet",
+      "description": "The maximum frame size shall not exceed 1518 bytes.",
+      "covered": true,
+      "matching_category": "Frame Structure",
+      "match_reason": "Maximum frame size is related to frame structure."
+    },
+    {
+      "id": "2.1.4",
+      "section": "Physical Layer & Ethernet",
+      "description": "The minimum frame size shall be 64 bytes.",
+      "covered": true,
+      "matching_category": "Frame Structure",
+      "match_reason": "Minimum frame size is related to frame structure."
+    },
+    {
+      "id": "2.1.5",
+      "section": "Physical Layer & Ethernet",
+      "description": "The maximum payload size per Virtual Link (VL) shall be defined by the configuration.",
+      "covered": true,
+      "matching_category": "Virtual Link Configuration",
+      "match_reason": "Payload size per Virtual Link is covered under Virtual Link Configuration."
+    },
+    {
+      "id": "2.1.6",
+      "section": "Physical Layer & Ethernet",
+      "description": "The port speed shall be at least 100 Mbps.",
+      "covered": true,
+      "matching_category": "Switch Performance",
+      "match_reason": "Port speed relates to switch performance and operational capabilities."
+    },
+    {
+      "id": "2.2.1",
+      "section": "End System (transmit side)",
+      "description": "Traffic shaping shall be implemented to ensure compliance with the bandwidth allocation.",
+      "covered": true,
+      "matching_category": "Traffic Shaping",
+      "match_reason": "Traffic shaping is explicitly mentioned in the extracted categories."
+    },
+    {
+      "id": "2.2.2",
+      "section": "End System (transmit side)",
+      "description": "The Bandwidth Allocation Gap (BAG) shall be enforced for each Virtual Link.",
+      "covered": true,
+      "matching_category": "Traffic Policing",
+      "match_reason": "Enforcement of Bandwidth Allocation Gap relates to traffic policing."
+    },
+    {
+      "id": "2.2.3",
+      "section": "End System (transmit side)",
+      "description": "Sub-VL scheduling shall be implemented to manage traffic effectively.",
+      "covered": true,
+      "matching_category": "Sub-VL Scheduling",
+      "match_reason": "Sub-VL scheduling is explicitly mentioned in the extracted categories."
+    },
+    {
+      "id": "2.2.4",
+      "section": "End System (transmit side)",
+      "description": "The transmission of frames shall adhere to the defined timing constraints.",
+      "covered": true,
+      "matching_category": "Timing Requirements",
+      "match_reason": "Adherence to timing constraints is covered under timing requirements."
+    },
+    {
+      "id": "2.3.1",
+      "section": "End System (receive side)",
+      "description": "Frame filtering shall be performed to accept only relevant frames.",
+      "covered": true,
+      "matching_category": "Frame Filtering",
+      "match_reason": "Frame filtering is explicitly mentioned in the extracted categories."
+    },
+    {
+      "id": "2.3.2",
+      "section": "End System (receive side)",
+      "description": "Policing mechanisms shall be implemented to ensure compliance with bandwidth limits.",
+      "covered": true,
+      "matching_category": "Policing",
+      "match_reason": "Policing mechanisms are covered under the policing category."
+    },
+    {
+      "id": "2.3.3",
+      "section": "End System (receive side)",
+      "description": "Integrity checking shall be performed on received frames.",
+      "covered": true,
+      "matching_category": "Integrity",
+      "match_reason": "Integrity checking is covered under the integrity category."
+    },
+    {
+      "id": "2.3.4",
+      "section": "End System (receive side)",
+      "description": "Redundancy management shall be implemented to handle frame duplication.",
+      "covered": true,
+      "matching_category": "Redundancy Management",
+      "match_reason": "Redundancy management is explicitly mentioned in the extracted categories."
+    },
+    {
+      "id": "2.4.1",
+      "section": "Virtual Links",
+      "description": "Virtual Links shall be defined with specific bandwidth allocations.",
+      "covered": true,
+      "matching_category": "Virtual Link Configuration",
+      "match_reason": "Bandwidth allocations for Virtual Links are covered under Virtual Link Configuration."
+    },
+    {
+      "id": "2.4.2",
+      "section": "Virtual Links",
+      "description": "A single-source constraint shall be enforced for each Virtual Link.",
+      "covered": true,
+      "matching_category": "Virtual Link",
+      "match_reason": "Single-source constraint for Virtual Link is addressed by the Virtual Link category."
+    },
+    {
+      "id": "2.4.3",
+      "section": "Virtual Links",
+      "description": "Bandwidth allocation for each Virtual Link shall be documented in the configuration.",
+      "covered": true,
+      "matching_category": "bandwidth_allocation",
+      "match_reason": "Bandwidth allocation for Virtual Link is covered under bandwidth_allocation."
+    },
+    {
+      "id": "2.5.1",
+      "section": "Switching",
+      "description": "Switch filtering shall be implemented to direct frames to the appropriate output ports.",
+      "covered": true,
+      "matching_category": "Switch Behavior",
+      "match_reason": "Switch filtering for directing frames is covered under Switch Behavior."
+    },
+    {
+      "id": "2.5.2",
+      "section": "Switching",
+      "description": "Policing shall be applied to ensure frames do not exceed bandwidth limits.",
+      "covered": true,
+      "matching_category": "Traffic Policing",
+      "match_reason": "Policing to ensure frames do not exceed bandwidth limits is covered under Traffic Policing."
+    },
+    {
+      "id": "2.5.3",
+      "section": "Switching",
+      "description": "Frame forwarding shall be performed based on MAC addresses.",
+      "covered": true,
+      "matching_category": "MAC Addressing",
+      "match_reason": "Frame forwarding based on MAC addresses is covered under MAC Addressing."
+    },
+    {
+      "id": "2.5.4",
+      "section": "Switching",
+      "description": "Buffering shall be implemented to manage frame queuing.",
+      "covered": true,
+      "matching_category": "Switch Buffering",
+      "match_reason": "Buffering for managing frame queuing is covered under Switch Buffering."
+    },
+    {
+      "id": "2.5.5",
+      "section": "Switching",
+      "description": "Priority handling shall be implemented to manage frame transmission order.",
+      "covered": true,
+      "matching_category": "Sub-VL Queue Management",
+      "match_reason": "Priority handling for frame transmission order is covered under Sub-VL Queue Management."
+    },
+    {
+      "id": "2.5.6",
+      "section": "Switching",
+      "description": "Switch latency shall be bounded to ensure timely frame delivery.",
+      "covered": true,
+      "matching_category": "Latency",
+      "match_reason": "Switch latency bounds for timely frame delivery are covered under Latency."
+    },
+    {
+      "id": "2.6.1",
+      "section": "Frame format",
+      "description": "The MAC addressing format shall comply with IEEE 802 standards.",
+      "covered": true,
+      "matching_category": "MAC Addressing",
+      "match_reason": "Compliance with IEEE 802 standards for MAC addressing is covered under MAC Addressing."
+    },
+    {
+      "id": "2.6.2",
+      "section": "Frame format",
+      "description": "IP/UDP encapsulation shall be used for payload transmission.",
+      "covered": true,
+      "matching_category": "IP_Layer_Requirements",
+      "match_reason": "IP/UDP encapsulation for payload transmission is covered under IP Layer Requirements."
+    },
+    {
+      "id": "2.6.3",
+      "section": "Frame format",
+      "description": "The payload structure shall be defined according to the application requirements.",
+      "covered": true,
+      "matching_category": "ethernet_payload",
+      "match_reason": "Payload structure defined according to application requirements is covered under ethernet_payload."
+    },
+    {
+      "id": "2.7.1",
+      "section": "Network configuration",
+      "description": "OPS files shall be used for network configuration.",
+      "covered": true,
+      "matching_category": "Switch Configuration",
+      "match_reason": "OPS files for network configuration are covered under Switch Configuration."
+    },
+    {
+      "id": "2.7.2",
+      "section": "Network configuration",
+      "description": "Switch modes shall be configurable to meet operational requirements.",
+      "covered": true,
+      "matching_category": "Switch Operating Modes",
+      "match_reason": "Configurable switch modes to meet operational requirements are covered under Switch Operating Modes."
+    },
+    {
+      "id": "2.7.3",
+      "section": "Network configuration",
+      "description": "Port configuration shall be documented and adhered to.",
+      "covered": true,
+      "matching_category": "Switch Port Configuration",
+      "match_reason": "Documentation and adherence to port configuration is covered under Switch Port Configuration."
+    },
+    {
+      "id": "2.8.1",
+      "section": "Quality of Service",
+      "description": "Latency guarantees shall be defined for each Virtual Link.",
+      "covered": true,
+      "matching_category": "Latency Management",
+      "match_reason": "Latency guarantees for each Virtual Link are covered under Latency Management."
+    },
+    {
+      "id": "2.8.2",
+      "section": "Quality of Service",
+      "description": "Jitter bounds shall be established and maintained.",
+      "covered": true,
+      "matching_category": "Jitter",
+      "match_reason": "Jitter bounds are explicitly mentioned in the Jitter category."
+    },
+    {
+      "id": "2.8.3",
+      "section": "Quality of Service",
+      "description": "Fault isolation mechanisms shall be implemented to ensure system reliability.",
+      "covered": true,
+      "matching_category": "Redundancy",
+      "match_reason": "Fault isolation mechanisms relate to system reliability and redundancy."
+    },
+    {
+      "id": "2.9.1",
+      "section": "IP/TCP optional services",
+      "description": "IP addressing shall be configured according to the network requirements.",
+      "covered": true,
+      "matching_category": "IP_Addressing",
+      "match_reason": "IP addressing configuration is directly addressed in the IP_Addressing category."
+    },
+    {
+      "id": "2.9.2",
+      "section": "IP/TCP optional services",
+      "description": "ICMP services shall be supported for network diagnostics.",
+      "covered": true,
+      "matching_category": "IP_Layer_Requirements",
+      "match_reason": "ICMP services for diagnostics relate to network layer requirements."
+    },
+    {
+      "id": "2.9.3",
+      "section": "IP/TCP optional services",
+      "description": "TCP connections shall be established according to the defined protocols.",
+      "covered": true,
+      "matching_category": "IP_Layer_Requirements",
+      "match_reason": "TCP connections are part of the network layer protocols."
+    },
+    {
+      "id": "2.10.1",
+      "section": "Redundancy",
+      "description": "Dual-lane redundancy shall be implemented for critical data paths.",
+      "covered": true,
+      "matching_category": "Queuing Service",
+      "match_reason": "Queuing mechanisms for frame transmission are covered under queuing service."
+    },
+    {
+      "id": "2.10.2",
+      "section": "Redundancy",
+      "description": "Sequence numbering shall be used to track frame order.",
+      "covered": false,
+      "matching_category": null,
+      "match_reason": "Sampling rates for data acquisition are not explicitly covered."
+    },
+    {
+      "id": "2.10.3",
+      "section": "Redundancy",
+      "description": "First-valid-wins policy shall be applied for frame selection.",
+      "covered": true,
+      "matching_category": "Frame Filtering",
+      "match_reason": "First-valid-wins policy relates to frame selection and filtering."
+    },
+    {
+      "id": "2.11.1",
+      "section": "Communication ports",
+      "description": "Queuing mechanisms shall be implemented for frame transmission.",
+      "covered": true,
+      "matching_category": "Queuing Service",
+      "match_reason": "Queuing mechanisms for frame transmission are covered under queuing service."
+    },
+    {
+      "id": "2.11.2",
+      "section": "Communication ports",
+      "description": "Sampling rates shall be defined for data acquisition.",
+      "covered": false,
+      "matching_category": null,
+      "match_reason": "Sampling rates for data acquisition are not explicitly covered."
+    },
+    {
+      "id": "2.11.3",
+      "section": "Communication ports",
+      "description": "Service Access Point (SAP) ports shall be configured according to the application.",
+      "covered": true,
+      "matching_category": "Switch Port Configuration",
+      "match_reason": "Configuration of SAP ports relates to switch port configuration."
+    },
+    {
+      "id": "2.12.1",
+      "section": "Error handling",
+      "description": "Error reporting mechanisms shall be implemented to log and report faults.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Error reporting mechanisms are part of error handling."
+    },
+    {
+      "id": "2.12.2",
+      "section": "Error handling",
+      "description": "Frame integrity errors shall be detected and reported.",
+      "covered": true,
+      "matching_category": "Integrity",
+      "match_reason": "Frame integrity errors relate to data integrity checks."
+    },
+    {
+      "id": "2.12.3",
+      "section": "Error handling",
+      "description": "Redundant paths shall be monitored for failure detection.",
+      "covered": true,
+      "matching_category": "Redundancy Management",
+      "match_reason": "Monitoring redundant paths relates to redundancy management."
+    },
+    {
+      "id": "2.12.4",
+      "section": "Error handling",
+      "description": "Error recovery procedures shall be defined and implemented.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Error recovery procedures are part of error handling."
+    },
+    {
+      "id": "2.12.5",
+      "section": "Error handling",
+      "description": "The system shall provide mechanisms for graceful degradation in case of errors.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Graceful degradation mechanisms relate to error handling."
+    },
+    {
+      "id": "2.13.1",
+      "section": "2.13",
+      "description": "Define the bit-field structure for MAC addresses, including reserved bits and alignment requirements.",
+      "covered": true,
+      "matching_category": "MAC Addressing",
+      "match_reason": "Bit-field structure for MAC addresses is covered under MAC Addressing."
+    },
+    {
+      "id": "2.13.2",
+      "section": "2.13",
+      "description": "Specify the format for MAC address assignment and management within the network.",
+      "covered": true,
+      "matching_category": "MAC Addressing",
+      "match_reason": "Format for MAC address assignment relates to MAC Addressing."
+    },
+    {
+      "id": "2.14.1",
+      "section": "2.14",
+      "description": "Detail the encapsulation format for IP packets within UDP, including header fields and payload structure.",
+      "covered": true,
+      "matching_category": "IP_Layer_Requirements",
+      "match_reason": "Encapsulation format for IP packets is covered under IP Layer Requirements."
+    },
+    {
+      "id": "2.14.2",
+      "section": "2.14",
+      "description": "Outline the requirements for handling fragmented IP packets in UDP encapsulation.",
+      "covered": true,
+      "matching_category": "IP_Layer_Requirements",
+      "match_reason": "Handling fragmented IP packets relates to IP Layer Requirements."
+    },
+    {
+      "id": "2.15.1",
+      "section": "2.15",
+      "description": "Define the constraints for policing algorithms, including rate limits and burst sizes.",
+      "covered": true,
+      "matching_category": "Traffic Policing",
+      "match_reason": "Policing algorithm constraints are covered under Traffic Policing."
+    },
+    {
+      "id": "2.15.2",
+      "section": "2.15",
+      "description": "Specify the behavior of the policing algorithm under various traffic conditions.",
+      "covered": true,
+      "matching_category": "Traffic Policing",
+      "match_reason": "Behavior of policing algorithms under traffic conditions relates to Traffic Policing."
+    },
+    {
+      "id": "2.16.1",
+      "section": "2.16",
+      "description": "Detail the requirements for switch configuration tables, including maximum entries and update frequency.",
+      "covered": true,
+      "matching_category": "Switch Configuration",
+      "match_reason": "Requirements for switch configuration tables are covered under Switch Configuration."
+    },
+    {
+      "id": "2.16.2",
+      "section": "2.16",
+      "description": "Outline the format and fields required in switch configuration tables for VLAN management.",
+      "covered": true,
+      "matching_category": "Switch Configuration",
+      "match_reason": "Format and fields for VLAN management relate to Switch Configuration."
+    },
+    {
+      "id": "2.17.1",
+      "section": "2.17",
+      "description": "Define the queuing mechanisms for communication ports, including FIFO and priority queuing rules.",
+      "covered": true,
+      "matching_category": "Queuing Service",
+      "match_reason": "Queuing mechanisms for communication ports are covered under Queuing Service."
+    },
+    {
+      "id": "2.17.2",
+      "section": "2.17",
+      "description": "Specify the sampling rates for traffic monitoring on communication ports.",
+      "covered": true,
+      "matching_category": "Traffic Monitoring",
+      "match_reason": "Sampling rates for traffic monitoring relate to Traffic Control."
+    },
+    {
+      "id": "2.18.1",
+      "section": "2.18",
+      "description": "Outline the optional TCP service constraints, including maximum segment size and window scaling.",
+      "covered": true,
+      "matching_category": "IP_Layer_Requirements",
+      "match_reason": "TCP service constraints are related to IP Layer Requirements."
+    },
+    {
+      "id": "2.18.2",
+      "section": "2.18",
+      "description": "Define the requirements for TCP connection establishment and teardown procedures.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "TCP connection establishment and teardown procedures relate to Error Handling."
+    },
+    {
+      "id": "2.19.1",
+      "section": "2.19",
+      "description": "Specify the error-handling mechanisms for packet loss, including retransmission strategies.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Error-handling mechanisms for packet loss are covered under Error Handling."
+    },
+    {
+      "id": "2.19.2",
+      "section": "2.19",
+      "description": "Detail the requirements for error detection and correction in transmitted packets.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Requirements for error detection and correction relate to Error Handling."
+    },
+    {
+      "id": "2.20.1",
+      "section": "2.20",
+      "description": "Define the scheduling details for Sub-VLs, including timing and priority rules.",
+      "covered": true,
+      "matching_category": "Sub-VL Scheduling",
+      "match_reason": "Scheduling details for Sub-VLs are covered under Sub-VL Scheduling."
+    },
+    {
+      "id": "2.20.2",
+      "section": "2.20",
+      "description": "Outline the requirements for bandwidth allocation among Sub-VLs.",
+      "covered": true,
+      "matching_category": "bandwidth_allocation",
+      "match_reason": "Bandwidth allocation requirements are directly addressed by the bandwidth_allocation category."
+    },
+    {
+      "id": "2.21.1",
+      "section": "2.21",
+      "description": "Specify the requirements for network management interfaces, including SNMP support.",
+      "covered": true,
+      "matching_category": "Switch Configuration",
+      "match_reason": "Network management interfaces, including SNMP support, relate to Switch Configuration."
+    },
+    {
+      "id": "2.21.2",
+      "section": "2.21",
+      "description": "Detail the logging and monitoring requirements for network management.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Logging and monitoring requirements for network management can be associated with Error Handling."
+    },
+    {
+      "id": "2.22.1",
+      "section": "2.22",
+      "description": "Define the requirements for multicast traffic handling, including group management.",
+      "covered": true,
+      "matching_category": "Switch Functionality",
+      "match_reason": "Multicast traffic handling requirements are related to Switch Functionality."
+    },
+    {
+      "id": "2.22.2",
+      "section": "2.22",
+      "description": "Outline the constraints for multicast address allocation and usage.",
+      "covered": true,
+      "matching_category": "addressing",
+      "match_reason": "Constraints for multicast address allocation and usage are covered under addressing."
+    },
+    {
+      "id": "2.23.1",
+      "section": "2.23",
+      "description": "Specify the requirements for link layer discovery protocols.",
+      "covered": true,
+      "matching_category": "Switch Behavior",
+      "match_reason": "Link layer discovery protocols are part of Switch Behavior."
+    },
+    {
+      "id": "2.23.2",
+      "section": "2.23",
+      "description": "Detail the requirements for network topology discovery and reporting.",
+      "covered": true,
+      "matching_category": "Switch Operational Modes",
+      "match_reason": "Network topology discovery and reporting relate to Switch Operational Modes."
+    },
+    {
+      "id": "2.24.1",
+      "section": "2.24",
+      "description": "Define the requirements for time synchronization across network devices.",
+      "covered": true,
+      "matching_category": "Timing Requirements",
+      "match_reason": "Time synchronization requirements are covered under Timing Requirements."
+    },
+    {
+      "id": "2.24.2",
+      "section": "2.24",
+      "description": "Outline the mechanisms for maintaining time accuracy in the network.",
+      "covered": true,
+      "matching_category": "Timing Requirements",
+      "match_reason": "Mechanisms for maintaining time accuracy relate to Timing Requirements."
+    },
+    {
+      "id": "2.25.1",
+      "section": "2.25",
+      "description": "Specify the requirements for network security measures, including encryption and authentication.",
+      "covered": true,
+      "matching_category": "Integrity",
+      "match_reason": "Network security measures, including encryption and authentication, relate to Integrity."
+    },
+    {
+      "id": "2.25.2",
+      "section": "2.25",
+      "description": "Detail the requirements for access control lists and their implementation.",
+      "covered": true,
+      "matching_category": "Error Handling",
+      "match_reason": "Access control lists and their implementation are part of Error Handling."
+    },
+    {
+      "id": "2.26.1",
+      "section": "2.26",
+      "description": "Define the requirements for quality of service (QoS) parameters and their enforcement.",
+      "covered": true,
+      "matching_category": "Quality of Service",
+      "match_reason": "QoS parameters and their enforcement are directly addressed by Quality of Service."
+    },
+    {
+      "id": "2.26.2",
+      "section": "2.26",
+      "description": "Outline the mechanisms for monitoring and reporting QoS metrics.",
+      "covered": true,
+      "matching_category": "Quality of Service",
+      "match_reason": "Monitoring and reporting QoS metrics are part of Quality of Service."
+    },
+    {
+      "id": "2.27.1",
+      "section": "2.27",
+      "description": "Specify the requirements for network redundancy and failover mechanisms.",
+      "covered": true,
+      "matching_category": "Network Redundancy",
+      "match_reason": "Network redundancy and failover mechanisms are covered under Network Redundancy."
+    },
+    {
+      "id": "2.27.2",
+      "section": "2.27",
+      "description": "Detail the requirements for load balancing across network paths.",
+      "covered": true,
+      "matching_category": "Traffic Control",
+      "match_reason": "Load balancing across network paths relates to traffic management and control."
+    },
+    {
+      "id": "2.28.1",
+      "section": "2.28",
+      "description": "Define the requirements for network device firmware updates and management.",
+      "covered": true,
+      "matching_category": "Switch Configuration",
+      "match_reason": "Network device firmware updates and management can be associated with switch configuration and operational management."
+    },
+    {
+      "id": "2.28.2",
+      "section": "2.28",
+      "description": "Outline the procedures for validating firmware integrity before updates.",
+      "covered": true,
+      "matching_category": "Integrity",
+      "match_reason": "Validating firmware integrity before updates relates to ensuring data integrity."
+    },
+    {
+      "id": "2.29.1",
+      "section": "2.29",
+      "description": "Specify the requirements for user interface design for network management tools.",
+      "covered": false,
+      "matching_category": null,
+      "match_reason": "User interface design for network management tools is not explicitly covered by the extracted categories."
+    },
+    {
+      "id": "2.29.2",
+      "section": "2.29",
+      "description": "Detail the accessibility requirements for network management interfaces.",
+      "covered": false,
+      "matching_category": null,
+      "match_reason": "Accessibility requirements for network management interfaces are not explicitly covered by the extracted categories."
+    },
+    {
+      "id": "2.30.1",
+      "section": "2.30",
+      "description": "Define the requirements for performance testing of network components.",
+      "covered": true,
+      "matching_category": "End System Performance",
+      "match_reason": "Performance testing of network components relates to assessing end system performance."
+    },
+    {
+      "id": "2.30.2",
+      "section": "2.30",
+      "description": "Outline the procedures for benchmarking network performance under various loads.",
+      "covered": true,
+      "matching_category": "Latency Management",
+      "match_reason": "Benchmarking network performance under various loads relates to managing latency and performance metrics."
+    }
+  ],
+  "metric": "Rule Completeness",
+  "formula": "#spec_requirements_covered / #total_spec_requirements",
+  "total_spec_requirements": 82,
+  "covered_by_extracted_rules": 77,
+  "not_covered": 5,
+  "completeness": 0.939,
+  "completeness_percent": "93.9%",
+  "model_used": "gpt-4o-mini",
+  "extracted_rule_categories": 72
+}
