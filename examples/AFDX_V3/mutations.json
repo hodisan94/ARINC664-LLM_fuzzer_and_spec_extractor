@@ -2,9 +2,9 @@
   "vlId": 3001,
   "prob": 0.0,
   "payload_delta_bytes": -416,
-  "timing_jitter_ms": 0,
+  "timing_jitter_ms": 11,
   "mac_mutation": "none",
   "is_extreme_test": true,
   "sequence_number_override": 0,
-  "dest_mac_mutation": "corrupt_prefix"
+  "dest_mac_mutation": "none"
 }
