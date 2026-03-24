@@ -1,4 +1,0 @@
-iteration,timestamp,duration,fuzzer_type,target_vl,protocol_rule,test_mode,strategy,test_cases,custom_mutation,num_frames,simulation_success,reward,frames_received,frames_dropped_policing,frames_forwarded,policing_rate,forward_rate,bugs_found
-0,2026-03-21T17:05:35.561669,0.001032,RANDOM_BASELINE,2001,Redundancy Management.first_win_redundancy_delivery,custom_fallback,conformance,,,20,False,0.0,0,0,0,0.0,0.0,False
-1,2026-03-21T17:05:35.564688,0.000742,RANDOM_BASELINE,2001,ICMP.generate_icmp_destination_unreachable,custom,edge-case,,,20,False,0.0,0,0,0,0.0,0.0,False
-2,2026-03-21T17:05:35.566338,0.000553,RANDOM_BASELINE,3002,frame_delivery_distribution,custom,conformance,,,20,False,0.0,0,0,0,0.0,0.0,False

@@ -14,6 +14,7 @@ The LLM has freedom to choose predefined test cases OR propose custom mutations.
 
 import json
 import os
+import re
 import pandas as pd
 from typing import Dict, List, Any, Optional
 from pathlib import Path
@@ -31,6 +32,12 @@ try:
     OPENAI_AVAILABLE = True
 except ImportError:
     OPENAI_AVAILABLE = False
+
+try:
+    import anthropic
+    ANTHROPIC_AVAILABLE = True
+except ImportError:
+    ANTHROPIC_AVAILABLE = False
 
 
 class LLMStrategyPlanner:
@@ -73,13 +80,32 @@ class LLMStrategyPlanner:
         if not OPENAI_AVAILABLE:
             raise ImportError("openai package required. Install with: pip install openai")
         
-        # Get API key
+        # Primary: OpenAI  Fallback: Gemini via OpenAI-compatible API
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
-        if not self.api_key:
-            raise ValueError("OpenAI API key required. Set OPENAI_API_KEY env variable or pass api_key parameter.")
-        
         self.model = model
-        self.client = OpenAI(api_key=self.api_key)
+        self.client = OpenAI(api_key=self.api_key) if self.api_key else None
+
+        gemini_key = os.getenv("GEMINI_API_KEY")
+        if gemini_key:
+            self.gemini_client = OpenAI(
+                api_key=gemini_key,
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+            )
+            self.gemini_model = "gemini-2.0-flash"
+        else:
+            self.gemini_client = None
+            self.gemini_model = None
+
+        claude_key = os.getenv("CLAUDE_API_KEY")
+        if claude_key and ANTHROPIC_AVAILABLE:
+            self.claude_client = anthropic.Anthropic(api_key=claude_key)
+            self.claude_model = "claude-sonnet-4-20250514"
+        else:
+            self.claude_client = None
+            self.claude_model = None
+
+        if not self.client and not self.gemini_client and not self.claude_client:
+            raise ValueError("Set OPENAI_API_KEY, GEMINI_API_KEY, or CLAUDE_API_KEY.")
         
         # Load spec rules and test cases
         self.spec_loader = SpecificationLoader(spec_rules_path)
@@ -87,7 +113,92 @@ class LLMStrategyPlanner:
         
         self.spec_rules = self.spec_loader.get_all_rules()
         self.test_cases = self.test_case_loader.get_all_test_cases()
+
+        # Build rule -> spec-category lookup for category-aware coverage
+        self._rule_to_cat, self._cat_to_rules = self._build_category_maps(spec_rules_path)
+        self._all_known_rules = sorted(set(self.spec_rules.keys()) | set(self.test_cases.keys()))
     
+    # ------------------------------------------------------------------
+    # Category mapping helpers
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _norm(s: str) -> str:
+        s = s.lower().replace(' ', '_').replace('.', '_').replace('-', '_')
+        s = re.sub(r'_+', '_', s)
+        return s.strip('_')
+
+    def _build_category_maps(self, spec_rules_path: str):
+        """Build bidirectional rule<->category maps from spec_rules_filtered."""
+        rule_to_cat: Dict[str, str] = {}
+        cat_to_rules: Dict[str, List[str]] = {}
+        try:
+            with open(spec_rules_path) as f:
+                spec = json.load(f)
+        except Exception:
+            return rule_to_cat, cat_to_rules
+
+        for cat, content in spec.items():
+            cat_to_rules[cat] = []
+            rule_to_cat[self._norm(cat)] = cat
+            if isinstance(content, dict):
+                for sub in content.keys():
+                    rule_to_cat[self._norm(sub)] = cat
+                    cat_to_rules[cat].append(sub)
+        return rule_to_cat, cat_to_rules
+
+    def rule_category(self, rule_name: str) -> Optional[str]:
+        """Map a rule name to its spec category (or None)."""
+        norm = self._norm(rule_name)
+        if norm in self._rule_to_cat:
+            return self._rule_to_cat[norm]
+        parts = rule_name.split('.')
+        if len(parts) > 1:
+            for part in parts:
+                n = self._norm(part)
+                if n in self._rule_to_cat:
+                    return self._rule_to_cat[n]
+        # Prefix matching against category names (mirrors external analysis)
+        for cat in self._cat_to_rules:
+            nc = self._norm(cat)
+            if norm == nc or norm.startswith(nc + '_') or nc.startswith(norm + '_'):
+                return cat
+        return None
+
+    def category_coverage_pct(self, history: Optional[pd.DataFrame]) -> float:
+        """Compute spec-category coverage percentage from history."""
+        if history is None or history.empty or 'protocol_rule' not in history.columns:
+            return 0.0
+        cats = set()
+        for rule in history['protocol_rule'].dropna().unique():
+            cat = self.rule_category(str(rule))
+            if cat:
+                cats.add(cat)
+        total = len(self._cat_to_rules) if self._cat_to_rules else 1
+        return len(cats) / total * 100
+
+    def _normalize_to_known_rule(self, raw: str) -> str:
+        """Find the closest known rule for a free-form LLM rule name."""
+        if raw in self._all_known_rules:
+            return raw
+        norm = self._norm(raw)
+        for known in self._all_known_rules:
+            if self._norm(known) == norm:
+                return known
+        for known in self._all_known_rules:
+            kn = self._norm(known)
+            if norm.startswith(kn) or kn.startswith(norm):
+                return known
+        best, best_score = raw, 0
+        raw_tokens = set(norm.split('_'))
+        for known in self._all_known_rules:
+            kn_tokens = set(self._norm(known).split('_'))
+            overlap = len(raw_tokens & kn_tokens)
+            if overlap > best_score:
+                best_score = overlap
+                best = known
+        return best if best_score >= 2 else raw
+
+    # ------------------------------------------------------------------
     def plan_next_iteration(
         self,
         history: Optional[pd.DataFrame] = None,
@@ -137,23 +248,122 @@ class LLMStrategyPlanner:
             coverage_stats=coverage_stats
         )
         
-        llm_response = self._query_llm(prompt)
-        strategy = self._parse_strategy(llm_response)
-        strategy["llm_raw_response"] = llm_response
-        self._validate_strategy(strategy, system_config)
-        
+        # Retry once on LLM failure
+        for attempt in range(2):
+            try:
+                llm_response = self._query_llm(prompt)
+                strategy = self._parse_strategy(llm_response)
+                strategy["llm_raw_response"] = llm_response
+                self._validate_strategy(strategy, system_config)
+                break
+            except (ValueError, Exception) as e:
+                if attempt == 0:
+                    print(f"  [RETRY] LLM attempt 1 failed: {e}")
+                    continue
+                raise
+
+        # Normalize protocol_rule to a known rule name
+        raw_mt = strategy.get("mutation_type", "")
+        normalized = self._normalize_to_known_rule(raw_mt)
+        if normalized != raw_mt:
+            print(f"  [NORM] '{raw_mt}' -> '{normalized}'")
+        strategy["protocol_rule"] = normalized
+
+        # Dedup: redirect if the rule was already tested OR its category
+        # is already covered (when uncovered categories still remain)
+        tested_rules = set()
+        covered_cats = set()
+        if history is not None and not history.empty and "protocol_rule" in history.columns:
+            tested_rules = set(history["protocol_rule"].dropna().unique())
+            for r in tested_rules:
+                for c in self._all_categories_for_rule(str(r)):
+                    covered_cats.add(c)
+
+        uncovered_cats_raw = coverage_stats.get("uncovered_categories", [])
+        uncovered_cats_norm = {self._norm(c) for c in uncovered_cats_raw}
+        uncovered_cats = [c for c in uncovered_cats_raw if self._norm(c) not in covered_cats]
+        rule_cats = self._all_categories_for_rule(normalized)
+        rule_already_tested = normalized in tested_rules
+        category_already_covered = bool(rule_cats & covered_cats) if rule_cats else False
+        category_unmapped = len(rule_cats) == 0
+
+        needs_redirect = (rule_already_tested or category_already_covered or category_unmapped) and uncovered_cats
+        if needs_redirect:
+            redirect = self._pick_untested_rule_from_category(
+                uncovered_cats, tested_rules, strategy, system_config)
+            if redirect:
+                if rule_already_tested:
+                    reason = "rule tested"
+                elif category_unmapped:
+                    reason = "unmapped category"
+                else:
+                    reason = f"category '{rule_cats}' covered"
+                print(f"  [DEDUP] '{normalized}' ({reason}) -> '{redirect}'")
+                strategy["protocol_rule"] = redirect
+                strategy["mutation_type"] = redirect
+                tc_data = self.test_cases.get(redirect, {})
+                cases = tc_data.get("test_cases", [])
+                if cases:
+                    strategy["test_cases"] = ["TC0"]
+                    strategy["test_mode"] = "predefined"
+
         return strategy
+
+    def _all_categories_for_rule(self, rule_name: str) -> set:
+        """Get ALL categories a rule maps to, normalized for dedup comparison."""
+        cats = set()
+        norm = self._norm(rule_name)
+
+        if norm in self._rule_to_cat:
+            cats.add(self._norm(self._rule_to_cat[norm]))
+
+        parts = rule_name.split('.')
+        if len(parts) > 1:
+            for part in parts:
+                n = self._norm(part)
+                if n in self._rule_to_cat:
+                    cats.add(self._norm(self._rule_to_cat[n]))
+
+        for cat in self._cat_to_rules:
+            nc = self._norm(cat)
+            if norm == nc or norm.startswith(nc + '_') or nc.startswith(norm + '_'):
+                cats.add(nc)
+
+        return cats
+
+    def _pick_untested_rule_from_category(
+        self, uncovered_cats, tested_rules, strategy, system_config
+    ) -> Optional[str]:
+        """Pick an untested rule from the first uncovered category that has TCs."""
+        for cat in uncovered_cats:
+            sub_rules = self._cat_to_rules.get(cat, [])
+            # Try exact sub-rule name
+            for sub in sub_rules:
+                if sub in self.test_cases and sub not in tested_rules:
+                    return sub
+            # Try dotted format: category.sub_rule (common in test_cases.json)
+            norm_cat = self._norm(cat)
+            for sub in sub_rules:
+                dotted = f"{cat}.{sub}"
+                if dotted in self.test_cases and dotted not in tested_rules:
+                    return dotted
+            # Try any test_case key containing the category name
+            for rule_name in self._all_known_rules:
+                if rule_name in tested_rules:
+                    continue
+                rn = self._norm(rule_name)
+                if rn == norm_cat or rn.startswith(norm_cat + '_') or norm_cat in rn.split('_'):
+                    return rule_name
+        # Fallback: any untested known rule
+        for rule_name in self._all_known_rules:
+            if rule_name not in tested_rules:
+                return rule_name
+        return None
     
     def _compute_coverage_stats(self, history: Optional[pd.DataFrame]) -> Dict[str, Any]:
-        """
-        Compute which rules have been covered vs uncovered.
-        
-        Uses the full spec_rules list as the universe, and checks which
-        protocol_rule / mutation_type values appear in history.
-        """
-        all_rule_names = sorted(self.spec_rules.keys())
-        all_tc_names = sorted(self.test_cases.keys())
-        all_known = set(all_rule_names) | set(all_tc_names)
+        """Compute rule-level AND category-level coverage from history."""
+        all_known = set(self.spec_rules.keys()) | set(self.test_cases.keys())
+        all_categories = sorted(self._cat_to_rules.keys())
         
         if history is None or len(history) == 0:
             return {
@@ -161,10 +371,14 @@ class LLMStrategyPlanner:
                 "uncovered_rules": sorted(all_known),
                 "mutation_type_counts": {},
                 "total_rules": len(all_known),
+                "covered_categories": [],
+                "uncovered_categories": all_categories,
+                "category_coverage_pct": 0.0,
+                "cat_to_rules": self._cat_to_rules,
             }
         
         seen_rules = set()
-        mt_counts = {}
+        mt_counts: Dict[str, int] = {}
         
         if "protocol_rule" in history.columns:
             for val in history["protocol_rule"].dropna().unique():
@@ -177,12 +391,24 @@ class LLMStrategyPlanner:
         
         covered = sorted(seen_rules & all_known)
         uncovered = sorted(all_known - seen_rules)
+
+        covered_cats = set()
+        for rule in seen_rules:
+            cat = self.rule_category(rule)
+            if cat:
+                covered_cats.add(cat)
+        uncovered_cats = sorted(set(all_categories) - covered_cats)
+        cat_pct = len(covered_cats) / len(all_categories) * 100 if all_categories else 0.0
         
         return {
             "covered_rules": covered,
             "uncovered_rules": uncovered,
             "mutation_type_counts": mt_counts,
             "total_rules": len(all_known),
+            "covered_categories": sorted(covered_cats),
+            "uncovered_categories": uncovered_cats,
+            "category_coverage_pct": cat_pct,
+            "cat_to_rules": self._cat_to_rules,
         }
     
     def _prepare_recent_results(
@@ -190,83 +416,115 @@ class LLMStrategyPlanner:
         history: Optional[pd.DataFrame],
         n: int = 10
     ) -> List[Dict[str, Any]]:
-        """
-        Prepare recent iteration results for prompt.
-        
-        Args:
-            history: DataFrame of previous iterations
-            n: Number of recent iterations to include
-            
-        Returns:
-            List of result dictionaries
-        """
+        """Prepare recent results with metrics and category info for the prompt."""
         if history is None or len(history) == 0:
             return []
         
         recent = history.tail(n)
         results = []
         
+        def _safe_int(val, default=0):
+            try:
+                return int(val)
+            except (ValueError, TypeError):
+                return default
+
+        def _safe_float(val, default=0.0):
+            try:
+                v = float(val)
+                return v if v == v else default  # NaN check
+            except (ValueError, TypeError):
+                return default
+
         for _, row in recent.iterrows():
+            rule = str(row.get("protocol_rule", ""))
+            cat = self.rule_category(rule)
             results.append({
-                "iteration": int(row.get("iteration", 0)),
-                "target_vl": int(row.get("target_vl", 0)),
-                "protocol_rule": str(row.get("protocol_rule", "")),
+                "iteration": _safe_int(row.get("iteration", 0)),
+                "target_vl": _safe_int(row.get("target_vl", 0)),
+                "protocol_rule": rule,
                 "strategy": str(row.get("strategy", "")),
-                "reward": float(row.get("reward", 0.0)),
+                "reward": _safe_float(row.get("reward", 0.0)),
                 "bugs_found": bool(row.get("bugs_found", False)),
-                "recommendation": str(row.get("recommendation", ""))
+                "recommendation": str(row.get("recommendation", "")),
+                "policing_rate": _safe_float(row.get("policing_rate", 0.0)),
+                "es_rejection_rate": _safe_float(row.get("es_rejection_rate", 0.0)),
+                "frames_dropped_mac_error": _safe_int(row.get("frames_dropped_mac_error", 0)),
+                "spec_category": cat or "unmapped",
             })
         
         return results
     
     def _query_llm(self, prompt: str) -> str:
-        """
-        Query LLM with prompt.
-        
-        Args:
-            prompt: Complete fuzzing prompt
-            
-        Returns:
-            LLM response text
-            
-        Raises:
-            Exception: If LLM query fails
-        """
-        try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are an expert protocol fuzzing agent. Respond ONLY with valid JSON."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
-                # temperature=0.7 removed - some models don't support non-default values
-                max_completion_tokens=8000,   # Large limit for reasoning models (gpt-5 uses ~2000 reasoning + JSON)
-                response_format={"type": "json_object"}  # Force JSON output
-            )
-            
-            # Debug: print full response
-            print(f"[DEBUG] Finish reason: {response.choices[0].finish_reason}")
-            print(f"[DEBUG] Refusal: {response.choices[0].message.refusal}")
-            
-            content = response.choices[0].message.content
-            
-            print(f"[DEBUG] Content ({len(content) if content else 0} chars):")
-            if content:
-                print(content[:500])
-            else:
-                print("  EMPTY RESPONSE!")
-                print(f"[DEBUG] Full response object: {response}")
-            
-            return content
-            
-        except Exception as e:
-            raise Exception(f"LLM query failed: {str(e)}")
+        """Query LLM with prompt, trying OpenAI -> Gemini -> Claude."""
+        sys_msg = "You are an expert protocol fuzzing agent. Respond ONLY with valid JSON."
+        messages = [
+            {"role": "system", "content": sys_msg},
+            {"role": "user", "content": prompt}
+        ]
+
+        # Try OpenAI-compatible backends first
+        openai_backends = []
+        if self.client:
+            openai_backends.append(("OpenAI", self.client, self.model, {
+                "max_completion_tokens": 8000,
+                "response_format": {"type": "json_object"}
+            }))
+        if self.gemini_client:
+            openai_backends.append(("Gemini", self.gemini_client, self.gemini_model, {}))
+
+        last_err = None
+        for name, client, model, extra_kwargs in openai_backends:
+            try:
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=messages,
+                    **extra_kwargs
+                )
+                content = response.choices[0].message.content
+                print(f"[{name}] {model} -> {len(content) if content else 0} chars")
+                if content:
+                    return content
+            except Exception as e:
+                last_err = e
+                print(f"[{name}] failed: {e}")
+
+        # Try Claude as last resort
+        if self.claude_client:
+            try:
+                response = self.claude_client.messages.create(
+                    model=self.claude_model,
+                    max_tokens=4096,
+                    system=sys_msg + " Do NOT wrap your JSON in markdown code blocks.",
+                    messages=[{"role": "user", "content": prompt}]
+                )
+                content = response.content[0].text
+                print(f"[Claude] {self.claude_model} -> {len(content) if content else 0} chars")
+                if content:
+                    content = self._extract_json(content)
+                    return content
+            except Exception as e:
+                last_err = e
+                print(f"[Claude] failed: {e}")
+
+        raise Exception(f"All LLM backends failed. Last error: {last_err}")
+
+    @staticmethod
+    def _extract_json(text: str) -> str:
+        """Extract JSON from text that may be wrapped in markdown code blocks."""
+        text = text.strip()
+        if text.startswith('{'):
+            return text
+        # Strip ```json ... ``` blocks
+        m = re.search(r'```(?:json)?\s*\n?(.*?)\n?```', text, re.DOTALL)
+        if m:
+            return m.group(1).strip()
+        # Find first { ... last }
+        start = text.find('{')
+        end = text.rfind('}')
+        if start != -1 and end != -1 and end > start:
+            return text[start:end+1]
+        return text
     
     def _parse_strategy(self, llm_response: str) -> Dict[str, Any]:
         """

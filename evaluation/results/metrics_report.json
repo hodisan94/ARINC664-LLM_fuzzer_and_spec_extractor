@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-24T00:25:10.151797",
+  "generated": "2026-03-24T14:58:10.291646",
   "total_rules": 72,
   "iterations": {
     "LLM": 200,
@@ -16,8 +16,8 @@
       "coverage_percent": 213.9
     },
     "Boofuzz": {
-      "unique_rules_tested": 34,
-      "coverage_percent": 47.2
+      "unique_rules_tested": 200,
+      "coverage_percent": 277.8
     }
   },
   "normalized_spec_coverage": {
@@ -32,9 +32,9 @@
       "pct": 36.1
     },
     "Boofuzz": {
-      "covered": 3,
+      "covered": 23,
       "total": 72,
-      "pct": 4.2
+      "pct": 31.9
     }
   },
   "time_to_coverage": {
@@ -49,9 +49,9 @@
       "max_coverage": 2.138888888888889
     },
     "Boofuzz": {
-      "80%": null,
-      "100%": null,
-      "max_coverage": 0.4722222222222222
+      "80%": 58,
+      "100%": 72,
+      "max_coverage": 2.7777777777777777
     }
   },
   "redundancy_ratio": {
@@ -151,53 +151,49 @@
       ]
     },
     "Boofuzz": {
-      "entropy": 4.9894,
-      "max_entropy": 5.0875,
-      "normalized_entropy": 0.9807,
-      "n_types": 34,
+      "entropy": 7.6439,
+      "max_entropy": 7.6439,
+      "normalized_entropy": 1.0,
+      "n_types": 200,
       "top_5": [
         {
           "rule": "address_validation",
-          "count": 14
+          "count": 1
         },
         {
           "rule": "Address",
-          "count": 7
+          "count": 1
         },
         {
           "rule": "domain_id_coding",
-          "count": 7
+          "count": 1
         },
         {
           "rule": "side_id_coding",
-          "count": 7
+          "count": 1
         },
         {
           "rule": "Addressing.location_id_coding",
-          "count": 7
+          "count": 1
         }
       ]
     }
   },
   "unique_findings": {
-    "LLM_only_count": 56,
-    "Random_only_count": 131,
-    "Boofuzz_only_count": 16,
+    "LLM_only_count": 51,
+    "Random_only_count": 69,
+    "Boofuzz_only_count": 110,
     "LLM_and_Random": 10,
-    "LLM_and_Boofuzz": 7,
-    "Random_and_Boofuzz": 12,
-    "all_three": 2,
+    "LLM_and_Boofuzz": 15,
+    "Random_and_Boofuzz": 77,
+    "all_three": 5,
     "LLM_total": 71,
     "Random_total": 151,
-    "Boofuzz_total": 33,
+    "Boofuzz_total": 197,
     "LLM_only": [
       "address_validation_reject_invalid_ip_address_on_open",
       "address_validation_source_address_validation",
       "addressing_mac_address_constant_field_format",
-      "addressing_source_address_ownership_requirement",
-      "communication_ports",
-      "communication_ports_afdx_reception_port_quintuplet_uniqueness",
-      "communication_ports_afdx_transmission_port_quintuplet_uniqueness",
       "data_integrity_virtual_link_ordinal_integrity_requirement",
       "end_system_behavior_ethernet_frame_compliance",
       "end_system_performance_maximum_allowed_jitter",
@@ -210,7 +206,11 @@
       "frame_validation_discard_frames_with_disallowed_vl_id",
       "frame_validation_discard_frames_with_erroneous_mac_destination_address",
       "frame_validation_frame_discard_on_validation_failure",
-      "frame_validation_frame_size_envelope_validation"
+      "frame_validation_frame_size_envelope_validation",
+      "frame_validation_frame_size_maximum_constraint",
+      "frame_validation_frame_size_validation",
+      "frame_validation_mac_destination_address_constant_field_validation",
+      "frame_validation_maximum_frame_size_for_vl"
     ],
     "LLM_detailed": [
       "Address Validation.reject_invalid_ip_address_on_open|edge-case",
@@ -235,26 +235,26 @@
       "Frame Validation.frame_size_validation|edge-case"
     ],
     "Random_only": [
-      "address_mask_handling",
-      "addressing_ip_address_class_a_private_format",
-      "afdx_communication_port_transmission_link",
-      "afdx_network_connection",
-      "bag_interval_enforcement",
-      "bidirectional_sap_communication",
-      "communication_mode",
-      "configuration_access_on_power_on",
-      "configuration_default_configuration_usage_rule",
-      "data_transmission_transfer_syntax_translation",
-      "default_port_speed",
       "delayed_ack_timing",
-      "destination_address",
       "dynamic_length_for_arinc_429_data_structure",
       "end_system_unique_sap_port_linkage_for_transmission",
-      "errorhandling_buffer_overflow_handling_in_transmission",
       "ethernet_payload",
       "fault_tolerance_fault_performance_mechanism",
-      "fragmentation_local_fragmentation_of_outgoing_packets",
-      "frame_based_frame_acceptance"
+      "frame_filtering",
+      "frame_processing_fragmented_frame_reassembly_requirement",
+      "frame_structure",
+      "frame_structure_frame_overhead_components",
+      "icmp_layer_icmp_error_minimum_data_inclusion",
+      "icmp_message_handling",
+      "icmp_message_handling_mandatory_address_mask_reply_broadcast_on_initialization",
+      "ip_addressing_ip_source_address_identifies_transmitting_partition",
+      "ip_layer_requirements_no_gateway_operation_required",
+      "ip_layer_ttl_discard_prohibition",
+      "ip_version",
+      "ipv4_packet_structure_compliance",
+      "ipv4_total_length_field_range_in_afdx",
+      "ipv4_version",
+      "mac_destination_address_constant_field"
     ],
     "Random_detailed": [
       "Byte ACi|conformance",
@@ -279,44 +279,48 @@
       "IP_Addressing.ip_source_address_identifies_transmitting_partition|conformance"
     ],
     "Boofuzz_only": [
+      "address_mask_reply",
       "address_validation",
+      "addressing_pin_programming_value_encoding",
+      "afdx_reception_port_parameter_set_binding",
+      "afdx_transmission_port_parameter_set_binding",
+      "bag_value",
+      "bandwidth",
+      "bandwidth_allocation_for_maximum_message_size",
+      "communication_static_addressing_for_intra_afdx_messages",
       "configuration_file_consistency",
+      "configuration_management_position_based_configuration_table_access",
+      "connection_management_simultaneous_open_support",
+      "connection_management_time_wait_state_duration",
       "data_encoding_boolean_size_constraint",
+      "data_primitive_validation",
+      "demultiplexing_receiver_demultiplexing_based_on_destination_addresses",
       "domain_id_coding",
+      "duplicate_frame_discard",
       "ethernet_bit_order",
-      "fifo_discipline_for_queuing",
-      "float_32",
-      "float_32_size_constraint",
-      "frame_processing_rate",
-      "maximum_data_size_for_queuing_service",
-      "maximum_technological_latency_in_transmission",
-      "opaque_data",
-      "side_id_coding",
-      "signed_32",
-      "signed_64",
-      "signed_64_integer"
+      "ethernet_frame_size_handling_range"
     ],
     "Boofuzz_detailed": [
-      "Addressing.frame_based_filtering|above_max_length",
       "Addressing.frame_based_filtering|broadcast_address",
-      "Addressing.frame_based_filtering|invalid_format",
-      "Addressing.frame_based_filtering|not_in_list",
-      "Addressing.frame_based_filtering|null_address",
-      "Addressing.frame_based_filtering|reserved_address",
-      "Addressing.location_id_coding|above_max",
       "Addressing.location_id_coding|below_min",
-      "Addressing.location_id_coding|invalid_format",
-      "Addressing.location_id_coding|negative",
       "Address|above_max",
-      "Address|invalid_format",
-      "Address|negative",
-      "Boolean|invalid_format",
       "Boolean|not_in_list",
-      "Broadcast Address|above_max",
       "Broadcast Address|invalid_format",
-      "Broadcast Address|negative",
+      "Byte ACi|below_min",
       "Communication Ports.no_ip_fragmentation_for_sampling_com_ports|above_max",
-      "Communication Ports.no_ip_fragmentation_for_sampling_com_ports|boundary_case"
+      "Communication Ports.unidirectional_multicast_for_sampling|invalid_configuration",
+      "Communication_Ports.afdx_reception_port_quintuplet_uniqueness|multiple_quintuplets_to_single_port",
+      "Communication_Ports.afdx_transmission_port_quintuplet_uniqueness|multiple_quintuplets",
+      "Communication_Ports|invalid_operation",
+      "Connection Management.simultaneous_open_support|unsupported_feature",
+      "Connection Management.time_wait_state_duration|below_min",
+      "Data Encoding.boolean_size_constraint|below_min",
+      "Data Encoding|little_endian",
+      "Data Transmission.transfer_syntax_translation|invalid_format",
+      "ErrorHandling.buffer_overflow_handling_in_transmission|below_min",
+      "Float_32|invalid_format",
+      "Float_64|above_max",
+      "Fragmentation.do_not_exceed_mms_s|above_max"
     ]
   },
   "reward_convergence": {
@@ -339,13 +343,13 @@
       "base_improvement_percent": 6.9
     },
     "Boofuzz": {
-      "early_mean_reward": 0.7568,
-      "late_mean_reward": 0.901,
-      "improvement_percent": 19.1,
-      "final_ma": 0.78,
-      "base_early_mean": 0.6139,
-      "base_late_mean": 0.707,
-      "base_improvement_percent": 15.2
+      "early_mean_reward": 2.2267,
+      "late_mean_reward": 2.2382,
+      "improvement_percent": 0.5,
+      "final_ma": 2.18,
+      "base_early_mean": 1.2467,
+      "base_late_mean": 1.2482,
+      "base_improvement_percent": 0.1
     }
   },
   "ratio_valid_messages": {
@@ -372,8 +376,8 @@
       "successful_injections": 200,
       "injection_success_rate": 1.0,
       "injection_success_percent": "100.0%",
-      "avg_forward_rate": 50.9,
-      "avg_policing_rate": 47.81,
+      "avg_forward_rate": 50.95,
+      "avg_policing_rate": 48.37,
       "interpretation": "High injection success = frames are structurally valid. High policing rate = frames trigger rule violations (good for fuzzer). High forward rate = frames pass unchallenged (fuzzer not finding violations)."
     }
   },
@@ -403,7 +407,7 @@
       "api_calls": 0,
       "cost_per_call_usd": 0.0,
       "total_cost_usd": 0.0,
-      "unique_findings": 33,
+      "unique_findings": 197,
       "cost_per_finding_usd": 0.0,
       "findings_per_dollar": "inf (free)",
       "cost_per_iteration_usd": 0.0

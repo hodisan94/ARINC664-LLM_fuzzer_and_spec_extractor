@@ -199,11 +199,7 @@ class LLMFuzzer:
             
             # Step 4: Feedback Analyzer
             print("\n[4/4] Analyzing Feedback...")
-            cov_pct = 0.0
-            if not history.empty and "protocol_rule" in history.columns:
-                n_unique = history["protocol_rule"].dropna().nunique()
-                total_known = len(self.strategy_planner.spec_rules) + len(self.strategy_planner.test_cases)
-                cov_pct = (n_unique / total_known * 100) if total_known > 0 else 0.0
+            cov_pct = self.strategy_planner.category_coverage_pct(history)
             feedback = self.feedback_analyzer.analyze(
                 log_content=sim_result.get('log_content', ''),
                 csv_content=sim_result.get('csv_content', ''),
@@ -314,7 +310,7 @@ class LLMFuzzer:
             return True
         
         # Too many consecutive failures
-        if consecutive_failures >= 5:
+        if consecutive_failures >= 10:
             print(f"\nStopping: {consecutive_failures} consecutive failures")
             return True
         

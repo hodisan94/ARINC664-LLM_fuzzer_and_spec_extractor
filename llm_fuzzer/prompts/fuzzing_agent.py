@@ -12,7 +12,7 @@ import pandas as pd
 
 
 def _build_coverage_section(coverage_stats: Optional[Dict[str, Any]], iteration: int) -> str:
-    """Build coverage awareness section showing which rules are tested/untested."""
+    """Build coverage awareness section with category-level + rule-level info."""
     if not coverage_stats:
         return ""
 
@@ -20,37 +20,50 @@ def _build_coverage_section(coverage_stats: Optional[Dict[str, Any]], iteration:
     lines.append("COVERAGE STATUS (CRITICAL — READ THIS FIRST!):")
     lines.append("=" * 70)
 
+    # --- Category-level coverage (primary metric) ---
+    covered_cats = coverage_stats.get("covered_categories", [])
+    uncovered_cats = coverage_stats.get("uncovered_categories", [])
+    cat_pct = coverage_stats.get("category_coverage_pct", 0.0)
+    cat_to_rules = coverage_stats.get("cat_to_rules", {})
+    total_cats = len(covered_cats) + len(uncovered_cats)
+
+    lines.append(f"\n*** SPEC CATEGORY COVERAGE: {len(covered_cats)}/{total_cats} = {cat_pct:.1f}% ***")
+
+    if uncovered_cats:
+        lines.append(f"\nUNCOVERED CATEGORIES ({len(uncovered_cats)} remaining — target these!):")
+        for cat in uncovered_cats:
+            example_rules = cat_to_rules.get(cat, [])
+            examples = ", ".join(example_rules[:3]) if example_rules else cat
+            lines.append(f"  [{cat}] try: {examples}")
+
+    if covered_cats:
+        lines.append(f"\nCOVERED CATEGORIES ({len(covered_cats)}):")
+        for cat in covered_cats[:20]:
+            lines.append(f"  [OK] {cat}")
+        if len(covered_cats) > 20:
+            lines.append(f"  ... +{len(covered_cats) - 20} more")
+
+    # --- Rule-level details ---
     covered = coverage_stats.get("covered_rules", [])
     uncovered = coverage_stats.get("uncovered_rules", [])
     mt_counts = coverage_stats.get("mutation_type_counts", {})
-    total_rules = len(covered) + len(uncovered)
-    coverage_pct = (len(covered) / total_rules * 100) if total_rules > 0 else 0
-
-    lines.append(f"\nCoverage: {len(covered)}/{total_rules} rules = {coverage_pct:.1f}%")
 
     if mt_counts:
         overused = {k: v for k, v in sorted(mt_counts.items(), key=lambda x: -x[1]) if v >= 3}
         if overused:
-            lines.append("\nOVERUSED mutation_types (AVOID THESE — you lose reward for repeating):")
+            lines.append("\nOVERUSED mutation_types (AVOID — penalty applied):")
             for mt, count in list(overused.items())[:10]:
-                lines.append(f"  '{mt}' — used {count} times (PENALTY applied!)")
+                lines.append(f"  '{mt}' — used {count}x")
 
     if uncovered:
         lines.append(f"\nUNTESTED RULES ({len(uncovered)} remaining — +1.0 BONUS for each new one!):")
-        for rule in uncovered[:50]:
+        for rule in uncovered[:40]:
             lines.append(f"  - {rule}")
-        if len(uncovered) > 50:
-            lines.append(f"  ... and {len(uncovered) - 50} more")
+        if len(uncovered) > 40:
+            lines.append(f"  ... and {len(uncovered) - 40} more")
 
-    if covered:
-        lines.append(f"\nALREADY TESTED ({len(covered)} rules — no new-rule bonus):")
-        for rule in covered[:15]:
-            count = mt_counts.get(rule, "?")
-            lines.append(f"  - {rule} (tested ~{count}x)" if isinstance(count, int) else f"  - {rule}")
-        if len(covered) > 15:
-            lines.append(f"  ... and {len(covered) - 15} more")
-
-    lines.append(f"\nYOUR GOAL: Maximize coverage by testing UNTESTED rules. You get a +1.0 BONUS for each new rule!")
+    lines.append(f"\nYOUR GOAL: Cover as many SPEC CATEGORIES as possible!")
+    lines.append(f"Pick rules from UNCOVERED CATEGORIES above to maximize coverage.")
     return "\n".join(lines)
 
 
@@ -198,7 +211,7 @@ def _build_test_cases_section(test_cases: Dict[str, Any]) -> str:
 
 
 def _build_recent_performance_section(recent_results: List[Dict[str, Any]]) -> str:
-    """Format recent iteration results."""
+    """Format recent iteration results with metrics and category info."""
     lines = ["\n" + "=" * 70]
     lines.append("RECENT PERFORMANCE (Last iterations):")
     lines.append("=" * 70)
@@ -215,12 +228,18 @@ def _build_recent_performance_section(recent_results: List[Dict[str, Any]]) -> s
         strategy = result.get('strategy', '?')
         reward = result.get('reward', 0)
         bugs = result.get('bugs_found', False)
-        recommendation = result.get('recommendation', '')
+        cat = result.get('spec_category', 'unmapped')
+        policing = result.get('policing_rate', 0.0)
+        es_rej = result.get('es_rejection_rate', 0.0)
+        mac_err = result.get('frames_dropped_mac_error', 0)
         
-        bug_indicator = " [BUG FOUND!]" if bugs else ""
-        lines.append(f"Iter {iteration}: VL={vl}, rule={rule}, strategy={strategy}, reward={reward:.2f}{bug_indicator}")
-        if recommendation and len(recommendation) > 10:
-            lines.append(f"  Feedback: {recommendation[:120]}")
+        bug_indicator = " [BUG!]" if bugs else ""
+        cat_tag = f" [{cat}]" if cat != "unmapped" else " [no-category]"
+        lines.append(
+            f"Iter {iteration}: VL={vl}, rule={rule}{cat_tag}, "
+            f"reward={reward:.2f}, policing={policing:.0f}%, "
+            f"es_rej={es_rej:.0f}%, mac_err={mac_err}{bug_indicator}"
+        )
     
     return "\n".join(lines)
 
@@ -279,51 +298,52 @@ def _build_vl_statistics_section(
 
 
 def _build_decision_guidelines(iteration: int, coverage_stats: Optional[Dict[str, Any]] = None) -> str:
-    """Provide decision-making guidelines to the LLM."""
-    uncovered_count = len(coverage_stats.get("uncovered_rules", [])) if coverage_stats else "unknown"
-    covered_count = len(coverage_stats.get("covered_rules", [])) if coverage_stats else 0
+    """Provide decision-making guidelines using category-level coverage."""
+    cat_pct = coverage_stats.get("category_coverage_pct", 0.0) if coverage_stats else 0.0
+    uncovered_cats = coverage_stats.get("uncovered_categories", []) if coverage_stats else []
     total_rules = coverage_stats.get("total_rules", 1) if coverage_stats else 1
-    coverage_pct = (covered_count / total_rules * 100) if isinstance(covered_count, int) and total_rules > 0 else 0
 
-    if coverage_pct < 50:
+    if cat_pct < 40:
         phase = "EXPLORE"
-        phase_msg = "Coverage is LOW — pick UNTESTED rules from the list above for +1.0 bonus each!"
-    elif coverage_pct < 90:
+        phase_msg = (f"Category coverage is LOW ({cat_pct:.0f}%) — "
+                     f"{len(uncovered_cats)} spec categories uncovered. "
+                     f"Pick rules from UNCOVERED CATEGORIES for maximum impact!")
+    elif cat_pct < 80:
         phase = "FILL GAPS"
-        phase_msg = f"Good progress! {uncovered_count} rules remain. Keep picking from UNTESTED list."
+        phase_msg = (f"Good progress ({cat_pct:.0f}%)! {len(uncovered_cats)} categories remain. "
+                     f"Focus on the UNCOVERED CATEGORIES list above.")
     else:
         phase = "DEEPEN"
-        phase_msg = ("Coverage is HIGH — most rules tested. Now DEEPEN: re-test rules with "
-                     "DIFFERENT VLs, parameters, and strategies. Overuse penalty is reduced.")
+        phase_msg = (f"Category coverage is HIGH ({cat_pct:.0f}%). "
+                     f"Now DEEPEN: re-test covered categories with different VLs, "
+                     f"parameters, and strategies. Overuse penalty is reduced.")
 
     return f"""
 {"=" * 70}
-DECISION GUIDELINES — Phase: {phase} (coverage {coverage_pct:.0f}%)
+DECISION GUIDELINES — Phase: {phase} (category coverage {cat_pct:.0f}%)
 {"=" * 70}
 
 {phase_msg}
 
 1. PICK YOUR RULE:
-   - If UNTESTED rules remain: pick one from the UNTESTED list above (you get +1.0 bonus)
-   - Set your 'mutation_type' to EXACTLY the rule name from the list
-   - If all rules are tested: pick a rule you want to DEEPEN with different params
+   - Look at the UNCOVERED CATEGORIES list above — each shows example rules
+   - Set your 'mutation_type' to EXACTLY a rule name from the test cases list
+   - This covers a new spec category AND gives you +1.0 new-rule bonus
 
 2. USE PREDEFINED TEST CASES (STRONGLY RECOMMENDED):
-   - Look at the "PREDEFINED TEST CASES" section — there are {total_rules}+ rules available
+   - Look at the "PREDEFINED TEST CASES" section — {total_rules}+ rules available
    - Match your chosen rule name to find its test cases
-   - Set test_cases to e.g. ["TC0", "TC1"] to use those specific cases
-   - This is the FASTEST way to cover new rules
+   - Set test_cases to e.g. ["TC0", "TC1"]
 
-3. CUSTOM MUTATIONS (use when no test cases exist):
-   - Propose specific values: bag_value, frame_size, sequence_number, timing_jitter_ms
-   - Especially useful for deepening investigation of interesting rules
+3. CUSTOM MUTATIONS (when no predefined TCs exist):
+   - Propose specific values: bag_value, frame_size, sequence_number, etc.
 
 4. STRATEGY TYPES:
-   - "conformance": valid parameters, verify compliance
-   - "edge-case": boundary values (RECOMMENDED — most findings come from here)
+   - "edge-case": boundary values (RECOMMENDED — most findings)
    - "adversarial": extreme violations, stress testing
+   - "conformance": valid parameters, verify compliance
 
-5. VL ROTATION: spread tests across VLs (1001-3002) for broader coverage
+5. VL ROTATION: spread tests across VLs (1001-3002)
 
 ITERATION {iteration}: {phase_msg}
 """

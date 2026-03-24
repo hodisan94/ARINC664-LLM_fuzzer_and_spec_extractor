@@ -130,17 +130,32 @@ def plot_rule_coverage(
     print(f"  Saved: {out_path}")
 
 
-def normalized_spec_coverage(df: pd.DataFrame, spec_categories: List[str]) -> Dict[str, Any]:
+def normalized_spec_coverage(
+    df: pd.DataFrame,
+    spec_categories: List[str],
+    spec_rules: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """Map each fuzzer's protocol_rule to the closest spec category and count
     how many of the 72 spec categories are covered.
 
-    Matching strategy: normalize both sides, then check if the fuzzer rule
-    *starts with* or *equals* a normalized spec category (handles
-    'frame_validation.discard_frames_smaller_than_minimum_size' matching
-    the 'Frame Validation' category).
+    Matching strategy (applied in order):
+      1. Sub-rule lookup — check if the normalised rule name (or its last
+         dotted component) is a known sub-key inside a spec category.
+      2. Prefix matching — check if the normalised rule name starts-with or
+         equals a normalised spec category name (or vice-versa).
     """
     if df.empty:
-        return {"covered": 0, "total": len(spec_categories), "pct": 0.0, "matched": []}
+        return {"covered": 0, "total": len(spec_categories), "pct": 0.0,
+                "matched": [], "unmatched": sorted(spec_categories)}
+
+    # Build sub-rule -> category lookup from the full spec dict
+    sub_lookup: Dict[str, str] = {}
+    if spec_rules:
+        for cat, content in spec_rules.items():
+            sub_lookup[normalize_rule_name(cat)] = cat
+            if isinstance(content, dict):
+                for sub in content.keys():
+                    sub_lookup[normalize_rule_name(sub)] = cat
 
     norm_cats = {normalize_rule_name(c): c for c in spec_categories}
     rules = get_rule_field(df)
@@ -148,6 +163,20 @@ def normalized_spec_coverage(df: pd.DataFrame, spec_categories: List[str]) -> Di
     matched_cats: set = set()
     for raw_rule in rules:
         norm = normalize_rule_name(raw_rule)
+
+        # Strategy 1: sub-rule lookup (exact match on full name or last part)
+        if norm in sub_lookup:
+            matched_cats.add(sub_lookup[norm])
+        parts = raw_rule.split('.')
+        if len(parts) > 1:
+            sub = normalize_rule_name(parts[-1])
+            if sub in sub_lookup:
+                matched_cats.add(sub_lookup[sub])
+            prefix = normalize_rule_name(parts[0])
+            if prefix in sub_lookup:
+                matched_cats.add(sub_lookup[prefix])
+
+        # Strategy 2: prefix matching (original approach)
         for nc, original in norm_cats.items():
             if norm == nc or norm.startswith(nc + "_") or nc.startswith(norm + "_"):
                 matched_cats.add(original)
@@ -682,7 +711,7 @@ def main():
     spec_categories = list(spec_rules.keys())
     norm_cov = {}
     for name, df in data.items():
-        nc = normalized_spec_coverage(df, spec_categories)
+        nc = normalized_spec_coverage(df, spec_categories, spec_rules=spec_rules)
         norm_cov[name] = nc
         print(f"    {name}: {nc['covered']}/{nc['total']} spec categories = {nc['pct']}%")
         if nc["unmatched"]:

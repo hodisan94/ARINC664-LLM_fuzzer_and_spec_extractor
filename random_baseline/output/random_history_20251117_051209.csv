@@ -1,6 +1,0 @@
-iteration,timestamp,duration,fuzzer_type,target_vl,protocol_rule,test_mode,strategy,test_cases,custom_mutation,num_frames,simulation_success,reward,frames_received,frames_dropped_policing,frames_forwarded,policing_rate,forward_rate,bugs_found
-0,2025-11-17T05:11:28.930752,10.177103,RANDOM_BASELINE,3002,bag,predefined,conformance,"['TC0', 'TC1']",,40,True,0.0,0,0,0,0.0,0.0,False
-1,2025-11-17T05:11:39.086623,10.151948,RANDOM_BASELINE,1003,sequence_number_field,predefined,conformance,['TC0'],,20,True,0.0,0,0,0,0.0,0.0,False
-2,2025-11-17T05:11:49.251071,10.161584,RANDOM_BASELINE,2001,virtual_link.configuration_parameters,predefined,edge-case,"['TC0', 'TC1']",,0,True,0.0,0,0,0,0.0,0.0,False
-3,2025-11-17T05:11:59.458717,10.204112,RANDOM_BASELINE,2003,priority_qos.priority_levels,custom,conformance,,Apply random corruption to priority_qos.priority_levels,20,True,0.0,0,0,0,0.0,0.0,False
-4,2025-11-17T05:12:09.647208,10.185177,RANDOM_BASELINE,3001,virtual_link.id_range,custom,edge-case,,Apply random corruption to virtual_link.id_range,20,True,0.0,0,0,0,0.0,0.0,False
