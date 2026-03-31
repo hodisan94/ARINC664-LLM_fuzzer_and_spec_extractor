@@ -357,6 +357,7 @@ struct MutationConfig
     int seqMutationCount;       // Count of sequence-number mutations applied
     std::string destMacMutation; // "none", "corrupt_prefix", "wrong_vl", "zero"
     int destMacMutationCount;   // Count of dest-MAC mutations applied
+    std::string injectBug;      // "none" or bug ID for BDR evaluation
     
     MutationConfig() : 
         targetVL(0), probability(0.0), payloadDeltaBytes(0), 
@@ -364,7 +365,8 @@ struct MutationConfig
         payloadAppliedBytes(0), jitterAppliedMs(0), payloadClampCount(0), 
         txProbDrops(0), macSpoofCount(0),
         sequenceNumberOverride(0), seqMutationCount(0),
-        destMacMutation("none"), destMacMutationCount(0) {}
+        destMacMutation("none"), destMacMutationCount(0),
+        injectBug("none") {}
 };
 
 // Global mutation config (accessible from traffic generator)
@@ -472,6 +474,16 @@ bool LoadMutations(const std::string& mutationsFile, MutationConfig& config)
         config.destMacMutation = content.substr(quoteStart + 1, quoteEnd - quoteStart - 1);
     }
     
+    // Parse inject_bug ("none", "skip_bag_policing", "skip_frame_validation", etc.)
+    size_t bugPos = content.find("\"inject_bug\"");
+    if (bugPos != std::string::npos)
+    {
+        size_t colonPos = content.find(":", bugPos);
+        size_t quoteStart = content.find("\"", colonPos);
+        size_t quoteEnd = content.find("\"", quoteStart + 1);
+        config.injectBug = content.substr(quoteStart + 1, quoteEnd - quoteStart - 1);
+    }
+    
     config.isActive = true;
     NS_LOG_INFO("Loaded mutations: VL=" << config.targetVL 
                 << ", prob=" << config.probability
@@ -480,7 +492,8 @@ bool LoadMutations(const std::string& mutationsFile, MutationConfig& config)
                 << ", mac_mutation=" << config.macMutation
                 << ", seq_override=" << config.sequenceNumberOverride
                 << ", dest_mac_mutation=" << config.destMacMutation
-                << ", extreme_test=" << (config.isExtremeTest ? "YES" : "NO"));
+                << ", extreme_test=" << (config.isExtremeTest ? "YES" : "NO")
+                << ", inject_bug=" << config.injectBug);
     
     return true;
 }

@@ -36,6 +36,7 @@ struct MutationConfig
     int seqMutationCount;
     std::string destMacMutation;
     int destMacMutationCount;
+    std::string injectBug;
     
     MutationConfig() : 
         targetVL(0), probability(0.0), payloadDeltaBytes(0), 
@@ -43,7 +44,8 @@ struct MutationConfig
         payloadAppliedBytes(0), jitterAppliedMs(0), payloadClampCount(0), 
         txProbDrops(0), macSpoofCount(0),
         sequenceNumberOverride(0), seqMutationCount(0),
-        destMacMutation("none"), destMacMutationCount(0) {}
+        destMacMutation("none"), destMacMutationCount(0),
+        injectBug("none") {}
 };
 extern MutationConfig g_mutationConfig;
 
@@ -738,44 +740,53 @@ AfdxTrafficGenerator::ProcessReceivedFrame(Ptr<const Packet> packet, const std::
     return false; // Silently ignore (not an error)
   }
   
+  // BDR bug injection: read active bug ID
+  const std::string& activeBug = g_mutationConfig.injectBug;
+
   // ====================================================================
   // AFDX VALIDATION STEP 2: Validate Constant Field (ARINC 664 P7 §3.1.1.3.3)
   // ====================================================================
-  if (!ValidateConstantField(frame))
+  if (activeBug != "skip_constant_field")
   {
-    m_framesRejected++;
-    if (m_csvEnabled)
+    if (!ValidateConstantField(frame))
     {
-      std::stringstream ss;
-      ss << std::fixed << std::setprecision(6) << Simulator::Now().GetSeconds();
-      LogToCsv(ss.str(), vlId, "FRAME_RX_REJECTED", 
-               "Invalid constant field from Network " + networkId);
+      m_framesRejected++;
+      if (m_csvEnabled)
+      {
+        std::stringstream ss;
+        ss << std::fixed << std::setprecision(6) << Simulator::Now().GetSeconds();
+        LogToCsv(ss.str(), vlId, "FRAME_RX_REJECTED", 
+                 "Invalid constant field from Network " + networkId);
+      }
+      NS_LOG_WARN("VL " << vlId << " rejected - invalid constant field");
+      return false;
     }
-    NS_LOG_WARN("VL " << vlId << " rejected - invalid constant field");
-    return false;
   }
   
   // ====================================================================
   // AFDX VALIDATION STEP 3: Integrity Checking (ARINC 664 P7 §3.2.6.2.1)
   // ====================================================================
-  if (!CheckSequenceNumber(vlId, seqNum))
+  if (activeBug != "skip_sequence_check")
   {
-    m_framesRejected++;
-    if (m_csvEnabled)
+    if (!CheckSequenceNumber(vlId, seqNum))
     {
-      std::stringstream ss;
-      ss << std::fixed << std::setprecision(6) << Simulator::Now().GetSeconds();
-      std::stringstream details;
-      details << "Seq=" << (int)seqNum << " invalid (expected [" 
-              << (int)((m_previousSeqNum[vlId] == 255) ? 1 : m_previousSeqNum[vlId] + 1)
-              << "-" 
-              << (int)((m_previousSeqNum[vlId] >= 254) ? ((m_previousSeqNum[vlId] == 254) ? 255 : 1) : m_previousSeqNum[vlId] + 2)
-              << "]) from Network " << networkId;
-      LogToCsv(ss.str(), vlId, "FRAME_RX_REJECTED", details.str());
+      m_framesRejected++;
+      if (m_csvEnabled)
+      {
+        std::stringstream ss;
+        ss << std::fixed << std::setprecision(6) << Simulator::Now().GetSeconds();
+        std::stringstream details;
+        details << "Seq=" << (int)seqNum << " invalid (expected [" 
+                << (int)((m_previousSeqNum[vlId] == 255) ? 1 : m_previousSeqNum[vlId] + 1)
+                << "-" 
+                << (int)((m_previousSeqNum[vlId] >= 254) ? ((m_previousSeqNum[vlId] == 254) ? 255 : 1) : m_previousSeqNum[vlId] + 2)
+                << "]) from Network " << networkId;
+        LogToCsv(ss.str(), vlId, "FRAME_RX_REJECTED", details.str());
+      }
+      NS_LOG_WARN("VL " << vlId << " Seq=" << (int)seqNum 
+                  << " rejected - sequence validation failed");
+      return false;
     }
-    NS_LOG_WARN("VL " << vlId << " Seq=" << (int)seqNum 
-                << " rejected - sequence validation failed");
-    return false;
   }
   
   // ====================================================================

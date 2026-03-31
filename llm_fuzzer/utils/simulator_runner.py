@@ -197,6 +197,8 @@ class SimulatorRunner:
         seq_override = int(metadata.get('sequence_number_override') or 0)
         dest_mac_mut = metadata.get('dest_mac_mutation') or 'none'
         
+        inject_bug = metadata.get('inject_bug', 'none')
+
         return {
             "vlId": vl_id,
             "prob": prob,
@@ -206,6 +208,7 @@ class SimulatorRunner:
             "is_extreme_test": is_extreme,
             "sequence_number_override": seq_override,
             "dest_mac_mutation": dest_mac_mut,
+            "inject_bug": inject_bug,
         }
     
     def _write_mutations_file(self, test_inputs: Dict[str, Any]):

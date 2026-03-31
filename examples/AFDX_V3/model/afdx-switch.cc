@@ -13,6 +13,39 @@
 #include "ns3/csma-net-device.h"
 #include <iomanip>
 
+// Forward-declare just enough of MutationConfig for bug injection checks.
+// The real definition + global instance live in afdx-demo.cc / traffic-generator.cc.
+struct MutationConfig
+{
+    uint16_t targetVL;
+    double probability;
+    int payloadDeltaBytes;
+    int timingJitterMs;
+    std::string macMutation;
+    bool isExtremeTest;
+    bool isActive;
+    int payloadAppliedBytes;
+    int jitterAppliedMs;
+    int payloadClampCount;
+    int txProbDrops;
+    int macSpoofCount;
+    int sequenceNumberOverride;
+    int seqMutationCount;
+    std::string destMacMutation;
+    int destMacMutationCount;
+    std::string injectBug;
+
+    MutationConfig() :
+        targetVL(0), probability(0.0), payloadDeltaBytes(0),
+        timingJitterMs(0), macMutation("none"), isExtremeTest(false), isActive(false),
+        payloadAppliedBytes(0), jitterAppliedMs(0), payloadClampCount(0),
+        txProbDrops(0), macSpoofCount(0),
+        sequenceNumberOverride(0), seqMutationCount(0),
+        destMacMutation("none"), destMacMutationCount(0),
+        injectBug("none") {}
+};
+extern MutationConfig g_mutationConfig;
+
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE("AfdxSwitch");
@@ -262,29 +295,39 @@ AfdxSwitch::ProcessFrame(Ptr<const Packet> packet, uint32_t inPort)
   }
   m_vlStats[vlId].lastFrameTime = now;
   
+  // BDR bug injection: read active bug ID
+  const std::string& activeBug = g_mutationConfig.injectBug;
+
   // Step 1: Frame validation (CRC, size)
-  if (m_frameValidation && !ValidateFrame(frame))
+  if (activeBug != "skip_frame_validation" && activeBug != "accept_oversized")
   {
-    m_framesDropped++;
-    m_framesDroppedFrameError++;
-    if (m_vlStats.find(vlId) != m_vlStats.end())
+    if (m_frameValidation && !ValidateFrame(frame))
     {
-      m_vlStats[vlId].framesDropped++;
+      m_framesDropped++;
+      m_framesDroppedFrameError++;
+      if (m_vlStats.find(vlId) != m_vlStats.end())
+      {
+        m_vlStats[vlId].framesDropped++;
+      }
+      LogDrop(vlId, "Frame_Size_Error");
+      return false;
     }
-    LogDrop(vlId, "Frame_Size_Error");
-    return false;
   }
   
   // Step 2: VL authorization check
-  if (!IsVLAuthorized(vlId))
+  if (activeBug != "skip_vl_check")
   {
-    m_framesDropped++;
-    m_framesDroppedInvalidVL++;
-    LogDrop(vlId, "Invalid_VL");
-    return false;
+    if (!IsVLAuthorized(vlId))
+    {
+      m_framesDropped++;
+      m_framesDroppedInvalidVL++;
+      LogDrop(vlId, "Invalid_VL");
+      return false;
+    }
   }
   
   // Step 2b: Source MAC validation (ARINC 664 Part 7 §6.4.3)
+  if (activeBug != "skip_mac_validation")
   {
     Mac48Address frameSrcMac = frame.GetSourceAddress();
     Mac48Address expectedSrcMac = m_vlConfig[vlId].GetSourceMac();
@@ -302,26 +345,32 @@ AfdxSwitch::ProcessFrame(Ptr<const Packet> packet, uint32_t inPort)
   }
   
   // Step 3: BAG policing check
-  if (m_strictBagPolicing && !CheckBagPolicing(vlId))
+  if (activeBug != "skip_bag_policing")
   {
-    m_framesDropped++;
-    m_framesDroppedPolicing++;
-    m_vlStats[vlId].framesDropped++;
-    m_vlStats[vlId].policingViolations++;
-    LogDrop(vlId, "BAG_Violation");
-    return false;
+    if (m_strictBagPolicing && !CheckBagPolicing(vlId))
+    {
+      m_framesDropped++;
+      m_framesDroppedPolicing++;
+      m_vlStats[vlId].framesDropped++;
+      m_vlStats[vlId].policingViolations++;
+      LogDrop(vlId, "BAG_Violation");
+      return false;
+    }
   }
   
   // Step 4: Token Bucket Policing (ARINC 664 Part 7 §6.4.4)
   uint32_t frameSize = packet->GetSize();
-  if (!CheckTokenBucket(vlId, frameSize))
+  if (activeBug != "skip_token_bucket")
   {
-    m_framesDropped++;
-    m_framesDroppedPolicing++;
-    m_vlStats[vlId].framesDropped++;
-    m_vlStats[vlId].policingViolations++;
-    LogDrop(vlId, "BAG_Violation");
-    return false;
+    if (!CheckTokenBucket(vlId, frameSize))
+    {
+      m_framesDropped++;
+      m_framesDroppedPolicing++;
+      m_vlStats[vlId].framesDropped++;
+      m_vlStats[vlId].policingViolations++;
+      LogDrop(vlId, "BAG_Violation");
+      return false;
+    }
   }
   
   // Debit tokens for this frame

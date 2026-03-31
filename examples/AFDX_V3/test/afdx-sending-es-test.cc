@@ -41,11 +41,20 @@ struct MutationConfig
     int txProbDrops;
     int macSpoofCount;
     
+    int sequenceNumberOverride;
+    int seqMutationCount;
+    std::string destMacMutation;
+    int destMacMutationCount;
+    std::string injectBug;
+    
     MutationConfig() : 
         targetVL(0), probability(0.0), payloadDeltaBytes(0), 
         timingJitterMs(0), macMutation("none"), isExtremeTest(false), isActive(false),
         payloadAppliedBytes(0), jitterAppliedMs(0), payloadClampCount(0), 
-        txProbDrops(0), macSpoofCount(0) {}
+        txProbDrops(0), macSpoofCount(0),
+        sequenceNumberOverride(0), seqMutationCount(0),
+        destMacMutation("none"), destMacMutationCount(0),
+        injectBug("none") {}
 };
 MutationConfig g_mutationConfig;  // Dummy instance for test linking
 

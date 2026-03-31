@@ -33,6 +33,7 @@ struct MutationConfig
     int seqMutationCount;
     std::string destMacMutation;
     int destMacMutationCount;
+    std::string injectBug;
     
     MutationConfig() : 
         targetVL(0), probability(0.0), payloadDeltaBytes(0), 
@@ -40,7 +41,8 @@ struct MutationConfig
         payloadAppliedBytes(0), jitterAppliedMs(0), payloadClampCount(0), 
         txProbDrops(0), macSpoofCount(0),
         sequenceNumberOverride(0), seqMutationCount(0),
-        destMacMutation("none"), destMacMutationCount(0) {}
+        destMacMutation("none"), destMacMutationCount(0),
+        injectBug("none") {}
 };
 extern MutationConfig g_mutationConfig;
 
@@ -388,21 +390,28 @@ AfdxEndSystem::ProcessReceivedFrame(Ptr<const Packet> packet, const std::string&
                << " Seq=" << (uint32_t)seqNum 
                << " from " << networkId);
   
+  // BDR bug injection: read active bug ID
+  const std::string& activeBug = g_mutationConfig.injectBug;
+
   // ====================================================================
   // AFDX VALIDATION STEP 1: Frame Size Check
   // ====================================================================
-  if (!ValidateFrame(frame, frameSize))
+  if (activeBug != "skip_es_frame_validation")
   {
-    m_framesRejected++;
-    LogRxEvent(vlId, seqNum, networkId, "REJECTED", "Invalid frame size");
-    NS_LOG_WARN("ES" << m_nodeId << " rejected VL" << vlId << " - invalid frame size");
-    return;
+    if (!ValidateFrame(frame, frameSize))
+    {
+      m_framesRejected++;
+      LogRxEvent(vlId, seqNum, networkId, "REJECTED", "Invalid frame size");
+      NS_LOG_WARN("ES" << m_nodeId << " rejected VL" << vlId << " - invalid frame size");
+      return;
+    }
   }
   
   // ====================================================================
   // AFDX VALIDATION STEP 2: Constant Field Check (ARINC 664 P7 §3.1.1.3.3)
   // First 4 octets of dest MAC must be 03:00:00:00
   // ====================================================================
+  if (activeBug != "skip_constant_field")
   {
     Mac48Address dest = frame.GetDestinationAddress();
     uint8_t mac[6];
@@ -447,12 +456,15 @@ AfdxEndSystem::ProcessReceivedFrame(Ptr<const Packet> packet, const std::string&
   // ====================================================================
   // AFDX VALIDATION STEP 5: Sequence Number Check
   // ====================================================================
-  if (!CheckSequenceNumber(vlId, seqNum))
+  if (activeBug != "skip_sequence_check")
   {
-    m_framesRejected++;
-    LogRxEvent(vlId, seqNum, networkId, "REJECTED", "Invalid sequence number");
-    NS_LOG_WARN("ES" << m_nodeId << " rejected VL" << vlId << " - sequence error");
-    return;
+    if (!CheckSequenceNumber(vlId, seqNum))
+    {
+      m_framesRejected++;
+      LogRxEvent(vlId, seqNum, networkId, "REJECTED", "Invalid sequence number");
+      NS_LOG_WARN("ES" << m_nodeId << " rejected VL" << vlId << " - sequence error");
+      return;
+    }
   }
   
   // ====================================================================
