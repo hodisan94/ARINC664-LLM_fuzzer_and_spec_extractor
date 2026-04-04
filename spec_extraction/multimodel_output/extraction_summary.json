@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "pdf_path": "configs/ARINC_664P7.pdf",
+    "extraction_date": "2026-04-04T17:46:23.966085",
+    "duration_seconds": 2890.530419,
+    "extraction_mode": "open",
+    "providers_used": [
+      "openai",
+      "anthropic",
+      "mistral"
+    ],
+    "providers_failed": []
+  },
+  "files_generated": {
+    "openai": "rules_openai.json",
+    "anthropic": "rules_anthropic.json",
+    "mistral": "rules_mistral.json"
+  },
+  "next_steps": [
+    "Run align_rules.py to semantically align rules across models",
+    "Run align_rules.py --verify-unique to verify rules found by only one model",
+    "Run export_validated.py --mode open to generate final validated rules"
+  ]
+}

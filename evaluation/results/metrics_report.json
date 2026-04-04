@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-31T14:48:38.661353",
+  "generated": "2026-03-31T19:17:39.533010",
   "total_rules": 72,
   "iterations": {
     "LLM": 50,
@@ -22,9 +22,9 @@
   },
   "normalized_spec_coverage": {
     "LLM": {
-      "covered": 54,
+      "covered": 55,
       "total": 72,
-      "pct": 75.0
+      "pct": 76.4
     },
     "Random": {
       "covered": 18,
@@ -101,6 +101,10 @@
       "n_types": 50,
       "top_5": [
         {
+          "rule": "frame_size_validation",
+          "count": 1
+        },
+        {
           "rule": "Address",
           "count": 1
         },
@@ -109,15 +113,11 @@
           "count": 1
         },
         {
-          "rule": "full_duplex_ethernet_requirement",
+          "rule": "transmission_during_link_failure",
           "count": 1
         },
         {
-          "rule": "maximum_technological_latency_in_transmission",
-          "count": 1
-        },
-        {
-          "rule": "ErrorHandling.buffer_overflow_handling_in_transmission",
+          "rule": "bandwidth_allocation_gap",
           "count": 1
         }
       ]
@@ -180,11 +180,11 @@
     }
   },
   "unique_findings": {
-    "LLM_only_count": 14,
+    "LLM_only_count": 12,
     "Random_only_count": 43,
-    "Boofuzz_only_count": 15,
+    "Boofuzz_only_count": 13,
     "LLM_and_Random": 3,
-    "LLM_and_Boofuzz": 34,
+    "LLM_and_Boofuzz": 36,
     "Random_and_Boofuzz": 2,
     "all_three": 1,
     "LLM_total": 50,
@@ -193,40 +193,38 @@
     "LLM_only": [
       "constant_end_system_latency",
       "data_integrity",
-      "destination_address_validity",
       "frame_filtering_function_requirement",
-      "integrity",
       "latency_calculation_first_frame_latency_formula",
       "maximum_application_data_size",
       "maximum_network_transit_delay_guarantee",
-      "maximum_technological_latency_in_transmission",
       "network_redundancy",
+      "ordinal_integrity_within_virtual_link",
       "switch_behavior_technological_latency_limit",
       "switch_buffering_minimum_output_port_buffer_capacity",
       "switch_specification",
-      "unknown"
+      "transmission_during_link_failure"
     ],
     "LLM_detailed": [
       "Address|edge-case",
       "ErrorHandling.buffer_overflow_handling_in_transmission|adversarial",
       "IP_Addressing.ip_address_class_a_private_format_requirement|edge-case",
       "IP_Layer_Requirements.no_gateway_operation_required|edge-case",
-      "Integrity|edge-case",
       "Jitter.jitter_time_calculation|edge-case",
-      "Network Redundancy|edge-case",
+      "Network Redundancy|adversarial",
       "Switch Behavior.technological_latency_limit|edge-case",
-      "Switch Functionality.default_configuration_table_usage|edge-case",
+      "Switch Functionality.default_configuration_table_usage|adversarial",
       "Switch Specification|edge-case",
       "Virtual Link.single_source_per_virtual_link|edge-case",
-      "bandwidth_allocation_gap|edge-case",
+      "bandwidth_allocation_gap|adversarial",
       "constant_end_system_latency|edge-case",
       "data_integrity|edge-case",
-      "data_presentation_after_reassembly|edge-case",
+      "data_presentation_after_reassembly|adversarial",
       "default_reception_vl_identifier|edge-case",
       "default_ttl_value|edge-case",
-      "destination_address_validity|edge-case",
       "domain_id_coding|edge-case",
-      "ethernet_payload|edge-case"
+      "ethernet_payload|edge-case",
+      "frame_based_frame_acceptance|edge-case",
+      "frame_buffering_requirement|edge-case"
     ],
     "Random_only": [
       "addressing_source_address_ownership_requirement",
@@ -276,15 +274,13 @@
       "address_validation",
       "bandwidth_allocation_for_maximum_message_size",
       "error_handling_reception_buffer_overflow_handling",
-      "frame_based_frame_acceptance",
-      "frame_size_validation",
       "frame_validation",
-      "integrity_checking_valid_sequence_number_range_for_frame_acceptance",
+      "full_duplex_ethernet_requirement",
       "integrity_ordinal_integrity",
       "latency",
       "latency_calculation",
       "mac_destination_address_lsb_of_first_byte_must_be_1_(group_address)",
-      "performance_calculation_formula",
+      "maximum_bandwidth_allocation",
       "quality_of_service_fault_isolation_in_switch",
       "redundancy_management_first_valid_wins_policy",
       "vl_identifier_pin_programming_format"
@@ -314,13 +310,13 @@
   },
   "reward_convergence": {
     "LLM": {
-      "early_mean_reward": 2.3462,
-      "late_mean_reward": 2.1437,
-      "improvement_percent": -8.6,
-      "final_ma": 2.286,
-      "base_early_mean": 1.3462,
-      "base_late_mean": 1.1437,
-      "base_improvement_percent": -15.0
+      "early_mean_reward": 2.5381,
+      "late_mean_reward": 2.4897,
+      "improvement_percent": -1.9,
+      "final_ma": 2.326,
+      "base_early_mean": 1.5381,
+      "base_late_mean": 1.4897,
+      "base_improvement_percent": -3.1
     },
     "Random": {
       "early_mean_reward": 2.2628,
@@ -344,11 +340,11 @@
   "ratio_valid_messages": {
     "LLM": {
       "total_iterations": 50,
-      "successful_injections": 49,
-      "injection_success_rate": 0.98,
-      "injection_success_percent": "98.0%",
-      "avg_forward_rate": 51.03,
-      "avg_policing_rate": 47.87,
+      "successful_injections": 50,
+      "injection_success_rate": 1.0,
+      "injection_success_percent": "100.0%",
+      "avg_forward_rate": 50.95,
+      "avg_policing_rate": 45.47,
       "interpretation": "High injection success = frames are structurally valid. High policing rate = frames trigger rule violations (good for fuzzer). High forward rate = frames pass unchallenged (fuzzer not finding violations)."
     },
     "Random": {
@@ -407,7 +403,7 @@
       "total_iterations": 50,
       "effective_mutations": 50,
       "effective_rate_percent": 100.0,
-      "zero_frame_iterations": 1,
+      "zero_frame_iterations": 0,
       "baseline_policing": 74.53,
       "tolerance": 0.5
     },

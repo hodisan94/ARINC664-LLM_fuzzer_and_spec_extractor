@@ -307,6 +307,30 @@ class LLMStrategyPlanner:
                     strategy["test_cases"] = ["TC0"]
                     strategy["test_mode"] = "predefined"
 
+        # Mutation mechanism injection: if we're past iteration 20 and there
+        # are untested mechanisms, periodically force one to be used.
+        used_mechs = coverage_stats.get("used_mutation_mechanisms", set())
+        mech_schedule = [
+            (21, "mac_mutation_type", "spoof_src", "mac_mutation_type:spoof_src"),
+            (26, "dest_mac_mutation", "corrupt_prefix", "dest_mac_mutation:corrupt_prefix"),
+            (31, "frame_size", 2000, "frame_size>1518"),
+            (36, "timing_jitter_ms", -5, "timing_jitter_ms<0"),
+            (41, "sequence_number_override", 255, "sequence_number_override>0"),
+        ]
+        for trigger_iter, param, value, mech_key in mech_schedule:
+            if iteration == trigger_iter and mech_key not in used_mechs:
+                if strategy.get(param) is None or strategy.get(param) == "none":
+                    print(f"  [MECH-INJECT] iter {iteration}: setting {param}={value}")
+                    strategy[param] = value
+                    if param == "mac_mutation_type":
+                        strategy["prob"] = strategy.get("prob") or 1.0
+
+        # Token bucket stress: large frames at NORMAL BAG timing
+        if iteration == 46 and "token_bucket_stress" not in used_mechs:
+            print(f"  [MECH-INJECT] iter {iteration}: token bucket stress (frame_size=1500, default BAG)")
+            strategy["frame_size"] = 1500
+            strategy["bag_value"] = None
+
         return strategy
 
     def _all_categories_for_rule(self, rule_name: str) -> set:
@@ -400,6 +424,29 @@ class LLMStrategyPlanner:
         uncovered_cats = sorted(set(all_categories) - covered_cats)
         cat_pct = len(covered_cats) / len(all_categories) * 100 if all_categories else 0.0
         
+        used_mechs = set()
+        if not history.empty:
+            for _, row in history.iterrows():
+                mt = row.get("mac_mutation_type") or ""
+                if mt and mt not in ("none", ""):
+                    used_mechs.add(f"mac_mutation_type:{mt}")
+                dm = row.get("dest_mac_mutation") or ""
+                if dm and dm not in ("none", ""):
+                    used_mechs.add(f"dest_mac_mutation:{dm}")
+                fs = row.get("frame_size")
+                if fs and int(fs or 0) > 1518:
+                    used_mechs.add("frame_size>1518")
+                tj = row.get("timing_jitter_ms")
+                if tj and int(tj or 0) < 0:
+                    used_mechs.add("timing_jitter_ms<0")
+                so = row.get("sequence_number_override")
+                if so and int(so or 0) > 0:
+                    used_mechs.add("sequence_number_override>0")
+                fs_val = int(row.get("frame_size") or 0)
+                bag_val = row.get("bag_value")
+                if 1400 <= fs_val <= 1518 and bag_val is None:
+                    used_mechs.add("token_bucket_stress")
+
         return {
             "covered_rules": covered,
             "uncovered_rules": uncovered,
@@ -409,6 +456,7 @@ class LLMStrategyPlanner:
             "uncovered_categories": uncovered_cats,
             "category_coverage_pct": cat_pct,
             "cat_to_rules": self._cat_to_rules,
+            "used_mutation_mechanisms": used_mechs,
         }
     
     def _prepare_recent_results(

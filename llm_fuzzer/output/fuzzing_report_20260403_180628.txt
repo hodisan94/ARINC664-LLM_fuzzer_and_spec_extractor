@@ -1,0 +1,33 @@
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 50
+Successful: 46
+Failed: 4
+
+Reward Statistics:
+  Mean: 2.400
+  Max: 2.710
+  Min: 2.000
+
+Bugs Found: 0
+
+VLs Tested: 8 / 8
+  VL IDs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+
+Mutation Types Tested: 46
+  Types: ['Address Validation', 'End System Behavior.full_duplex_ethernet_requirement', 'Error Handling', 'IP_Addressing.ip_address_class_a_private_format_requirement', 'IP_Layer_Requirements.no_gateway_operation_required', 'Jitter.jitter_time_calculation', 'Network Redundancy', 'Switch Functionality.default_configuration_table_usage', 'Switch Specification', 'Virtual Link.single_source_per_virtual_link', 'bandwidth_allocation_gap', 'constant_end_system_latency', 'data_integrity', 'data_presentation_after_reassembly', 'default_reception_vl_identifier', 'default_ttl_value', 'domain_id_coding', 'ethernet_payload', 'frame_buffering_requirement', 'frame_filtering', 'frame_filtering_function', 'frame_processing.fragmented_frame_reassembly_requirement', 'frame_size_validation', 'frame_structure.frame_overhead_components', 'frame_transmission.complete_structure_transmission', 'integrity.ordinal_integrity', 'ipv4_packet_structure_compliance', 'mac_destination_address_format', 'mac_layer_frame_reception', 'maximum_bandwidth_allocation', 'maximum_latency_for_single_frame', 'maximum_network_transit_delay_guarantee', 'maximum_sub_vl_fifo_queues_per_vl', 'performance_calculation_formula', 'policing_rate_tolerance', 'port_speed_configuration', 'redundancy_management_requirement', 'sub_vl_fifo_queue_exclusivity', 'sub_vl_round_robin_scheduling', 'switch_initialization_time', 'switch_relies_on_ops_configuration_file_in_ops_mode', 'technological_latency_limit', 'traffic_policing', 'traffic_policing.byte_based_frame_acceptance', 'traffic_regulation.virtual_link_bandwidth_allocation_formula', 'vl_processing_capacity']
+
+Strategy Distribution:
+  edge-case: 35
+  adversarial: 11
+
+Top 5 Iterations (by reward):
+  Iter 4: VL=2002, mutation=traffic_policing.byte_based_frame_acceptance, reward=2.710
+  Iter 6: VL=2003, mutation=End System Behavior.full_duplex_ethernet_requirement, reward=2.710
+  Iter 8: VL=3001, mutation=traffic_regulation.virtual_link_bandwidth_allocation_formula, reward=2.710
+  Iter 12: VL=2003, mutation=default_ttl_value, reward=2.710
+  Iter 14: VL=1002, mutation=IP_Layer_Requirements.no_gateway_operation_required, reward=2.710
+
+======================================================================

@@ -394,7 +394,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--arbitrator",
-        choices=["openai", "anthropic", "google"],
+        choices=["openai", "anthropic", "mistral"],
         help="Specific provider to use as arbitrator"
     )
     

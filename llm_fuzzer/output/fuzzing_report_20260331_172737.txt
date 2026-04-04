@@ -1,0 +1,33 @@
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 50
+Successful: 50
+Failed: 0
+
+Reward Statistics:
+  Mean: 2.478
+  Max: 2.710
+  Min: 2.000
+
+Bugs Found: 0
+
+VLs Tested: 8 / 8
+  VL IDs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+
+Mutation Types Tested: 50
+  Types: ['Address Validation', 'IP_Layer_Requirements.no_gateway_operation_required', 'Jitter.jitter_time_calculation', 'Network Redundancy', 'Redundancy Management.first_valid_wins_policy', 'Switch Behavior.technological_latency_limit', 'Switch Functionality.default_configuration_table_usage', 'Switch Specification', 'Virtual Link.single_source_per_virtual_link', 'addressing.destination_address_filtering', 'bandwidth_allocation_gap', 'buffer_overflow_handling_in_transmission', 'constant_end_system_latency', 'data_integrity', 'data_presentation_after_reassembly', 'default_reception_vl_identifier', 'default_ttl_value', 'ethernet_frame_compliance', 'ethernet_payload', 'frame_buffering_requirement', 'frame_filtering', 'frame_filtering_function', 'frame_filtering_function_requirement', 'frame_processing.fragmented_frame_reassembly_requirement', 'frame_size_validation', 'frame_structure.frame_overhead_components', 'frame_transmission.complete_structure_transmission', 'integrity_checking.valid_sequence_number_range_for_frame_acceptance', 'ip_address_class_a_private_format_requirement', 'ipv4_packet_structure_compliance', 'latency_calculation.first_frame_latency_formula', 'mac_destination_address_format', 'mac_layer_frame_reception', 'maximum_application_data_size', 'maximum_frame_rate_processing_requirement', 'maximum_latency_for_single_frame', 'maximum_network_transit_delay_guarantee', 'maximum_sub_vl_fifo_queues_per_vl', 'ordinal_integrity', 'performance_calculation_formula', 'policing_rate_tolerance', 'port_speed_configuration', 'sub_vl_fifo_queue_exclusivity', 'sub_vl_round_robin_scheduling', 'switch_buffering.minimum_output_port_buffer_capacity', 'switch_initialization_time', 'switch_relies_on_ops_configuration_file_in_ops_mode', 'switching_behavior.frame_sequencing_for_simultaneous_reception', 'traffic_policing', 'vl_processing_capacity']
+
+Strategy Distribution:
+  edge-case: 33
+  adversarial: 17
+
+Top 5 Iterations (by reward):
+  Iter 1: VL=2001, mutation=frame_size_validation, reward=2.710
+  Iter 8: VL=3002, mutation=buffer_overflow_handling_in_transmission, reward=2.710
+  Iter 9: VL=2001, mutation=performance_calculation_formula, reward=2.710
+  Iter 11: VL=1003, mutation=default_ttl_value, reward=2.710
+  Iter 15: VL=2002, mutation=maximum_latency_for_single_frame, reward=2.710
+
+======================================================================

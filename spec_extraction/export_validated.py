@@ -388,9 +388,9 @@ Total Rules Extracted & """ + str(summary["total_rules"]) + r""" \\
 High Confidence (All Agree) & """ + str(summary["confidence_distribution"]["high"]) + r""" \\
 Medium Confidence (Majority) & """ + str(summary["confidence_distribution"]["medium"]) + r""" \\
 Arbitrated & """ + str(
-    summary["confidence_distribution"]["arbitrated_high"] + 
-    summary["confidence_distribution"]["arbitrated_medium"] +
-    summary["confidence_distribution"]["arbitrated_low"]
+    summary["confidence_distribution"].get("arbitrated_high", 0) + 
+    summary["confidence_distribution"].get("arbitrated_medium", 0) +
+    summary["confidence_distribution"].get("arbitrated_low", 0)
 ) + r""" \\
 Low Confidence (Unresolved) & """ + str(summary["confidence_distribution"]["low"]) + r""" \\
 \hline

@@ -98,6 +98,8 @@ build/
 
 # Large binaries
 *.pdf
+*.pcap
+*.csv
 
 # Logs
 *.log
@@ -106,21 +108,28 @@ build/
 **/checkpoints/
 **/iteration_*_test.json
 **/demo_history.jsonl
-**/multimodel_output/
-**/comparison_results.json
-**/alignment_results.json
-**/arbitration_results.json
-**/protocol_rules.json
 **/test_case_extraction_checkpoint.jsonl
+**/test_case_checkpoint.jsonl
 **/*_run.log
+**/old_extraction_backup/
+
+# TRACK: Multi-model extraction output (new rule extraction results)
+!spec_extraction/multimodel_output/
+!spec_extraction/multimodel_output/**
 
 # TRACK experiment data (iteration histories & results)
 !**/iteration_history.jsonl
-!**/iteration_history_BEFORE_FIX.jsonl
 !**/output/*.txt
 !**/output/*.csv
 !evaluation/results/
 !evaluation/results/**
+!evaluation/results/figures/*.png
+
+# LaTeX paper (managed separately)
+Latex/
+../Latex/
+**/*.tex
+!spec_extraction/multimodel_output/validation_table.tex
 
 # OS files
 .DS_Store

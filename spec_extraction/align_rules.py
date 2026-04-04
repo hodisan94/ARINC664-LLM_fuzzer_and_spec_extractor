@@ -711,7 +711,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--arbiter",
         default="openai",
-        choices=["openai", "anthropic", "google"],
+        choices=["openai", "anthropic", "mistral"],
         help="LLM provider to use as alignment arbiter"
     )
     parser.add_argument(
@@ -727,7 +727,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--judge",
         default=None,
-        choices=["openai", "anthropic", "google"],
+        choices=["openai", "anthropic", "mistral"],
         help="LLM provider to use as conflict judge (default: same as --arbiter)"
     )
     parser.add_argument(

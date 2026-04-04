@@ -1,5 +1,6 @@
 """
-Multi-provider LLM client supporting OpenAI (GPT), Anthropic (Claude), and Google (Gemini).
+Multi-provider LLM client supporting OpenAI (GPT), Anthropic (Claude),
+Google (Gemini), and Mistral.
 
 This module extends the existing llm_client.py to support multiple LLM providers
 for cross-model validation of protocol rule extraction.
@@ -7,7 +8,7 @@ for cross-model validation of protocol rule extraction.
 Required environment variables:
 - OPENAI_API_KEY: For GPT models
 - ANTHROPIC_API_KEY: For Claude models  
-- GOOGLE_API_KEY: For Gemini models
+- MISTRAL_API_KEY: For Mistral models
 """
 
 import os
@@ -21,7 +22,7 @@ class ModelProvider(Enum):
     """Supported LLM providers."""
     OPENAI = "openai"
     ANTHROPIC = "anthropic"
-    GOOGLE = "google"
+    MISTRAL = "mistral"
 
 
 class BaseLLMProvider(ABC):
@@ -170,19 +171,21 @@ class AnthropicProvider(BaseLLMProvider):
         return response.content[0].text.strip()
 
 
-class GoogleProvider(BaseLLMProvider):
-    """Google Gemini provider using the new google-genai library."""
+class MistralProvider(BaseLLMProvider):
+    """Mistral provider using OpenAI-compatible API."""
     
-    def __init__(self, model: str = "gemini-2.0-flash", api_key: Optional[str] = None):
+    def __init__(self, model: str = "mistral-large-latest", api_key: Optional[str] = None):
         super().__init__(model, api_key)
-        # Support both GOOGLE_API_KEY and GEMINI_API_KEY
-        self.api_key = api_key or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+        self.api_key = api_key or os.getenv("MISTRAL_API_KEY")
         
         if not self.api_key:
-            raise ValueError("GOOGLE_API_KEY or GEMINI_API_KEY environment variable not set")
+            raise ValueError("MISTRAL_API_KEY environment variable not set")
         
-        from google import genai
-        self.client = genai.Client(api_key=self.api_key)
+        from openai import OpenAI
+        self.client = OpenAI(
+            api_key=self.api_key,
+            base_url="https://api.mistral.ai/v1"
+        )
     
     def query(
         self,
@@ -191,22 +194,42 @@ class GoogleProvider(BaseLLMProvider):
         temperature: float = 0.7,
         max_tokens: int = 4096
     ) -> str:
-        # Gemini uses a different format - combine system and user prompts
-        full_prompt = f"""Instructions: {system_prompt}
-
-User Request:
-{user_prompt}"""
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
         
-        response = self.client.models.generate_content(
+        response = self.client.chat.completions.create(
             model=self.model,
-            contents=full_prompt,
-            config={
-                "temperature": temperature,
-                "max_output_tokens": max_tokens,
-            }
+            messages=messages,
+            temperature=temperature,
+            max_tokens=max_tokens
         )
         
-        return response.text.strip()
+        return response.choices[0].message.content.strip()
+    
+    def query_json(
+        self,
+        system_prompt: str,
+        user_prompt: str,
+        temperature: float = 0.7,
+        max_tokens: int = 4096
+    ) -> Dict[str, Any]:
+        """Mistral supports JSON mode via response_format."""
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
+        
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            response_format={"type": "json_object"}
+        )
+        
+        return json.loads(response.choices[0].message.content.strip())
 
 
 class MultiModelClient:
@@ -223,7 +246,7 @@ class MultiModelClient:
     DEFAULT_MODELS = {
         ModelProvider.OPENAI: "gpt-4o",
         ModelProvider.ANTHROPIC: "claude-sonnet-4-20250514",
-        ModelProvider.GOOGLE: "gemini-2.0-flash"
+        ModelProvider.MISTRAL: "mistral-large-latest"
     }
     
     def __init__(
@@ -259,8 +282,8 @@ class MultiModelClient:
             return OpenAIProvider(model=model)
         elif provider == ModelProvider.ANTHROPIC:
             return AnthropicProvider(model=model)
-        elif provider == ModelProvider.GOOGLE:
-            return GoogleProvider(model=model)
+        elif provider == ModelProvider.MISTRAL:
+            return MistralProvider(model=model)
         else:
             raise ValueError(f"Unknown provider: {provider}")
     

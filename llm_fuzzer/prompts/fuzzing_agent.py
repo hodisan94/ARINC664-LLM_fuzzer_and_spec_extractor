@@ -318,12 +318,39 @@ def _build_decision_guidelines(iteration: int, coverage_stats: Optional[Dict[str
                      f"Now DEEPEN: re-test covered categories with different VLs, "
                      f"parameters, and strategies. Overuse penalty is reduced.")
 
+    # Build mutation mechanism coverage section
+    used_mechs = coverage_stats.get("used_mutation_mechanisms", set()) if coverage_stats else set()
+    all_mechs = {
+        "mac_mutation_type:spoof_src": "Source MAC spoofing — triggers switch MAC validation",
+        "dest_mac_mutation:corrupt_prefix": "Dest MAC corruption — triggers ES constant-field check",
+        "frame_size>1518": "Oversized frames — triggers switch frame-size validation",
+        "timing_jitter_ms<0": "BAG violation (fast timing) — triggers BAG policing",
+        "sequence_number_override>0": "Sequence number override — triggers ES sequence check",
+        "token_bucket_stress": "Token bucket stress (frame_size=1500 + default BAG timing) — overflows bandwidth budget",
+    }
+    untested_mechs = {k: v for k, v in all_mechs.items() if k not in used_mechs}
+
+    mech_section = ""
+    if untested_mechs:
+        mech_lines = [
+            "\n*** UNTESTED MUTATION MECHANISMS (use these to find MORE bugs!) ***",
+            "These mutation types exercise DIFFERENT validation paths in the simulator.",
+            "Each one can reveal bugs that NO other mutation can find!",
+        ]
+        for mech, desc in untested_mechs.items():
+            param_hint = mech.split(":")[0] if ":" in mech else mech.split(">")[0] if ">" in mech else mech.split("<")[0]
+            mech_lines.append(f"  UNTESTED: {desc}")
+            mech_lines.append(f"           Set: {mech}")
+        mech_lines.append(f"\n{len(untested_mechs)} mutation mechanisms never tested — BIG opportunity!")
+        mech_section = "\n".join(mech_lines)
+
     return f"""
 {"=" * 70}
 DECISION GUIDELINES — Phase: {phase} (category coverage {cat_pct:.0f}%)
 {"=" * 70}
 
 {phase_msg}
+{mech_section}
 
 1. PICK YOUR RULE:
    - Look at the UNCOVERED CATEGORIES list above — each shows example rules
@@ -338,12 +365,26 @@ DECISION GUIDELINES — Phase: {phase} (category coverage {cat_pct:.0f}%)
 3. CUSTOM MUTATIONS (when no predefined TCs exist):
    - Propose specific values: bag_value, frame_size, sequence_number, etc.
 
-4. STRATEGY TYPES:
+4. IMPORTANT — MUTATION MECHANISMS FOR BUG FINDING:
+   - mac_mutation_type: "spoof_src" => finds bugs in switch MAC validation
+   - dest_mac_mutation: "corrupt_prefix" => finds bugs in ES constant-field check
+   - frame_size: >1518 (e.g. 2000) => finds bugs in frame-size validation
+   - sequence_number_override: 0 or 255 => finds bugs in sequence checking
+   - timing_jitter_ms: negative value (e.g. -5) => finds bugs in BAG policing
+   - TOKEN BUCKET STRESS: frame_size=1500 (do NOT change bag_value!)
+     => Sends max-size VALID frames at the VL's NORMAL BAG rate.
+        CRITICAL: Do NOT set bag_value — keep default timing so BAG policing passes.
+        The large frame_size causes cumulative bandwidth to overflow the
+        token bucket, triggering policing drops from the bandwidth check.
+        This is the ONLY way to test token-bucket enforcement!
+   Combine these with different rules for maximum coverage!
+
+5. STRATEGY TYPES:
    - "edge-case": boundary values (RECOMMENDED — most findings)
    - "adversarial": extreme violations, stress testing
    - "conformance": valid parameters, verify compliance
 
-5. VL ROTATION: spread tests across VLs (1001-3002)
+6. VL ROTATION: spread tests across VLs (1001-3002)
 
 ITERATION {iteration}: {phase_msg}
 """
@@ -459,12 +500,67 @@ Example 5 - Full control (stress test):
   "reasoning": "I decided to test multiple violations simultaneously: BAG=0, oversized frame, invalid seq, jitter, malformed payload."
 }
 
+Example 6 - MAC spoofing (finds MAC validation bugs):
+{
+  "target_vl": 2001,
+  "mutation_type": "mac_source_validation",
+  "test_cases": null,
+  "bag_value": null,
+  "frame_size": null,
+  "sequence_number": null,
+  "timing_jitter_ms": null,
+  "mac_mutation_type": "spoof_src",
+  "prob": 1.0,
+  "sequence_number_override": null,
+  "dest_mac_mutation": null,
+  "payload_pattern": null,
+  "strategy": "adversarial",
+  "reasoning": "Testing source MAC validation at the switch. spoof_src should trigger MAC error drops."
+}
+
+Example 7 - Destination MAC corruption (finds constant-field bugs):
+{
+  "target_vl": 1002,
+  "mutation_type": "constant_field_check",
+  "test_cases": null,
+  "bag_value": null,
+  "frame_size": null,
+  "sequence_number": null,
+  "timing_jitter_ms": null,
+  "mac_mutation_type": null,
+  "prob": null,
+  "sequence_number_override": null,
+  "dest_mac_mutation": "corrupt_prefix",
+  "payload_pattern": null,
+  "strategy": "adversarial",
+  "reasoning": "Testing ARINC 664 constant field check at receiving ES by corrupting the multicast prefix."
+}
+
+Example 8 - Sequence number override (finds sequence check bugs):
+{
+  "target_vl": 3001,
+  "mutation_type": "sequence_number_integrity",
+  "test_cases": null,
+  "bag_value": null,
+  "frame_size": null,
+  "sequence_number": null,
+  "timing_jitter_ms": null,
+  "mac_mutation_type": null,
+  "prob": null,
+  "sequence_number_override": 255,
+  "dest_mac_mutation": null,
+  "payload_pattern": null,
+  "strategy": "edge-case",
+  "reasoning": "Override sequence number to 255 (max uint8) to test sequence number boundary and integrity checking."
+}
+
 THINK STEP BY STEP:
 1. Which VL should I test? Why?
 2. What mutation parameters will expose bugs?
 3. What specific VALUES should I test? (not just rule names!)
 4. What strategy (conformance/edge-case/adversarial)?
 5. What do I expect to learn?
+6. Have I tested ALL mutation mechanisms? (mac_mutation_type, dest_mac_mutation, etc.)
 """
 
 

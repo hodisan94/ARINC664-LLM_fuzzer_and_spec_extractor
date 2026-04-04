@@ -17,7 +17,7 @@ Output:
     spec_extraction/multimodel_output/
     ├── rules_openai.json
     ├── rules_anthropic.json
-    ├── rules_google.json
+    ├── rules_mistral.json
     └── extraction_summary.json
 """
 
@@ -295,7 +295,7 @@ def run_multimodel_extraction(
         print("   Make sure API keys are set in environment variables:")
         print("   - OPENAI_API_KEY")
         print("   - ANTHROPIC_API_KEY")
-        print("   - GOOGLE_API_KEY")
+        print("   - MISTRAL_API_KEY")
     
     # Extract text from PDF
     print(f"\n📄 Extracting text from PDF...")
@@ -425,7 +425,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--providers",
         nargs="+",
-        choices=["openai", "anthropic", "google"],
+        choices=["openai", "anthropic", "mistral"],
         help="Specific providers to use (default: all available)"
     )
     parser.add_argument(
