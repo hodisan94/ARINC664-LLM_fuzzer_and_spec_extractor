@@ -1,0 +1,654 @@
+{
+  "metadata": {
+    "providers": [
+      "mistral",
+      "openai",
+      "anthropic"
+    ],
+    "arbiter": "openai",
+    "timestamp": "2026-04-13T19:22:35.734289",
+    "total_rules_input": {
+      "mistral": 0,
+      "openai": 11,
+      "anthropic": 25
+    }
+  },
+  "alignment": {
+    "aligned_groups": [
+      {
+        "group_id": "G001",
+        "canonical_name": "Standard Data Transmission Rate",
+        "canonical_category": "Transmission",
+        "matches": [
+          {
+            "provider": "openai",
+            "rule_id": "rule_001",
+            "field_name": "data_rate",
+            "constraint_value": "50 bps"
+          },
+          {
+            "provider": "anthropic",
+            "rule_id": "rule_001",
+            "field_name": "data_rate",
+            "constraint_value": "50 bps"
+          }
+        ],
+        "agreement": "full",
+        "consensus_value": "50 bps",
+        "conflict_details": null,
+        "confidence": "high"
+      },
+      {
+        "group_id": "G002",
+        "canonical_name": "Alternative Data Transmission Rate with FEC",
+        "canonical_category": "Transmission",
+        "matches": [
+          {
+            "provider": "openai",
+            "rule_id": "rule_002",
+            "field_name": "data_rate_with_fec",
+            "constraint_value": "25 bps"
+          },
+          {
+            "provider": "anthropic",
+            "rule_id": "rule_002",
+            "field_name": "data_rate_fec",
+            "constraint_value": "25 bps"
+          }
+        ],
+        "agreement": "full",
+        "consensus_value": "25 bps",
+        "conflict_details": null,
+        "confidence": "high"
+      },
+      {
+        "group_id": "G003",
+        "canonical_name": "Subframe Bit Length",
+        "canonical_category": "Frame Structure",
+        "matches": [
+          {
+            "provider": "openai",
+            "rule_id": "rule_003",
+            "field_name": "subframe_length",
+            "constraint_value": "300 bits"
+          },
+          {
+            "provider": "anthropic",
+            "rule_id": "rule_005",
+            "field_name": "subframe_length",
+            "constraint_value": "300 bits"
+          }
+        ],
+        "agreement": "full",
+        "consensus_value": "300 bits",
+        "conflict_details": null,
+        "confidence": "high"
+      },
+      {
+        "group_id": "G004",
+        "canonical_name": "Data Flow Direction",
+        "canonical_category": "Data Transmission",
+        "matches": [
+          {
+            "provider": "openai",
+            "rule_id": "rule_007",
+            "field_name": "data_flow_direction",
+            "constraint_value": "MSB_FIRST"
+          },
+          {
+            "provider": "anthropic",
+            "rule_id": "rule_008",
+            "field_name": "bit_transmission_order",
+            "constraint_value": "MSB_FIRST"
+          }
+        ],
+        "agreement": "full",
+        "consensus_value": "MSB_FIRST",
+        "conflict_details": null,
+        "confidence": "high"
+      },
+      {
+        "group_id": "G005",
+        "canonical_name": "Word Parity",
+        "canonical_category": "Frame Validation",
+        "matches": [
+          {
+            "provider": "openai",
+            "rule_id": "rule_006",
+            "field_name": "parity",
+            "constraint_value": "Each word in each frame shall contain parity."
+          },
+          {
+            "provider": "anthropic",
+            "rule_id": "rule_009",
+            "field_name": "parity_present",
+            "constraint_value": "true"
+          }
+        ],
+        "agreement": "partial",
+        "consensus_value": null,
+        "conflict_details": "OpenAI specifies the presence of parity in words, while Anthropic confirms it as a boolean requirement.",
+        "confidence": "medium"
+      },
+      {
+        "group_id": "G006",
+        "canonical_name": "Parity Bits",
+        "canonical_category": "Data Transmission",
+        "matches": [
+          {
+            "provider": "openai",
+            "rule_id": "rule_010",
+            "field_name": "parity_bits",
+            "constraint_value": "6 bits"
+          },
+          {
+            "provider": "anthropic",
+            "rule_id": "rule_011",
+            "field_name": "parity_bits",
+            "constraint_value": "6 bits"
+          }
+        ],
+        "agreement": "full",
+        "consensus_value": "6 bits",
+        "conflict_details": null,
+        "confidence": "high"
+      },
+      {
+        "group_id": "G007",
+        "canonical_name": "Noninformation Bearing Bits",
+        "canonical_category": "Data Transmission",
+        "matches": [
+          {
+            "provider": "openai",
+            "rule_id": "rule_011",
+            "field_name": "noninformation_bearing_bits",
+            "constraint_value": "2 bits"
+          },
+          {
+            "provider": "anthropic",
+            "rule_id": "rule_012",
+            "field_name": "parity_computation_bits",
+            "constraint_value": "2 bits"
+          }
+        ],
+        "agreement": "full",
+        "consensus_value": "2 bits",
+        "conflict_details": null,
+        "confidence": "high"
+      },
+      {
+        "group_id": "G008",
+        "canonical_name": "TLM Word Timing",
+        "canonical_category": "Data Transmission",
+        "matches": [
+          {
+            "provider": "openai",
+            "rule_id": "rule_009",
+            "field_name": "TLM_word_timing",
+            "constraint_value": "6 seconds"
+          },
+          {
+            "provider": "anthropic",
+            "rule_id": "rule_020",
+            "field_name": "TLM_transmission_interval",
+            "constraint_value": "6 seconds"
+          }
+        ],
+        "agreement": "full",
+        "consensus_value": "6 seconds",
+        "conflict_details": null,
+        "confidence": "high"
+      }
+    ],
+    "unique_rules": [
+      {
+        "provider": "openai",
+        "rule_id": "rule_004",
+        "name": "Frame Composition",
+        "category": "Frame Structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "openai",
+        "rule_id": "rule_005",
+        "name": "Word Order in Subframe",
+        "category": "Frame Structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "openai",
+        "rule_id": "rule_008",
+        "name": "TLM Word Length",
+        "category": "Data Transmission",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_003",
+        "name": "Frame length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_004",
+        "name": "Subframe count per frame",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_006",
+        "name": "Word count per subframe",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_007",
+        "name": "Word length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_010",
+        "name": "Subframe transmission duration constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_013",
+        "name": "TLM field bit length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_014",
+        "name": "HOW field bit length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_015",
+        "name": "Valid subframe numbers constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_016",
+        "name": "Subframe 5 page number range constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_017",
+        "name": "Data ID field bit length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_018",
+        "name": "SV Page ID field bit length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_019",
+        "name": "SV Health field bit length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_021",
+        "name": "Pi constant precision requirement",
+        "category": "mathematical_constants",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_022",
+        "name": "WGS 84 Earth equatorial radius",
+        "category": "earth_model_constants",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_023",
+        "name": "Oblate Earth gravity coefficient",
+        "category": "earth_model_constants",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_024",
+        "name": "ECEF to ECI coordinate transformation",
+        "category": "coordinate_system",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_025",
+        "name": "GPS signal propagation linearity in ECI",
+        "category": "signal_propagation",
+        "needs_verification": true,
+        "reason": "Only found by one model"
+      }
+    ],
+    "alignment_stats": {
+      "total_groups": 8,
+      "full_agreement": 6,
+      "partial_agreement": 1,
+      "conflicts": 0,
+      "unique_rules": 20
+    },
+    "unique_rules_verified": [
+      {
+        "provider": "openai",
+        "rule_id": "rule_004",
+        "name": "Frame Composition",
+        "category": "Frame Structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any information about frame composition, subframes, or specific bit lengths related to frames. The rule about frames consisting of five subframes, each 300 bits long, is not mentioned or supported by the text provided.",
+        "source_quote": "The provided text does not mention frame composition or subframes."
+      },
+      {
+        "provider": "openai",
+        "rule_id": "rule_005",
+        "name": "Word Order in Subframe",
+        "category": "Frame Structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not mention any rule about the order of TLM and HOW words in a subframe. The text primarily discusses variable length opaque data structures and message structures, but does not address the specific word order within subframes as described in the rule.",
+        "source_quote": "The provided text does not contain any information related to the order of TLM and HOW words in subframes."
+      },
+      {
+        "provider": "openai",
+        "rule_id": "rule_008",
+        "name": "TLM Word Length",
+        "category": "Data Transmission",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not mention anything about a 'TLM Word Length' or any specific requirement that a TLM word should be 30 bits long. The text primarily discusses traffic policing, frame sizes, and switch specifications, none of which relate to a telemetry word length constraint.",
+        "source_quote": "The relevant specification text provided does not contain any reference to a 'TLM Word Length' or its constraints."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_003",
+        "name": "Frame length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any information about a frame length constraint of 1500 bits or any mention of a frame structure made up of five subframes, each 300 bits long. The source section '20.3.2' mentioned in the rule is not present in the provided text, and there is no relevant information in the sections listed. Therefore, this rule cannot be confirmed as genuine based on the given text.",
+        "source_quote": "The provided text does not contain relevant information to support the rule."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_004",
+        "name": "Subframe count per frame",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any information about a 'Subframe count per frame' or a requirement for frames to be made up of five subframes. The source section '20.3.2' mentioned in the rule does not appear in the provided text, and there is no mention of a 1500 bit long frame or subframes in the relevant sections. Therefore, this rule cannot be confirmed as genuine based on the given text.",
+        "source_quote": "The provided text does not contain relevant information to support the rule."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_006",
+        "name": "Word count per subframe",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any reference to a rule about the word count per subframe or any details about subframe structure. The quoted source section '20.3.2' is not present in the provided text, and there is no mention of subframes or word counts. Therefore, the rule cannot be confirmed as genuine based on the given information.",
+        "source_quote": "The provided text does not include any relevant information about subframe word counts or structure."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_007",
+        "name": "Word length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any information regarding a 'Word length constraint' or any mention of subframes consisting of words that are 30 bits long. The source section '20.3.2' is not present in the provided text, and there is no mention of word length constraints in the available pages.",
+        "source_quote": "The relevant specification text provided does not include any mention of word length constraints or subframes consisting of 30-bit words."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_010",
+        "name": "Subframe transmission duration constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not mention any rule about a 'Subframe transmission duration constraint' with a duration of 3 seconds. The quoted section '150 BITS 3 SECONDS' and 'Figure 20-1' are not present in the provided text, and there is no mention of a specific subframe duration constraint in the relevant sections. The rule appears to be fabricated or incorrectly extracted.",
+        "source_quote": "The provided specification text does not contain any reference to a 'Subframe transmission duration constraint' or a duration of 3 seconds."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_013",
+        "name": "TLM field bit length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any information about a TLM field or a constraint of 22 bits. The text provided is mostly introductory and does not include technical details or specific rules regarding frame structure or TLM fields. Without the relevant section or figure mentioned, there is no evidence to support the existence of this rule in the provided text.",
+        "source_quote": "The provided text does not contain any reference to a 'TLM 22 BITS' constraint or Figure 20-1."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_014",
+        "name": "HOW field bit length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any information about a 'HOW field' or its bit length constraint. The source quote 'HOW 22 BITS' and reference to 'Figure 20-1' are not present in the text provided. Therefore, there is no basis to confirm this rule from the given text.",
+        "source_quote": "The relevant specification text provided does not mention the HOW field or any bit length constraints."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_015",
+        "name": "Valid subframe numbers constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any information regarding subframe numbering or constraints on valid subframe numbers. The quote and section referenced in the rule do not appear in the provided text, and there is no mention of subframe numbers or a figure labeled 'Figure 20-1'. Therefore, this rule cannot be verified as genuine based on the available information.",
+        "source_quote": "The provided text does not contain relevant information about subframe numbering."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_016",
+        "name": "Subframe 5 page number range constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any information regarding a 'Subframe 5 page number range constraint' or any mention of 'page_number_sf5'. The text provided is primarily introductory and does not include technical details or constraints related to frame structures or page numbering. Without evidence from the specification text, this rule cannot be confirmed.",
+        "source_quote": "The relevant specification text provided does not contain any mention of subframe page numbering constraints."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_017",
+        "name": "Data ID field bit length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any information about a 'Data ID field bit length constraint' or any mention of a 'DATA ID - 2 BITS'. The text provided is introductory and does not include specific technical details or figures that would support the rule as described.",
+        "source_quote": "The relevant specification text provided does not contain any mention of a Data ID field or its bit length."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_018",
+        "name": "SV Page ID field bit length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any reference to a 'SV Page ID field' or a constraint regarding its bit length. The source quote 'SV (PAGE) ID - 6 BITS' and the source section 'Figure 20-1' are not present in the given text. Therefore, there is no evidence in the provided specification text to support the existence of this rule.",
+        "source_quote": "The relevant specification text does not mention 'SV Page ID' or any related bit length constraint."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_019",
+        "name": "SV Health field bit length constraint",
+        "category": "frame_structure",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not mention anything about an 'SV Health field' or a constraint of 6 bits for such a field. The text focuses on port number allocation and switch specifications, which are unrelated to the rule in question.",
+        "source_quote": "The relevant specification text provided does not contain any information about 'SV Health field' or its bit length."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_021",
+        "name": "Pi constant precision requirement",
+        "category": "mathematical_constants",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not mention any requirement for the precision of the mathematical constant Pi. The text focuses on network performance metrics such as latency, jitter, and frame processing, with no reference to mathematical constants or their precision.",
+        "source_quote": "The provided specification text does not contain any reference to the mathematical constant Pi or its precision."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_022",
+        "name": "WGS 84 Earth equatorial radius",
+        "category": "earth_model_constants",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any information related to the WGS 84 Earth equatorial radius or any earth model constants. The text is focused on network protocols, addressing, and switch specifications, which are unrelated to geophysical parameters.",
+        "source_quote": "The specification text provided does not mention WGS 84 Earth Equatorial Radius or any related constants."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_023",
+        "name": "Oblate Earth gravity coefficient",
+        "category": "earth_model_constants",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any reference to an 'Oblate Earth gravity coefficient' or a 'J2 coefficient'. The text is related to the ARINC 664 Part 7 specification, which focuses on Avionics Full Duplex Switched Ethernet (AFDX) networks, and does not cover earth model constants or physical parameters related to gravity coefficients.",
+        "source_quote": "The specification text provided does not mention any 'J2 coefficient' or related earth model constants."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_024",
+        "name": "ECEF to ECI coordinate transformation",
+        "category": "coordinate_system",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The specification text provided does not mention any coordinate transformation rules, specifically the ECEF to ECI transformation or any related formulas. The text focuses on the overview and relationship of ARINC 664 Part 7 with other standards and does not delve into coordinate systems or transformations.",
+        "source_quote": "The provided text does not contain any information regarding coordinate transformations or the specific rule in question."
+      },
+      {
+        "provider": "anthropic",
+        "rule_id": "rule_025",
+        "name": "GPS signal propagation linearity in ECI",
+        "category": "signal_propagation",
+        "needs_verification": true,
+        "reason": "Only found by one model",
+        "verification": "rejected",
+        "confidence": "high",
+        "corrected_value": null,
+        "justification": "The provided specification text does not contain any information related to GPS signal propagation, ECI coordinate systems, or the physics of signal propagation. The ARINC 664 Part 7 specification is focused on Avionics Full Duplex Switched Ethernet (AFDX) networks, which are unrelated to GPS signal propagation. Therefore, the rule is not genuinely stated in the specification text.",
+        "source_quote": "The specification text provided does not mention GPS signals or ECI coordinate systems."
+      }
+    ]
+  },
+  "metrics": {
+    "total_aligned_groups": 8,
+    "full_agreement": 7,
+    "partial_agreement": 1,
+    "conflicts": 0,
+    "unique_rules": 20,
+    "total_distinct_rules": 28,
+    "pairwise_agreement": {
+      "anthropic_vs_openai": 1.0
+    },
+    "fleiss_kappa": -0.098,
+    "kappa_interpretation": "Less than chance agreement"
+  },
+  "verification_stats": {
+    "total_verified": 20,
+    "confirmed": 0,
+    "rejected": 20,
+    "errors": 0
+  }
+}

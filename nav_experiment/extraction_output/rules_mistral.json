@@ -1,0 +1,9 @@
+{
+  "rules": [],
+  "extraction_stats": {
+    "total_rules": 0,
+    "categories_found": [],
+    "testable_rules": 0,
+    "note": "Aggregated locally (LLM aggregation failed)"
+  }
+}
