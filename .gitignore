@@ -55,11 +55,19 @@
 !tests/**
 
 # =============================================================
-# TRACK: AFDX Simulator (custom ns-3 module)
+# TRACK: AFDX Simulators (custom ns-3 modules)
 # =============================================================
 !examples/
 !examples/AFDX_V3/
 !examples/AFDX_V3/**
+!examples/AFDX_NAV/
+!examples/AFDX_NAV/**
+
+# =============================================================
+# TRACK: NAV Experiment (supervisor demo)
+# =============================================================
+!nav_experiment/
+!nav_experiment/**
 
 # =============================================================
 # TRACK: C++ Fuzzing Extensions
