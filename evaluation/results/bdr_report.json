@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-03T19:26:35.749538",
+  "generated": "2026-04-08T00:24:30.383288",
   "bugs": [
     {
       "id": "skip_bag_policing",
@@ -56,16 +56,16 @@
       "bugs_detected": 6,
       "bugs_total": 8,
       "bdr": 0.75,
-      "mean_iterations_to_first_detection": 0.5,
+      "mean_iterations_to_first_detection": 2.0,
       "per_bug": {
         "skip_bag_policing": {
           "detected": true,
-          "first_detection_iter": 0,
+          "first_detection_iter": 2,
           "description": "Switch skips BAG timing enforcement"
         },
         "skip_frame_validation": {
           "detected": true,
-          "first_detection_iter": 0,
+          "first_detection_iter": 2,
           "description": "Switch skips frame size validation"
         },
         "skip_mac_validation": {
@@ -85,7 +85,56 @@
         },
         "skip_constant_field": {
           "detected": true,
+          "first_detection_iter": 3,
+          "description": "End System skips constant-field MAC check"
+        },
+        "skip_sequence_check": {
+          "detected": true,
           "first_detection_iter": 2,
+          "description": "End System skips sequence-number integrity check"
+        },
+        "accept_oversized": {
+          "detected": true,
+          "first_detection_iter": 2,
+          "description": "Switch accepts frames larger than 1518 bytes"
+        }
+      }
+    },
+    "Boofuzz": {
+      "fuzzer": "Boofuzz",
+      "bugs_detected": 4,
+      "bugs_total": 8,
+      "bdr": 0.5,
+      "mean_iterations_to_first_detection": 1.5,
+      "per_bug": {
+        "skip_bag_policing": {
+          "detected": true,
+          "first_detection_iter": 0,
+          "description": "Switch skips BAG timing enforcement"
+        },
+        "skip_frame_validation": {
+          "detected": true,
+          "first_detection_iter": 3,
+          "description": "Switch skips frame size validation"
+        },
+        "skip_mac_validation": {
+          "detected": false,
+          "first_detection_iter": null,
+          "description": "Switch skips source MAC check"
+        },
+        "skip_token_bucket": {
+          "detected": false,
+          "first_detection_iter": null,
+          "description": "Switch skips token-bucket policing"
+        },
+        "skip_vl_check": {
+          "detected": false,
+          "first_detection_iter": null,
+          "description": "Switch skips VL authorization"
+        },
+        "skip_constant_field": {
+          "detected": false,
+          "first_detection_iter": null,
           "description": "End System skips constant-field MAC check"
         },
         "skip_sequence_check": {
@@ -95,7 +144,56 @@
         },
         "accept_oversized": {
           "detected": true,
+          "first_detection_iter": 3,
+          "description": "Switch accepts frames larger than 1518 bytes"
+        }
+      }
+    },
+    "Random": {
+      "fuzzer": "Random",
+      "bugs_detected": 2,
+      "bugs_total": 8,
+      "bdr": 0.25,
+      "mean_iterations_to_first_detection": 0.0,
+      "per_bug": {
+        "skip_bag_policing": {
+          "detected": true,
           "first_detection_iter": 0,
+          "description": "Switch skips BAG timing enforcement"
+        },
+        "skip_frame_validation": {
+          "detected": false,
+          "first_detection_iter": null,
+          "description": "Switch skips frame size validation"
+        },
+        "skip_mac_validation": {
+          "detected": false,
+          "first_detection_iter": null,
+          "description": "Switch skips source MAC check"
+        },
+        "skip_token_bucket": {
+          "detected": false,
+          "first_detection_iter": null,
+          "description": "Switch skips token-bucket policing"
+        },
+        "skip_vl_check": {
+          "detected": false,
+          "first_detection_iter": null,
+          "description": "Switch skips VL authorization"
+        },
+        "skip_constant_field": {
+          "detected": false,
+          "first_detection_iter": null,
+          "description": "End System skips constant-field MAC check"
+        },
+        "skip_sequence_check": {
+          "detected": true,
+          "first_detection_iter": 0,
+          "description": "End System skips sequence-number integrity check"
+        },
+        "accept_oversized": {
+          "detected": false,
+          "first_detection_iter": null,
           "description": "Switch accepts frames larger than 1518 bytes"
         }
       }
