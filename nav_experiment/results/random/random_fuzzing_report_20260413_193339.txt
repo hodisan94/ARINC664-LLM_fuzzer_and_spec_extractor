@@ -1,0 +1,38 @@
+======================================================================
+RANDOM BASELINE FUZZER - FINAL REPORT
+======================================================================
+
+Total Iterations: 3
+Successful: 3
+Failed: 0
+
+Reward Statistics:
+  Mean: 1.933
+  Max: 2.000
+  Min: 1.800
+  Std: 0.115
+
+Bugs Found: 0
+
+VLs Tested: 3 / 8
+  VL IDs: [1001, 1003, 2002]
+
+Protocol Rules Tested: 3
+  Rules: ['ip_layer.stream_identifier_option_ignore', 'tcp_connection_management.concurrent_listen_support', 'transmission_performance.maximum_jitter_absolute_bound']
+
+Strategy Distribution:
+  conformance: 2
+  edge-case: 1
+
+Test Mode Distribution:
+  custom: 2
+  predefined: 1
+
+Top 5 Iterations (by reward):
+  Iter 1: VL=1001, rule=tcp_connection_management.concurrent_listen_support, reward=2.000
+  Iter 2: VL=2002, rule=transmission_performance.maximum_jitter_absolute_bound, reward=2.000
+  Iter 0: VL=1003, rule=ip_layer.stream_identifier_option_ignore, reward=1.800
+
+======================================================================
+NOTE: This is a RANDOM baseline - no learning or adaptation
+======================================================================

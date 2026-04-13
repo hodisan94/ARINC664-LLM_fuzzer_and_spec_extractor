@@ -66,6 +66,7 @@ public:
   // Statistics getters
   uint32_t GetFramesSent() const { return m_framesSent; }
   uint32_t GetFramesReceived() const { return m_framesReceived; }
+  uint32_t GetFramesRejected() const { return m_framesRejected; }
   uint32_t GetDuplicatesDiscarded() const { return m_duplicatesDiscarded; }
 
 protected:

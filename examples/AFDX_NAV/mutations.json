@@ -1,0 +1,11 @@
+{
+  "vlId": 2002,
+  "prob": 0.0,
+  "payload_delta_bytes": 0,
+  "timing_jitter_ms": 0,
+  "mac_mutation": "none",
+  "is_extreme_test": true,
+  "sequence_number_override": 0,
+  "dest_mac_mutation": "none",
+  "inject_bug": "none"
+}

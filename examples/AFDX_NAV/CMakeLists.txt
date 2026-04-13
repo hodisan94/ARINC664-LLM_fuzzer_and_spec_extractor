@@ -75,6 +75,24 @@ build_example(
     ${libbridge}
 )
 
+# AFDX NAV Fuzz Target (mutations.json support for fuzzing pipeline)
+build_example(
+  NAME afdx-nav-fuzz
+  SOURCE_FILES
+    simulations/afdx-nav-fuzz.cc
+    model/afdx-frame.cc
+    model/afdx-virtual-link.cc
+    model/afdx-end-system.cc
+    model/afdx-switch.cc
+    model/afdx-traffic-generator.cc
+  LIBRARIES_TO_LINK
+    ${libcore}
+    ${libnetwork}
+    ${libinternet}
+    ${libcsma}
+    ${libbridge}
+)
+
 # AFDX Navigation Application Simulation
 # GPS Receiver + Flight Control over AFDX
 build_example(

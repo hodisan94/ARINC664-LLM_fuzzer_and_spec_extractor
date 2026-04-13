@@ -1,0 +1,41 @@
+======================================================================
+RANDOM BASELINE FUZZER - FINAL REPORT
+======================================================================
+
+Total Iterations: 200
+Successful: 200
+Failed: 0
+
+Reward Statistics:
+  Mean: 2.119
+  Max: 2.710
+  Min: 0.800
+  Std: 0.417
+
+Bugs Found: 0
+
+VLs Tested: 8 / 8
+  VL IDs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+
+Protocol Rules Tested: 169
+  Rules: ['Address', 'Broadcast Address', 'Communication Ports.no_ip_fragmentation_for_sampling_com_ports', 'Data Transmission.transfer_syntax_translation', 'ErrorHandling.buffer_overflow_handling_in_transmission', 'Float_32', 'ICMP Handling.echo_reply_source_address', 'ICMP Handling.source_quench_handling', 'ICMP.generate_icmp_destination_unreachable', 'ICMP_Echo_Reply', 'ICMP_Echo_Request_Response', 'ICMP_Message_Handling.explicit_configuration_requirement_for_address_mask_agent', 'ICMP_Message_Handling.mandatory_address_mask_reply_broadcast_on_initialization', 'IP_Addressing.ip_address_class_a_private_format_requirement', 'Interface.full_access_to_ip_mechanisms', 'Network Interoperability.interoperable_functional_elements', 'Opaque Data', 'Port Binding.sap_port_reception_binding_uniqueness', 'Redundancy Management.dual_network_transmission', 'Redundancy Management.first_win_frame_delivery', 'Redundancy Management.handling_frame_loss', 'Redundancy Management.single_ds_for_single_threaded_concentrator', 'Signed_32', 'String', 'Switch Operational Modes', 'Switching.discard_frames_on_link_failure', 'TCP Zero Window Probing', 'TCP_Acknowledgment.maximum_ack_delay', 'TCP_Configuration.initial_rtt_value', 'TCP_Configuration.rto_upper_bound', 'Traffic Control.bounded_arrival_distribution', 'VL_authorized_on_port', 'Virtual Link.maintain_data_ordering', 'Virtual Link.single_source_per_virtual_link', 'addressing.destination_address_filtering', 'addressing.ip_address_class_a_private_format', 'addressing.source_address_ownership_requirement', 'afdx_reception_port_parameter_set_binding', 'bandwidth_allocation_gap', 'configuration_access_on_power_on', 'configuration_file_consistency', 'configuration_management.position_based_configuration_table_access', 'constant_end_system_latency', 'data_presentation_after_reassembly', 'datagram_transmission.maximum_datagram_size_to_off_net_destinations', 'default_reception_vl_identifier', 'default_ttl_value', 'delayed_ack_timing', 'destination_address', 'dynamic_length_for_arinc_429_data_structure', 'ethernet_bit_order', 'ethernet_frame_size', 'ethernet_payload', 'fifo_discipline_for_queuing', 'file_transfer.tftp_block_size_limit', 'frame_based_frame_acceptance', 'frame_check_sequence', 'frame_forwarding_on_valid_crc', 'frame_size', 'frame_size_validation', 'frame_structure', 'frame_structure.frame_overhead_components', 'frame_transmission.complete_structure_transmission', 'frame_validation.frame_check_sequence_validation', 'frame_validation.frame_discard_on_validation_failure', 'icmp_echo_request_handling', 'icmp_error_messages', 'icmp_message_type', 'icmp_type', 'in_order_fragment_transmission', 'integrity_checking.invalid_frame_discard_requirement', 'integrity_checking.valid_sequence_number_range_for_frame_acceptance', 'integrity_checking.zero_sequence_number_transmission_condition', 'interface_id', 'ip_header_checksum', 'ip_layer.multiple_source_route_options_prohibition', 'ipv4_packet_structure_compliance', 'ipv4_total_length_field_range_in_afdx', 'latency', 'latency_calculation.delayed_frame_latency_formula', 'mac_address', 'mac_layer_frame_reception', 'maintain_vl_frame_order', 'maximum_allowed_jitter', 'maximum_bandwidth_allocation', 'maximum_ethernet_frame_size', 'maximum_jitter_value', 'maximum_latency_for_single_frame', 'maximum_port_delay', 'maximum_sub_vl_fifo_queues_per_vl', 'maximum_technological_latency_in_transmission', 'message_encapsulation', 'message_format.functional_status_sets_32_bit_boundary_alignment', 'message_format.string_data_2_byte_boundary_alignment', 'message_formatting.single_arinc_429_label_message_structure', 'message_structure.bit_order_within_bytes', 'message_structure.global_spare_field_fill_value', 'message_structure.unused_spare_field_fill_value', 'minimum_datagram_reassembly_size', 'minimum_ethernet_frame_size', 'minimum_inter_frame_gap', 'network_architecture', 'network_communication', 'network_data_element_byte_order_requirement', 'not_applicable_requirements_interpretation', 'ops_configuration_file_usage', 'ops_mode_health_indicator_state', 'ordinal_integrity_within_virtual_link', 'physical_layer.port_speed_options', 'physical_port_configuration.default_physical_port_designation', 'physical_port_configuration.default_port_speed_configuration', 'policing_rate_tolerance', 'port_maximum_delay_constraint', 'port_number', 'port_number_identification', 'protocol_stack.required_protocol_support', 'protocol_stack.tcp_optional_support', 'redundant_vl_dual_data_delivery_mode', 'reserved_word_32_bit_boundary_alignment', 'same_ops_file_loaded_in_all_switches', 'sampling_service.freshness_indication_requirement', 'sampling_service.sampling_message_size_constraint', 'sampling_service.sampling_service_no_error_control', 'sap_port_receiver_buffer_overflow_handling', 'sap_port_transmission_binding_uniqueness', 'side_id_coding', 'source_address', 'static_route_definition', 'sub_vl_fifo_queue_exclusivity', 'switch_buffering.buffer_priority_balance', 'switch_configuration.high_priority_vl_output_buffer_size', 'switch_configuration.low_priority_vl_output_buffer_size', 'switch_configuration.pin_value_encoding', 'switch_configuration.port_operational_state', 'switch_configuration.vl_priority_classification', 'switch_enters_passive_mode', 'switch_initialization_time', 'switch_operational_mode', 'switch_operational_modes.dl_mode_end_system_function_configuration', 'switch_performance.technological_latency_limit', 'switch_processing', 'switching.discard_frames_on_congestion', 'switching.no_preemption_of_low_priority_frames', 'switching_function.frame_filtering_and_policing_order', 'switching_traffic_prioritization_by_mac_address', 'tcp_addressing.consistent_local_address_usage', 'tcp_addressing.ip_source_address_request', 'tcp_behavior.tcp_maximum_segment_size_requirement', 'tcp_connection_management.time_wait_duration', 'tcp_options.illegal_option_length_handling_requirement', 'tcp_options.unsupported_tcp_option_handling_requirement', 'tcp_windowing.zero_window_probe_support_requirement', 'timely_delivery_requirement_for_afdx_networks', 'traffic_policing', 'traffic_policing.default_vl_policing_activation', 'traffic_policing_resolution', 'traffic_shaping.bag_value_range', 'transmission_performance.maximum_jitter_absolute_bound', 'transport_layer_addressing.dynamic/private_port_numbers_range', 'update_address_mask_from_first_reply', 'urgent_pointer', 'use_clock_driven_isn_selection', 'variable_length_field_population', 'virtual_link_configuration.default_reception_vl_uniqueness', 'vl_bandwidth_allocation_gap', 'vl_id', 'vl_id_port_authorization', 'window_size', 'wire_speed_capability']
+
+Strategy Distribution:
+  conformance: 69
+  adversarial: 66
+  edge-case: 65
+
+Test Mode Distribution:
+  predefined: 101
+  custom: 99
+
+Top 5 Iterations (by reward):
+  Iter 0: VL=2001, rule=Switch Operational Modes, reward=2.710
+  Iter 5: VL=2003, rule=switch_configuration.vl_priority_classification, reward=2.710
+  Iter 6: VL=3001, rule=timely_delivery_requirement_for_afdx_networks, reward=2.710
+  Iter 13: VL=2002, rule=ICMP_Echo_Request_Response, reward=2.710
+  Iter 38: VL=3002, rule=String, reward=2.710
+
+======================================================================
+NOTE: This is a RANDOM baseline - no learning or adaptation
+======================================================================
