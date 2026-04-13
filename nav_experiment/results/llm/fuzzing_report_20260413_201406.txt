@@ -1,0 +1,33 @@
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 50
+Successful: 50
+Failed: 0
+
+Reward Statistics:
+  Mean: 1.820
+  Max: 2.200
+  Min: 1.000
+
+Bugs Found: 0
+
+VLs Tested: 8 / 8
+  VL IDs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+
+Mutation Types Tested: 33
+  Types: ['Addressing.frame_based_filtering', 'Addressing.location_id_coding', 'Byte ACi', 'Data Transmission.transfer_syntax_translation', 'Frame Validation.word_parity', 'ICMP Handling.echo_reply_source_address', 'ICMP Handling.multicast_echo_request_discard_allowance', 'IP_Addressing.ip_multicast_address_format_requirement', 'Options Processing', 'TTL Management.decrement_ttl_on_forwarding', 'Traffic Policing.byte_based_traffic_policing', 'Transmission.standard_data_transmission_rate', 'VL_authorized_on_port', 'addressing.destination_address_filtering', 'demultiplexing.receiver_demultiplexing_based_on_destination_addresses', 'ethernet_frame_size_handling_range', 'frame_structure', 'integrity_checking.valid_sequence_number_range_for_frame_acceptance', 'integrity_checking.zero_sequence_number_transmission_condition', 'ip_header_checksum', 'ip_version', 'mac_destination_address', 'mac_destination_address_constant_field', 'mac_destination_address_format', 'mac_source_address_format', 'maximum_frame_size_for_vl', 'sequence_number', 'switching.switch_forwarding_based_on_mac_destination', 'traffic_policing', 'traffic_policing.initial_account_setting', 'traffic_shaping.bag_frame_rate_limit', 'udp_checksum', 'vl_id_port_authorization']
+
+Strategy Distribution:
+  edge-case: 35
+  adversarial: 15
+
+Top 5 Iterations (by reward):
+  Iter 1: VL=2001, mutation=Data Transmission.transfer_syntax_translation, reward=2.200
+  Iter 2: VL=3002, mutation=Transmission.standard_data_transmission_rate, reward=2.200
+  Iter 3: VL=3001, mutation=frame_structure, reward=2.200
+  Iter 4: VL=3002, mutation=Traffic Policing.byte_based_traffic_policing, reward=2.200
+  Iter 5: VL=3001, mutation=traffic_policing, reward=2.200
+
+======================================================================
