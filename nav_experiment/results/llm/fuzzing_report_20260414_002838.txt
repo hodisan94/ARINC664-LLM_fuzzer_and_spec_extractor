@@ -1,0 +1,28 @@
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 52
+Successful: 1
+Failed: 51
+
+Reward Statistics:
+  Mean: 2.200
+  Max: 2.200
+  Min: 2.200
+
+Bugs Found: 0
+
+VLs Tested: 1 / 8
+  VL IDs: [3001]
+
+Mutation Types Tested: 1
+  Types: ['AFDX-Specific']
+
+Strategy Distribution:
+  adversarial: 1
+
+Top 5 Iterations (by reward):
+  Iter 1: VL=3001, mutation=AFDX-Specific, reward=2.200
+
+======================================================================

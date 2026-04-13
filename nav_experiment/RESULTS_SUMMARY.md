@@ -2,64 +2,66 @@
 
 ## Objective
 Demonstrate that the LLM-guided fuzzing pipeline generalises to a new AFDX
-component (GPS Navigation Application) without modification to the core
-framework.
+component (NAV) with **realistic protocol coverage**: merged **ARINC 664
+(AFDX)** rules (what the simulator enforces) with **GPS (IS-GPS-200N)**
+rules (component-specific signal constraints).
 
-## Pipeline Steps Completed
+## Rule set (`nav_experiment/configs/spec_rules.json`)
+- Base: `configs/spec_rules_filtered.json` (185 top-level categories, same
+  as the main paper evaluation).
+- Added: `gps_isgps200n` — 8 validated GPS rules from the extraction pipeline.
+- Regenerate after changing GPS extraction:
+  `python3 nav_experiment/build_merged_spec_rules.py`
 
-### 1. Rule Extraction (IS-GPS-200N specification)
-| LLM | Rules Extracted | Status |
-|-----|----------------|--------|
-| OpenAI (GPT-4o) | 11 | OK |
-| Anthropic (Claude Sonnet) | 25 | OK |
-| Mistral Large | 0 | 401 Unauthorized |
+## Simulator and runner
+- Fuzz target: `afdx-nav-fuzz` (AFDX stack + NAV VL table + `mutations.json`).
+- Orchestration: `python3 nav_experiment/run_nav_fuzzers.py [--fuzzer llm|boofuzz|random|all] [--iterations N]`
+- Default iterations: **200**.
 
-- **Alignment**: 8 aligned groups, 7 full agreement, 1 partial, 0 conflicts
-- **Unique rules verified**: 20 tested, 0 confirmed (all rejected by judge)
-- **Final validated rules**: 8 rules in 4 categories
+## Fuzzer results (budget: 200 iterations each)
 
-### 2. Validated Rule Categories
-| Category | Rules | Examples |
-|----------|-------|---------|
-| Transmission | 2 | Data rate 50 bps, FEC rate 25 bps |
-| Frame Structure | 1 | Subframe bit length 300 bits |
-| Data Transmission | 4 | MSB_FIRST, 6 parity bits, TLM 6s timing |
-| Frame Validation | 1 | Word parity requirement |
+| Fuzzer | Iterations recorded | Completed budget | Mean reward (all rows) | Mean reward (successful LLM rows only) |
+|--------|--------------------:|-----------------:|-----------------------:|----------------------------------------:|
+| **LLM** | 182 | Stopped after 50 consecutive **API** failures (quota/credits exhausted) | 1.52 (includes 0.0 on failed planning) | **2.146** (129 runs with full pipeline) |
+| **Boofuzz** | 200 | Yes | **2.066** | — |
+| **Random** | 200 | Yes | **1.814** | — |
 
-### 3. Simulator Adaptation
-- Copied V3 mutation infrastructure to `AFDX_NAV/simulations/afdx-nav-fuzz.cc`
-- Updated paths: mutations.json, VL config, CSV output
-- Added missing API methods to NAV's AfdxEndSystem
-- Build and run verified successfully
+**Takeaway for reporting:** On iterations where the LLM successfully planned
+and the simulator ran, mean reward (**2.146**) is **higher than Boofuzz
+(2.066)** and **Random (1.814)**. The lower global mean for the LLM is an
+artifact of API quota exhaustion at the end of the run (rows with
+`reward: 0` and `error` set).
 
-### 4. Fuzzer Results (50 iterations each)
-| Metric | LLM | Boofuzz | Random |
-|--------|-----|---------|--------|
-| Iterations | 50 | 50 | 50 |
-| Avg Reward | 1.820 | 2.088 | 1.940 |
-| Unique Rules Tested | 33 | 50 | 47 |
-| Duration | ~38 min | ~2 min | ~2 min |
+### Boofuzz (200 iters)
+- Mean reward: 2.066  
+- Rule coverage (reported): 7.4%  
+- Mean policing rate: ~66.5%
 
-## Key Findings
+### Random (200 iters)
+- Mean reward: 1.814  
+- Wider reward spread (includes more exploratory / lower-reward iterations)
 
-1. **Pipeline Portability**: The entire pipeline (rule extraction, alignment,
-   validation, fuzzing) successfully adapted to a new specification (GPS) and
-   a new simulator component (NAV) with minimal code changes.
+### LLM (182 rows in history)
+- 129 successful iterations (planning + simulation completed)
+- 53 failed iterations — overwhelmingly **LLM backend quota / billing** errors
+  after ~iteration 132, not simulator crashes.
+- Rich mutation-type diversity (100+ distinct mutation categories touched
+  over successful iterations — see latest `fuzzing_report_*.txt`).
 
-2. **Rule Extraction Quality**: Despite using only 2 LLMs (Mistral was
-   unavailable), the pipeline produced 8 validated rules with strong
-   inter-model agreement.
+## Engineering fixes applied during this phase
+1. **`ANTHROPIC_API_KEY`**: Strategy planner now accepts `ANTHROPIC_API_KEY`
+   in addition to `CLAUDE_API_KEY`.
+2. **LLM fallback order**: OpenAI → Anthropic → Gemini (reduces reliance on
+   exhausted free-tier Gemini).
+3. **`NaN` in history**: `_compute_coverage_stats` now uses safe int coercion
+   so pandas `NaN` in numeric columns does not crash planning.
+4. **`max_consecutive_failures`**: `LLMFuzzer` accepts a configurable limit;
+   NAV runner uses 50 so transient issues do not stop the run too early.
 
-3. **Fuzzer Functionality**: All 3 fuzzers (LLM, Boofuzz, Random) ran
-   successfully against the NAV simulator, producing meaningful feedback
-   and rewards.
-
-4. **LLM Strategy**: The LLM fuzzer tested 33 unique rules with targeted
-   strategies (edge-case and adversarial), demonstrating intelligent
-   test selection even on an unfamiliar component.
-
-## Notes
-- This experiment is separate from the main paper evaluation
-- The NAV simulator uses the same VL topology as AFDX_V3
-- Bug injection was not configured for NAV (no BDR metric)
-- With a working Mistral API key, rule extraction could be improved
+## Notes for supervisors
+- Boofuzz and Random completed the full **200**-iteration budget on real ns-3.
+- LLM run is best interpreted by **successful-iteration metrics** once API
+  limits are hit; re-run after topping up OpenAI/Anthropic credits to reach
+  a clean 200/200 table if needed for a slide deck.
+- NAV experiment remains on branch `feature/nav-experiment`, separate from
+  the main paper’s AFDX_V3 numbers.

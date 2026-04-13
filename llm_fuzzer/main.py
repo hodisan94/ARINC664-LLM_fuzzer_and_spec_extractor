@@ -46,7 +46,8 @@ class LLMFuzzer:
         history_path: str = "llm_fuzzer/data/iteration_history.jsonl",
         output_dir: str = "llm_fuzzer/output",
         max_iterations: int = 50,
-        available_vls: Optional[List[int]] = None
+        available_vls: Optional[List[int]] = None,
+        max_consecutive_failures: int = 10,
     ):
         """
         Initialize the fuzzer.
@@ -59,6 +60,7 @@ class LLMFuzzer:
             output_dir: Directory for output files
             max_iterations: Maximum number of fuzzing iterations
             available_vls: List of available VL IDs
+            max_consecutive_failures: Stop after this many failed iterations in a row
         """
         self.spec_rules_path = spec_rules_path
         self.test_cases_path = test_cases_path
@@ -67,6 +69,7 @@ class LLMFuzzer:
         self.output_dir = Path(output_dir)
         self.max_iterations = max_iterations
         self.available_vls = available_vls or [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+        self.max_consecutive_failures = max_consecutive_failures
         
         # Create output directory
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -314,7 +317,7 @@ class LLMFuzzer:
             return True
         
         # Too many consecutive failures
-        if consecutive_failures >= 10:
+        if consecutive_failures >= self.max_consecutive_failures:
             print(f"\nStopping: {consecutive_failures} consecutive failures")
             return True
         

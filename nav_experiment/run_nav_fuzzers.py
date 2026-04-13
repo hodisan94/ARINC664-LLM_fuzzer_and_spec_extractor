@@ -9,8 +9,6 @@ then delegates to the standard fuzzer main() functions.
 import sys
 import os
 import argparse
-import json
-import shutil
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -52,9 +50,6 @@ def patch_simulator_runner():
 NAV_VLS = [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
 
 
-NAV_VLS = [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
-
-
 def clean_history(output_dir):
     """Ensure clean history for a fresh NAV run."""
     os.makedirs(output_dir, exist_ok=True)
@@ -76,6 +71,7 @@ def run_llm(iterations, output_dir):
         max_iterations=iterations,
         available_vls=NAV_VLS,
         history_path=history_file,
+        max_consecutive_failures=50,
     )
     fuzzer.run()
 
@@ -115,7 +111,7 @@ def run_random(iterations, output_dir):
 def main():
     parser = argparse.ArgumentParser(description="Run fuzzers on AFDX-NAV simulator")
     parser.add_argument("--fuzzer", choices=["llm", "boofuzz", "random", "all"], default="all")
-    parser.add_argument("--iterations", type=int, default=50)
+    parser.add_argument("--iterations", type=int, default=200)
     args = parser.parse_args()
 
     patch_simulator_runner()

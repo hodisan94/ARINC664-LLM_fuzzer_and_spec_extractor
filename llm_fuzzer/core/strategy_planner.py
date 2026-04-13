@@ -13,6 +13,7 @@ The LLM has freedom to choose predefined test cases OR propose custom mutations.
 """
 
 import json
+import math
 import os
 import re
 import pandas as pd
@@ -26,6 +27,19 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from llm_fuzzer.utils.spec_loader import SpecificationLoader
 from llm_fuzzer.utils.test_case_loader import TestCaseLoader
 from llm_fuzzer.prompts.fuzzing_agent import build_fuzzing_prompt, format_vl_statistics
+
+
+def _safe_int_for_stats(val) -> int:
+    """Convert value to int for coverage stats; NaN/inf/None -> 0."""
+    if val is None:
+        return 0
+    try:
+        f = float(val)
+        if math.isnan(f) or math.isinf(f):
+            return 0
+        return int(f)
+    except (ValueError, TypeError):
+        return 0
 
 try:
     from openai import OpenAI
@@ -96,7 +110,7 @@ class LLMStrategyPlanner:
             self.gemini_client = None
             self.gemini_model = None
 
-        claude_key = os.getenv("CLAUDE_API_KEY")
+        claude_key = os.getenv("CLAUDE_API_KEY") or os.getenv("ANTHROPIC_API_KEY")
         if claude_key and ANTHROPIC_AVAILABLE:
             self.claude_client = anthropic.Anthropic(api_key=claude_key)
             self.claude_model = "claude-sonnet-4-20250514"
@@ -105,7 +119,9 @@ class LLMStrategyPlanner:
             self.claude_model = None
 
         if not self.client and not self.gemini_client and not self.claude_client:
-            raise ValueError("Set OPENAI_API_KEY, GEMINI_API_KEY, or CLAUDE_API_KEY.")
+            raise ValueError(
+                "Set OPENAI_API_KEY, GEMINI_API_KEY, or CLAUDE_API_KEY / ANTHROPIC_API_KEY."
+            )
         
         # Load spec rules and test cases
         self.spec_loader = SpecificationLoader(spec_rules_path)
@@ -434,15 +450,15 @@ class LLMStrategyPlanner:
                 if dm and dm not in ("none", ""):
                     used_mechs.add(f"dest_mac_mutation:{dm}")
                 fs = row.get("frame_size")
-                if fs and int(fs or 0) > 1518:
+                if fs and _safe_int_for_stats(fs) > 1518:
                     used_mechs.add("frame_size>1518")
                 tj = row.get("timing_jitter_ms")
-                if tj and int(tj or 0) < 0:
+                if tj and _safe_int_for_stats(tj) < 0:
                     used_mechs.add("timing_jitter_ms<0")
                 so = row.get("sequence_number_override")
-                if so and int(so or 0) > 0:
+                if so and _safe_int_for_stats(so) > 0:
                     used_mechs.add("sequence_number_override>0")
-                fs_val = int(row.get("frame_size") or 0)
+                fs_val = _safe_int_for_stats(row.get("frame_size"))
                 bag_val = row.get("bag_value")
                 if 1400 <= fs_val <= 1518 and bag_val is None:
                     used_mechs.add("token_bucket_stress")
@@ -504,40 +520,31 @@ class LLMStrategyPlanner:
         return results
     
     def _query_llm(self, prompt: str) -> str:
-        """Query LLM with prompt, trying OpenAI -> Gemini -> Claude."""
+        """Query LLM with prompt, trying OpenAI -> Anthropic -> Gemini."""
         sys_msg = "You are an expert protocol fuzzing agent. Respond ONLY with valid JSON."
         messages = [
             {"role": "system", "content": sys_msg},
             {"role": "user", "content": prompt}
         ]
 
-        # Try OpenAI-compatible backends first
-        openai_backends = []
-        if self.client:
-            openai_backends.append(("OpenAI", self.client, self.model, {
-                "max_completion_tokens": 8000,
-                "response_format": {"type": "json_object"}
-            }))
-        if self.gemini_client:
-            openai_backends.append(("Gemini", self.gemini_client, self.gemini_model, {}))
-
         last_err = None
-        for name, client, model, extra_kwargs in openai_backends:
+
+        if self.client:
             try:
-                response = client.chat.completions.create(
-                    model=model,
+                response = self.client.chat.completions.create(
+                    model=self.model,
                     messages=messages,
-                    **extra_kwargs
+                    max_completion_tokens=8000,
+                    response_format={"type": "json_object"},
                 )
                 content = response.choices[0].message.content
-                print(f"[{name}] {model} -> {len(content) if content else 0} chars")
+                print(f"[OpenAI] {self.model} -> {len(content) if content else 0} chars")
                 if content:
                     return content
             except Exception as e:
                 last_err = e
-                print(f"[{name}] failed: {e}")
+                print(f"[OpenAI] failed: {e}")
 
-        # Try Claude as last resort
         if self.claude_client:
             try:
                 response = self.claude_client.messages.create(
@@ -554,6 +561,20 @@ class LLMStrategyPlanner:
             except Exception as e:
                 last_err = e
                 print(f"[Claude] failed: {e}")
+
+        if self.gemini_client:
+            try:
+                response = self.gemini_client.chat.completions.create(
+                    model=self.gemini_model,
+                    messages=messages,
+                )
+                content = response.choices[0].message.content
+                print(f"[Gemini] {self.gemini_model} -> {len(content) if content else 0} chars")
+                if content:
+                    return content
+            except Exception as e:
+                last_err = e
+                print(f"[Gemini] failed: {e}")
 
         raise Exception(f"All LLM backends failed. Last error: {last_err}")
 

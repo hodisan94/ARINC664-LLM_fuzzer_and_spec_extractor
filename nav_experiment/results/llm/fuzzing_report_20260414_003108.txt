@@ -1,0 +1,34 @@
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 183
+Successful: 173
+Failed: 10
+
+Reward Statistics:
+  Mean: 2.049
+  Max: 2.200
+  Min: 0.940
+
+Bugs Found: 0
+
+VLs Tested: 8 / 8
+  VL IDs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+
+Mutation Types Tested: 167
+  Types: ['AFDX-Specific', 'Addressing.frame_based_filtering', 'Broadcast Handling', 'Buffer Management', 'Communication Mode', 'Communication Ports', 'Communication Ports.no_ip_fragmentation_for_sampling_com_ports', 'Communication Ports.unidirectional_multicast_for_sampling', 'Communication_Ports', 'Communication_Ports.afdx_reception_port_quintuplet_uniqueness', 'Communication_Ports.afdx_transmission_port_quintuplet_uniqueness', 'Configuration', 'Data Encoding', 'Data Encoding.boolean_size_constraint', 'Data Format', 'Data Handling', 'Data Representation', 'Data Transmission', 'Data-Link Layer', 'End System Communication', 'End System Configuration', 'Error Handling', 'Fault Handling', 'Fault Tolerance', 'Flow Control', 'Frame Configuration', 'Frame Construction', 'Frame Formatting', 'Frame Identification', 'Frame Length', 'Frame Size', 'Frame Structure', 'Frame Transmission', 'Frame Validation', 'ICMP_Message_Handling.mandatory_address_mask_reply_broadcast_on_initialization', 'IP Addressing', 'IP Forwarding - TTL Management', 'IP Layer - Addressing', 'IP Layer - Configuration', 'IP Layer - Fragmentation and Reassembly', 'IP Layer - Header Validation', 'IP Layer - IP Options', 'IP Layer - TTL Handling', 'IP Layer - Type of Service', 'IP Protocol Validation', 'IPv4 Packet Length', 'Integrity Checking', 'Interoperability', 'Jitter.jitter_time_calculation', 'Latency Calculation', 'Latency Determinism', 'Link Behavior', 'MAC Performance', 'Message Formatting', 'Message Structure', 'Network Architecture', 'Network Behavior', 'Network Functions', 'Network Layer.valid_frame_filtering_criteria', 'Network Monitoring', 'Network Performance', 'Physical Configuration', 'Physical Layer', 'Policing', 'Port Allocation', 'Port Configuration', 'Port Management', 'Ports', 'Protocol Compliance', 'Protocol Usage', 'Protocol_Stack', 'Quality of Service', 'Reassembly and Fragmentation', 'Reception.buffer_overflow_handling', 'Redundancy', 'Reliability', 'Scheduling', 'Sequence Numbering', 'Service Guarantees', 'Service Quality', 'Status Indication', 'Sub-VL Fragmentation', 'Sub-VL Layering', 'Sub-VL Queue Management', 'Switch Initialization', 'Switch Modes', 'Switch Monitoring', 'Switch Operating Modes', 'Switch Operational Modes', 'Switch Performance', 'Switch Specification', 'Switch Traffic Policing', 'Timing', 'Traffic Control.bounded_arrival_distribution', 'Traffic Policing.byte_based_traffic_policing', 'Traffic Prioritization', 'UDP Protocol', 'Virtual Link Bandwidth', 'Virtual Link Configuration', 'Virtual Link Data Integrity', 'Virtual Link Definition', 'Virtual Link Latency', 'Virtual Link Partition Segregation', 'Virtual Link Source Uniqueness', 'Virtual Links Default Configuration', 'address_validation', 'addressing.source_address_ownership_requirement', 'broadcast_addressing', 'communication_services', 'configuration_file_consistency', 'configuration_management.position_based_configuration_table_access', 'data_formatting', 'data_integrity', 'data_presentation_after_reassembly', 'data_segmentation', 'data_size', 'default_port_speed', 'destination_address_validity', 'ethernet_frame_compliance', 'fault_indicator_condition', 'fault_indicator_state_during_initialization', 'fragmentation_reassembly', 'frame_integrity', 'frame_routing', 'frame_validation.frame_check_sequence_validation', 'functional_status_set_alignment', 'initialization', 'integrity_checking.valid_sequence_number_range_for_frame_acceptance', 'integrity_checking.zero_sequence_number_transmission_condition', 'ip_datagram_processing', 'ip_header_checksum', 'ipv4_packet_structure_compliance', 'latency_for_delayed_frame', 'mac_source_address_format', 'message_encapsulation', 'message_format', 'message_ordering', 'message_transmission', 'minimum_reassembly_buffer_size', 'operating_modes', 'ops_configuration_file_usage', 'ordinal_integrity_within_virtual_link', 'performance_measurement_burst_duration', 'port_speed_configuration', 'protocol_encapsulation', 'protocol_profile', 'reserved_word_alignment', 'safety_critical_communication', 'sampling_service.sampling_message_size_constraint', 'sap_port_receiver_buffer_overflow_handling', 'status_priority_enforcement', 'sub_vl_fifo_queue_exclusivity', 'sub_vl_round_robin_scheduling', 'switch_buffering.minimum_output_port_buffer_capacity', 'switch_configuration.high_priority_vl_output_buffer_size', 'switch_configuration.low_priority_vl_output_buffer_size', 'switch_filtering', 'switch_operation.traffic_policing_function_requirement', 'switch_processing', 'switch_timing', 'switching.switch_forwarding_based_on_mac_destination', 'traffic_shaping.bag_frame_rate_limit', 'transport_layer_addressing', 'udp_checksum', 'virtual_link.vl_bandwidth_isolation', 'virtual_link_management', 'vl_configuration']
+
+Strategy Distribution:
+  edge-case: 138
+  adversarial: 22
+  conformance: 13
+
+Top 5 Iterations (by reward):
+  Iter 1: VL=2001, mutation=Broadcast Handling, reward=2.200
+  Iter 3: VL=3002, mutation=mac_source_address_format, reward=2.200
+  Iter 5: VL=1003, mutation=Communication Ports, reward=2.200
+  Iter 6: VL=3001, mutation=Traffic Policing.byte_based_traffic_policing, reward=2.200
+  Iter 9: VL=2002, mutation=traffic_shaping.bag_frame_rate_limit, reward=2.200
+
+======================================================================
