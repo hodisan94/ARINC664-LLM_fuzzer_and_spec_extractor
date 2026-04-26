@@ -1,0 +1,104 @@
+================================================================================
+AFDX PCAP ANALYSIS REPORT
+================================================================================
+File:          /home/joesef/ns-3-dev/examples/AFDX/output/pcap/nav-app/afdx-nav-gps-netB-0-1.pcap
+Analysis Time: 2026-01-11 11:27:15
+
+--------------------------------------------------------------------------------
+FRAME SUMMARY
+--------------------------------------------------------------------------------
+Total Frames:   48
+Valid Frames:   48
+Invalid Frames: 0
+
+--------------------------------------------------------------------------------
+VIRTUAL LINK STATISTICS
+--------------------------------------------------------------------------------
+
+VL 100:
+  Frame Count:     48
+  Total Bytes:     4512
+  Frame Rate:      5.11 fps
+  Data Rate:       3.84 kbps
+  CRC Valid:       28
+  CRC Invalid:     20
+  Sequence Gaps:   0
+
+--------------------------------------------------------------------------------
+GPS DATA STATISTICS
+--------------------------------------------------------------------------------
+Total GPS Messages: 48
+Position X Range:   -47830.37 to 48112.78 m
+Position Y Range:   -45610.18 to 48214.58 m
+Position Z Range:   1106.63 to 11973.18 m
+Fix Types:
+  3D_FIX: 45
+  NO_FIX: 3
+
+--------------------------------------------------------------------------------
+CRC ERRORS (20 total)
+--------------------------------------------------------------------------------
+  Packet 3: VL 100, MsgID 2
+  Packet 5: VL 100, MsgID 4
+  Packet 9: VL 100, MsgID 8
+  Packet 11: VL 100, MsgID 10
+  Packet 16: VL 100, MsgID 15
+  Packet 17: VL 100, MsgID 16
+  Packet 22: VL 100, MsgID 21
+  Packet 23: VL 100, MsgID 22
+  Packet 25: VL 100, MsgID 24
+  Packet 27: VL 100, MsgID 26
+  ... and 10 more
+
+--------------------------------------------------------------------------------
+FRAME DETAILS (first 5 frames)
+--------------------------------------------------------------------------------
+
+Packet #1 @ 0.300000s
+  Src: 02:00:0b:01:00:01 -> Dst: 03:00:00:00:00:64
+  VL ID: 100, Seq: 1
+  GPS Message ID: 0, Rx ID: 1, Timestamp: 300 ms
+  Position: (16073.44, 22068.07, 5585.79) m
+  Velocity: (75.31, 24.39, 2.31) m/s
+  TOW: 0.300s, Sats: 11, Fix: 3D_FIX
+  CRC: 0xd84272f7 (VALID)
+
+Packet #2 @ 0.500000s
+  Src: 02:00:0b:01:00:01 -> Dst: 03:00:00:00:00:64
+  VL ID: 100, Seq: 2
+  GPS Message ID: 1, Rx ID: 1, Timestamp: 500 ms
+  Position: (-20655.90, 1108.65, 10931.42) m
+  Velocity: (43.18, 12.60, -1.45) m/s
+  TOW: 0.500s, Sats: 9, Fix: 3D_FIX
+  CRC: 0xbf47e13d (VALID)
+
+Packet #3 @ 0.700000s
+  Src: 02:00:0b:01:00:01 -> Dst: 03:00:00:00:00:64
+  VL ID: 100, Seq: 3
+  GPS Message ID: 2, Rx ID: 1, Timestamp: 700 ms
+  Position: (14704.77, -17002.17, 7633.96) m
+  Velocity: (201.85, -24.88, -7.44) m/s
+  TOW: 0.700s, Sats: 6, Fix: 3D_FIX
+  CRC: 0xc4524c88 (INVALID)
+
+Packet #4 @ 0.900000s
+  Src: 02:00:0b:01:00:01 -> Dst: 03:00:00:00:00:64
+  VL ID: 100, Seq: 4
+  GPS Message ID: 3, Rx ID: 1, Timestamp: 900 ms
+  Position: (-4324.02, 14920.98, 4359.78) m
+  Velocity: (-173.08, -114.37, -10.75) m/s
+  TOW: 0.900s, Sats: 11, Fix: 3D_FIX
+  CRC: 0x8cd10689 (VALID)
+
+Packet #5 @ 1.100000s
+  Src: 02:00:0b:01:00:01 -> Dst: 03:00:00:00:00:64
+  VL ID: 100, Seq: 5
+  GPS Message ID: 4, Rx ID: 1, Timestamp: 1100 ms
+  Position: (12392.35, -17150.85, 4428.09) m
+  Velocity: (245.06, 161.78, -12.59) m/s
+  TOW: 1.100s, Sats: 5, Fix: 3D_FIX
+  CRC: 0x7c160375 (INVALID)
+
+================================================================================
+END OF REPORT
+================================================================================

@@ -1,0 +1,451 @@
+{
+  "rules": [
+    {
+      "id": "rule_001",
+      "category": "data_transmission",
+      "subcategory": "transmission_rate",
+      "name": "L1/L2 data transmission rate",
+      "field_name": "data_rate",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 50,
+        "unit": "bps"
+      },
+      "source_quote": "The data stream shall be transmitted by the SV on the L1 and L2 channels at a rate of 50 bps.",
+      "source_section": "20.3.1",
+      "testable": true,
+      "test_hint": "Generate frames at incorrect data rates (not 50 bps) and verify network rejection"
+    },
+    {
+      "id": "rule_002",
+      "category": "data_transmission",
+      "subcategory": "transmission_rate",
+      "name": "L2 CM channel data transmission rate with FEC",
+      "field_name": "data_rate_fec",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 25,
+        "unit": "bps"
+      },
+      "source_quote": "upon ground command, the data stream shall be transmitted by the Block IIR-M SV on the L2 CM channel at a rate of 25 bps using FEC encoding resulting in 50 sps.",
+      "source_section": "20.3.1",
+      "testable": true,
+      "test_hint": "Test FEC-encoded transmission at rates other than 25 bps and verify network behavior"
+    },
+    {
+      "id": "rule_003",
+      "category": "frame_structure",
+      "subcategory": "frame_format",
+      "name": "Frame length constraint",
+      "field_name": "frame_length",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 1500,
+        "unit": "bits"
+      },
+      "source_quote": "the message structure shall utilize a basic format of a 1500 bit long frame made up of five subframes, each subframe being 300 bits long.",
+      "source_section": "20.3.2",
+      "testable": true,
+      "test_hint": "Generate frames with lengths other than 1500 bits and observe network handling"
+    },
+    {
+      "id": "rule_004",
+      "category": "frame_structure",
+      "subcategory": "subframe_format",
+      "name": "Subframe count per frame",
+      "field_name": "subframe_count",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 5,
+        "unit": null
+      },
+      "source_quote": "the message structure shall utilize a basic format of a 1500 bit long frame made up of five subframes",
+      "source_section": "20.3.2",
+      "testable": true,
+      "test_hint": "Create frames with incorrect number of subframes (not 5) and test network validation"
+    },
+    {
+      "id": "rule_005",
+      "category": "frame_structure",
+      "subcategory": "subframe_format",
+      "name": "Subframe length constraint",
+      "field_name": "subframe_length",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 300,
+        "unit": "bits"
+      },
+      "source_quote": "Each subframe shall consist of ten words, each 30 bits long",
+      "source_section": "20.3.2",
+      "testable": true,
+      "test_hint": "Generate subframes with lengths other than 300 bits and verify network rejection"
+    },
+    {
+      "id": "rule_006",
+      "category": "frame_structure",
+      "subcategory": "word_format",
+      "name": "Word count per subframe",
+      "field_name": "words_per_subframe",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 10,
+        "unit": null
+      },
+      "source_quote": "Each subframe shall consist of ten words, each 30 bits long",
+      "source_section": "20.3.2",
+      "testable": true,
+      "test_hint": "Create subframes with incorrect word count (not 10) and test network validation"
+    },
+    {
+      "id": "rule_007",
+      "category": "frame_structure",
+      "subcategory": "word_format",
+      "name": "Word length constraint",
+      "field_name": "word_length",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 30,
+        "unit": "bits"
+      },
+      "source_quote": "Each subframe shall consist of ten words, each 30 bits long",
+      "source_section": "20.3.2",
+      "testable": true,
+      "test_hint": "Generate words with lengths other than 30 bits and observe network behavior"
+    },
+    {
+      "id": "rule_008",
+      "category": "frame_structure",
+      "subcategory": "bit_ordering",
+      "name": "MSB transmission order requirement",
+      "field_name": "bit_transmission_order",
+      "data_type": "behavioral",
+      "constraint": {
+        "type": "behavioral",
+        "value": "MSB_FIRST",
+        "unit": null
+      },
+      "source_quote": "DIRECTION OF DATA FLOW FROM SV MSB FIRST",
+      "source_section": "Figure 20-1",
+      "testable": true,
+      "test_hint": "Send frames with LSB first bit ordering to test if network devices properly reject or handle incorrect bit ordering"
+    },
+    {
+      "id": "rule_009",
+      "category": "data_integrity",
+      "subcategory": "parity_validation",
+      "name": "Word parity requirement",
+      "field_name": "parity_present",
+      "data_type": "boolean",
+      "constraint": {
+        "type": "boolean",
+        "value": true,
+        "unit": null
+      },
+      "source_quote": "Each word in each frame shall contain parity (reference Section 20.3.5)",
+      "source_section": "20.3.2",
+      "testable": true,
+      "test_hint": "Send words without parity bits or with incorrect parity and test network validation"
+    },
+    {
+      "id": "rule_010",
+      "category": "frame_structure",
+      "subcategory": "timing",
+      "name": "Subframe transmission duration constraint",
+      "field_name": "subframe_duration",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 3,
+        "unit": "seconds"
+      },
+      "source_quote": "150 BITS 3 SECONDS",
+      "source_section": "Figure 20-1",
+      "testable": true,
+      "test_hint": "Send subframes with transmission durations other than 3 seconds"
+    },
+    {
+      "id": "rule_011",
+      "category": "data_integrity",
+      "subcategory": "parity_validation",
+      "name": "Parity bit field length constraint",
+      "field_name": "parity_bits",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 6,
+        "unit": "bits"
+      },
+      "source_quote": "P = 6 PARITY BITS",
+      "source_section": "Figure 20-1",
+      "testable": true,
+      "test_hint": "Send frames with parity fields containing other than 6 bits"
+    },
+    {
+      "id": "rule_012",
+      "category": "data_integrity",
+      "subcategory": "parity_validation",
+      "name": "Non-information bearing bits for parity constraint",
+      "field_name": "parity_computation_bits",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 2,
+        "unit": "bits"
+      },
+      "source_quote": "t = 2 NONINFORMATION BEARING BITS USED FOR PARITY COMPUTATION",
+      "source_section": "Figure 20-1",
+      "testable": true,
+      "test_hint": "Send frames with other than 2 non-information bearing bits used for parity computation"
+    },
+    {
+      "id": "rule_013",
+      "category": "frame_structure",
+      "subcategory": "tlm_field",
+      "name": "TLM field bit length constraint",
+      "field_name": "tlm_bits",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 22,
+        "unit": "bits"
+      },
+      "source_quote": "TLM 22 BITS",
+      "source_section": "Figure 20-1",
+      "testable": true,
+      "test_hint": "Send frames with TLM fields containing other than 22 bits"
+    },
+    {
+      "id": "rule_014",
+      "category": "frame_structure",
+      "subcategory": "how_field",
+      "name": "HOW field bit length constraint",
+      "field_name": "how_bits",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 22,
+        "unit": "bits"
+      },
+      "source_quote": "HOW 22 BITS",
+      "source_section": "Figure 20-1",
+      "testable": true,
+      "test_hint": "Send frames with HOW fields containing other than 22 bits"
+    },
+    {
+      "id": "rule_015",
+      "category": "frame_structure",
+      "subcategory": "subframe_numbering",
+      "name": "Valid subframe numbers constraint",
+      "field_name": "subframe_number",
+      "data_type": "enum",
+      "constraint": {
+        "type": "allowed_values",
+        "value": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "unit": null
+      },
+      "source_quote": "SUBFRAME NO. 1 N/A ... SUBFRAME NO. 2 N/A ... SUBFRAME NO. 3 N/A ... SUBFRAME NO. 5",
+      "source_section": "Figure 20-1",
+      "testable": true,
+      "test_hint": "Send frames with subframe numbers outside the range 1-5"
+    },
+    {
+      "id": "rule_016",
+      "category": "frame_structure",
+      "subcategory": "page_numbering",
+      "name": "Subframe 5 page number range constraint",
+      "field_name": "page_number_sf5",
+      "data_type": "range",
+      "constraint": {
+        "type": "range",
+        "value": [
+          1,
+          25
+        ],
+        "unit": null
+      },
+      "source_quote": "SUBFRAME NO. 5 1 THRU 24 ... SUBFRAME NO. 5 25",
+      "source_section": "Figure 20-1",
+      "testable": true,
+      "test_hint": "Send subframe 5 with page numbers outside the range 1-25"
+    },
+    {
+      "id": "rule_017",
+      "category": "frame_structure",
+      "subcategory": "data_identification",
+      "name": "Data ID field bit length constraint",
+      "field_name": "data_id_length",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 2,
+        "unit": "bits"
+      },
+      "source_quote": "DATA ID - 2 BITS",
+      "source_section": "Figure 20-1",
+      "testable": true,
+      "test_hint": "Send frames with Data ID fields of incorrect length (more or fewer than 2 bits) to test field validation"
+    },
+    {
+      "id": "rule_018",
+      "category": "frame_structure",
+      "subcategory": "satellite_identification",
+      "name": "SV Page ID field bit length constraint",
+      "field_name": "sv_page_id_length",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 6,
+        "unit": "bits"
+      },
+      "source_quote": "SV (PAGE) ID - 6 BITS",
+      "source_section": "Figure 20-1",
+      "testable": true,
+      "test_hint": "Send frames with SV Page ID fields of incorrect length (more or fewer than 6 bits) to test field validation"
+    },
+    {
+      "id": "rule_019",
+      "category": "frame_structure",
+      "subcategory": "health_data",
+      "name": "SV Health field bit length constraint",
+      "field_name": "sv_health_length",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 6,
+        "unit": "bits"
+      },
+      "source_quote": "SV HEALTH - 6 BITS",
+      "source_section": "Figure 20-1",
+      "testable": true,
+      "test_hint": "Send frames with SV Health fields of incorrect length (more or fewer than 6 bits per SV) to test health data validation"
+    },
+    {
+      "id": "rule_020",
+      "category": "frame_structure",
+      "subcategory": "timing",
+      "name": "TLM word transmission frequency",
+      "field_name": "TLM_transmission_interval",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "range",
+        "value": 6,
+        "unit": "seconds"
+      },
+      "source_quote": "occurs every six seconds in the data frame",
+      "source_section": "20.3.3.1",
+      "testable": true,
+      "test_hint": "Send TLM words at intervals other than 6 seconds"
+    },
+    {
+      "id": "rule_021",
+      "category": "mathematical_constants",
+      "subcategory": "precision_requirements",
+      "name": "Pi constant precision requirement",
+      "field_name": "pi_value",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "format",
+        "value": 3.1415926535898,
+        "unit": null
+      },
+      "source_quote": "\u03c0 is a mathematical constant, the ratio of a circle's circumference to its diameter. Here \u03c0 is taken as \u03c0 = 3.1415926535898.",
+      "source_section": "20.3.3.4.3.2",
+      "testable": true,
+      "test_hint": "Use a different precision value for \u03c0 in calculations and observe if the system accepts or rejects it"
+    },
+    {
+      "id": "rule_022",
+      "category": "earth_model_constants",
+      "subcategory": "physical_parameters",
+      "name": "WGS 84 Earth equatorial radius",
+      "field_name": "earth_equatorial_radius",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "format",
+        "value": 6378137.0,
+        "unit": "meters"
+      },
+      "source_quote": "RE = 6378137.0 meters WGS 84 Earth Equatorial Radius",
+      "source_section": "Table 20-IV",
+      "testable": true,
+      "test_hint": "Use a different value for Earth's equatorial radius in position calculations and verify system behavior"
+    },
+    {
+      "id": "rule_023",
+      "category": "earth_model_constants",
+      "subcategory": "physical_parameters",
+      "name": "Oblate Earth gravity coefficient",
+      "field_name": "j2_coefficient",
+      "data_type": "numeric",
+      "constraint": {
+        "type": "format",
+        "value": 0.0010826262,
+        "unit": null
+      },
+      "source_quote": "J2 = 0.0010826262 Oblate Earth Gravity Coefficient",
+      "source_section": "Table 20-IV",
+      "testable": true,
+      "test_hint": "Modify the J2 gravity coefficient value and test if the system detects the change in gravitational calculations"
+    },
+    {
+      "id": "rule_024",
+      "category": "coordinate_system",
+      "subcategory": "transformation",
+      "name": "ECEF to ECI coordinate transformation",
+      "field_name": "coordinate_transformation",
+      "data_type": "behavioral",
+      "constraint": {
+        "type": "formula",
+        "value": "x = x*cos(\u03b8) - y*sin(\u03b8); y = x*sin(\u03b8) + y*cos(\u03b8); z = z; where \u03b8 = \u03a9\u0307e*(t - t0)",
+        "unit": null
+      },
+      "source_quote": "x = x cos(\u03b8) - y sin(\u03b8); y = x sin(\u03b8) + y cos(\u03b8); z = z; where \u03b8 = \u03a9\u0307e(t - t0)",
+      "source_section": "20.3.3.4.3.3.2",
+      "testable": true,
+      "test_hint": "Send coordinate data that doesn't follow the proper transformation equations and verify if the system validates the coordinate conversion"
+    },
+    {
+      "id": "rule_025",
+      "category": "signal_propagation",
+      "subcategory": "physics",
+      "name": "GPS signal propagation linearity in ECI",
+      "field_name": "signal_propagation",
+      "data_type": "behavioral",
+      "constraint": {
+        "type": "behavioral",
+        "value": "GPS signals propagate in straight lines at constant speed c in ECI coordinate system",
+        "unit": null
+      },
+      "source_quote": "In an ECI coordinate system, GPS signals propagate in straight lines at the constant speed c",
+      "source_section": "20.3.3.4.3.3.2",
+      "testable": true,
+      "test_hint": "Test with signal propagation models that don't assume straight-line propagation or constant speed"
+    }
+  ],
+  "extraction_stats": {
+    "total_rules": 25,
+    "categories_found": [
+      "data_transmission",
+      "frame_structure",
+      "data_integrity",
+      "mathematical_constants",
+      "earth_model_constants",
+      "coordinate_system",
+      "signal_propagation"
+    ],
+    "testable_rules": 25
+  }
+}

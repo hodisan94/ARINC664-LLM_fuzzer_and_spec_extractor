@@ -117,18 +117,12 @@ The following files contain hardcoded absolute paths to `/home/hodisan1994/ns-3-
 | File | Line | Type |
 |------|------|------|
 | `llm_fuzzer/utils/simulator_runner.py` | ~33 | Default `ns3_path` parameter |
-| `tools/ai_fuzzer_agent.py` | ~61 | `ROOT_DIR` constant |
-| `scripts/run_experiments.sh` | ~3 | `ROOT` variable |
 
 > **Recommendation:** Replace with `Path(__file__).resolve().parent.parent` or environment variable.
 
 ---
 
 ## C++ Dependencies
-
-### `extensions/fuzzing/payload-provider.h`
-- Includes: `../../scratch/afdx/global-sim-state.h` (relative path)
-- **Warning:** Moving `extensions/` will break this include.
 
 ### `examples/AFDX_V3/`
 - Self-contained (no external C++ dependencies beyond standard ns-3)
@@ -144,7 +138,6 @@ The following files contain hardcoded absolute paths to `/home/hodisan1994/ns-3-
 | Loose `.md` summaries | `archive/` |
 | `paper_sections/` | `docs/paper/` |
 | `presentation_context/` | `docs/presentation/` |
-| `.sh` scripts | `scripts/` (use absolute paths internally) |
 | `test_*.py` (top-level) | `tests/` (use absolute sys.path) |
 
 ## DO NOT Move
@@ -158,5 +151,3 @@ The following files contain hardcoded absolute paths to `/home/hodisan1994/ns-3-
 | `spec_extraction/` | Uses sys.path relative to project root |
 | `configs/` | Referenced by virtually every module |
 | `examples/AFDX_V3/` | Part of ns-3 build system, referenced by simulator_runner |
-| `extensions/` | C++ relative includes to scratch/ |
-| `tools/` | Standalone but referenced by shell scripts |

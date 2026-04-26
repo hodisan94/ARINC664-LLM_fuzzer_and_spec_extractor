@@ -1,6 +1,6 @@
 """
 Multi-provider LLM client supporting OpenAI (GPT), Anthropic (Claude),
-Google (Gemini), and Mistral.
+and Mistral.
 
 This module extends the existing llm_client.py to support multiple LLM providers
 for cross-model validation of protocol rule extraction.
@@ -239,7 +239,7 @@ class MultiModelClient:
     Usage:
         client = MultiModelClient()
         results = client.query_all(system_prompt, user_prompt)
-        # results = {"openai": "...", "anthropic": "...", "google": "..."}
+        # results = {"openai": "...", "anthropic": "...", "mistral": "..."}
     """
     
     # Default models for each provider
@@ -376,7 +376,7 @@ def get_single_provider(provider_name: str) -> BaseLLMProvider:
     Get a single LLM provider by name.
     
     Args:
-        provider_name: One of 'openai', 'anthropic', 'google'
+        provider_name: One of 'openai', 'anthropic', 'mistral'
     
     Returns:
         Configured LLM provider

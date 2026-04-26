@@ -1,0 +1,34 @@
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 39
+Successful: 29
+Failed: 10
+
+Reward Statistics:
+  Mean: 2.117
+  Max: 2.200
+  Min: 1.800
+
+Bugs Found: 0
+
+VLs Tested: 8 / 8
+  VL IDs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+
+Mutation Types Tested: 29
+  Types: ['AFDX-Specific', 'Broadcast Handling', 'Buffer Management', 'Communication Mode', 'Communication Ports', 'Configuration', 'Data Encoding', 'Data Format', 'Data Handling', 'Data Representation', 'Data-Link Layer', 'End System Communication', 'End System Configuration', 'Error Handling', 'Fault Handling', 'Fault Tolerance', 'Flow Control', 'Traffic Policing.byte_based_traffic_policing', 'destination_address_validity', 'ethernet_frame_compliance', 'functional_status_set_alignment', 'ip_header_checksum', 'ipv4_packet_structure_compliance', 'mac_destination_address_format', 'performance_measurement_burst_duration', 'reserved_word_alignment', 'switching.switch_forwarding_based_on_mac_destination', 'traffic_shaping.bag_value_range', 'udp_checksum']
+
+Strategy Distribution:
+  edge-case: 24
+  adversarial: 4
+  conformance: 1
+
+Top 5 Iterations (by reward):
+  Iter 1: VL=2001, mutation=mac_destination_address_format, reward=2.200
+  Iter 2: VL=3001, mutation=Broadcast Handling, reward=2.200
+  Iter 3: VL=3002, mutation=Traffic Policing.byte_based_traffic_policing, reward=2.200
+  Iter 4: VL=2002, mutation=ip_header_checksum, reward=2.200
+  Iter 5: VL=1003, mutation=traffic_shaping.bag_value_range, reward=2.200
+
+======================================================================

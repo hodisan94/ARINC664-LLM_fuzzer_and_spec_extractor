@@ -1,0 +1,33 @@
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 182
+Successful: 129
+Failed: 53
+
+Reward Statistics:
+  Mean: 2.146
+  Max: 2.200
+  Min: 2.000
+
+Bugs Found: 0
+
+VLs Tested: 8 / 8
+  VL IDs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+
+Mutation Types Tested: 129
+  Types: ['AFDX-Specific', 'Addressing.frame_based_filtering', 'Broadcast Handling', 'Buffer Management', 'Communication Mode', 'Communication Ports', 'Communication Ports.no_ip_fragmentation_for_sampling_com_ports', 'Communication Ports.unidirectional_multicast_for_sampling', 'Communication_Ports', 'Communication_Ports.afdx_reception_port_quintuplet_uniqueness', 'Communication_Ports.afdx_transmission_port_quintuplet_uniqueness', 'Configuration', 'Data Encoding', 'Data Format', 'Data Handling', 'Data Representation', 'Data-Link Layer', 'End System Communication', 'End System Configuration', 'Fault Handling', 'Fault Tolerance', 'Flow Control', 'Frame Configuration', 'Frame Construction', 'Frame Formatting', 'Frame Identification', 'Frame Length', 'Frame Size', 'Frame Structure', 'Frame Transmission', 'Frame Validation', 'IP Addressing', 'IP Forwarding - TTL Management', 'IP Layer - Addressing', 'IP Layer - Configuration', 'IP Layer - Fragmentation and Reassembly', 'IP Layer - Header Validation', 'IP Layer - IP Options', 'IP Layer - TTL Handling', 'IP Layer - Type of Service', 'IP Protocol Validation', 'IPv4 Packet Length', 'Interoperability', 'Jitter.jitter_time_calculation', 'Latency Calculation', 'Latency Determinism', 'Link Behavior', 'MAC Performance', 'Message Formatting', 'Message Structure', 'Network Architecture', 'Network Behavior', 'Network Functions', 'Network Layer', 'Network Monitoring', 'Network Performance', 'Physical Configuration', 'Physical Layer', 'Policing', 'Port Allocation', 'Port Configuration', 'Port Management', 'Ports', 'Protocol Compliance', 'Protocol Usage', 'Protocol_Stack', 'Quality of Service', 'Reassembly and Fragmentation', 'Reception.buffer_overflow_handling', 'Redundancy', 'Reliability', 'Scheduling', 'Sequence Numbering', 'Service Guarantees', 'Service Quality', 'Status Indication', 'Sub-VL Fragmentation', 'Sub-VL Layering', 'Sub-VL Queue Management', 'Switch Initialization', 'Switch Modes', 'Switch Monitoring', 'Switch Operating Modes', 'Switch Operational Modes', 'Switch Performance', 'Switch Specification', 'Switch Traffic Policing', 'Switching', 'Timing', 'Traffic Prioritization', 'Traffic Shaping', 'Transport Layer Addressing', 'UDP Checksum Handling', 'UDP Protocol', 'Virtual Link Configuration', 'Virtual Link Data Integrity', 'Virtual Link Definition', 'Virtual Link Latency', 'Virtual Link Partition Segregation', 'Virtual Link Source Uniqueness', 'Virtual Links Default Configuration', 'address_validation', 'broadcast_addressing', 'buffer_overflow_handling_in_transmission', 'communication_services', 'data_formatting', 'data_integrity', 'destination_address_validity', 'ethernet_frame_compliance', 'fault_indicator_condition', 'functional_status_set_alignment', 'integrity_checking.valid_sequence_number_range_for_frame_acceptance', 'ipv4_packet_structure_compliance', 'latency_for_delayed_frame', 'logical_bandwidth_isolation_between_virtual_links', 'mac_destination_address_format', 'maximum_frame_size', 'message_encapsulation', 'message_transmission.complete_structure_transmission', 'minimum_reassembly_buffer_size', 'ordinal_integrity_within_virtual_link', 'output_buffer_size_for_low_priority_vls', 'performance_measurement_burst_duration', 'port_speed_configuration', 'reserved_word_alignment', 'sap_port_receiver_buffer_overflow_handling', 'sub_vl_fifo_queue_exclusivity', 'sub_vl_round_robin_scheduling', 'traffic_policing.initial_account_setting']
+
+Strategy Distribution:
+  edge-case: 115
+  adversarial: 14
+
+Top 5 Iterations (by reward):
+  Iter 2: VL=1002, mutation=buffer_overflow_handling_in_transmission, reward=2.200
+  Iter 4: VL=3002, mutation=output_buffer_size_for_low_priority_vls, reward=2.200
+  Iter 8: VL=2001, mutation=Configuration, reward=2.200
+  Iter 9: VL=3001, mutation=reserved_word_alignment, reward=2.200
+  Iter 11: VL=3001, mutation=Data Handling, reward=2.200
+
+======================================================================

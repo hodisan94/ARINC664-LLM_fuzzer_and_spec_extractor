@@ -1,8 +1,7 @@
 """
 Open-discovery prompts for LLM-based protocol rule extraction.
 
-Unlike prompts_strict.py which forces a predefined schema, these prompts
-let the LLM freely discover and categorize rules from the specification.
+These prompts let the LLM freely discover and categorize rules from the specification.
 The only constraint is the per-rule micro-format (ensuring comparability).
 
 This implements the improved "Guided Discovery with Open Extensions" approach:

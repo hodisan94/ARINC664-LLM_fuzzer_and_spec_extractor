@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "generated_at": "2026-04-13T19:24:24.506506",
+    "alignment_source": "nav_experiment/extraction_output/aligned_rules.json",
+    "providers_used": [
+      "mistral",
+      "openai",
+      "anthropic"
+    ],
+    "extraction_mode": "open"
+  },
+  "validation_summary": {
+    "methodology": "Open Discovery with Semantic Alignment and LLM Verification",
+    "total_rules": 8,
+    "confidence_distribution": {
+      "high": 7,
+      "medium": 1,
+      "low": 0
+    },
+    "agreement_distribution": {
+      "full": 7,
+      "partial": 1,
+      "resolved": 0,
+      "conflict": 0,
+      "unique_confirmed": 0,
+      "unique_unverified": 0
+    },
+    "categories_found": [
+      "Data Transmission",
+      "Frame Structure",
+      "Frame Validation",
+      "Transmission"
+    ]
+  },
+  "agreement_metrics": {
+    "total_aligned_groups": 8,
+    "full_agreement": 7,
+    "partial_agreement": 1,
+    "conflicts": 0,
+    "unique_rules": 20,
+    "total_distinct_rules": 28,
+    "pairwise_agreement": {
+      "anthropic_vs_openai": 1.0
+    },
+    "fleiss_kappa": -0.098,
+    "kappa_interpretation": "Less than chance agreement"
+  },
+  "quality_indicators": {
+    "high_confidence_percentage": "87.5%",
+    "validated_percentage": "100.0%",
+    "needs_review_percentage": "0.0%"
+  },
+  "rules_needing_review": []
+}

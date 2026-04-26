@@ -11,6 +11,7 @@
 # =============================================================
 !.gitignore
 !.env.example
+!README.md
 
 # =============================================================
 # TRACK: LLM-Guided Fuzzer
@@ -47,10 +48,6 @@
 # =============================================================
 # TRACK: Tools, Scripts, Tests
 # =============================================================
-!tools/
-!tools/**
-!scripts/
-!scripts/**
 !tests/
 !tests/**
 
@@ -60,12 +57,14 @@
 !examples/
 !examples/AFDX_V3/
 !examples/AFDX_V3/**
+!examples/AFDX_NAV/
+!examples/AFDX_NAV/**
 
 # =============================================================
-# TRACK: C++ Fuzzing Extensions
+# TRACK: NAV experiment prototype
 # =============================================================
-!extensions/
-!extensions/**
+!nav_experiment/
+!nav_experiment/**
 
 # =============================================================
 # TRACK: Documentation

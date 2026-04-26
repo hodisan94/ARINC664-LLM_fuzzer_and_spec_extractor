@@ -13,22 +13,22 @@ The project is built on top of ns-3. The ns-3 installation is already in place a
 
 ### Python Dependencies
 ```bash
-pip install openai anthropic google-generativeai pandas numpy boofuzz PyPDF2 python-dotenv
+pip install openai anthropic pandas numpy boofuzz PyPDF2 python-dotenv
 ```
 
 It's recommended to use a virtual environment:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install openai anthropic google-generativeai pandas numpy boofuzz PyPDF2 python-dotenv
+pip install openai anthropic pandas numpy boofuzz PyPDF2 python-dotenv
 ```
 
 ### API Keys
 Create a `.env` file in the project root (loaded automatically by `python-dotenv`):
 ```bash
 OPENAI_API_KEY=sk-...
-CLAUDE_API_KEY=sk-ant-...
-GOOGLE_API_KEY=AI...
+ANTHROPIC_API_KEY=sk-ant-...
+MISTRAL_API_KEY=...
 ```
 
 The code checks for both `ANTHROPIC_API_KEY` and `CLAUDE_API_KEY`.
@@ -63,13 +63,12 @@ All commands should be run from the project root: `/home/hodisan1994/ns-3-reset/
 
 ### 1. Specification Extraction
 
-#### Open Discovery Mode (recommended)
+#### Open Discovery Pipeline
 ```bash
 # Step 1: Extract rules with multiple LLMs (each discovers freely)
 python3 spec_extraction/run_multimodel.py \
     --pdf configs/ARINC_664P7.pdf \
-    --mode open \
-    --providers openai anthropic
+    --providers openai anthropic mistral
 
 # Step 2: Align + resolve conflicts + verify unique (all-in-one)
 python3 spec_extraction/align_rules.py \
@@ -88,19 +87,6 @@ python3 spec_extraction/export_validated.py \
 **Note:** Step 1 takes ~35 minutes (API calls per PDF chunk per provider).
 Step 2 takes ~25 minutes (alignment batches + 464 verification calls).
 Step 3 is instant.
-
-#### Legacy Strict Mode
-```bash
-python3 spec_extraction/run_multimodel.py --pdf configs/ARINC_664P7.pdf --mode strict
-python3 spec_extraction/compare_extractions.py
-python3 spec_extraction/arbitrate_conflicts.py --pdf configs/ARINC_664P7.pdf
-python3 spec_extraction/export_validated.py --mode strict
-```
-
-#### Single-Model Extraction (quick test)
-```bash
-python3 spec_extraction/extract_rules.py
-```
 
 ### 2. LLM Fuzzer
 ```bash
@@ -137,24 +123,6 @@ python3 evaluation/three_way_comparison.py
 python3 evaluation/generate_latex_tables.py
 ```
 
-#### Analysis Without LLM (no API key needed)
-```bash
-python3 evaluation/analysis_without_llm.py
-```
-
----
-
-## Shell Scripts
-
-Located in `scripts/`:
-
-| Script | Purpose | Usage |
-|--------|---------|-------|
-| `run_experiments.sh` | Full experiment runner | `bash scripts/run_experiments.sh` |
-| `run_e2e.sh` | End-to-end test | `bash scripts/run_e2e.sh` |
-| `run_ai_fuzzer.sh` | AI fuzzer launcher | `bash scripts/run_ai_fuzzer.sh` |
-| `QUICK_REWARD_FIX.sh` | Recompute rewards | `bash scripts/QUICK_REWARD_FIX.sh` |
-
 ---
 
 ## Directory Reference
@@ -167,7 +135,4 @@ Located in `scripts/`:
 | `boofuzz_baseline/data/` | Boofuzz baseline iteration history |
 | `evaluation/results/` | Comparison reports, data, LaTeX |
 | `examples/AFDX_V3/output/` | Simulator outputs (CSV, PCAP) |
-| `logs/` | Past run logs |
-| `docs/` | Paper and presentation materials |
 | `context/` | This documentation |
-| `archive/` | Old summaries and reports |

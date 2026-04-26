@@ -1,0 +1,18 @@
+{
+  "Transmission": {
+    "standard_data_transmission_rate": "50 bps",
+    "alternative_data_transmission_rate_with_fec": "25 bps"
+  },
+  "Frame Structure": {
+    "subframe_bit_length": "300 bits"
+  },
+  "Data Transmission": {
+    "data_flow_direction": "MSB_FIRST",
+    "parity_bits": "6 bits",
+    "noninformation_bearing_bits": "2 bits",
+    "tlm_word_timing": "6 seconds"
+  },
+  "Frame Validation": {
+    "word_parity": "Each word in each frame shall contain parity."
+  }
+}

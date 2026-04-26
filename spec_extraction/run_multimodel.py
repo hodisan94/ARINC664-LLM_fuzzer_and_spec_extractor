@@ -2,16 +2,14 @@
 """
 Multi-model extraction orchestrator.
 
-Runs protocol rule extraction using multiple LLM providers (GPT, Claude, Gemini)
+Runs protocol rule extraction using multiple LLM providers (GPT, Claude, Mistral)
 in parallel for cross-validation purposes.
 
-Supports two extraction modes:
-  --mode strict  : Legacy mode with predefined JSON schema (prompts_strict.py)
-  --mode open    : New open-discovery mode where LLMs freely discover rules (prompts_open.py)
+Uses the open-discovery extraction mode where LLMs freely discover rules
+without a predefined schema.
 
 Usage:
-    python3 run_multimodel.py --pdf configs/ARINC_664P7.pdf --mode open
-    python3 run_multimodel.py --pdf configs/ARINC_664P7.pdf --mode strict  # legacy
+    python3 run_multimodel.py --pdf configs/ARINC_664P7.pdf
 
 Output:
     spec_extraction/multimodel_output/
@@ -39,18 +37,9 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 from spec_extraction.pdf_utils import get_all_relevant_text, chunk_text
 from spec_extraction.llm_providers import (
-    MultiModelClient, 
-    ModelProvider, 
-    BaseLLMProvider,
-    get_single_provider
-)
-
-# Strict (legacy) prompts
-from spec_extraction.prompts_strict import (
-    SYSTEM_PROMPT_STRICT_EXTRACTION,
-    SYSTEM_PROMPT_STRICT_AGGREGATION,
-    get_strict_extraction_prompt,
-    get_strict_aggregation_prompt
+    MultiModelClient,
+    ModelProvider,
+    BaseLLMProvider
 )
 
 # Open discovery prompts
@@ -62,37 +51,21 @@ from spec_extraction.prompts_open import (
 )
 
 
-def _get_prompts(mode: str):
-    """Return the appropriate prompt set based on extraction mode."""
-    if mode == "open":
-        return {
-            "extraction_system": SYSTEM_PROMPT_OPEN_EXTRACTION,
-            "aggregation_system": SYSTEM_PROMPT_OPEN_AGGREGATION,
-            "extraction_user": get_open_extraction_prompt,
-            "aggregation_user": get_open_aggregation_prompt,
-        }
-    else:
-        return {
-            "extraction_system": SYSTEM_PROMPT_STRICT_EXTRACTION,
-            "aggregation_system": SYSTEM_PROMPT_STRICT_AGGREGATION,
-            "extraction_user": get_strict_extraction_prompt,
-            "aggregation_user": get_strict_aggregation_prompt,
-        }
-
-
-# Legacy aliases for backward compatibility
-SYSTEM_PROMPT_RULE_EXTRACTION = SYSTEM_PROMPT_STRICT_EXTRACTION
-SYSTEM_PROMPT_AGGREGATION = SYSTEM_PROMPT_STRICT_AGGREGATION
-get_extraction_user_prompt = get_strict_extraction_prompt
-get_aggregation_user_prompt = get_strict_aggregation_prompt
+def _get_prompts():
+    """Return the open-discovery prompt set used by the paper pipeline."""
+    return {
+        "extraction_system": SYSTEM_PROMPT_OPEN_EXTRACTION,
+        "aggregation_system": SYSTEM_PROMPT_OPEN_AGGREGATION,
+        "extraction_user": get_open_extraction_prompt,
+        "aggregation_user": get_open_aggregation_prompt,
+    }
 
 
 def extract_rules_with_provider(
     provider: BaseLLMProvider,
     provider_name: str,
     chapter_texts: Dict[str, str],
-    checkpoint_dir: str,
-    mode: str = "strict"
+    checkpoint_dir: str
 ) -> Dict[str, Any]:
     """
     Extract rules using a single provider.
@@ -102,19 +75,19 @@ def extract_rules_with_provider(
         provider_name: Name for logging and checkpointing
         chapter_texts: Dictionary of chapter_name -> text
         checkpoint_dir: Directory for checkpoints
-        mode: "strict" for legacy schema, "open" for free discovery
+        checkpoint_dir: Directory for checkpoints
     
     Returns:
         Aggregated rules dictionary
     """
-    prompts = _get_prompts(mode)
+    prompts = _get_prompts()
 
     print(f"\n{'='*60}")
-    print(f"  Extracting with {provider_name.upper()} (mode: {mode})")
+    print(f"  Extracting with {provider_name.upper()} (open discovery)")
     print(f"{'='*60}")
     
     all_extractions = []
-    provider_checkpoint_dir = os.path.join(checkpoint_dir, f"{provider_name}_{mode}")
+    provider_checkpoint_dir = os.path.join(checkpoint_dir, f"{provider_name}_open")
     os.makedirs(provider_checkpoint_dir, exist_ok=True)
     
     for chapter_name, chapter_text in chapter_texts.items():
@@ -192,14 +165,7 @@ def extract_rules_with_provider(
         
     except Exception as e:
         print(f"  Aggregation failed: {e}")
-        # For open mode, try to merge without LLM
-        if mode == "open":
-            return _merge_open_extractions_locally(rule_dicts, provider_name)
-        return {
-            "note": f"Aggregation failed for {provider_name}",
-            "error": str(e),
-            "raw_extractions": rule_dicts[:10]
-        }
+        return _merge_open_extractions_locally(rule_dicts, provider_name)
 
 
 def _merge_open_extractions_locally(
@@ -244,8 +210,7 @@ def run_multimodel_extraction(
     pdf_path: str,
     output_dir: str,
     providers: Optional[List[str]] = None,
-    parallel: bool = False,
-    mode: str = "strict"
+    parallel: bool = False
 ) -> Dict[str, Any]:
     """
     Run extraction with multiple LLM providers.
@@ -255,7 +220,6 @@ def run_multimodel_extraction(
         output_dir: Output directory for results
         providers: List of provider names to use (default: all available)
         parallel: Run extractions in parallel (default: sequential)
-        mode: "strict" for predefined schema, "open" for free discovery
     
     Returns:
         Summary dictionary with results and metadata
@@ -271,11 +235,8 @@ def run_multimodel_extraction(
     print(f"  PDF: {pdf_path}")
     print(f"  Output: {output_dir}")
     print(f"  Execution: {'Parallel' if parallel else 'Sequential'}")
-    print(f"  Extraction mode: {mode.upper()}")
-    if mode == "open":
-        print(f"  (LLMs freely discover and categorize rules)")
-    else:
-        print(f"  (LLMs fill predefined JSON schema)")
+    print(f"  Extraction mode: OPEN DISCOVERY")
+    print(f"  (LLMs freely discover and categorize rules)")
     print("=" * 70)
     
     # Initialize providers
@@ -319,8 +280,7 @@ def run_multimodel_extraction(
                     provider_instance,
                     provider.value,
                     chapter_texts,
-                    checkpoint_dir,
-                    mode
+                    checkpoint_dir
                 )
                 futures[future] = provider.value
             
@@ -340,8 +300,7 @@ def run_multimodel_extraction(
                     provider_instance,
                     provider.value,
                     chapter_texts,
-                    checkpoint_dir,
-                    mode
+                    checkpoint_dir
                 )
             except Exception as e:
                 print(f"  {provider.value} failed: {e}")
@@ -360,26 +319,18 @@ def run_multimodel_extraction(
     end_time = datetime.now()
     duration = (end_time - start_time).total_seconds()
     
-    # Mode-specific next steps
-    if mode == "open":
-        next_steps = [
-            "Run align_rules.py to semantically align rules across models",
-            "Run align_rules.py --verify-unique to verify rules found by only one model",
-            "Run export_validated.py --mode open to generate final validated rules"
-        ]
-    else:
-        next_steps = [
-            "Run compare_extractions.py to analyze agreement between models",
-            "Run arbitrate_conflicts.py if there are significant disagreements",
-            "Run export_validated.py to generate final validated rules"
-        ]
+    next_steps = [
+        "Run align_rules.py to semantically align rules across models",
+        "Run align_rules.py --verify-unique to verify rules found by only one model",
+        "Run export_validated.py --mode open to generate final validated rules"
+    ]
 
     summary = {
         "metadata": {
             "pdf_path": pdf_path,
             "extraction_date": start_time.isoformat(),
             "duration_seconds": duration,
-            "extraction_mode": mode,
+            "extraction_mode": "open",
             "providers_used": [p for p in results.keys() if "error" not in results[p]],
             "providers_failed": [p for p in results.keys() if "error" in results[p]]
         },
@@ -433,13 +384,6 @@ if __name__ == "__main__":
         action="store_true",
         help="Run extractions in parallel"
     )
-    parser.add_argument(
-        "--mode",
-        choices=["strict", "open"],
-        default="open",
-        help="Extraction mode: 'strict' uses predefined schema, 'open' lets LLMs freely discover rules (default: open)"
-    )
-    
     args = parser.parse_args()
     
     if not os.path.exists(args.pdf):
@@ -450,7 +394,6 @@ if __name__ == "__main__":
         pdf_path=args.pdf,
         output_dir=args.output_dir,
         providers=args.providers,
-        parallel=args.parallel,
-        mode=args.mode
+        parallel=args.parallel
     )
 

@@ -1,0 +1,34 @@
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 164
+Successful: 114
+Failed: 50
+
+Reward Statistics:
+  Mean: 2.128
+  Max: 2.200
+  Min: 1.800
+
+Bugs Found: 0
+
+VLs Tested: 8 / 8
+  VL IDs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+
+Mutation Types Tested: 114
+  Types: ['AFDX-Specific', 'Broadcast Handling', 'Buffer Management', 'Communication Mode', 'Communication Ports', 'Communication Ports.no_ip_fragmentation_for_sampling_com_ports', 'Communication Ports.unidirectional_multicast_for_sampling', 'Communication_Ports', 'Communication_Ports.afdx_reception_port_quintuplet_uniqueness', 'Communication_Ports.afdx_transmission_port_quintuplet_uniqueness', 'Configuration Management', 'Data Encoding', 'Data Format', 'Data Handling', 'Data Representation', 'Data-Link Layer', 'End System Configuration', 'ErrorHandling.buffer_overflow_handling_in_transmission', 'Fault Handling', 'Fault Tolerance', 'Flow Control', 'Frame Formatting', 'Frame Identification', 'Frame Length', 'Frame Size', 'Frame Structure', 'Frame Transmission', 'IP Forwarding - TTL Management', 'IP Layer - Addressing', 'IP Layer - Configuration', 'IP Layer - Fragmentation and Reassembly', 'IP Layer - Header Validation', 'IP Layer - IP Options', 'IP Layer - TTL Handling', 'IP Layer - Type of Service', 'IP Protocol Validation', 'IP_Addressing.ip_address_class_a_private_format_requirement', 'IPv4 Packet Length', 'Integrity Checking', 'Interoperability', 'Jitter.jitter_time_calculation', 'Latency Calculation', 'Latency Determinism', 'Link Behavior', 'MAC Performance', 'Network Architecture', 'Network Behavior', 'Network Functions', 'Network Layer', 'Network Monitoring', 'Network Performance', 'Physical Configuration', 'Policing', 'Port Allocation', 'Port Configuration', 'Port Management', 'Ports', 'Protocol Compliance', 'Protocol Usage', 'Protocol_Stack', 'Quality of Service', 'Reassembly and Fragmentation', 'Reception.buffer_overflow_handling', 'Redundancy', 'Reliability', 'Scheduling', 'Sequence Numbering', 'Service Guarantees', 'Service Quality', 'Status Indication', 'Sub-VL Fragmentation', 'Sub-VL Layering', 'Sub-VL Queue Management', 'Switch Initialization', 'Switch Modes', 'Switch Monitoring', 'Switch Operating Modes', 'Switch Operational Modes', 'Switch Performance', 'Switch Specification', 'Switching', 'Timing', 'Transport Layer Addressing', 'address_validation', 'bag_configuration_range', 'byte_based_policing_acceptance_condition', 'configuration.default_configuration_usage_rule', 'data_element_alignment', 'destination_address_validity', 'ethernet_frame_compliance', 'fault_indicator_condition', 'frame_validation.frame_check_sequence_validation_requirement', 'functional_status_set_alignment', 'ipv4_packet_structure_compliance', 'latency_for_delayed_frame', 'mac_source_address_format', 'maximum_frame_size', 'message_encapsulation', 'message_format.functional_status_sets_32_bit_boundary_alignment', 'message_formatting', 'minimum_reassembly_buffer_size', 'no_unused_bytes_between_data_primitives', 'ordinal_integrity_within_virtual_link', 'output_buffer_size_for_low_priority_vls', 'performance_measurement_burst_duration', 'physical_layer.default_port_speed_configuration', 'port_speed_configuration', 'reserved_word_alignment', 'sampling_message_size_constraint', 'sap_port_transmission_uniqueness', 'sub_vl_fifo_queue_exclusivity', 'sub_vl_round_robin_scheduling', 'two_traffic_priority_classes', 'virtual_link_frame_size_range']
+
+Strategy Distribution:
+  edge-case: 84
+  adversarial: 29
+  conformance: 1
+
+Top 5 Iterations (by reward):
+  Iter 1: VL=2001, mutation=Broadcast Handling, reward=2.200
+  Iter 2: VL=3001, mutation=ErrorHandling.buffer_overflow_handling_in_transmission, reward=2.200
+  Iter 4: VL=1002, mutation=Communication Mode, reward=2.200
+  Iter 5: VL=1003, mutation=sampling_message_size_constraint, reward=2.200
+  Iter 6: VL=2002, mutation=frame_validation.frame_check_sequence_validation_requirement, reward=2.200
+
+======================================================================

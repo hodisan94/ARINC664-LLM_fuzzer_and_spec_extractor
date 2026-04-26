@@ -74,29 +74,19 @@ class LLMStrategyPlanner:
             test_cases_path: Path to test_cases.json
             
         Raises:
-            ImportError: If openai package not installed
+            ImportError: If the requested LLM provider package is not installed
             ValueError: If API key not provided and not in environment
         """
-        if not OPENAI_AVAILABLE:
-            raise ImportError("openai package required. Install with: pip install openai")
-        
-        # Primary: OpenAI  Fallback: Gemini via OpenAI-compatible API
+        # Primary: OpenAI; fallback: Claude/Anthropic.
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         self.model = model
+        if self.api_key and not OPENAI_AVAILABLE:
+            raise ImportError("openai package required for OpenAI backend. Install with: pip install openai")
         self.client = OpenAI(api_key=self.api_key) if self.api_key else None
 
-        gemini_key = os.getenv("GEMINI_API_KEY")
-        if gemini_key:
-            self.gemini_client = OpenAI(
-                api_key=gemini_key,
-                base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
-            )
-            self.gemini_model = "gemini-2.0-flash"
-        else:
-            self.gemini_client = None
-            self.gemini_model = None
-
-        claude_key = os.getenv("CLAUDE_API_KEY")
+        claude_key = os.getenv("ANTHROPIC_API_KEY") or os.getenv("CLAUDE_API_KEY")
+        if claude_key and not ANTHROPIC_AVAILABLE:
+            raise ImportError("anthropic package required for Claude backend. Install with: pip install anthropic")
         if claude_key and ANTHROPIC_AVAILABLE:
             self.claude_client = anthropic.Anthropic(api_key=claude_key)
             self.claude_model = "claude-sonnet-4-20250514"
@@ -104,8 +94,8 @@ class LLMStrategyPlanner:
             self.claude_client = None
             self.claude_model = None
 
-        if not self.client and not self.gemini_client and not self.claude_client:
-            raise ValueError("Set OPENAI_API_KEY, GEMINI_API_KEY, or CLAUDE_API_KEY.")
+        if not self.client and not self.claude_client:
+            raise ValueError("Set OPENAI_API_KEY, ANTHROPIC_API_KEY, or CLAUDE_API_KEY.")
         
         # Load spec rules and test cases
         self.spec_loader = SpecificationLoader(spec_rules_path)
@@ -504,7 +494,7 @@ class LLMStrategyPlanner:
         return results
     
     def _query_llm(self, prompt: str) -> str:
-        """Query LLM with prompt, trying OpenAI -> Gemini -> Claude."""
+        """Query LLM with prompt, trying OpenAI first and Claude as fallback."""
         sys_msg = "You are an expert protocol fuzzing agent. Respond ONLY with valid JSON."
         messages = [
             {"role": "system", "content": sys_msg},
@@ -518,9 +508,6 @@ class LLMStrategyPlanner:
                 "max_completion_tokens": 8000,
                 "response_format": {"type": "json_object"}
             }))
-        if self.gemini_client:
-            openai_backends.append(("Gemini", self.gemini_client, self.gemini_model, {}))
-
         last_err = None
         for name, client, model, extra_kwargs in openai_backends:
             try:

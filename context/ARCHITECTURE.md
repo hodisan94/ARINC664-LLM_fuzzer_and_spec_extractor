@@ -14,9 +14,6 @@ ns-3/
 │   ├── output/                #   Simulation outputs (CSV, PCAP)
 │   └── mutations.json         #   Mutation input from fuzzer
 │
-├── extensions/                # C++ fuzzing extensions
-│   └── fuzzing/               #   feedback-logger.h, violation-checker.h, payload-provider.h
-│
 ├── llm_fuzzer/                # LLM-Guided Fuzzer (Python)
 │   ├── main.py                #   Main fuzzing loop
 │   ├── core/                  #   Core components
@@ -35,17 +32,13 @@ ns-3/
 │   └── tests/                 #   Unit tests for fuzzer
 │
 ├── spec_extraction/           # Specification Extraction Pipeline (Python)
-│   ├── extract_rules.py       #   Single-model rule extraction from PDF
 │   ├── extract_test_cases.py  #   Test case generation from rules
-│   ├── llm_client.py          #   OpenAI API client
-│   ├── llm_providers.py       #   Multi-provider LLM (GPT/Claude/Gemini)
-│   ├── run_multimodel.py      #   Multi-model extraction (--mode open|strict)
-│   ├── prompts_open.py        #   Open-discovery prompts (NEW)
-│   ├── align_rules.py         #   Semantic rule alignment across models (NEW)
-│   ├── filter_rules.py        #   Rule filtering by simulator relevance (NEW)
-│   ├── compare_extractions.py #   Cross-model comparison (auto-detects format)
-│   ├── arbitrate_conflicts.py #   Conflict resolution with judge LLM (legacy)
-│   ├── export_validated.py    #   Export final validated rules (both modes)
+│   ├── llm_providers.py       #   Multi-provider LLM (GPT/Claude/Mistral)
+│   ├── run_multimodel.py      #   Multi-model open-discovery extraction
+│   ├── prompts_open.py        #   Open-discovery prompts
+│   ├── align_rules.py         #   Semantic rule alignment across models
+│   ├── filter_rules.py        #   Rule filtering by simulator relevance
+│   ├── export_validated.py    #   Export final validated rules
 │   └── multimodel_output/     #   Per-provider extraction results
 │
 ├── random_baseline/           # Random Fuzzer Baseline (Python)
@@ -58,31 +51,18 @@ ns-3/
 │   └── boofuzz_strategy_generator.py
 │
 ├── evaluation/                # Evaluation & Comparison (Python)
-│   ├── three_way_comparison.py    # LLM vs Random vs Boofuzz comparison
-│   ├── run_full_evaluation.py     # Full automated evaluation pipeline
-│   ├── run_comparison.py          # Two-way comparison (LLM vs Random)
-│   ├── comprehensive_analysis.py  # Deep analysis
-│   ├── analysis_without_llm.py    # Analysis using only random data
+│   ├── compute_metrics.py         # Coverage, diversity, and comparison metrics
+│   ├── compute_bdr.py             # Injected-bug detection metrics
+│   ├── compute_rule_correctness.py
+│   ├── compute_rule_completeness.py
 │   └── generate_latex_tables.py   # LaTeX table generation for paper
 │
 ├── configs/                   # Configuration & Data Files
-│   ├── spec_rules.json            # Full extracted rules (431)
-│   ├── spec_rules_filtered.json   # Simulator-relevant rules (236)
-│   ├── filter_report.json         # Filter statistics & justifications
+│   ├── spec_rules.json            # Full extracted rules
+│   ├── spec_rules_filtered.json   # Simulator-relevant rules
 │   ├── spec_rules_validated.json  # Cross-validated rules (full metadata)
 │   ├── test_cases.json            # Violation test cases
-│   ├── ARINC_664P7.pdf            # ARINC 664 Part 7 specification
 │   └── validation_report.json     # Validation metadata
-│
-├── tools/                     # Standalone Tools
-│   ├── ai_fuzzer_agent.py         # AI-driven fuzzer agent
-│   └── random_fuzzer_baseline.py  # Standalone random baseline
-│
-├── scripts/                   # Shell Scripts
-│   ├── run_experiments.sh         # Full experiment runner
-│   ├── run_e2e.sh                 # End-to-end test
-│   ├── run_ai_fuzzer.sh           # AI fuzzer launcher
-│   └── QUICK_REWARD_FIX.sh        # Reward recomputation fix
 │
 ├── tests/                     # Integration Tests
 │   ├── test_hybrid_freedom.py     # Hybrid approach test

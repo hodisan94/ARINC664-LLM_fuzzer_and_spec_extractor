@@ -97,12 +97,10 @@ python3 llm_fuzzer/main.py --max-iterations 50
 
 **Language:** Python
 
-### Two Extraction Modes
-
-#### Open Mode (recommended, `--mode open`)
+### Open-Discovery Extraction
 LLMs freely discover and categorize rules — no predefined schema.
 ```
-PDF → run_multimodel.py --mode open (GPT + Claude)
+PDF → run_multimodel.py (GPT + Claude + Mistral)
    → Each LLM outputs a list of rules it discovered
    → align_rules.py --full (semantic align + conflict resolution + verify unique)
    → export_validated.py --mode open → configs/spec_rules.json
@@ -117,31 +115,17 @@ Full pipeline steps:
 4. **Verify unique** — judge confirms/rejects rules found by only one model
 5. **Export** — builds clean rules (enriched with test_hint, data_type, unit, source_quote)
 
-#### Strict Mode (legacy, `--mode strict`)
-LLMs fill a predefined JSON schema — 12 hardcoded categories.
-```
-PDF → run_multimodel.py --mode strict
-   → compare_extractions.py (key-based comparison)
-   → arbitrate_conflicts.py (judge resolves)
-   → export_validated.py --mode strict → configs/spec_rules.json
-```
-
 ### Files
 | File | Purpose |
 |------|---------|
-| `run_multimodel.py` | Multi-provider extraction (supports `--mode open\|strict`) |
+| `run_multimodel.py` | Multi-provider open-discovery extraction |
 | **`prompts_open.py`** | **Open-discovery prompts + conflict resolution + alignment prompts** |
 | **`align_rules.py`** | **Semantic alignment + conflict resolution + unique verification** |
 | `export_validated.py` | Export final validated outputs (loads original extraction data for enrichment) |
-| `extract_rules.py` | Single-model rule extraction from PDF |
 | `extract_test_cases.py` | LLM-based test case generation per rule |
-| `compare_extractions.py` | Cross-model comparison (legacy strict + auto-detect) |
-| `arbitrate_conflicts.py` | Conflict resolution via judge LLM (legacy strict) |
 | `llm_client.py` | OpenAI API wrapper |
-| `llm_providers.py` | Multi-provider abstraction (GPT/Claude/Gemini) + markdown JSON fix |
+| `llm_providers.py` | Multi-provider abstraction (GPT/Claude/Mistral) + markdown JSON fix |
 | `pdf_utils.py` | PDF text extraction utilities (chapter-based chunking) |
-| `prompts.py` | Discovery + extraction prompts (Phase 1/2) |
-| `prompts_strict.py` | Strict schema prompts (legacy) |
 | `test_case_prompts.py` | Test case generation prompts |
 | `validate_test_cases.py` | Test case validation logic |
 

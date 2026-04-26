@@ -2,8 +2,7 @@
 """
 Semantic rule alignment across multiple LLM provider extractions.
 
-This module replaces the old key-based comparison (compare_extractions.py) with
-semantic alignment that works with the open-discovery extraction format.
+This module aligns open-discovery extraction results by semantic meaning.
 
 Instead of comparing fixed JSON keys, it:
 1. Collects all rules from all providers
@@ -61,7 +60,7 @@ def load_open_extractions(input_dir: str) -> Dict[str, Dict[str, Any]]:
     Expects files named: rules_<provider>.json
     Each file should contain: {"rules": [...], "extraction_stats": {...}}
     
-    Also supports legacy format (flat JSON without "rules" key) by wrapping it.
+    Files without the open-discovery "rules" list are skipped.
     """
     extractions = {}
 
@@ -84,8 +83,7 @@ def load_open_extractions(input_dir: str) -> Dict[str, Dict[str, Any]]:
                 extractions[provider] = data
                 n_rules = len(data["rules"])
             elif isinstance(data, dict):
-                # Legacy flat format — skip (not compatible with alignment)
-                print(f"  Skipping {provider}: legacy flat format (use compare_extractions.py instead)")
+                print(f"  Skipping {provider}: unsupported rule format")
                 continue
             else:
                 print(f"  Skipping {provider}: unexpected format")

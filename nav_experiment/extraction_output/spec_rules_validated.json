@@ -1,0 +1,133 @@
+{
+  "rules": [
+    {
+      "id": "rule_001",
+      "name": "Standard Data Transmission Rate",
+      "category": "Transmission",
+      "consensus_value": "50 bps",
+      "agreement": "full",
+      "confidence": "high",
+      "providers": [
+        "openai",
+        "anthropic"
+      ],
+      "provider_values": {
+        "openai": "50 bps",
+        "anthropic": "50 bps"
+      }
+    },
+    {
+      "id": "rule_002",
+      "name": "Alternative Data Transmission Rate with FEC",
+      "category": "Transmission",
+      "consensus_value": "25 bps",
+      "agreement": "full",
+      "confidence": "high",
+      "providers": [
+        "openai",
+        "anthropic"
+      ],
+      "provider_values": {
+        "openai": "25 bps",
+        "anthropic": "25 bps"
+      }
+    },
+    {
+      "id": "rule_003",
+      "name": "Subframe Bit Length",
+      "category": "Frame Structure",
+      "consensus_value": "300 bits",
+      "agreement": "full",
+      "confidence": "high",
+      "providers": [
+        "openai",
+        "anthropic"
+      ],
+      "provider_values": {
+        "openai": "300 bits",
+        "anthropic": "300 bits"
+      }
+    },
+    {
+      "id": "rule_004",
+      "name": "Data Flow Direction",
+      "category": "Data Transmission",
+      "consensus_value": "MSB_FIRST",
+      "agreement": "full",
+      "confidence": "high",
+      "providers": [
+        "openai",
+        "anthropic"
+      ],
+      "provider_values": {
+        "openai": "MSB_FIRST",
+        "anthropic": "MSB_FIRST"
+      }
+    },
+    {
+      "id": "rule_005",
+      "name": "Word Parity",
+      "category": "Frame Validation",
+      "consensus_value": null,
+      "agreement": "partial",
+      "confidence": "medium",
+      "providers": [
+        "openai",
+        "anthropic"
+      ],
+      "provider_values": {
+        "openai": "Each word in each frame shall contain parity.",
+        "anthropic": "true"
+      },
+      "conflict_details": "OpenAI specifies the presence of parity in words, while Anthropic confirms it as a boolean requirement."
+    },
+    {
+      "id": "rule_006",
+      "name": "Parity Bits",
+      "category": "Data Transmission",
+      "consensus_value": "6 bits",
+      "agreement": "full",
+      "confidence": "high",
+      "providers": [
+        "openai",
+        "anthropic"
+      ],
+      "provider_values": {
+        "openai": "6 bits",
+        "anthropic": "6 bits"
+      }
+    },
+    {
+      "id": "rule_007",
+      "name": "Noninformation Bearing Bits",
+      "category": "Data Transmission",
+      "consensus_value": "2 bits",
+      "agreement": "full",
+      "confidence": "high",
+      "providers": [
+        "openai",
+        "anthropic"
+      ],
+      "provider_values": {
+        "openai": "2 bits",
+        "anthropic": "2 bits"
+      }
+    },
+    {
+      "id": "rule_008",
+      "name": "TLM Word Timing",
+      "category": "Data Transmission",
+      "consensus_value": "6 seconds",
+      "agreement": "full",
+      "confidence": "high",
+      "providers": [
+        "openai",
+        "anthropic"
+      ],
+      "provider_values": {
+        "openai": "6 seconds",
+        "anthropic": "6 seconds"
+      }
+    }
+  ]
+}
