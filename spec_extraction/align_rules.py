@@ -28,8 +28,9 @@ import os
 import sys
 import json
 import argparse
+import re
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Set, Tuple
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -215,8 +216,8 @@ def align_extractions(
     total_rules = sum(len(e.get("rules", [])) for e in extractions.values())
 
     if total_rules > 60:
-        # Too many rules for one prompt — align in batches by category
-        print(f"  Large extraction ({total_rules} rules) — aligning by category batches...")
+        # Too many rules for one prompt — use semantic candidate batches.
+        print(f"  Large extraction ({total_rules} rules) — aligning by semantic batches...")
         alignment = _align_in_batches(extractions, arbiter)
     else:
         # Single alignment call
@@ -267,51 +268,56 @@ def _align_in_batches(
 ) -> Dict[str, Any]:
     """
     Align rules in batches when there are too many for a single prompt.
-    Groups rules by category first, then aligns each category batch.
-    """
-    # Collect all categories across all providers
-    all_categories = set()
-    for data in extractions.values():
-        for rule in data.get("rules", []):
-            all_categories.add(rule.get("category", "uncategorized").lower().strip())
 
-    # Group rules by category
+    The extraction stage intentionally uses open discovery, so provider-generated
+    category names are free-form and cannot be used as hard alignment boundaries.
+    Instead, build cross-provider candidate components from semantic rule text
+    (name, field, constraint, test hint, source quote, and category as a weak hint)
+    and ask the arbiter to align each component.
+    """
     aligned_groups = []
     unique_rules = []
+
+    components = _build_semantic_candidate_components(extractions)
+    max_batch_rules = 60
     batch_num = 0
 
-    # Process in batches of ~5 categories
-    cat_list = sorted(all_categories)
-    batch_size = 5
+    print(f"    Built {len(components)} semantic candidate components")
 
-    for i in range(0, len(cat_list), batch_size):
-        batch_cats = set(cat_list[i:i + batch_size])
-        batch_num += 1
+    for component in components:
+        providers_in_component = {item["provider"] for item in component}
 
-        # Filter rules to this batch
-        batch_extractions = {}
-        for provider, data in extractions.items():
-            batch_rules = [
-                r for r in data.get("rules", [])
-                if r.get("category", "uncategorized").lower().strip() in batch_cats
-            ]
-            if batch_rules:
-                batch_extractions[provider] = {"rules": batch_rules}
-
-        if not batch_extractions:
+        if len(component) == 1 or len(providers_in_component) == 1:
+            for item in component:
+                unique_rules.append(_unique_from_item(item, "No semantic candidate from another provider"))
             continue
 
-        total_in_batch = sum(len(e["rules"]) for e in batch_extractions.values())
-        print(f"    Batch {batch_num}: {len(batch_cats)} categories, {total_in_batch} rules...")
+        for chunk in _split_component(component, max_batch_rules):
+            chunk_providers = {item["provider"] for item in chunk}
+            if len(chunk_providers) == 1:
+                for item in chunk:
+                    unique_rules.append(_unique_from_item(item, "No cross-provider candidate in chunk"))
+                continue
 
-        try:
-            user_prompt = get_alignment_prompt(batch_extractions)
-            batch_result = arbiter.query_json(
-                system_prompt=SYSTEM_PROMPT_RULE_ALIGNMENT,
-                user_prompt=user_prompt,
-                temperature=0.2,
-                max_tokens=8000
+            batch_extractions = _component_to_extractions(chunk)
+            batch_num += 1
+            total_in_batch = sum(len(e["rules"]) for e in batch_extractions.values())
+            print(
+                f"    Batch {batch_num}: {len(chunk_providers)} providers, "
+                f"{total_in_batch} candidate rules..."
             )
+
+            try:
+                user_prompt = get_alignment_prompt(batch_extractions)
+                batch_result = arbiter.query_json(
+                    system_prompt=SYSTEM_PROMPT_RULE_ALIGNMENT,
+                    user_prompt=user_prompt,
+                    temperature=0.2,
+                    max_tokens=8000
+                )
+            except Exception as e:
+                print(f"      -> Batch failed: {e}; using local fallback for this batch")
+                batch_result = _fallback_alignment(batch_extractions)
 
             # Renumber group IDs
             for g in batch_result.get("aligned_groups", []):
@@ -319,11 +325,10 @@ def _align_in_batches(
                 aligned_groups.append(g)
 
             unique_rules.extend(batch_result.get("unique_rules", []))
-            print(f"      -> {len(batch_result.get('aligned_groups', []))} groups, "
-                  f"{len(batch_result.get('unique_rules', []))} unique")
-
-        except Exception as e:
-            print(f"      -> Batch failed: {e}")
+            print(
+                f"      -> {len(batch_result.get('aligned_groups', []))} groups, "
+                f"{len(batch_result.get('unique_rules', []))} unique"
+            )
 
     return {
         "aligned_groups": aligned_groups,
@@ -335,6 +340,166 @@ def _align_in_batches(
             "conflicts": sum(1 for g in aligned_groups if g.get("agreement") == "conflict"),
             "unique_rules": len(unique_rules)
         }
+    }
+
+
+_STOPWORDS = {
+    "the", "and", "for", "with", "from", "that", "this", "must", "shall",
+    "should", "rule", "rules", "value", "values", "field", "fields",
+    "constraint", "constraints", "valid", "invalid", "frame", "frames",
+    "afdx", "arinc", "part", "section", "system", "network",
+}
+
+
+def _normalize_text(value: Any) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, (dict, list)):
+        return json.dumps(value, sort_keys=True, default=str)
+    return str(value)
+
+
+def _rule_semantic_text(rule: Dict[str, Any]) -> str:
+    parts = [
+        rule.get("name"),
+        rule.get("field_name"),
+        rule.get("category"),
+        rule.get("subcategory"),
+        rule.get("constraint"),
+        rule.get("test_hint"),
+        rule.get("source_quote"),
+    ]
+    return " ".join(_normalize_text(part) for part in parts if part is not None).lower()
+
+
+def _tokenize_rule(rule: Dict[str, Any]) -> Set[str]:
+    tokens = set(re.findall(r"[a-zA-Z_][a-zA-Z0-9_]*|\d+(?:\.\d+)?", _rule_semantic_text(rule)))
+    return {token for token in tokens if len(token) >= 3 and token not in _STOPWORDS}
+
+
+def _numeric_tokens(rule: Dict[str, Any]) -> Set[str]:
+    return set(re.findall(r"\d+(?:\.\d+)?", _rule_semantic_text(rule)))
+
+
+def _normalized_field(rule: Dict[str, Any]) -> str:
+    field = rule.get("field_name") or rule.get("name") or ""
+    return re.sub(r"[^a-z0-9]+", "_", str(field).lower()).strip("_")
+
+
+def _rule_similarity(left: Dict[str, Any], right: Dict[str, Any]) -> float:
+    left_tokens = left["_tokens"]
+    right_tokens = right["_tokens"]
+    if not left_tokens or not right_tokens:
+        return 0.0
+
+    overlap = left_tokens & right_tokens
+    union = left_tokens | right_tokens
+    jaccard = len(overlap) / max(len(union), 1)
+
+    left_field = left["_field"]
+    right_field = right["_field"]
+    field_match = bool(left_field and right_field and left_field == right_field)
+
+    number_overlap = left["_numbers"] & right["_numbers"]
+    number_score = len(number_overlap) / max(min(len(left["_numbers"]), len(right["_numbers"])), 1)
+
+    if field_match:
+        return max(jaccard, 0.75)
+    if number_overlap and jaccard >= 0.08:
+        return max(jaccard, 0.35 + 0.25 * number_score)
+    return jaccard
+
+
+def _flatten_rules(extractions: Dict[str, Dict[str, Any]]) -> List[Dict[str, Any]]:
+    items: List[Dict[str, Any]] = []
+    for provider, data in extractions.items():
+        for index, rule in enumerate(data.get("rules", [])):
+            item = {
+                "provider": provider,
+                "rule": rule,
+                "key": (provider, rule.get("id", f"{provider}_{index}")),
+            }
+            item["_tokens"] = _tokenize_rule(rule)
+            item["_numbers"] = _numeric_tokens(rule)
+            item["_field"] = _normalized_field(rule)
+            items.append(item)
+    return items
+
+
+def _build_semantic_candidate_components(
+    extractions: Dict[str, Dict[str, Any]],
+    threshold: float = 0.22
+) -> List[List[Dict[str, Any]]]:
+    items = _flatten_rules(extractions)
+    adjacency: Dict[Tuple[str, str], Set[Tuple[str, str]]] = {
+        item["key"]: set() for item in items
+    }
+    by_key = {item["key"]: item for item in items}
+
+    for i, left in enumerate(items):
+        for right in items[i + 1:]:
+            if left["provider"] == right["provider"]:
+                continue
+
+            similarity = _rule_similarity(left, right)
+            if similarity >= threshold:
+                adjacency[left["key"]].add(right["key"])
+                adjacency[right["key"]].add(left["key"])
+
+    components: List[List[Dict[str, Any]]] = []
+    visited: Set[Tuple[str, str]] = set()
+
+    for item in items:
+        key = item["key"]
+        if key in visited:
+            continue
+
+        stack = [key]
+        visited.add(key)
+        component_keys = []
+
+        while stack:
+            current = stack.pop()
+            component_keys.append(current)
+            for neighbor in adjacency[current]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    stack.append(neighbor)
+
+        components.append([by_key[component_key] for component_key in component_keys])
+
+    components.sort(key=lambda component: (-len(component), sorted(item["key"] for item in component)[0]))
+    return components
+
+
+def _split_component(component: List[Dict[str, Any]], max_rules: int) -> List[List[Dict[str, Any]]]:
+    if len(component) <= max_rules:
+        return [component]
+
+    chunks = []
+    for i in range(0, len(component), max_rules):
+        chunks.append(component[i:i + max_rules])
+    return chunks
+
+
+def _component_to_extractions(component: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    batch: Dict[str, Dict[str, Any]] = {}
+    for item in component:
+        batch.setdefault(item["provider"], {"rules": []})
+        batch[item["provider"]]["rules"].append(item["rule"])
+    return batch
+
+
+def _unique_from_item(item: Dict[str, Any], reason: str) -> Dict[str, Any]:
+    rule = item["rule"]
+    fallback_name = item["_field"] or "unknown"
+    return {
+        "provider": item["provider"],
+        "rule_id": item["key"][1],
+        "name": rule.get("name", fallback_name),
+        "category": rule.get("category", "unknown"),
+        "needs_verification": True,
+        "reason": reason,
     }
 
 
