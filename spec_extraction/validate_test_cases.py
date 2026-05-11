@@ -4,6 +4,7 @@ Ensures that generated test cases actually violate the rules they claim to viola
 """
 
 import json
+import re
 from typing import Dict, List, Any, Tuple
 
 
@@ -18,6 +19,7 @@ class TestCaseValidator:
             spec_rules: Dictionary containing AFDX protocol rules
         """
         self.spec_rules = spec_rules
+        self.rule_index = self._build_rule_index(spec_rules)
         self.validation_results = {
             "total_test_cases": 0,
             "valid_violations": 0,
@@ -90,7 +92,10 @@ class TestCaseValidator:
     
     def _validate_bag(self, value: Any, violation_type: str) -> Tuple[bool, str]:
         """Validate BAG test case."""
-        allowed_values = self.spec_rules.get("bag", {}).get("allowed_values_ms", [])
+        allowed_values = self._find_allowed_values(
+            ["bag", "bandwidth_allocation_gap"],
+            default=[1, 2, 4, 8, 16, 32, 64, 128],
+        )
         
         # Handle non-numeric values (strings, None, etc.)
         if not isinstance(value, (int, float)):
@@ -109,9 +114,14 @@ class TestCaseValidator:
     
     def _validate_frame_size(self, value: Any, violation_type: str, param_name: str) -> Tuple[bool, str]:
         """Validate frame size test case."""
-        frame_rules = self.spec_rules.get("frame_structure", {}).get("ethernet", {})
-        lmin = frame_rules.get("lmin", 64)
-        lmax = frame_rules.get("lmax", 1518)
+        lmin = self._find_numeric_value(
+            ["lmin", "ethernet_lmin", "minimum_frame", "min_frame"],
+            default=64,
+        )
+        lmax = self._find_numeric_value(
+            ["lmax", "ethernet_lmax", "maximum_frame", "max_frame"],
+            default=1518,
+        )
         
         # Handle non-numeric values
         if not isinstance(value, (int, float)):
@@ -130,9 +140,9 @@ class TestCaseValidator:
     
     def _validate_vl_id(self, value: Any, violation_type: str) -> Tuple[bool, str]:
         """Validate VL ID test case."""
-        vl_rules = self.spec_rules.get("frame_structure", {}).get("afdx", {}).get("vl_id", {})
-        min_val = vl_rules.get("min", 0)
-        max_val = vl_rules.get("max", 65535)
+        vl_range = self._find_range(["vl_id", "virtual_link_identifier"])
+        min_val = vl_range[0] if vl_range else 0
+        max_val = vl_range[1] if vl_range else 65535
         
         # Handle non-numeric values
         if not isinstance(value, (int, float)):
@@ -151,9 +161,9 @@ class TestCaseValidator:
     
     def _validate_sequence_number(self, value: Any, violation_type: str) -> Tuple[bool, str]:
         """Validate sequence number test case."""
-        seq_rules = self.spec_rules.get("sequence_numbers", {})
-        min_val = seq_rules.get("min", 0)
-        max_val = seq_rules.get("max", 255)
+        seq_range = self._find_range(["sequence_number", "sequence_numbers", "sn"])
+        min_val = seq_range[0] if seq_range else 0
+        max_val = seq_range[1] if seq_range else 255
         
         # Handle non-numeric values (strings, None, etc.)
         if not isinstance(value, (int, float)):
@@ -166,8 +176,7 @@ class TestCaseValidator:
     
     def _validate_priority(self, value: Any, violation_type: str) -> Tuple[bool, str]:
         """Validate priority/QoS test case."""
-        priority_rules = self.spec_rules.get("priority_qos", {})
-        levels = priority_rules.get("levels", 4)
+        levels = self._find_numeric_value(["priority_levels", "qos_levels", "priority"], default=4)
         
         # Handle non-numeric values
         if not isinstance(value, (int, float)):
@@ -184,9 +193,8 @@ class TestCaseValidator:
             # Check if it's a valid MAC format
             parts = value.split(":")
             if len(parts) == 6 and all(len(p) == 2 for p in parts):
-                # Check multicast bit rules
-                mac_rules = self.spec_rules.get("frame_structure", {}).get("ethernet", {}).get("destination_mac", {})
-                if "multicast_bit" in mac_rules:
+                # Check multicast bit rules if they exist in any supported spec format.
+                if self._find_rule(["destination_mac", "multicast_bit", "mac"]):
                     # Valid format but might violate multicast rules
                     return True, "Valid violation (multicast bit)"
             else:
@@ -197,8 +205,6 @@ class TestCaseValidator:
     
     def _validate_ip(self, value: Any, violation_type: str) -> Tuple[bool, str]:
         """Validate IP address test case."""
-        ip_rules = self.spec_rules.get("frame_structure", {}).get("ip", {})
-        
         if isinstance(value, str):
             # Check if it's a valid IP format
             parts = value.split(".")
@@ -206,7 +212,7 @@ class TestCaseValidator:
                 return True, "Valid violation (invalid format)"
             
             # Check multicast range
-            if "multicast_range" in ip_rules:
+            if self._find_rule(["ip", "multicast_range"]):
                 # Could violate multicast rules
                 return True, "Valid violation"
         
@@ -225,7 +231,7 @@ class TestCaseValidator:
     def _validate_generic(self, param_name: str, value: Any, violation_type: str) -> Tuple[bool, str]:
         """Generic validation for parameters without specific rules."""
         # Look up the parameter in spec_rules
-        param_spec = self._get_nested_value(self.spec_rules, param_name)
+        param_spec = self._find_rule([param_name])
         
         if param_spec is None:
             self.validation_results["warnings"].append(
@@ -246,6 +252,133 @@ class TestCaseValidator:
                     return False, f"Value {value} is in allowed list"
         
         return True, "Valid violation"
+
+    def _build_rule_index(self, rules: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Build a flat lookup index over all supported rule formats.
+
+        The current export_validated.py format is:
+            {category: {rule_name: value_or_enriched_dict}}
+        Older runs may still use nested legacy dictionaries or the open
+        {"rules": [...]} audit format. The validator indexes all of them so
+        validation does not depend on hardcoded top-level paths.
+        """
+        index: Dict[str, Any] = {}
+
+        if isinstance(rules, dict) and isinstance(rules.get("rules"), list):
+            for rule in rules["rules"]:
+                if not isinstance(rule, dict):
+                    continue
+                category = rule.get("category", "")
+                name = rule.get("field_name") or rule.get("name") or rule.get("id", "")
+                constraint = rule.get("constraint", {})
+                data = {
+                    "name": rule.get("name", name),
+                    "value": constraint.get("value") if isinstance(constraint, dict) else constraint,
+                    "constraint_type": constraint.get("type") if isinstance(constraint, dict) else None,
+                    "unit": constraint.get("unit") if isinstance(constraint, dict) else None,
+                    "test_hint": rule.get("test_hint"),
+                    "source_quote": rule.get("source_quote"),
+                }
+                self._index_entry(index, f"{category}.{name}", data)
+            return index
+
+        self._walk_rule_tree(index, rules)
+        return index
+
+    def _walk_rule_tree(self, index: Dict[str, Any], node: Any, prefix: str = "") -> None:
+        if not isinstance(node, dict):
+            if prefix:
+                self._index_entry(index, prefix, node)
+            return
+
+        enriched_keys = {"value", "data_type", "test_hint", "source_quote", "unit", "min", "max",
+                         "allowed_values", "allowed_values_ms", "constraint_value"}
+        if prefix and (enriched_keys & set(node.keys())):
+            self._index_entry(index, prefix, node)
+            return
+
+        for key, value in node.items():
+            next_prefix = f"{prefix}.{key}" if prefix else key
+            self._walk_rule_tree(index, value, next_prefix)
+
+    def _index_entry(self, index: Dict[str, Any], key: str, value: Any) -> None:
+        normalized_key = self._normalize_key(key)
+        if normalized_key:
+            index[normalized_key] = value
+        leaf_key = self._normalize_key(key.split(".")[-1])
+        if leaf_key and leaf_key not in index:
+            index[leaf_key] = value
+
+    def _normalize_key(self, key: str) -> str:
+        return re.sub(r"[^a-z0-9]+", "_", str(key).lower()).strip("_")
+
+    def _entry_text(self, key: str, value: Any) -> str:
+        if isinstance(value, dict):
+            parts = [key]
+            for field in ("name", "test_hint", "source_quote", "unit", "constraint_type"):
+                if value.get(field) is not None:
+                    parts.append(str(value[field]))
+            if value.get("value") is not None:
+                parts.append(str(value["value"]))
+            return self._normalize_key(" ".join(parts))
+        return self._normalize_key(f"{key} {value}")
+
+    def _find_rule(self, keywords: List[str]) -> Any:
+        normalized_keywords = [self._normalize_key(keyword) for keyword in keywords]
+        normalized_keywords = [keyword for keyword in normalized_keywords if keyword]
+
+        for key, value in self.rule_index.items():
+            text = self._entry_text(key, value)
+            if all(keyword in text for keyword in normalized_keywords):
+                return value
+
+        for key, value in self.rule_index.items():
+            text = self._entry_text(key, value)
+            if any(keyword in text for keyword in normalized_keywords):
+                return value
+
+        return None
+
+    def _extract_value(self, entry: Any) -> Any:
+        if isinstance(entry, dict):
+            if "value" in entry:
+                return entry["value"]
+            if "constraint_value" in entry:
+                return entry["constraint_value"]
+            if "allowed_values" in entry:
+                return entry["allowed_values"]
+            if "allowed_values_ms" in entry:
+                return entry["allowed_values_ms"]
+        return entry
+
+    def _find_allowed_values(self, keywords: List[str], default: List[Any]) -> List[Any]:
+        entry = self._find_rule(keywords)
+        value = self._extract_value(entry)
+        if isinstance(value, list):
+            return value
+        return default
+
+    def _find_numeric_value(self, keywords: List[str], default: float) -> float:
+        entry = self._find_rule(keywords)
+        value = self._extract_value(entry)
+        if isinstance(value, (int, float)):
+            return value
+        return default
+
+    def _find_range(self, keywords: List[str]) -> Tuple[float, float] | None:
+        entry = self._find_rule(keywords)
+        if isinstance(entry, dict):
+            if isinstance(entry.get("min"), (int, float)) and isinstance(entry.get("max"), (int, float)):
+                return entry["min"], entry["max"]
+            value = self._extract_value(entry)
+        else:
+            value = entry
+
+        if isinstance(value, list) and value and all(isinstance(v, (int, float)) for v in value):
+            return min(value), max(value)
+
+        return None
     
     def _get_nested_value(self, d: Dict, key_path: str) -> Any:
         """Get nested dictionary value using dot notation."""
