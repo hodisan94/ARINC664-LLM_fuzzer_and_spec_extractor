@@ -168,7 +168,7 @@ def export_from_alignment(
 
     clean_rules: Dict[str, Dict[str, Any]] = {}
     for rule in validated_rules:
-        if rule["confidence"] not in ("high", "medium") and rule["agreement"] not in (
+        if rule["confidence"] not in ("high", "medium") or rule["agreement"] not in (
             "full",
             "partial",
             "resolved",
