@@ -96,12 +96,21 @@ class TestGenerator:
         if len(frames) == 0:
             frames = self._create_generic_varied_sequence(seed_frame, {})
             fallback_used = True
+
+        mutation_type = strategy.get('mutation_type') or strategy.get('protocol_rule', 'generic')
         
         output = {
             'vl_id': strategy['target_vl'],
             'frames': frames,
             'metadata': {
-                'mutation_type': strategy['mutation_type'],
+                'mutation_type': mutation_type,
+                'protocol_rule': strategy.get('protocol_rule', mutation_type),
+                'primary_rule': strategy.get('primary_rule', strategy.get('protocol_rule', mutation_type)),
+                'compound_test': strategy.get('compound_test', False),
+                'planner_actions': strategy.get('planner_actions', []),
+                'redirected_from_rule': strategy.get('redirected_from_rule'),
+                'injected_mechanism': strategy.get('injected_mechanism'),
+                'test_mode': strategy.get('test_mode'),
                 'test_cases': strategy.get('test_cases'),
                 'bag_value': strategy.get('bag_value'),
                 'frame_size': strategy.get('frame_size'),

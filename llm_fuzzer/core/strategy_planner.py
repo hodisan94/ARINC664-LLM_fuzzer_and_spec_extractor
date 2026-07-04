@@ -56,6 +56,19 @@ class LLMStrategyPlanner:
     - Whether to use predefined test cases or custom mutation
     - What strategy to use (conformance/edge-case/adversarial)
     """
+
+    MUTATION_FIELDS = [
+        "test_cases",
+        "bag_value",
+        "frame_size",
+        "sequence_number",
+        "timing_jitter_ms",
+        "payload_pattern",
+        "mac_mutation_type",
+        "prob",
+        "sequence_number_override",
+        "dest_mac_mutation",
+    ]
     
     def __init__(
         self,
@@ -188,6 +201,55 @@ class LLMStrategyPlanner:
                 best = known
         return best if best_score >= 2 else raw
 
+    def _clear_mutation_fields(self, strategy: Dict[str, Any]) -> None:
+        """Clear executable mutation fields before replacing the selected rule."""
+        for field in self.MUTATION_FIELDS:
+            strategy[field] = None
+
+    @staticmethod
+    def _append_planner_action(strategy: Dict[str, Any], action: Dict[str, Any]) -> None:
+        """Record deterministic planner post-processing for auditability."""
+        actions = strategy.setdefault("planner_actions", [])
+        actions.append(action)
+
+    def _make_standalone_mechanism_strategy(
+        self,
+        strategy: Dict[str, Any],
+        *,
+        protocol_rule: str,
+        field: str,
+        value: Any,
+        mechanism: str,
+        iteration: int,
+        extra_fields: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """Replace the LLM choice with a standalone scheduled mechanism test."""
+        original_rule = strategy.get("protocol_rule") or strategy.get("mutation_type")
+        self._clear_mutation_fields(strategy)
+        strategy["protocol_rule"] = protocol_rule
+        strategy["mutation_type"] = protocol_rule
+        strategy["primary_rule"] = protocol_rule
+        strategy["compound_test"] = False
+        strategy["injected_mechanism"] = mechanism
+        strategy[field] = value
+        if extra_fields:
+            strategy.update(extra_fields)
+        strategy["reasoning"] = (
+            f"Scheduled standalone mechanism coverage for {mechanism}. "
+            f"Original LLM-selected rule was {original_rule}."
+        )
+        self._append_planner_action(strategy, {
+            "type": "scheduled_standalone",
+            "iteration": iteration,
+            "original_rule": original_rule,
+            "protocol_rule": protocol_rule,
+            "field": field,
+            "value": value,
+            "mechanism": mechanism,
+            "reason": "scheduled mechanism coverage",
+        })
+        return strategy
+
     # ------------------------------------------------------------------
     def plan_next_iteration(
         self,
@@ -258,68 +320,116 @@ class LLMStrategyPlanner:
         if normalized != raw_mt:
             print(f"  [NORM] '{raw_mt}' -> '{normalized}'")
         strategy["protocol_rule"] = normalized
+        strategy.setdefault("primary_rule", normalized)
+        has_test_cases = bool(strategy.get("test_cases"))
+        has_direct_params = any(
+            strategy.get(field) not in (None, "none")
+            for field in self.MUTATION_FIELDS
+            if field != "test_cases"
+        )
+        strategy["compound_test"] = has_test_cases and has_direct_params
+        strategy.setdefault("planner_actions", [])
+
+        # Scheduled mechanism coverage should be standalone, not stacked on
+        # whatever strategy the LLM happened to choose for this iteration.
+        used_mechs = coverage_stats.get("used_mutation_mechanisms", set())
+        mech_schedule = [
+            (21, "mac_address", "mac_mutation_type", "spoof_src",
+             "mac_mutation_type:spoof_src", {"prob": 1.0}),
+            (26, "mac_address", "dest_mac_mutation", "corrupt_prefix",
+             "dest_mac_mutation:corrupt_prefix", None),
+            (31, "frame_structure.ethernet", "frame_size", 2000,
+             "frame_size>1518", None),
+            (36, "bag", "timing_jitter_ms", -5,
+             "timing_jitter_ms<0", None),
+            (41, "sequence_numbers", "sequence_number_override", 255,
+             "sequence_number_override>0", None),
+        ]
+        for trigger_iter, rule, param, value, mech_key, extra_fields in mech_schedule:
+            if iteration == trigger_iter and mech_key not in used_mechs:
+                print(f"  [MECH-STANDALONE] iter {iteration}: setting {param}={value}")
+                return self._make_standalone_mechanism_strategy(
+                    strategy,
+                    protocol_rule=rule,
+                    field=param,
+                    value=value,
+                    mechanism=mech_key,
+                    iteration=iteration,
+                    extra_fields=extra_fields,
+                )
+
+        # Token bucket stress: large frames at NORMAL BAG timing.
+        if iteration == 46 and "token_bucket_stress" not in used_mechs:
+            print(f"  [MECH-STANDALONE] iter {iteration}: token bucket stress "
+                  "(frame_size=1500, default BAG)")
+            return self._make_standalone_mechanism_strategy(
+                strategy,
+                protocol_rule="token_bucket_stress",
+                field="frame_size",
+                value=1500,
+                mechanism="token_bucket_stress",
+                iteration=iteration,
+                extra_fields={"bag_value": None},
+            )
 
         # Dedup: redirect if the rule was already tested OR its category
-        # is already covered (when uncovered categories still remain)
+        # is already covered for the same VL (when uncovered categories still remain)
         tested_rules = set()
+        tested_rule_vl_pairs = set()
         covered_cats = set()
+        covered_cats_for_vl = set()
+        target_vl = strategy.get("target_vl")
         if history is not None and not history.empty and "protocol_rule" in history.columns:
             tested_rules = set(history["protocol_rule"].dropna().unique())
-            for r in tested_rules:
-                for c in self._all_categories_for_rule(str(r)):
+            for _, row in history.iterrows():
+                rule = row.get("protocol_rule")
+                if pd.isna(rule):
+                    continue
+                rule = str(rule)
+                row_vl = row.get("target_vl")
+                tested_rule_vl_pairs.add((rule, row_vl))
+                for c in self._all_categories_for_rule(rule):
                     covered_cats.add(c)
+                    if row_vl == target_vl:
+                        covered_cats_for_vl.add(c)
 
         uncovered_cats_raw = coverage_stats.get("uncovered_categories", [])
-        uncovered_cats_norm = {self._norm(c) for c in uncovered_cats_raw}
         uncovered_cats = [c for c in uncovered_cats_raw if self._norm(c) not in covered_cats]
         rule_cats = self._all_categories_for_rule(normalized)
-        rule_already_tested = normalized in tested_rules
-        category_already_covered = bool(rule_cats & covered_cats) if rule_cats else False
-        category_unmapped = len(rule_cats) == 0
+        rule_already_tested = (normalized, target_vl) in tested_rule_vl_pairs
+        category_already_covered = bool(rule_cats & covered_cats_for_vl) if rule_cats else False
+        category_unmapped = len(rule_cats) == 0 and normalized not in self._all_known_rules
 
         needs_redirect = (rule_already_tested or category_already_covered or category_unmapped) and uncovered_cats
         if needs_redirect:
             redirect = self._pick_untested_rule_from_category(
-                uncovered_cats, tested_rules, strategy, system_config)
+                uncovered_cats, tested_rule_vl_pairs, target_vl, strategy, system_config)
             if redirect:
                 if rule_already_tested:
-                    reason = "rule tested"
+                    reason = f"rule tested on VL {target_vl}"
                 elif category_unmapped:
                     reason = "unmapped category"
                 else:
-                    reason = f"category '{rule_cats}' covered"
+                    reason = f"category '{rule_cats}' covered on VL {target_vl}"
                 print(f"  [DEDUP] '{normalized}' ({reason}) -> '{redirect}'")
+                self._clear_mutation_fields(strategy)
+                strategy["redirected_from_rule"] = normalized
                 strategy["protocol_rule"] = redirect
                 strategy["mutation_type"] = redirect
+                strategy["primary_rule"] = redirect
+                strategy["compound_test"] = False
                 tc_data = self.test_cases.get(redirect, {})
                 cases = tc_data.get("test_cases", [])
                 if cases:
                     strategy["test_cases"] = ["TC0"]
                     strategy["test_mode"] = "predefined"
-
-        # Mutation mechanism injection: if we're past iteration 20 and there
-        # are untested mechanisms, periodically force one to be used.
-        used_mechs = coverage_stats.get("used_mutation_mechanisms", set())
-        mech_schedule = [
-            (21, "mac_mutation_type", "spoof_src", "mac_mutation_type:spoof_src"),
-            (26, "dest_mac_mutation", "corrupt_prefix", "dest_mac_mutation:corrupt_prefix"),
-            (31, "frame_size", 2000, "frame_size>1518"),
-            (36, "timing_jitter_ms", -5, "timing_jitter_ms<0"),
-            (41, "sequence_number_override", 255, "sequence_number_override>0"),
-        ]
-        for trigger_iter, param, value, mech_key in mech_schedule:
-            if iteration == trigger_iter and mech_key not in used_mechs:
-                if strategy.get(param) is None or strategy.get(param) == "none":
-                    print(f"  [MECH-INJECT] iter {iteration}: setting {param}={value}")
-                    strategy[param] = value
-                    if param == "mac_mutation_type":
-                        strategy["prob"] = strategy.get("prob") or 1.0
-
-        # Token bucket stress: large frames at NORMAL BAG timing
-        if iteration == 46 and "token_bucket_stress" not in used_mechs:
-            print(f"  [MECH-INJECT] iter {iteration}: token bucket stress (frame_size=1500, default BAG)")
-            strategy["frame_size"] = 1500
-            strategy["bag_value"] = None
+                self._append_planner_action(strategy, {
+                    "type": "redirect",
+                    "from_rule": normalized,
+                    "to_rule": redirect,
+                    "target_vl": target_vl,
+                    "reason": reason,
+                })
 
         return strategy
 
@@ -346,31 +456,36 @@ class LLMStrategyPlanner:
         return cats
 
     def _pick_untested_rule_from_category(
-        self, uncovered_cats, tested_rules, strategy, system_config
+        self,
+        uncovered_cats,
+        tested_rule_vl_pairs,
+        target_vl,
+        strategy,
+        system_config
     ) -> Optional[str]:
-        """Pick an untested rule from the first uncovered category that has TCs."""
+        """Pick a rule not yet tested for this VL from the first uncovered category."""
         for cat in uncovered_cats:
             sub_rules = self._cat_to_rules.get(cat, [])
             # Try exact sub-rule name
             for sub in sub_rules:
-                if sub in self.test_cases and sub not in tested_rules:
+                if sub in self.test_cases and (sub, target_vl) not in tested_rule_vl_pairs:
                     return sub
             # Try dotted format: category.sub_rule (common in test_cases.json)
             norm_cat = self._norm(cat)
             for sub in sub_rules:
                 dotted = f"{cat}.{sub}"
-                if dotted in self.test_cases and dotted not in tested_rules:
+                if dotted in self.test_cases and (dotted, target_vl) not in tested_rule_vl_pairs:
                     return dotted
             # Try any test_case key containing the category name
             for rule_name in self._all_known_rules:
-                if rule_name in tested_rules:
+                if (rule_name, target_vl) in tested_rule_vl_pairs:
                     continue
                 rn = self._norm(rule_name)
                 if rn == norm_cat or rn.startswith(norm_cat + '_') or norm_cat in rn.split('_'):
                     return rule_name
         # Fallback: any untested known rule
         for rule_name in self._all_known_rules:
-            if rule_name not in tested_rules:
+            if (rule_name, target_vl) not in tested_rule_vl_pairs:
                 return rule_name
         return None
     

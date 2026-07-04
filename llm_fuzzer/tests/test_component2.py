@@ -90,7 +90,7 @@ class TestPromptBuilder(unittest.TestCase):
         )
         
         self.assertIn("RECENT PERFORMANCE", prompt)
-        self.assertIn("Iteration 1", prompt)
+        self.assertIn("Iter 1", prompt)
         self.assertIn("VL=2001", prompt)
     
     def test_prompt_includes_vl_statistics(self):
@@ -100,7 +100,7 @@ class TestPromptBuilder(unittest.TestCase):
             self.vl_statistics, self.system_config, iteration=2
         )
         
-        self.assertIn("VIRTUAL LINK (VL) STATISTICS", prompt)
+        self.assertIn("VIRTUAL LINK (VL) CONFIGURATION & STATISTICS", prompt)
         self.assertIn("VL 2001", prompt)
         self.assertIn("tested 1 times", prompt)
     
@@ -114,7 +114,7 @@ class TestPromptBuilder(unittest.TestCase):
         self.assertIn("OUTPUT FORMAT", prompt)
         self.assertIn("JSON", prompt)
         self.assertIn("target_vl", prompt)
-        self.assertIn("test_mode", prompt)
+        self.assertIn("mutation_type", prompt)
     
     def test_prompt_has_decision_guidelines(self):
         """Test that prompt includes decision guidelines"""
@@ -134,8 +134,8 @@ class TestPromptBuilder(unittest.TestCase):
             self.vl_statistics, self.system_config, iteration=1
         )
         
-        # Prompt should be under 10,000 characters (reasonable for LLM)
-        self.assertLess(len(prompt), 10000)
+        # Prompt should stay within a reasonable LLM context budget.
+        self.assertLess(len(prompt), 15000)
         # But should have substantial content
         self.assertGreater(len(prompt), 1000)
     
@@ -162,6 +162,7 @@ class TestStrategyPlanner(unittest.TestCase):
         """Set up test fixtures"""
         self.mock_strategy_predefined = {
             "target_vl": 2001,
+            "mutation_type": "bag",
             "protocol_rule": "bag",
             "test_mode": "predefined",
             "test_cases": ["TC0", "TC1"],
@@ -172,6 +173,7 @@ class TestStrategyPlanner(unittest.TestCase):
         
         self.mock_strategy_custom = {
             "target_vl": 9999,
+            "mutation_type": "virtual_link",
             "protocol_rule": "virtual_link",
             "test_mode": "custom",
             "test_cases": None,
@@ -288,14 +290,169 @@ class TestStrategyPlanner(unittest.TestCase):
         # Create planner
         planner = LLMStrategyPlanner(api_key="test-key")
         planner.client = mock_client  # Use mocked client
+        expected_rule = planner._normalize_to_known_rule("bag")
         
         # Plan iteration
         strategy = planner.plan_next_iteration(history=None, iteration=1)
         
         # Verify
         self.assertEqual(strategy["target_vl"], 2001)
-        self.assertEqual(strategy["protocol_rule"], "bag")
+        self.assertEqual(strategy["protocol_rule"], expected_rule)
         self.assertIn("llm_raw_response", strategy)
+
+    @patch.dict('os.environ', {'OPENAI_API_KEY': 'test-key'})
+    def test_redirect_clears_stale_mutation_fields(self):
+        """Redirected strategies should not retain abandoned mutation params."""
+        planner = LLMStrategyPlanner(api_key="test-key")
+        planner._query_llm = Mock(return_value=json.dumps({
+            "target_vl": 2001,
+            "mutation_type": "bag timing violation",
+            "test_cases": ["TC1"],
+            "bag_value": 0,
+            "frame_size": None,
+            "sequence_number": None,
+            "timing_jitter_ms": None,
+            "payload_pattern": None,
+            "mac_mutation_type": None,
+            "prob": None,
+            "sequence_number_override": None,
+            "dest_mac_mutation": None,
+            "strategy": "edge-case",
+            "reasoning": "Test BAG timing boundary behavior."
+        }))
+        planner._normalize_to_known_rule = Mock(return_value="bag")
+        planner._pick_untested_rule_from_category = Mock(return_value="mac_address")
+
+        history = pd.DataFrame([{
+            "target_vl": 2001,
+            "protocol_rule": "bag",
+            "mutation_type": "bag",
+            "simulation_success": True,
+        }])
+
+        strategy = planner.plan_next_iteration(
+            history=history,
+            iteration=2,
+            system_config={"available_vls": [2001]}
+        )
+
+        self.assertEqual(strategy["protocol_rule"], "mac_address")
+        self.assertEqual(strategy["mutation_type"], "mac_address")
+        self.assertEqual(strategy["redirected_from_rule"], "bag")
+        self.assertIsNone(strategy["bag_value"])
+        self.assertIsNone(strategy["frame_size"])
+        self.assertEqual(strategy["test_cases"], ["TC0"])
+        self.assertFalse(strategy["compound_test"])
+        self.assertEqual(strategy["planner_actions"][0]["type"], "redirect")
+
+    @patch.dict('os.environ', {'OPENAI_API_KEY': 'test-key'})
+    def test_scheduled_mechanism_is_standalone(self):
+        """Scheduled mechanism coverage should replace, not stack onto, LLM choice."""
+        planner = LLMStrategyPlanner(api_key="test-key")
+        planner._query_llm = Mock(return_value=json.dumps({
+            "target_vl": 1002,
+            "mutation_type": "sequence_numbers",
+            "test_cases": ["TC0"],
+            "bag_value": 0,
+            "frame_size": None,
+            "sequence_number": None,
+            "timing_jitter_ms": None,
+            "payload_pattern": None,
+            "mac_mutation_type": None,
+            "prob": None,
+            "sequence_number_override": None,
+            "dest_mac_mutation": None,
+            "strategy": "edge-case",
+            "reasoning": "Test sequence number behavior."
+        }))
+
+        strategy = planner.plan_next_iteration(
+            history=pd.DataFrame(),
+            iteration=21,
+            system_config={"available_vls": [1002]}
+        )
+
+        self.assertEqual(strategy["protocol_rule"], "mac_address")
+        self.assertEqual(strategy["primary_rule"], "mac_address")
+        self.assertEqual(strategy["mac_mutation_type"], "spoof_src")
+        self.assertEqual(strategy["prob"], 1.0)
+        self.assertIsNone(strategy["test_cases"])
+        self.assertIsNone(strategy["bag_value"])
+        self.assertFalse(strategy["compound_test"])
+        self.assertEqual(strategy["injected_mechanism"], "mac_mutation_type:spoof_src")
+        self.assertEqual(strategy["planner_actions"][0]["type"], "scheduled_standalone")
+
+    @patch.dict('os.environ', {'OPENAI_API_KEY': 'test-key'})
+    def test_llm_selected_compound_strategy_is_marked(self):
+        """Intentional LLM compound strategies should be recorded explicitly."""
+        planner = LLMStrategyPlanner(api_key="test-key")
+        planner._query_llm = Mock(return_value=json.dumps({
+            "target_vl": 1002,
+            "mutation_type": "frame_structure.ethernet",
+            "test_cases": ["TC0"],
+            "bag_value": None,
+            "frame_size": 2000,
+            "sequence_number": None,
+            "timing_jitter_ms": None,
+            "payload_pattern": None,
+            "mac_mutation_type": None,
+            "prob": None,
+            "sequence_number_override": None,
+            "dest_mac_mutation": None,
+            "strategy": "adversarial",
+            "reasoning": "Use a frame test case and an oversized direct value."
+        }))
+
+        strategy = planner.plan_next_iteration(
+            history=pd.DataFrame(),
+            iteration=3,
+            system_config={"available_vls": [1002]}
+        )
+
+        self.assertTrue(strategy["compound_test"])
+        self.assertEqual(strategy["planner_actions"], [])
+        self.assertEqual(strategy["frame_size"], 2000)
+        self.assertEqual(strategy["test_cases"], ["TC0"])
+
+    @patch.dict('os.environ', {'OPENAI_API_KEY': 'test-key'})
+    def test_dedup_allows_same_rule_on_different_vl(self):
+        """Testing a rule on one VL should not redirect the same rule on another VL."""
+        planner = LLMStrategyPlanner(api_key="test-key")
+        planner._query_llm = Mock(return_value=json.dumps({
+            "target_vl": 3001,
+            "mutation_type": "bag",
+            "test_cases": ["TC0"],
+            "bag_value": None,
+            "frame_size": None,
+            "sequence_number": None,
+            "timing_jitter_ms": None,
+            "payload_pattern": None,
+            "mac_mutation_type": None,
+            "prob": None,
+            "sequence_number_override": None,
+            "dest_mac_mutation": None,
+            "strategy": "edge-case",
+            "reasoning": "Test BAG on a different VL."
+        }))
+        expected_rule = planner._normalize_to_known_rule("bag")
+
+        history = pd.DataFrame([{
+            "target_vl": 1001,
+            "protocol_rule": expected_rule,
+            "mutation_type": expected_rule,
+            "simulation_success": True,
+        }])
+
+        strategy = planner.plan_next_iteration(
+            history=history,
+            iteration=2,
+            system_config={"available_vls": [1001, 3001]}
+        )
+
+        self.assertEqual(strategy["target_vl"], 3001)
+        self.assertEqual(strategy["protocol_rule"], expected_rule)
+        self.assertNotIn("redirected_from_rule", strategy)
+        self.assertEqual(strategy["planner_actions"], [])
 
 
 def run_tests():

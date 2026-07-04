@@ -80,6 +80,55 @@ class TestMainLoop(unittest.TestCase):
         self.assertEqual(len(history), 2)
         self.assertEqual(history.iloc[0]['iteration'], 0)
         self.assertEqual(history.iloc[1]['reward'], 1.2)
+
+    def test_run_refuses_existing_history_without_resume_or_force(self):
+        """Test fresh runs do not silently reuse existing history."""
+        with open(self.history_path, 'w') as f:
+            f.write(json.dumps({"iteration": 0, "reward": 1.5}) + '\n')
+
+        fuzzer = LLMFuzzer(
+            history_path=str(self.history_path),
+            output_dir=str(self.output_dir),
+            max_iterations=1
+        )
+
+        with self.assertRaises(FileExistsError):
+            fuzzer.run()
+
+    def test_run_resume_allows_existing_history(self):
+        """Test explicit resume loads existing history."""
+        with open(self.history_path, 'w') as f:
+            f.write(json.dumps({
+                "iteration": 0,
+                "target_vl": 1001,
+                "protocol_rule": "bag",
+                "reward": 1.5,
+                "bugs_found": False,
+                "strategy": "edge-case",
+                "simulation_success": True
+            }) + '\n')
+
+        fuzzer = LLMFuzzer(
+            history_path=str(self.history_path),
+            output_dir=str(self.output_dir),
+            max_iterations=1
+        )
+
+        fuzzer.run(resume=True)
+
+    def test_run_force_removes_existing_history(self):
+        """Test force starts from a clean history file."""
+        with open(self.history_path, 'w') as f:
+            f.write(json.dumps({"iteration": 0, "reward": 1.5}) + '\n')
+
+        fuzzer = LLMFuzzer(
+            history_path=str(self.history_path),
+            output_dir=str(self.output_dir),
+            max_iterations=0
+        )
+
+        fuzzer.run(force=True)
+        self.assertFalse(self.history_path.exists())
     
     def test_save_iteration(self):
         """Test saving iteration data."""
@@ -182,6 +231,44 @@ class TestMainLoop(unittest.TestCase):
         self.assertIn("Bugs Found: 1", report)
         self.assertIn("VLs Tested: 2", report)
         self.assertIn("Protocol Rules Tested: 2", report)
+
+    def test_generate_report_calls_out_fuzzer_errors(self):
+        """Test report surfaces code-level iteration errors."""
+        fuzzer = LLMFuzzer(
+            history_path=str(self.history_path),
+            output_dir=str(self.output_dir)
+        )
+
+        history = pd.DataFrame([
+            {
+                'iteration': 0,
+                'target_vl': 1001,
+                'protocol_rule': 'bag',
+                'reward': 1.5,
+                'bugs_found': False,
+                'strategy': 'edge-case',
+                'simulation_success': True
+            },
+            {
+                'iteration': 1,
+                'target_vl': -1,
+                'protocol_rule': 'unknown',
+                'reward': 0.0,
+                'bugs_found': False,
+                'strategy': 'unknown',
+                'simulation_success': False,
+                'error': "missing required field 'mutation_type'",
+                'error_type': 'KeyError',
+                'failure_kind': 'fuzzer_error'
+            }
+        ])
+
+        report = fuzzer.generate_report(history)
+
+        self.assertIn("Fuzzer Code Errors:", report)
+        self.assertIn("Iterations with exceptions: 1", report)
+        self.assertIn("KeyError: 1", report)
+        self.assertIn("Iter 1: KeyError: missing required field", report)
     
     def test_run_iteration_with_mocks(self):
         """Test single iteration with mocked components."""

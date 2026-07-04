@@ -46,7 +46,8 @@ class LLMFuzzer:
         history_path: str = "llm_fuzzer/data/iteration_history.jsonl",
         output_dir: str = "llm_fuzzer/output",
         max_iterations: int = 50,
-        available_vls: Optional[List[int]] = None
+        available_vls: Optional[List[int]] = None,
+        max_consecutive_failures: int = 5
     ):
         """
         Initialize the fuzzer.
@@ -59,6 +60,7 @@ class LLMFuzzer:
             output_dir: Directory for output files
             max_iterations: Maximum number of fuzzing iterations
             available_vls: List of available VL IDs
+            max_consecutive_failures: Stop after this many consecutive failed iterations
         """
         self.spec_rules_path = spec_rules_path
         self.test_cases_path = test_cases_path
@@ -67,6 +69,7 @@ class LLMFuzzer:
         self.output_dir = Path(output_dir)
         self.max_iterations = max_iterations
         self.available_vls = available_vls or [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+        self.max_consecutive_failures = max_consecutive_failures
         
         # Create output directory
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -156,9 +159,12 @@ class LLMFuzzer:
                 iteration=iteration,
                 system_config={'available_vls': self.available_vls}
             )
+            mutation_type = strategy.get('mutation_type') or strategy.get('protocol_rule', 'unknown')
+            strategy['mutation_type'] = mutation_type
+            strategy.setdefault('protocol_rule', mutation_type)
             
             print(f"  Target VL: {strategy['target_vl']}")
-            print(f"  Mutation Type: {strategy['mutation_type']}")
+            print(f"  Mutation Type: {mutation_type}")
             
             # Show what LLM chose (test cases, params, or both)
             has_tc = strategy.get('test_cases') and len(strategy.get('test_cases', [])) > 0
@@ -222,8 +228,13 @@ class LLMFuzzer:
                 'timestamp': datetime.now().isoformat(),
                 'duration': (datetime.now() - iteration_start).total_seconds(),
                 'target_vl': strategy['target_vl'],
-                'mutation_type': strategy['mutation_type'],
-                'protocol_rule': strategy.get('protocol_rule', strategy['mutation_type']),
+                'mutation_type': mutation_type,
+                'protocol_rule': strategy['protocol_rule'],
+                'primary_rule': strategy.get('primary_rule', strategy['protocol_rule']),
+                'compound_test': strategy.get('compound_test', False),
+                'planner_actions': strategy.get('planner_actions', []),
+                'redirected_from_rule': strategy.get('redirected_from_rule'),
+                'injected_mechanism': strategy.get('injected_mechanism'),
                 'test_cases': strategy.get('test_cases'),
                 'bag_value': strategy.get('bag_value'),
                 'frame_size': strategy.get('frame_size'),
@@ -269,6 +280,11 @@ class LLMFuzzer:
                 'target_vl': strategy.get('target_vl', -1) if 'strategy' in locals() else -1,
                 'mutation_type': strategy.get('mutation_type', 'unknown') if 'strategy' in locals() else 'unknown',
                 'protocol_rule': strategy.get('protocol_rule', strategy.get('mutation_type', 'unknown')) if 'strategy' in locals() else 'unknown',
+                'primary_rule': strategy.get('primary_rule', strategy.get('protocol_rule', 'unknown')) if 'strategy' in locals() else 'unknown',
+                'compound_test': strategy.get('compound_test', False) if 'strategy' in locals() else False,
+                'planner_actions': strategy.get('planner_actions', []) if 'strategy' in locals() else [],
+                'redirected_from_rule': strategy.get('redirected_from_rule') if 'strategy' in locals() else None,
+                'injected_mechanism': strategy.get('injected_mechanism') if 'strategy' in locals() else None,
                 'test_cases': None,
                 'bag_value': None,
                 'frame_size': None,
@@ -288,6 +304,8 @@ class LLMFuzzer:
                 'bugs_found': False,
                 'recommendation': f'Error: {str(e)}',
                 'error': str(e),
+                'error_type': type(e).__name__,
+                'failure_kind': 'fuzzer_error',
                 'success': False
             }
     
@@ -314,7 +332,7 @@ class LLMFuzzer:
             return True
         
         # Too many consecutive failures
-        if consecutive_failures >= 10:
+        if consecutive_failures >= self.max_consecutive_failures:
             print(f"\nStopping: {consecutive_failures} consecutive failures")
             return True
         
@@ -351,6 +369,32 @@ class LLMFuzzer:
         report_lines.append(f"Successful: {len(successful)}")
         report_lines.append(f"Failed: {total_iterations - len(successful)}")
         report_lines.append("")
+
+        if 'error' in history.columns:
+            error_mask = history['error'].notna() & (history['error'].astype(str).str.len() > 0)
+            error_iterations = history[error_mask].copy()
+        else:
+            error_iterations = pd.DataFrame()
+
+        if not error_iterations.empty:
+            report_lines.append("Fuzzer Code Errors:")
+            report_lines.append(f"  Iterations with exceptions: {len(error_iterations)}")
+            error_type_column = 'error_type' if 'error_type' in error_iterations.columns else None
+            if error_type_column:
+                for error_type, count in error_iterations[error_type_column].fillna('unknown').value_counts().items():
+                    report_lines.append(f"  {error_type}: {count}")
+            report_lines.append("")
+            report_lines.append("  First error iterations:")
+            for _, row in error_iterations.head(5).iterrows():
+                iteration = row.get('iteration', 'unknown')
+                error_type = row.get('error_type', 'error')
+                error = str(row.get('error', '')).strip()
+                if len(error) > 120:
+                    error = error[:117] + "..."
+                report_lines.append(f"    Iter {iteration}: {error_type}: {error}")
+            if len(error_iterations) > 5:
+                report_lines.append(f"    ... {len(error_iterations) - 5} more")
+            report_lines.append("")
         
         if not successful.empty:
             # Reward stats
@@ -371,10 +415,11 @@ class LLMFuzzer:
             report_lines.append(f"  VL IDs: {sorted(vls_tested)}")
             report_lines.append("")
             
-            # Mutation types tested
-            mutation_types = successful['mutation_type'].unique()
-            report_lines.append(f"Mutation Types Tested: {len(mutation_types)}")
-            report_lines.append(f"  Types: {sorted(mutation_types)}")
+            # Protocol rules tested
+            rule_column = 'protocol_rule' if 'protocol_rule' in successful.columns else 'mutation_type'
+            protocol_rules = successful[rule_column].dropna().unique()
+            report_lines.append(f"Protocol Rules Tested: {len(protocol_rules)}")
+            report_lines.append(f"  Rules: {sorted(protocol_rules)}")
             report_lines.append("")
             
             # Strategy distribution
@@ -384,24 +429,32 @@ class LLMFuzzer:
             report_lines.append("")
             
             # Top performers
-            top_5 = successful.nlargest(5, 'reward')[['iteration', 'target_vl', 'mutation_type', 'reward', 'bugs_found']]
+            top_columns = ['iteration', 'target_vl', rule_column, 'reward', 'bugs_found']
+            top_5 = successful.nlargest(5, 'reward')[top_columns]
             report_lines.append("Top 5 Iterations (by reward):")
             for idx, row in top_5.iterrows():
                 bugs_str = " [BUG!]" if row['bugs_found'] else ""
                 report_lines.append(f"  Iter {row['iteration']}: VL={row['target_vl']}, "
-                                  f"mutation={row['mutation_type']}, reward={row['reward']:.3f}{bugs_str}")
+                                  f"rule={row[rule_column]}, reward={row['reward']:.3f}{bugs_str}")
         
         report_lines.append("")
         report_lines.append("=" * 70)
         
         return "\n".join(report_lines)
     
-    def run(self):
+    def run(self, resume: bool = False, force: bool = False):
         """
         Main fuzzing loop.
         
         Runs the complete LLM-guided fuzzing process.
+
+        Args:
+            resume: Continue from an existing history file.
+            force: Remove an existing history file and start from iteration 0.
         """
+        if resume and force:
+            raise ValueError("Use either --resume or --force, not both.")
+
         print("\n" + "=" * 70)
         print("LLM-GUIDED AFDX FUZZER")
         print("=" * 70)
@@ -410,14 +463,29 @@ class LLMFuzzer:
         print(f"  Available VLs: {self.available_vls}")
         print(f"  History File: {self.history_path}")
         print(f"  Output Directory: {self.output_dir}")
+        print(f"  Run Mode: {'force fresh' if force else 'resume' if resume else 'fresh'}")
         print("")
         
-        # Load history
-        history = self.load_history()
-        start_iteration = len(history) if not history.empty else 0
-        
-        if start_iteration > 0:
-            print(f"\nResuming from iteration {start_iteration}")
+        # History handling is explicit: fresh runs never silently reuse old state.
+        if force:
+            if self.history_path.exists():
+                self.history_path.unlink()
+                print(f"Removed existing history: {self.history_path}")
+            history = pd.DataFrame()
+            start_iteration = 0
+        elif resume:
+            history = self.load_history()
+            start_iteration = len(history) if not history.empty else 0
+            if start_iteration > 0:
+                print(f"\nResuming from iteration {start_iteration}")
+        else:
+            if self.history_path.exists() and self.history_path.stat().st_size > 0:
+                raise FileExistsError(
+                    f"History file already exists: {self.history_path}. "
+                    "Use --resume to continue it or --force to start a fresh run."
+                )
+            history = pd.DataFrame()
+            start_iteration = 0
         
         # Main loop
         consecutive_failures = 0
@@ -432,6 +500,11 @@ class LLMFuzzer:
             # Update history
             new_row = pd.DataFrame([result])
             history = pd.concat([history, new_row], ignore_index=True)
+
+            if result.get('error'):
+                error_type = result.get('error_type', 'error')
+                print(f"\n[WARN] Iteration {iteration} failed with fuzzer error "
+                      f"({error_type}): {result.get('error')}")
             
             # Track failures
             if not result.get('simulation_success', False):
@@ -478,6 +551,12 @@ Examples:
   
   # Resume from previous run
   python3 llm_fuzzer/main.py --resume
+
+  # Start fresh even if a history file already exists
+  python3 llm_fuzzer/main.py --force
+
+  # Use custom input/output paths
+  python3 llm_fuzzer/main.py --test-cases configs/nav_test_cases.json --history-path runs/nav.jsonl
   
   # Specify custom VLs
   python3 llm_fuzzer/main.py --vls 1001 1002 2001 2002
@@ -512,11 +591,39 @@ Examples:
         default='configs/spec_rules_filtered.json',
         help='Path to protocol rules JSON (default: configs/spec_rules_filtered.json)'
     )
-    
+
     parser.add_argument(
+        '--test-cases',
+        type=str,
+        default='configs/test_cases.json',
+        help='Path to violation test cases JSON (default: configs/test_cases.json)'
+    )
+
+    parser.add_argument(
+        '--seed-frames',
+        type=str,
+        default='llm_fuzzer/data/seed_frames.json',
+        help='Path to seed frames JSON (default: llm_fuzzer/data/seed_frames.json)'
+    )
+
+    parser.add_argument(
+        '--history-path',
+        type=str,
+        default='llm_fuzzer/data/iteration_history.jsonl',
+        help='Path to iteration history JSONL (default: llm_fuzzer/data/iteration_history.jsonl)'
+    )
+    
+    history_mode = parser.add_mutually_exclusive_group()
+    history_mode.add_argument(
         '--resume',
         action='store_true',
         help='Resume from previous run (load existing history)'
+    )
+
+    history_mode.add_argument(
+        '--force',
+        action='store_true',
+        help='Start a fresh run by deleting an existing history file'
     )
     
     args = parser.parse_args()
@@ -524,6 +631,9 @@ Examples:
     # Create fuzzer
     fuzzer = LLMFuzzer(
         spec_rules_path=args.spec_rules,
+        test_cases_path=args.test_cases,
+        seed_frames_path=args.seed_frames,
+        history_path=args.history_path,
         max_iterations=args.max_iterations,
         available_vls=args.vls,
         output_dir=args.output_dir
@@ -531,7 +641,7 @@ Examples:
     
     # Run
     try:
-        fuzzer.run()
+        fuzzer.run(resume=args.resume, force=args.force)
     except KeyboardInterrupt:
         print("\n\nFuzzing interrupted by user.")
         print("History saved. You can resume with --resume flag.")
