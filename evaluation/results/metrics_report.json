@@ -1,10 +1,11 @@
 {
-  "generated": "2026-04-18T21:39:56.774055",
+  "generated": "2026-04-29T20:15:20.603968",
   "total_rules": 185,
   "iterations": {
     "LLM": 200,
     "Random": 200,
-    "Boofuzz": 200
+    "Boofuzz": 200,
+    "LLM No-Feedback": 200
   },
   "rule_coverage": {
     "LLM": {
@@ -18,6 +19,10 @@
     "Boofuzz": {
       "unique_rules_tested": 178,
       "coverage_percent": 96.2
+    },
+    "LLM No-Feedback": {
+      "unique_rules_tested": 40,
+      "coverage_percent": 21.6
     }
   },
   "normalized_spec_coverage": {
@@ -35,6 +40,11 @@
       "covered": 87,
       "total": 185,
       "pct": 47.0
+    },
+    "LLM No-Feedback": {
+      "covered": 10,
+      "total": 185,
+      "pct": 5.4
     }
   },
   "time_to_coverage": {
@@ -52,6 +62,11 @@
       "80%": 169,
       "100%": null,
       "max_coverage": 0.9621621621621622
+    },
+    "LLM No-Feedback": {
+      "80%": null,
+      "100%": null,
+      "max_coverage": 0.21621621621621623
     }
   },
   "redundancy_ratio": {
@@ -177,22 +192,53 @@
           "count": 2
         }
       ]
+    },
+    "LLM No-Feedback": {
+      "entropy": 3.94,
+      "max_entropy": 5.3219,
+      "normalized_entropy": 0.7403,
+      "n_types": 40,
+      "top_5": [
+        {
+          "rule": "Redundancy",
+          "count": 42
+        },
+        {
+          "rule": "aggressive_stress",
+          "count": 29
+        },
+        {
+          "rule": "mac_address_constant_field_format",
+          "count": 24
+        },
+        {
+          "rule": "combined_test",
+          "count": 21
+        },
+        {
+          "rule": "sequence_number",
+          "count": 21
+        }
+      ]
     }
   },
   "unique_findings": {
-    "LLM_only_count": 113,
-    "Random_only_count": 92,
-    "Boofuzz_only_count": 74,
+    "LLM_only_count": 107,
+    "Random_only_count": 91,
+    "Boofuzz_only_count": 73,
+    "LLM No-Feedback_only_count": 28,
     "LLM_and_Random": 27,
     "LLM_and_Boofuzz": 52,
+    "LLM_and_LLM No-Feedback": 10,
     "Random_and_Boofuzz": 70,
-    "all_three": 20,
+    "Random_and_LLM No-Feedback": 3,
+    "Boofuzz_and_LLM No-Feedback": 4,
     "LLM_total": 172,
     "Random_total": 169,
     "Boofuzz_total": 176,
+    "LLM No-Feedback_total": 40,
     "LLM_only": [
       "afdx_specific",
-      "bag_interval_enforcement",
       "broadcast_addressing",
       "broadcast_handling",
       "buffer_management",
@@ -210,7 +256,8 @@
       "default_port_speed",
       "duplicate_frame_discard",
       "end_system_communication",
-      "end_system_configuration"
+      "end_system_configuration",
+      "error_handling"
     ],
     "LLM_detailed": [
       "AFDX-Specific|conformance",
@@ -321,6 +368,50 @@
       "IP_Layer_Requirements.no_gateway_operation_required|invalid_format",
       "Jitter.jitter_time_calculation|above_max",
       "Latency.latency_for_first_frame|invalid_format"
+    ],
+    "LLM No-Feedback_only": [
+      "aggressive_stress",
+      "bag_and_size_and_mac_combo",
+      "bag_and_size_boundary",
+      "bag_and_size_violation",
+      "bag_and_size_violation_with_mac_and_seq_boundary",
+      "bag_boundary",
+      "bag_envelope_seq_mac_combo",
+      "bag_length_mac_seq_combo",
+      "bag_seq_jitter_oversize_reserved",
+      "bag_size_mac_seq_combo",
+      "bag_size_seq_combo",
+      "bag_violation",
+      "bag_violation_with_seq_boundary",
+      "boundary_conditions",
+      "combined_policing_integrity_mac",
+      "combined_stress",
+      "combined_test",
+      "increasing_rsn_order",
+      "mac_address_constant_field_format",
+      "mac_destination_address_constant_field"
+    ],
+    "LLM No-Feedback_detailed": [
+      "Frame Size|adversarial",
+      "Policing|adversarial",
+      "Redundancy Management.first_win_frame_delivery|edge-case",
+      "Redundancy Management|edge-case",
+      "Redundancy|adversarial",
+      "Redundancy|edge-case",
+      "Traffic Policing.byte_based_traffic_policing|adversarial",
+      "Traffic Shaping|adversarial",
+      "aggressive_stress|adversarial",
+      "bag_and_size_and_mac_combo|adversarial",
+      "bag_and_size_boundary|adversarial",
+      "bag_and_size_violation_with_mac_and_seq_boundary|adversarial",
+      "bag_and_size_violation|adversarial",
+      "bag_boundary|adversarial",
+      "bag_envelope_seq_mac_combo|adversarial",
+      "bag_interval_enforcement|adversarial",
+      "bag_length_mac_seq_combo|adversarial",
+      "bag_seq_jitter_oversize_reserved|adversarial",
+      "bag_size_mac_seq_combo|adversarial",
+      "bag_size_seq_combo|adversarial"
     ]
   },
   "reward_convergence": {
@@ -350,6 +441,15 @@
       "base_early_mean": 1.4405,
       "base_late_mean": 1.4686,
       "base_improvement_percent": 1.9
+    },
+    "LLM No-Feedback": {
+      "early_mean_reward": 1.1783,
+      "late_mean_reward": 0.5783,
+      "improvement_percent": -50.9,
+      "final_ma": 0.7307,
+      "base_early_mean": 0.9242,
+      "base_late_mean": 0.4203,
+      "base_improvement_percent": -54.5
     }
   },
   "ratio_valid_messages": {
@@ -378,6 +478,15 @@
       "injection_success_percent": "100.0%",
       "avg_forward_rate": 51.94,
       "avg_policing_rate": 47.09,
+      "interpretation": "High injection success = frames are structurally valid. High policing rate = frames trigger rule violations (good for fuzzer). High forward rate = frames pass unchallenged (fuzzer not finding violations)."
+    },
+    "LLM No-Feedback": {
+      "total_iterations": 200,
+      "successful_injections": 200,
+      "injection_success_rate": 1.0,
+      "injection_success_percent": "100.0%",
+      "avg_forward_rate": 52.45,
+      "avg_policing_rate": 46.54,
       "interpretation": "High injection success = frames are structurally valid. High policing rate = frames trigger rule violations (good for fuzzer). High forward rate = frames pass unchallenged (fuzzer not finding violations)."
     }
   },
@@ -411,6 +520,16 @@
       "cost_per_finding_usd": 0.0,
       "findings_per_dollar": "inf (free)",
       "cost_per_iteration_usd": 0.0
+    },
+    "LLM No-Feedback": {
+      "iterations": 200,
+      "api_calls": 200,
+      "cost_per_call_usd": 0.015,
+      "total_cost_usd": 3.0,
+      "unique_findings": 40,
+      "cost_per_finding_usd": 0.075,
+      "findings_per_dollar": 13.3,
+      "cost_per_iteration_usd": 0.015
     }
   },
   "effective_mutation_rate": {
@@ -431,6 +550,14 @@
       "tolerance": 0.5
     },
     "Boofuzz": {
+      "total_iterations": 200,
+      "effective_mutations": 200,
+      "effective_rate_percent": 100.0,
+      "zero_frame_iterations": 0,
+      "baseline_policing": 74.53,
+      "tolerance": 0.5
+    },
+    "LLM No-Feedback": {
       "total_iterations": 200,
       "effective_mutations": 200,
       "effective_rate_percent": 100.0,

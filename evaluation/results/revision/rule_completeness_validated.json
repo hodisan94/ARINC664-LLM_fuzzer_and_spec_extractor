@@ -1,0 +1,725 @@
+{
+  "rule_set": "validated",
+  "model": "gpt-4o-mini",
+  "temperature": 0.0,
+  "candidates_per_item": 8,
+  "date": "2026-10-23",
+  "checklist_items": 142,
+  "counts": {
+    "covered": 97,
+    "partial": 14,
+    "not_covered": 31
+  },
+  "items": {
+    "N001": {
+      "status": "covered",
+      "rule_id": "rule_760",
+      "section": "2.4"
+    },
+    "N002": {
+      "status": "covered",
+      "rule_id": "rule_500",
+      "section": "3.1"
+    },
+    "N003": {
+      "status": "covered",
+      "rule_id": "rule_200",
+      "section": "3.2.1"
+    },
+    "N004": {
+      "status": "covered",
+      "rule_id": "rule_202",
+      "section": "3.2.2"
+    },
+    "N005": {
+      "status": "covered",
+      "rule_id": "rule_760",
+      "section": "3.2.2"
+    },
+    "N006": {
+      "status": "covered",
+      "rule_id": "rule_202",
+      "section": "3.2.2"
+    },
+    "N007": {
+      "status": "covered",
+      "rule_id": "rule_761",
+      "section": "3.2.2"
+    },
+    "N008": {
+      "status": "covered",
+      "rule_id": "rule_100",
+      "section": "3.2.4.2"
+    },
+    "N009": {
+      "status": "covered",
+      "rule_id": "rule_511",
+      "section": "3.2.4.3"
+    },
+    "N010": {
+      "status": "partial",
+      "rule_id": "rule_511",
+      "section": "3.2.4.3"
+    },
+    "N011": {
+      "status": "partial",
+      "rule_id": "rule_744",
+      "section": "3.2.5.1"
+    },
+    "N012": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "3.2.5.1"
+    },
+    "N013": {
+      "status": "covered",
+      "rule_id": "rule_103",
+      "section": "3.2.5.1"
+    },
+    "N014": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "3.2.5.1"
+    },
+    "N015": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "3.2.5.1"
+    },
+    "N016": {
+      "status": "covered",
+      "rule_id": "rule_058",
+      "section": "3.0"
+    },
+    "N017": {
+      "status": "covered",
+      "rule_id": "rule_126",
+      "section": "3.2.6.2.1"
+    },
+    "N018": {
+      "status": "covered",
+      "rule_id": "rule_231",
+      "section": "3.2.6.2.1"
+    },
+    "N019": {
+      "status": "covered",
+      "rule_id": "rule_559",
+      "section": "3.2.6.2.1"
+    },
+    "N020": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "3.2.6.2.1"
+    },
+    "N021": {
+      "status": "covered",
+      "rule_id": "rule_083",
+      "section": "3.2.6.2.2"
+    },
+    "N022": {
+      "status": "covered",
+      "rule_id": "rule_435",
+      "section": "3.2.6.2.2"
+    },
+    "N023": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "3.2.6.2.2"
+    },
+    "N024": {
+      "status": "covered",
+      "rule_id": "rule_232",
+      "section": "3.2.6.2.2"
+    },
+    "N025": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "3.3.1"
+    },
+    "N026": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "3.3.1.1.1.1"
+    },
+    "N027": {
+      "status": "covered",
+      "rule_id": "rule_055",
+      "section": "3.3.1.1.1.1"
+    },
+    "N028": {
+      "status": "covered",
+      "rule_id": "rule_017",
+      "section": "3.3.1.1.1.1"
+    },
+    "N029": {
+      "status": "covered",
+      "rule_id": "rule_548",
+      "section": "3.3.1.1.2.1"
+    },
+    "N030": {
+      "status": "covered",
+      "rule_id": "rule_227",
+      "section": "3.3.1.1.2.1"
+    },
+    "N031": {
+      "status": "covered",
+      "rule_id": "rule_549",
+      "section": "3.3.1.1.2.1"
+    },
+    "N032": {
+      "status": "covered",
+      "rule_id": "rule_236",
+      "section": "3.3.1.1.2.1"
+    },
+    "N033": {
+      "status": "covered",
+      "rule_id": "rule_019",
+      "section": "3.3.1.1.2.1"
+    },
+    "N034": {
+      "status": "covered",
+      "rule_id": "rule_020",
+      "section": "3.3.1.1.2.1"
+    },
+    "N035": {
+      "status": "covered",
+      "rule_id": "rule_319",
+      "section": "3.3.1.1.2.1"
+    },
+    "N036": {
+      "status": "covered",
+      "rule_id": "rule_347",
+      "section": "3.3.1.1.2.1"
+    },
+    "N037": {
+      "status": "covered",
+      "rule_id": "rule_050",
+      "section": "3.3.1.1.2.1"
+    },
+    "N038": {
+      "status": "covered",
+      "rule_id": "rule_348",
+      "section": "3.3.1.2.2"
+    },
+    "N039": {
+      "status": "covered",
+      "rule_id": "rule_566",
+      "section": "3.3.1.2.2"
+    },
+    "N040": {
+      "status": "covered",
+      "rule_id": "rule_134",
+      "section": "3.3.1.2.2"
+    },
+    "N041": {
+      "status": "covered",
+      "rule_id": "rule_566",
+      "section": "3.3.1.2.2"
+    },
+    "N042": {
+      "status": "covered",
+      "rule_id": "rule_138",
+      "section": "3.3.2"
+    },
+    "N043": {
+      "status": "covered",
+      "rule_id": "rule_139",
+      "section": "3.3.2"
+    },
+    "N044": {
+      "status": "covered",
+      "rule_id": "rule_140",
+      "section": "3.3.2"
+    },
+    "N045": {
+      "status": "covered",
+      "rule_id": "rule_590",
+      "section": "3.3.2"
+    },
+    "N046": {
+      "status": "covered",
+      "rule_id": "rule_206",
+      "section": "3.4.1.3"
+    },
+    "N047": {
+      "status": "covered",
+      "rule_id": "rule_240",
+      "section": "3.4.1.3"
+    },
+    "N048": {
+      "status": "covered",
+      "rule_id": "rule_234",
+      "section": "3.4.1.3.2"
+    },
+    "N049": {
+      "status": "covered",
+      "rule_id": "rule_235",
+      "section": "3.4.1.3.2"
+    },
+    "N050": {
+      "status": "covered",
+      "rule_id": "rule_537",
+      "section": "3.4.1.3.2"
+    },
+    "N051": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "3.4.1.4.1"
+    },
+    "N052": {
+      "status": "partial",
+      "rule_id": "rule_203",
+      "section": "3.4.1.4.1"
+    },
+    "N053": {
+      "status": "covered",
+      "rule_id": "rule_758",
+      "section": "3.4.1.4.1"
+    },
+    "N054": {
+      "status": "covered",
+      "rule_id": "rule_012",
+      "section": "3.4.1.4.1"
+    },
+    "N055": {
+      "status": "partial",
+      "rule_id": "rule_216",
+      "section": "3.4.1.4.1"
+    },
+    "N056": {
+      "status": "partial",
+      "rule_id": "rule_210",
+      "section": "3.4.1.5"
+    },
+    "N057": {
+      "status": "covered",
+      "rule_id": "rule_239",
+      "section": "3.4.1.5.1"
+    },
+    "N058": {
+      "status": "covered",
+      "rule_id": "rule_237",
+      "section": "3.4.1.5.1"
+    },
+    "N059": {
+      "status": "covered",
+      "rule_id": "rule_239",
+      "section": "3.4.1.5.3"
+    },
+    "N060": {
+      "status": "covered",
+      "rule_id": "rule_240",
+      "section": "3.4.1.5.3"
+    },
+    "N061": {
+      "status": "partial",
+      "rule_id": "rule_204",
+      "section": "3.4.1.5.3"
+    },
+    "N062": {
+      "status": "partial",
+      "rule_id": "rule_204",
+      "section": "3.4.1.5.3"
+    },
+    "N063": {
+      "status": "covered",
+      "rule_id": "rule_380",
+      "section": "4.0"
+    },
+    "N064": {
+      "status": "covered",
+      "rule_id": "rule_380",
+      "section": "4.0"
+    },
+    "N065": {
+      "status": "partial",
+      "rule_id": "rule_340",
+      "section": "4.0"
+    },
+    "N066": {
+      "status": "covered",
+      "rule_id": "rule_732",
+      "section": "4.0"
+    },
+    "N067": {
+      "status": "covered",
+      "rule_id": "rule_184",
+      "section": "4.0"
+    },
+    "N068": {
+      "status": "covered",
+      "rule_id": "rule_177",
+      "section": "4.0"
+    },
+    "N069": {
+      "status": "covered",
+      "rule_id": "rule_185",
+      "section": "4.0"
+    },
+    "N070": {
+      "status": "covered",
+      "rule_id": "rule_178",
+      "section": "4.0"
+    },
+    "N071": {
+      "status": "covered",
+      "rule_id": "167",
+      "section": "4.6"
+    },
+    "N072": {
+      "status": "covered",
+      "rule_id": "170",
+      "section": "4.6"
+    },
+    "N073": {
+      "status": "covered",
+      "rule_id": "168",
+      "section": "4.6"
+    },
+    "N074": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.6"
+    },
+    "N075": {
+      "status": "covered",
+      "rule_id": "681",
+      "section": "4.6"
+    },
+    "N076": {
+      "status": "covered",
+      "rule_id": "rule_682",
+      "section": "4.6"
+    },
+    "N077": {
+      "status": "covered",
+      "rule_id": "rule_169",
+      "section": "4.6"
+    },
+    "N078": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.6"
+    },
+    "N079": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.6"
+    },
+    "N080": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.7.1"
+    },
+    "N081": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.7.1"
+    },
+    "N082": {
+      "status": "covered",
+      "rule_id": "rule_620",
+      "section": "4.7.1"
+    },
+    "N083": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.7.1"
+    },
+    "N084": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.7.1"
+    },
+    "N085": {
+      "status": "covered",
+      "rule_id": "rule_629",
+      "section": "4.7.1"
+    },
+    "N086": {
+      "status": "covered",
+      "rule_id": "rule_620",
+      "section": "4.7.1"
+    },
+    "N087": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.7.1"
+    },
+    "N088": {
+      "status": "covered",
+      "rule_id": "rule_146",
+      "section": "4.7.2"
+    },
+    "N089": {
+      "status": "covered",
+      "rule_id": "rule_147",
+      "section": "4.7.2.3"
+    },
+    "N090": {
+      "status": "covered",
+      "rule_id": "rule_623",
+      "section": "4.7.2.3"
+    },
+    "N091": {
+      "status": "partial",
+      "rule_id": "rule_771",
+      "section": "4.7.2.3"
+    },
+    "N092": {
+      "status": "covered",
+      "rule_id": "rule_663",
+      "section": "4.7.3.2"
+    },
+    "N093": {
+      "status": "covered",
+      "rule_id": "rule_683",
+      "section": "4.7.3.2"
+    },
+    "N094": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.8.2.2"
+    },
+    "N095": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.8.2.2"
+    },
+    "N096": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.8.2.2"
+    },
+    "N097": {
+      "status": "covered",
+      "rule_id": "617",
+      "section": "4.8.2.2"
+    },
+    "N098": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.8.2.2"
+    },
+    "N099": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.9.1"
+    },
+    "N100": {
+      "status": "covered",
+      "rule_id": "638",
+      "section": "4.9.1"
+    },
+    "N101": {
+      "status": "partial",
+      "rule_id": "rule_609",
+      "section": "4.9.1"
+    },
+    "N102": {
+      "status": "covered",
+      "rule_id": "rule_143",
+      "section": "4.10"
+    },
+    "N103": {
+      "status": "covered",
+      "rule_id": "rule_144",
+      "section": "4.10"
+    },
+    "N104": {
+      "status": "covered",
+      "rule_id": "rule_633",
+      "section": "4.10"
+    },
+    "N105": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "4.10"
+    },
+    "N106": {
+      "status": "partial",
+      "rule_id": "rule_770",
+      "section": "4.10"
+    },
+    "N107": {
+      "status": "covered",
+      "rule_id": "rule_330",
+      "section": "5.1"
+    },
+    "N108": {
+      "status": "covered",
+      "rule_id": "rule_330",
+      "section": "5.1"
+    },
+    "N109": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "5.0"
+    },
+    "N110": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "Att1"
+    },
+    "N111": {
+      "status": "covered",
+      "rule_id": "rule_037",
+      "section": "Att1"
+    },
+    "N112": {
+      "status": "covered",
+      "rule_id": "rule_039",
+      "section": "Att1"
+    },
+    "N113": {
+      "status": "covered",
+      "rule_id": "rule_242",
+      "section": "Att1"
+    },
+    "N114": {
+      "status": "covered",
+      "rule_id": "rule_749",
+      "section": "Att1"
+    },
+    "N115": {
+      "status": "covered",
+      "rule_id": "rule_276",
+      "section": "Att1"
+    },
+    "N116": {
+      "status": "covered",
+      "rule_id": "rule_247",
+      "section": "Att1"
+    },
+    "N117": {
+      "status": "covered",
+      "rule_id": "rule_248",
+      "section": "Att1"
+    },
+    "N118": {
+      "status": "covered",
+      "rule_id": "rule_274",
+      "section": "Att1"
+    },
+    "N119": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "Att1"
+    },
+    "N120": {
+      "status": "partial",
+      "rule_id": "rule_364",
+      "section": "Att1"
+    },
+    "N121": {
+      "status": "covered",
+      "rule_id": "rule_278",
+      "section": "Att1"
+    },
+    "N122": {
+      "status": "covered",
+      "rule_id": "rule_373",
+      "section": "Att1"
+    },
+    "N123": {
+      "status": "covered",
+      "rule_id": "rule_282",
+      "section": "Att1"
+    },
+    "N124": {
+      "status": "covered",
+      "rule_id": "rule_323",
+      "section": "Att1"
+    },
+    "N125": {
+      "status": "partial",
+      "rule_id": "rule_364",
+      "section": "Att1"
+    },
+    "N126": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "Att1"
+    },
+    "N127": {
+      "status": "covered",
+      "rule_id": "rule_343",
+      "section": "Att1"
+    },
+    "N128": {
+      "status": "covered",
+      "rule_id": "rule_344",
+      "section": "Att1"
+    },
+    "N129": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "Att1"
+    },
+    "N130": {
+      "status": "covered",
+      "rule_id": "rule_345",
+      "section": "Att1"
+    },
+    "N131": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "Att1"
+    },
+    "N132": {
+      "status": "covered",
+      "rule_id": "rule_346",
+      "section": "Att1"
+    },
+    "N133": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "Att2"
+    },
+    "N134": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "Att2"
+    },
+    "N135": {
+      "status": "covered",
+      "rule_id": "rule_736",
+      "section": "Att2"
+    },
+    "N136": {
+      "status": "covered",
+      "rule_id": "rule_685",
+      "section": "Att2"
+    },
+    "N137": {
+      "status": "covered",
+      "rule_id": "rule_406",
+      "section": "Att2"
+    },
+    "N138": {
+      "status": "covered",
+      "rule_id": "rule_700",
+      "section": "Att2"
+    },
+    "N139": {
+      "status": "not_covered",
+      "rule_id": null,
+      "section": "Att2"
+    },
+    "N140": {
+      "status": "covered",
+      "rule_id": "rule_199",
+      "section": "Att2"
+    },
+    "N141": {
+      "status": "partial",
+      "rule_id": "rule_092",
+      "section": "Att2"
+    },
+    "N142": {
+      "status": "covered",
+      "rule_id": "rule_087",
+      "section": "Att2"
+    }
+  }
+}

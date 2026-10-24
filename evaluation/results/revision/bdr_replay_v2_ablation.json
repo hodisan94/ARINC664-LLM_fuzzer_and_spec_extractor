@@ -1,0 +1,155 @@
+{
+  "evaluation/results/revision/runs/llm_A0.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 53,
+    "bugs_detected": 6,
+    "bugs_total": 8,
+    "bdr": 0.75,
+    "mean_iterations_to_first_detection": 3.5,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 10,
+        "detecting_iterations": 38
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 44
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 109
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 10,
+        "detecting_iterations": 38
+      }
+    }
+  },
+  "evaluation/results/revision/runs/llm_A1.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 81,
+    "bugs_detected": 6,
+    "bugs_total": 8,
+    "bdr": 0.75,
+    "mean_iterations_to_first_detection": 0.8333333333333334,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 65
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 4,
+        "detecting_iterations": 27
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 63
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 65
+      }
+    }
+  },
+  "evaluation/results/revision/runs/llm_A2.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 85,
+    "bugs_detected": 6,
+    "bugs_total": 8,
+    "bdr": 0.75,
+    "mean_iterations_to_first_detection": 3.1666666666666665,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 78
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 17,
+        "detecting_iterations": 4
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 8
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 78
+      }
+    }
+  }
+}

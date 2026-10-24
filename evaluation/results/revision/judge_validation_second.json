@@ -1,0 +1,445 @@
+{
+  "model": "gpt-5",
+  "temperature": "API default",
+  "date": "2026-10-23",
+  "total": 108,
+  "counts": {
+    "correct": 98,
+    "unverifiable": 4,
+    "incorrect": 6
+  },
+  "verdicts": {
+    "rule_577": {
+      "verdict": "correct",
+      "reason": "Page 12 explicitly states that for safety-critical systems reliable real-time communication links are essential."
+    },
+    "rule_482": {
+      "verdict": "correct",
+      "reason": "Page 92 specifies that the Reserved word at the beginning of the message should be aligned on a 32-bit boundary."
+    },
+    "rule_716": {
+      "verdict": "correct",
+      "reason": "Page 64 says an output port should not transmit frames older than the configured max delay, implying such frames are not forwarded."
+    },
+    "rule_552": {
+      "verdict": "correct",
+      "reason": "Page 31 states the sequence number is always assigned the initial value 0 following a reset of the transmitting ES."
+    },
+    "rule_333": {
+      "verdict": "correct",
+      "reason": "Page 80 defines the performance measurement using a 1 ms burst of back-to-back frames."
+    },
+    "rule_748": {
+      "verdict": "correct",
+      "reason": "The specification states IANA assigned port numbers are 0–1023."
+    },
+    "rule_093": {
+      "verdict": "correct",
+      "reason": "The specification explicitly requires that a host MUST support originating a source route and be able to act as the final destination."
+    },
+    "rule_290": {
+      "verdict": "correct",
+      "reason": "The specification says unused spare and reserved/global spare fields should be filled with all binary zeros."
+    },
+    "rule_176": {
+      "verdict": "correct",
+      "reason": "The specification indicates end systems should handle Ethernet frame sizes up to 1518 octets, establishing 1518 as the maximum frame size considered."
+    },
+    "rule_175": {
+      "verdict": "correct",
+      "reason": "The specification defines BAG values as powers of two from 1 to 128 ms inclusive (1,2,4,8,16,32,64,128)."
+    },
+    "rule_652": {
+      "verdict": "correct",
+      "reason": "Section 4.10.1.1 states that when Switch_Ground_Condition is false, hardware program pins should not be read and the switch should use the last memorized values."
+    },
+    "rule_037": {
+      "verdict": "correct",
+      "reason": "Section 1-2.4.2 specifies that unused bits at the most significant end of a 32-bit packed Boolean structure must be all binary zeros."
+    },
+    "rule_016": {
+      "verdict": "correct",
+      "reason": "Section 3.3.1.1.1.1 states that Sampling Com Ports must not use IP fragmentation, so each sampling message size must be less than or equal to the associated Virtual Link payload size."
+    },
+    "rule_236": {
+      "verdict": "correct",
+      "reason": "The specification states that for bi-directional communication using conventional AFDX communication ports, the ports should be used in queuing mode."
+    },
+    "rule_112": {
+      "verdict": "correct",
+      "reason": "The text explicitly says a user port is configured to either transmit or receive, but not both."
+    },
+    "rule_608": {
+      "verdict": "correct",
+      "reason": "The specification states the appropriate configuration file is selected in an exclusive mode depending on operating mode."
+    },
+    "rule_745": {
+      "verdict": "correct",
+      "reason": "The specification mandates a prioritization mechanism with exactly two classes: High Priority and Low Priority."
+    },
+    "rule_769": {
+      "verdict": "correct",
+      "reason": "The specification states only one End System should be the source of any one Virtual Link."
+    },
+    "rule_263": {
+      "verdict": "correct",
+      "reason": "The specification says shorter signed integers should be sign-extended and unsigned integers zero-extended when converted to 32-bit."
+    },
+    "rule_377": {
+      "verdict": "correct",
+      "reason": "The specification requires the End System to accommodate VL frames up to 1518 bytes."
+    },
+    "rule_628": {
+      "verdict": "correct",
+      "reason": "The spec states the Fault/Healthy MIB variable is updated every 100 ms and the indicator output at least every 100 ms, implying a maximum update interval of 100 ms."
+    },
+    "rule_588": {
+      "verdict": "correct",
+      "reason": "The spec explicitly says the sequence number increments by one for each frame and wraps to 1 after 255."
+    },
+    "rule_479": {
+      "verdict": "unverifiable",
+      "reason": "The passage gives an example message with dynamic length 22 bytes but does not state a general maximum length constraint."
+    },
+    "rule_297": {
+      "verdict": "unverifiable",
+      "reason": "The passage specifies two’s complement for 64-bit signed integers but does not provide the explicit numeric range stated in the rule."
+    },
+    "rule_211": {
+      "verdict": "correct",
+      "reason": "The spec defines the multicast address as Class D '1110' with a 12-bit constant '0000 1110 0000' and a 16-bit Virtual Link Identifier, matching the rule."
+    },
+    "rule_004": {
+      "verdict": "correct",
+      "reason": "The specification states that in the MAC Source Addressing Format the least significant bit of the first byte indicates an Individual Address and is 0."
+    },
+    "rule_057": {
+      "verdict": "correct",
+      "reason": "The specification explicitly says the maximum frame size S_i_max should be in the range [84, 1538] bytes."
+    },
+    "rule_304": {
+      "verdict": "correct",
+      "reason": "The specification defines Float_64 as 64 bits with 1 sign bit, 11 exponent bits, and 52 mantissa bits."
+    },
+    "rule_630": {
+      "verdict": "correct",
+      "reason": "The specification states the switch should enter OPS mode after initialization if compatibility checks are correct and the shop condition is not active."
+    },
+    "rule_360": {
+      "verdict": "correct",
+      "reason": "The specification says that in OPS the End System function uses the EndSystem_Configuration_Table to check the consistency of received frames."
+    },
+    "rule_018": {
+      "verdict": "correct",
+      "reason": "The specification states that the sampling service is simple, connectionless, without acknowledge."
+    },
+    "rule_320": {
+      "verdict": "correct",
+      "reason": "The specification requires that any Ethernet frame generated by the End System be compliant with IEEE 802.3."
+    },
+    "rule_113": {
+      "verdict": "correct",
+      "reason": "The specification defines an AFDX Communication port as having unidirectional access: Transmission (Tx) or reception (Rx)."
+    },
+    "rule_581": {
+      "verdict": "correct",
+      "reason": "The specification summarizes that in a guaranteed service, bandwidth and bounded latency are guaranteed."
+    },
+    "rule_637": {
+      "verdict": "correct",
+      "reason": "The specification states that in PASSIVE mode the switch functions are stopped and it keeps silent, but communication with Network Management is maintained unless there is a pin programming parity error."
+    },
+    "rule_348": {
+      "verdict": "correct",
+      "reason": "The specification explicitly states that in case of fragmentation no data should be presented to a partition until the whole message has been reassembled."
+    },
+    "rule_013": {
+      "verdict": "correct",
+      "reason": "The specification lists these four standard IP broadcast address forms and requires a host to recognize any of them in the destination address of an incoming datagram."
+    },
+    "rule_103": {
+      "verdict": "correct",
+      "reason": "The specification requires MAC destination addresses to be group and locally administered with the xx11 pattern in the first byte and formatted as a 16-bit constant field plus a 32-bit Virtual Link Identifier."
+    },
+    "rule_640": {
+      "verdict": "correct",
+      "reason": "The specification states that in QUIET mode the switch's functions are stopped, it does not transmit frames or allow management communication, and all ports are disabled."
+    },
+    "rule_435": {
+      "verdict": "correct",
+      "reason": "The specification says it should be possible on a per-VL basis to disable integrity checking on both networks via the configuration table."
+    },
+    "rule_295": {
+      "verdict": "correct",
+      "reason": "The specification defines a data element as a specific value defined by range and resolution representing a discrete piece of information, with primitive types and ranges listed."
+    },
+    "rule_725": {
+      "verdict": "correct",
+      "reason": "The specification states the switch should use the VL identifier to obtain filtering and policing information from the configuration table, with parameters accessed via the VL id."
+    },
+    "rule_323": {
+      "verdict": "correct",
+      "reason": "The specification states that when more than one status condition exists, the condition with the highest priority should be encoded into the status field."
+    },
+    "rule_339": {
+      "verdict": "correct",
+      "reason": "The specification says that in the case of a link failure, frames forwarded to and held in buffers of that port should be discarded for that port."
+    },
+    "rule_140": {
+      "verdict": "correct",
+      "reason": "The specification states that a Sub-VL FIFO queue should only be read by one VL FIFO queue and describes the round-robin reading by the main VL FIFO."
+    },
+    "rule_593": {
+      "verdict": "correct",
+      "reason": "The specification explicitly states that the guaranteed service provides a firm, mathematically provable upper bound on end-to-end frame transit delay."
+    },
+    "rule_723": {
+      "verdict": "correct",
+      "reason": "The specification states transmissions are delayed according to the VL’s bandwidth limitation (traffic shaping) with latency bounded by multiples of BAGi."
+    },
+    "rule_033": {
+      "verdict": "correct",
+      "reason": "The specification states that the 32-bit signed integer uses two’s complement representation."
+    },
+    "rule_493": {
+      "verdict": "correct",
+      "reason": "The specification defines the FSS as four 8-bit status fields supporting up to four data sets, with additional data sets requiring another FSS."
+    },
+    "rule_461": {
+      "verdict": "correct",
+      "reason": "The specification mandates verifying the IP header checksum and silently discarding any datagram with a bad checksum."
+    },
+    "rule_225": {
+      "verdict": "correct",
+      "reason": "The passage explicitly lists the four standard IP broadcast address forms as limited, directed, subnet directed, and all-subnets directed broadcasts."
+    },
+    "rule_638": {
+      "verdict": "correct",
+      "reason": "The specification states that upon entering PASSIVE mode the switch should set the Fault/Healthy indicator to the Fault state."
+    },
+    "rule_355": {
+      "verdict": "correct",
+      "reason": "The specification states that a maximum AFDX frame length should be defined on a per VL basis."
+    },
+    "rule_392": {
+      "verdict": "correct",
+      "reason": "The specification requires discarding frames smaller than 64 bytes, establishing a 64-byte minimum size."
+    },
+    "rule_619": {
+      "verdict": "correct",
+      "reason": "The specification defines pin programming encoding with GROUND as 1 and OPEN as 0."
+    },
+    "rule_117": {
+      "verdict": "incorrect",
+      "reason": "The AFDX compliance table marks “Aggregate or queue un-pushed data” as NOT APPLICABLE (interpreted as MUST NOT), so aggregating data without the PSH flag is not permitted."
+    },
+    "rule_733": {
+      "verdict": "incorrect",
+      "reason": "The specification states ACi is initially set to Si_max only when Ji,switch = 0, not unconditionally."
+    },
+    "rule_600": {
+      "verdict": "correct",
+      "reason": "The specification explicitly states that frames filtered by the Filtering and Policing function are forwarded to the appropriate physical output ports."
+    },
+    "rule_274": {
+      "verdict": "incorrect",
+      "reason": "The specification says the buffer “should” be positioned for 32-bit alignment of the Reserved word, not “must.”},{"
+    },
+    "rule_248": {
+      "verdict": "correct",
+      "reason": "The passage explicitly states that Functional Status Sets should be aligned on 32-bit boundaries throughout the message."
+    },
+    "rule_279": {
+      "verdict": "correct",
+      "reason": "The passage defines an FSS as four 8-bit status fields with each field representing one DS, up to four DS per FSS, and requiring an additional FSS if more than four DS are used."
+    },
+    "rule_009": {
+      "verdict": "correct",
+      "reason": "The passage states the Domain ID is 4 bits with 0000 and 1111 forbidden, yielding 14 possible Domain IDs."
+    },
+    "rule_771": {
+      "verdict": "correct",
+      "reason": "The passage states that each Switch has a unique default transmission VL whose identifier depends on the Switch’s position."
+    },
+    "rule_277": {
+      "verdict": "correct",
+      "reason": "The passage indicates that a 64-bit double-precision field is placed at an address divisible by its 8-byte length, i.e., aligned on an 8-byte boundary."
+    },
+    "rule_724": {
+      "verdict": "correct",
+      "reason": "The specification explicitly states that frame-based traffic policing filters VLs by bandwidth in frames per second."
+    },
+    "rule_157": {
+      "verdict": "correct",
+      "reason": "The specification states that QUIET mode is entered in the event of catastrophic failures that question switch functionality."
+    },
+    "rule_089": {
+      "verdict": "unverifiable",
+      "reason": "While the spec says a host MUST NOT send a datagram with TTL zero, it does not specify the TTL range as 1–255."
+    },
+    "rule_143": {
+      "verdict": "correct",
+      "reason": "The specification states the switch should not have more than two field loadable software components (OPS_Software and OPS_Configuration_File)."
+    },
+    "rule_684": {
+      "verdict": "correct",
+      "reason": "The specification describes that simultaneous frames are sequenced for re-transmission with maximum jitter dependent on message length (Tj = (8×M)/Nbw + Tmin_gap)."
+    },
+    "rule_107": {
+      "verdict": "correct",
+      "reason": "The passages state AFDX is a special case (subset) of a profiled IEEE 802.3 network and that a deterministic network may communicate with wider profiled/compliant networks via routers or gateways."
+    },
+    "rule_133": {
+      "verdict": "correct",
+      "reason": "The specification explicitly says the Redundancy Management algorithm should only use the RSN of a frame for acceptance or rejection, with integrity checking handled separately."
+    },
+    "rule_100": {
+      "verdict": "correct",
+      "reason": "The text specifies the MAC should process received frames and make selected frames available to the partition at the full frame rate of the medium."
+    },
+    "rule_163": {
+      "verdict": "incorrect",
+      "reason": "The specification says the switch should maintain VL frame order, not that it must, so the rule overstates the requirement."
+    },
+    "rule_045": {
+      "verdict": "correct",
+      "reason": "The passages state booleans are represented by a single bit in a 32-bit field, with bit 0 used when only one boolean is present."
+    },
+    "rule_234": {
+      "verdict": "correct",
+      "reason": "The spec explicitly states that for bi-directional communication two SAPs should be used (e.g., SAP 30000 Tx and SAP 30000 Rx)."
+    },
+    "rule_085": {
+      "verdict": "correct",
+      "reason": "The spec mandates that a datagram whose IP version is not 4 must be silently discarded."
+    },
+    "rule_153": {
+      "verdict": "correct",
+      "reason": "The spec describes a Filtering & Policing function where all frames are filtered before switching, implying frame filtering is required."
+    },
+    "rule_761": {
+      "verdict": "correct",
+      "reason": "The spec explicitly states that one Virtual Link should not be shared by two or more source partitions."
+    },
+    "rule_529": {
+      "verdict": "correct",
+      "reason": "The spec states that all output interfaces will continue to transmit even in the case of a physical layer link failure."
+    },
+    "rule_659": {
+      "verdict": "correct",
+      "reason": "The passage explicitly defines La = Ts + Tm1 + Tsw + (8 x M)/Nbw + Tm2 + Tr as the first frame latency."
+    },
+    "rule_232": {
+      "verdict": "correct",
+      "reason": "The passage states that on a per-VL basis the ES should be able to receive redundant single-delivery (RM active), redundant dual-delivery (RM not active), or non-redundant frames."
+    },
+    "rule_343": {
+      "verdict": "incorrect",
+      "reason": "The specification says spare fields should be filled with binary zeros, not must."
+    },
+    "rule_449": {
+      "verdict": "correct",
+      "reason": "The passage states the Stream Identifier option SHOULD NOT be sent and MUST be silently ignored if received."
+    },
+    "rule_667": {
+      "verdict": "correct",
+      "reason": "The passage specifies that in QUIET mode switch functions stop, the switch does not transmit frames, and all ports are disabled."
+    },
+    "rule_742": {
+      "verdict": "correct",
+      "reason": "The specification explicitly states that an Ethernet frame consists of a MAC header followed by a packet."
+    },
+    "rule_213": {
+      "verdict": "correct",
+      "reason": "The specification states a TCP implementation MUST reject as an error a local OPEN call for an invalid remote IP address."
+    },
+    "rule_257": {
+      "verdict": "correct",
+      "reason": "The specification defines Ethernet as big-endian, with higher-order bits/bytes at lower addresses and transmitted first."
+    },
+    "rule_446": {
+      "verdict": "correct",
+      "reason": "The specification requires that every host support IP reassembly."
+    },
+    "rule_215": {
+      "verdict": "correct",
+      "reason": "The MAC source addressing format specifies the locally administered bit (second LSB of the first byte) is set to 1."
+    },
+    "rule_120": {
+      "verdict": "correct",
+      "reason": "The specification states that in case of fragmentation, no data should be presented to a partition until the whole message has been reassembled."
+    },
+    "rule_357": {
+      "verdict": "correct",
+      "reason": "Frame filtering checks whether the FCS embedded in the frame matches the calculation upon reception."
+    },
+    "rule_186": {
+      "verdict": "correct",
+      "reason": "The specification says non-compliant frames are discarded and the appropriate MIB entries are updated, both in filtering and traffic policing."
+    },
+    "rule_255": {
+      "verdict": "correct",
+      "reason": "The specification defines Default and OPS configuration files and specifies the appropriate file is selected in an exclusive mode."
+    },
+    "rule_743": {
+      "verdict": "correct",
+      "reason": "The traffic regulator should shape the flow to send no more than one frame in each interval of BAG milliseconds."
+    },
+    "rule_328": {
+      "verdict": "correct",
+      "reason": "The specification states SAP ports 1024–65535 are used for bi-directional communication."
+    },
+    "rule_587": {
+      "verdict": "correct",
+      "reason": "The specification says the sequence number is initially 0 and is reset to 0 after a transmitting ES reset."
+    },
+    "rule_728": {
+      "verdict": "correct",
+      "reason": "The specification explicitly requires one BAG, one jitter, and one maximum size value per VL."
+    },
+    "rule_122": {
+      "verdict": "incorrect",
+      "reason": "The specification allows non-redundant VLs that send frames on only one network, so not every frame is sent on both A and B."
+    },
+    "rule_287": {
+      "verdict": "correct",
+      "reason": "The table lists Float_64 range as ±(2−1/2^51)2^−1022 … 1023, matching the stated constraint."
+    },
+    "rule_042": {
+      "verdict": "correct",
+      "reason": "Table 1-3 lists ND, NO, FT, NCD with decimal values 0, 3, 12, and 48, and states other values must be discarded."
+    },
+    "rule_730": {
+      "verdict": "correct",
+      "reason": "The switch per-VL configuration explicitly includes an account flag specifying whether it is shared or not."
+    },
+    "rule_068": {
+      "verdict": "correct",
+      "reason": "The variable-length opaque structure defines that the length field equals the number of data bytes, with padding filling the remainder."
+    },
+    "rule_091": {
+      "verdict": "correct",
+      "reason": "The passages conflict by both prohibiting and requiring discard of received packets with TTL less than 2."
+    },
+    "rule_049": {
+      "verdict": "unverifiable",
+      "reason": "The passages reference a performance formula but do not provide its content to verify against."
+    },
+    "rule_378": {
+      "verdict": "correct",
+      "reason": "The specification commentary explicitly states that at the receiver demultiplexing is based only on the MAC, IP, and UDP destination addresses."
+    },
+    "rule_316": {
+      "verdict": "correct",
+      "reason": "The specification states that for data primitives both bytes and bits are represented with the most significant on the left and the least significant on the right."
+    },
+    "rule_607": {
+      "verdict": "correct",
+      "reason": "The specification states a switch may implement byte-based policing, frame-based policing, or both."
+    },
+    "rule_460": {
+      "verdict": "correct",
+      "reason": "The specification explicitly states that any IP datagram whose version is not 4 must be silently discarded, confirming the need to validate the IP version field equals 4."
+    }
+  }
+}

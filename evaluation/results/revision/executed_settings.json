@@ -1,0 +1,105 @@
+{
+  "campaign": {
+    "LLM": {
+      "iterations": 200,
+      "distinct_settings": 74,
+      "iterations_per_mechanism": {
+        "frame_size": 127,
+        "dest_mac": 11,
+        "timing": 25,
+        "src_mac": 4,
+        "seq_override": 11
+      },
+      "iterations_without_mutation": 61
+    },
+    "Boofuzz": {
+      "iterations": 200,
+      "distinct_settings": 75,
+      "iterations_per_mechanism": {
+        "frame_size": 81,
+        "timing": 43,
+        "dest_mac": 45,
+        "seq_override": 17,
+        "src_mac": 13
+      },
+      "iterations_without_mutation": 72,
+      "replay_matches_logged_violation_id": 200
+    },
+    "Random": {
+      "iterations": 200,
+      "note": "mutation parameters not logged"
+    }
+  },
+  "bdr_replay": {
+    "LLM": {
+      "iterations": 200,
+      "distinct_settings": 74,
+      "iterations_per_mechanism": {
+        "frame_size": 127,
+        "dest_mac": 11,
+        "timing": 25,
+        "src_mac": 4,
+        "seq_override": 11
+      },
+      "iterations_without_mutation": 61
+    },
+    "Boofuzz": {
+      "iterations": 200,
+      "distinct_settings": 62,
+      "iterations_per_mechanism": {
+        "frame_size": 81,
+        "timing": 43,
+        "tx_drop": 200
+      },
+      "iterations_without_mutation": 0
+    },
+    "Random": {
+      "iterations": 200,
+      "distinct_settings": 8,
+      "iterations_per_mechanism": {
+        "tx_drop": 200
+      },
+      "iterations_without_mutation": 0
+    }
+  },
+  "redirect_replay_LLM": {
+    "label_equals_redirect_pick": 135,
+    "label_differs_from_redirect_pick": 65,
+    "categories_from_other_iterations": 31,
+    "first_iterations_label_equals_pick": [
+      1,
+      2,
+      6,
+      10,
+      11,
+      14,
+      15,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ]
+  },
+  "boofuzz_rule_coverage": {
+    "stitched_history_categories": 87,
+    "clean_200_iteration_schedule_categories": 86,
+    "clean_curve_at_50_100_150_200": [
+      57,
+      85,
+      86,
+      86
+    ],
+    "clean_and_llm": 81,
+    "clean_only": 5,
+    "llm_only": 77
+  }
+}

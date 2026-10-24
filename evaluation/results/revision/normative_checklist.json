@@ -1,0 +1,858 @@
+{
+  "source": "ARINC_664P7.pdf",
+  "count": 142,
+  "items": [
+    {
+      "section": "2.4",
+      "page": 15,
+      "text": "Where there is an association between sequenced frames, ordinal integrity should be maintained.",
+      "id": "N001"
+    },
+    {
+      "section": "3.1",
+      "page": 17,
+      "text": "Each network transmission request must be serviced regardless of the data type and a maximum network transit delay (also called end- to-end latency) must be guaranteed.",
+      "id": "N002"
+    },
+    {
+      "section": "3.2.1",
+      "page": 18,
+      "text": "Only one End System within the Avionics network should be the source of any one VL.",
+      "id": "N003"
+    },
+    {
+      "section": "3.2.2",
+      "page": 19,
+      "text": "The ES should provide logical isolation with respect to available bandwidth among the Virtual Link(s) it supports.",
+      "id": "N004"
+    },
+    {
+      "section": "3.2.2",
+      "page": 19,
+      "text": "For each Virtual Link, the End System should maintain the ordering of data as delivered by a partition, for both transmission and reception (ordinal integrity).",
+      "id": "N005"
+    },
+    {
+      "section": "3.2.2",
+      "page": 19,
+      "text": "The End-system communication stack should guarantee in transmission the allocated bandwidth of each Virtual Link regardless of the attempted use of Bandwidth by other Virtual Links, in order to preserve segregation between partitions at the network level.",
+      "id": "N006"
+    },
+    {
+      "section": "3.2.2",
+      "page": 19,
+      "text": "One Virtual Link should not be shared by two or more source partitions.",
+      "id": "N007"
+    },
+    {
+      "section": "3.2.4.2",
+      "page": 24,
+      "text": "Figure 3-9 - Rx - Points of Performance Measurement The technological latency of the end-system in reception should be bounded and lower than 150 μs. 3.2.4.2 MAC Constraints To avoid losing incoming frames during a burst, and to fix the IFG in transmission, the MAC layer of the end-system should be able to: • Process received frames at full frame rate of the medium and appropriate (selected) frames are made available to the partition at full frame rate of the medium • Transmit frames back to back",
+      "id": "N008"
+    },
+    {
+      "section": "3.2.4.3",
+      "page": 25,
+      "text": "Nevertheless, the designer should very carefully consider the impact for compliance on maximum jitter in transmission.",
+      "id": "N009"
+    },
+    {
+      "section": "3.2.4.3",
+      "page": 25,
+      "text": "3.2.4.3 Jitter In transmission, the maximum allowed jitter on each VL at the output of the end- system should comply with both of the following formulas:",
+      "id": "N010"
+    },
+    {
+      "section": "3.2.5.1",
+      "page": 26,
+      "text": "For the given VLi in transmission, and if (p-1) frames are being processed, the maximum latency of the frame number p should be bounded according to the following formula: MAX_Latencyi (frame_p) ≤ p * BAGi + Max_jitter + Technological_Latency_in_transmission The transmission will be delayed according to the bandwidth limitation of the VL (traffic shaping).",
+      "id": "N011"
+    },
+    {
+      "section": "3.2.5.1",
+      "page": 26,
+      "text": "In all cases the values stated above should be adhered to. 3.2.5 MAC Addressing 3.2.5.1 MAC Destination Address A Virtual Link should only be identified by the MAC destination address as illustrated in Figure 3-10, and the MAC source address of AFDX frames should be the MAC unicast address used to identify the physical Ethernet interface.",
+      "id": "N012"
+    },
+    {
+      "section": "3.2.5.1",
+      "page": 26,
+      "text": "A MAC destination address in the AFDX frame should be a Group and Locally Administered address and should be compliant with the following format. 48 bits Constant field 32 bits Virtual Link Identifier 16 bits xxxx xx11 xxxx xxxx xxxx xxxx xxxx xxxx Figure 3-10 - MAC Multicast Addressing Format Each ES should get \"constant field\" and \"Virtual Link Identifier\" values from the system integrator.",
+      "id": "N013"
+    },
+    {
+      "section": "3.2.5.1",
+      "page": 26,
+      "text": "The constant field should be the same for each ES in any given AFDX network.",
+      "id": "N014"
+    },
+    {
+      "section": "3.2.5.1",
+      "page": 26,
+      "text": "In order to use the standard Ethernet frame, MAC group addresses should be used to send frames from End System to End System(s).",
+      "id": "N015"
+    },
+    {
+      "section": "3.0",
+      "page": 32,
+      "text": "ARINC SPECIFICATION 664 PART 7 - Page 24 3.0 END SYSTEM SPECIFICATION The frame sequence number should be located just before the MAC CRC field, as part of the MAC payload, as illustrated in Figure 3-19.",
+      "id": "N016"
+    },
+    {
+      "section": "3.2.6.2.1",
+      "page": 32,
+      "text": "Figure 3-19 - Sequence Number Location in Frames for Minimum and Maximum Length In order to simplify the algorithm on the receiving End System, redundant copies of a frame should be sent within a maximum time difference of 0.5 ms.",
+      "id": "N017"
+    },
+    {
+      "section": "3.2.6.2.1",
+      "page": 32,
+      "text": "On a per VL basis, the ES should be able to send messages on either or both networks.",
+      "id": "N018"
+    },
+    {
+      "section": "3.2.6.2.1",
+      "page": 32,
+      "text": "This property should be configurable.",
+      "id": "N019"
+    },
+    {
+      "section": "3.2.6.2.1",
+      "page": 32,
+      "text": "If redundancy is turned off for any Virtual Link, a careful assessment of its impact should be performed on system integrity and availability.",
+      "id": "N020"
+    },
+    {
+      "section": "3.2.6.2.2",
+      "page": 33,
+      "text": "The Integrity Checking should also accept the frame as valid in the following special cases: • The Received Sequence Number (RSN) is equal to 0 • The frame is the first frame received after any reset of the receiving ES Frames that do not meet these criteria are discarded.",
+      "id": "N021"
+    },
+    {
+      "section": "3.2.6.2.2",
+      "page": 33,
+      "text": "It should be possible on a per VL basis to disable the integrity checking on both networks through the configuration table.",
+      "id": "N022"
+    },
+    {
+      "section": "3.2.6.2.2",
+      "page": 33,
+      "text": "This value depends on the network topology (number of switches crossed by the frames) and should be provided by the system integrator.",
+      "id": "N023"
+    },
+    {
+      "section": "3.2.6.2.2",
+      "page": 33,
+      "text": "The SkewMax value (expressed in ms) is given by configuration per VL Definitions: • Redundant VL means that the same frames are sent through both network, A and B • Non-redundant VL means that (possibly different) frames are sent through either network A or B On a per VL basis, the ES should be able to receive: • A redundant VL and deliver to the partition one of the redundant data (RM active) • A redundant VL and deliver to the partition both redundant data (RM not active) • A non redundant VL on either interface and submit data from it to the partition (in this case, RM can be active or not)",
+      "id": "N024"
+    },
+    {
+      "section": "3.3.1",
+      "page": 36,
+      "text": "The examples with red cross should not be used.",
+      "id": "N025"
+    },
+    {
+      "section": "3.3.1.1.1.1",
+      "page": 37,
+      "text": "3.3.1.1.1 Avionics Sampling Services The End System should provide sampling services as defined in ARINC 653 (Section 2.3.5.6.1).",
+      "id": "N026"
+    },
+    {
+      "section": "3.3.1.1.1.1",
+      "page": 37,
+      "text": "3.3.1.1.1.1 In Transmission Sampling Com Ports should not use IP fragmentation, therefore the size of each sampling message should be less than or equal to the payload size of the associated Virtual Link.",
+      "id": "N027"
+    },
+    {
+      "section": "3.3.1.1.1.1",
+      "page": 37,
+      "text": "Sampling service should be based on multicast and unidirectional communication to send data from one source to one or several receptors.",
+      "id": "N028"
+    },
+    {
+      "section": "3.3.1.1.2.1",
+      "page": 38,
+      "text": "3.3.1.1.1.2 In Reception The last message stored in a particular sampling port should be able to be read by several partitions (i.e. several partitions may subscribe to this sampling port).",
+      "id": "N029"
+    },
+    {
+      "section": "3.3.1.1.2.1",
+      "page": 38,
+      "text": "A freshness indication should be associated to each sampling port.",
+      "id": "N030"
+    },
+    {
+      "section": "3.3.1.1.2.1",
+      "page": 38,
+      "text": "This freshness indication should be available to each partition reading the message.",
+      "id": "N031"
+    },
+    {
+      "section": "3.3.1.1.2.1",
+      "page": 38,
+      "text": "3.3.1.1.2 Avionics Queuing Service The End System should provide queuing services to an avionics partition, as defined in ARINC 653 (Section 2.3.5.6.2).",
+      "id": "N032"
+    },
+    {
+      "section": "3.3.1.1.2.1",
+      "page": 38,
+      "text": "The queuing service should be able to manage messages of different sizes for the same queuing Communication Port.",
+      "id": "N033"
+    },
+    {
+      "section": "3.3.1.1.2.1",
+      "page": 38,
+      "text": "To guarantee the sequence of messages, the queuing service should manage the messages with FIFO discipline in transmission and reception.",
+      "id": "N034"
+    },
+    {
+      "section": "3.3.1.1.2.1",
+      "page": 38,
+      "text": "Each instance of Queuing Service should be able to manage up to 8 k octets of application data (IP fragmentation is thus needed).",
+      "id": "N035"
+    },
+    {
+      "section": "3.3.1.1.2.1",
+      "page": 38,
+      "text": "3.3.1.1.2.1 In Transmission When fragmentation is used, the fragments should be transmitted in-order to the AFDX network.",
+      "id": "N036"
+    },
+    {
+      "section": "3.3.1.1.2.1",
+      "page": 38,
+      "text": "If a buffer overflow occurs in transmission, an error indication should be sent to the transmitting partition and the frame should be discarded, as illustrated in Figure 3-24.",
+      "id": "N037"
+    },
+    {
+      "section": "3.3.1.2.2",
+      "page": 39,
+      "text": "3.3.1.1.2.2 In Reception In case of fragmentation, no data should be presented to a partition in the queuing services FIFO until whole message has been reassembled.",
+      "id": "N038"
+    },
+    {
+      "section": "3.3.1.2.2",
+      "page": 39,
+      "text": "If a buffer overflow occurs in reception, an error message should be sent to the receiving partition and the frame should be discarded. 3.3.1.2 SAP Port",
+      "id": "N039"
+    },
+    {
+      "section": "3.3.1.2.2",
+      "page": 39,
+      "text": "3.3.1.2.1 Services to Compliant Network An ES can be a Service Access Point with the following characteristics: • The SAP ports could be used for communications within the AFDX network. • Access to the compliant network can be through either a gateway or a router, as part of the ES design. • The ES should provide UDP services to communicate with Compliant Network. • Each instance of the UDP Service Access Point should handle up to 8k octets. • As an option, TCP could be used by accessing the IP layer directly through an appropriately configured SAP port.",
+      "id": "N040"
+    },
+    {
+      "section": "3.3.1.2.2",
+      "page": 39,
+      "text": "If receiver buffer overflow occurs, an error message is sent to the receiving partition, and the frame should be discarded.",
+      "id": "N041"
+    },
+    {
+      "section": "3.3.2",
+      "page": 42,
+      "text": "ARINC SPECIFICATION 664 PART 7 - Page 34 3.0 END SYSTEM SPECIFICATION A VL FIFO queue should be able to manage at most 4 Sub-VL FIFO queues.",
+      "id": "N042"
+    },
+    {
+      "section": "3.3.2",
+      "page": 42,
+      "text": "Each Sub-VF FIFO queue should be read in round-robin sequence such that if any Sub-VF FIFO queue has traffic, one frame per BAG is sent to the main VL.",
+      "id": "N043"
+    },
+    {
+      "section": "3.3.2",
+      "page": 42,
+      "text": "A Sub-VL FIFO queue should only be read by one VL FIFO queue.",
+      "id": "N044"
+    },
+    {
+      "section": "3.3.2",
+      "page": 42,
+      "text": "IP fragmentation should be performed at the IP layer, if it is needed.",
+      "id": "N045"
+    },
+    {
+      "section": "3.4.1.3",
+      "page": 49,
+      "text": "Figure3-34 - Message Identification Concept For a source IP, there should be several source UDP/TCP ports.",
+      "id": "N046"
+    },
+    {
+      "section": "3.4.1.3",
+      "page": 49,
+      "text": "For a destination IP there should be several destination UDP/TCP ports.",
+      "id": "N047"
+    },
+    {
+      "section": "3.4.1.3.2",
+      "page": 50,
+      "text": "To obtain a bi-directional communication, two SAPs should be used (e.g.: SAP 30 000 Tx and SAP 30 000 Rx).",
+      "id": "N048"
+    },
+    {
+      "section": "3.4.1.3.2",
+      "page": 50,
+      "text": "Bi-directional communication, at a single ES should require two AFDX communication ports : one transmitter and one receiver, (e.g.: AFDX Com port 15 000 Tx and AFDX Com port 15 000 Rx).",
+      "id": "N049"
+    },
+    {
+      "section": "3.4.1.3.2",
+      "page": 50,
+      "text": "For a bi-directional communication, the ports should be used in queuing mode.",
+      "id": "N050"
+    },
+    {
+      "section": "3.4.1.4.1",
+      "page": 51,
+      "text": "On the contrary, if frames are sent by an AFDX ES outside this closed network (to another Domain), ARINC 664, Part 4 should be applicable.",
+      "id": "N051"
+    },
+    {
+      "section": "3.4.1.4.1",
+      "page": 51,
+      "text": "The system integrator my do this by using an IP address translation mechanism. 3.4.1.4.1 IP Source Address The IP source address should be used to identify the transmitting partition associated with the End System.",
+      "id": "N052"
+    },
+    {
+      "section": "3.4.1.4.1",
+      "page": 51,
+      "text": "The IP destination address should be used by an End System to forward IP packets to one or more destination End System(s).",
+      "id": "N053"
+    },
+    {
+      "section": "3.4.1.4.1",
+      "page": 51,
+      "text": "The IP address should be Class A and private Internet Unicast Address (First 8 bits should be ‘0000 1010’).",
+      "id": "N054"
+    },
+    {
+      "section": "3.4.1.4.1",
+      "page": 51,
+      "text": "It should be used as the system integrator deems appropriate to give each IP addressable host on the network a unique and meaningful IP address.",
+      "id": "N055"
+    },
+    {
+      "section": "3.4.1.5",
+      "page": 52,
+      "text": "Spare Field Meaning 0 0 0 No significance Figure 3-37 - Spare Field Definition The IP source address in the IP header of the AFDX frame should be an IP unicast address used to identify the transmitter. 3.4.1.4.2 IP Destination Address The IP destination address in the IP header of the AFDX frame should be: • Either the IP Unicast address to identify the target subscriber • Or an IP Multicast address compliant to the format shown in Figure 3-38 IP Addressing Format 32 bits 4 bits 28 bits Class D “1110” IP Multicast Identifier Constant field 12 bits = “0000 1110 0000” Virtual Link Identifier 16 bits Figure 3-38 - IP Multicast Addressing Format 3.4.1.5 AFDX Communication Port, SAP and UDP/TCP Addressing Format For Intra and Extra AFDX communications, there are two interfaces between the End System and the partitions: AFDX communication and SAP ports.",
+      "id": "N056"
+    },
+    {
+      "section": "3.4.1.5.1",
+      "page": 53,
+      "text": "Figure 3-40 - SAP Port Using UDP 3.4.1.5.1 AFDX Communication Ports In transmission, an AFDX Communication Port should only be linked to a single set UDP port source, IP source, VL (MAC destination), IP destination and UDP destination.",
+      "id": "N057"
+    },
+    {
+      "section": "3.4.1.5.1",
+      "page": 53,
+      "text": "In reception, an AFDX Communication Port should only be linked to a single set (unique UDP port destination, IP destination, VL (MAC destination)) and additionally to the Ethernet physical interface if the redundancy management is disabling.",
+      "id": "N058"
+    },
+    {
+      "section": "3.4.1.5.3",
+      "page": 54,
+      "text": "ARINC SPECIFICATION 664 PART 7 - Page 46 3.0 END SYSTEM SPECIFICATION 3.4.1.5.2 SAP Ports In transmission, a SAP Port should only be linked to a single set (UDP port source, IP source and VL (MAC destination)).",
+      "id": "N059"
+    },
+    {
+      "section": "3.4.1.5.3",
+      "page": 54,
+      "text": "In reception, a SAP Port should only be linked to a single set (UDP/TCP port destination, IP destination and VL (MAC destination)) The UDP/TCP port number should identify the Service Access Point.",
+      "id": "N060"
+    },
+    {
+      "section": "3.4.1.5.3",
+      "page": 54,
+      "text": "In reception, the Service Access Point should make available the IP source and the UDP/TCP Source to the receiving partition.",
+      "id": "N061"
+    },
+    {
+      "section": "3.4.1.5.3",
+      "page": 54,
+      "text": "In transmission, the Service Access Point should permit the partition to specify the IP address and the UDP/TCP port of the destination partition.",
+      "id": "N062"
+    },
+    {
+      "section": "4.0",
+      "page": 57,
+      "text": "S i max is a configurable parameter that should be in the range [84, 1538] • The minimum frame size for VLi is denoted S i min (expressed in bytes).",
+      "id": "N063"
+    },
+    {
+      "section": "4.0",
+      "page": 57,
+      "text": "S i min is a configurable parameter that should be in the range [84, 1538].",
+      "id": "N064"
+    },
+    {
+      "section": "4.0",
+      "page": 57,
+      "text": "S i min should be less than or equal to S i max The frame size value shown in Figure 4-2 corresponds to the actual time a frame occupies the Ethernet line (s).",
+      "id": "N065"
+    },
+    {
+      "section": "4.0",
+      "page": 62,
+      "text": "Traffic policing should be based on parameters: BAG, Jitter, Smax, and eventually Smin in the case where byte-based traffic policing is used.",
+      "id": "N066"
+    },
+    {
+      "section": "4.0",
+      "page": 62,
+      "text": "It should mechanize the algorithm described in paragraph “filtering and policing function introduction.” For each VL or group of VLs sharing the same account, the Traffic Policing function should authorize one BAG value according to the configuration table.",
+      "id": "N067"
+    },
+    {
+      "section": "4.0",
+      "page": 62,
+      "text": "The Traffic Policing function of the Switch should at least be configurable for BAG values in the range 1ms to 128 ms.",
+      "id": "N068"
+    },
+    {
+      "section": "4.0",
+      "page": 62,
+      "text": "For each VL or group of VLs sharing the same account, the Traffic Policing function should authorize one maximum Jitter value, according to the configuration table.",
+      "id": "N069"
+    },
+    {
+      "section": "4.0",
+      "page": 62,
+      "text": "The traffic policing function should at a minimum be configurable for maximum allowed Jitter values in the range 0 to 10 milliseconds.",
+      "id": "N070"
+    },
+    {
+      "section": "4.6",
+      "page": 64,
+      "text": "ARINC SPECIFICATION 664 PART 7 - Page 56 4.0 SWITCH SPECIFICATION An output port should not transmit frames that are older than \"max delay.” The \"max delay\" parameter is defined on a per port basis in the configuration table.",
+      "id": "N071"
+    },
+    {
+      "section": "4.6",
+      "page": 64,
+      "text": "The maximum delay parameter of a frame on a given port is defined as the maximum elapsed time between the two following events: • Arrival of the last bit of a frame on the input port of a switch • Exit of this last bit of the frame from the given output port of the switch The switch should have the capability to receive a frame on any port and forward it to any combination of ports (including the receiving port).",
+      "id": "N072"
+    },
+    {
+      "section": "4.6",
+      "page": 64,
+      "text": "The Switch should have a traffic prioritization mechanism based on MAC destination address with 2 traffic classes: High Priority and Low Priority.",
+      "id": "N073"
+    },
+    {
+      "section": "4.6",
+      "page": 64,
+      "text": "The priority level should be defined in the configuration table on a Virtual Link basis.",
+      "id": "N074"
+    },
+    {
+      "section": "4.6",
+      "page": 64,
+      "text": "For each output port, frames with a priority set to high should be sent prior to the one set to low.",
+      "id": "N075"
+    },
+    {
+      "section": "4.6",
+      "page": 64,
+      "text": "A low priority frame in the process of being transmitted should not be pre-empted by the arrival of a high priority frame.",
+      "id": "N076"
+    },
+    {
+      "section": "4.6",
+      "page": 64,
+      "text": "If frames are present at the output port, switch should send them with a minimum Inter Frame Gap.",
+      "id": "N077"
+    },
+    {
+      "section": "4.6",
+      "page": 64,
+      "text": "4.5.1 Overview The End System of the Switch should comply with all requirements of Section 3.0, except the one related to network redundancy.",
+      "id": "N078"
+    },
+    {
+      "section": "4.6",
+      "page": 64,
+      "text": "4.5.2 Addressing Policy The End System of the switch should use its own MAC unicast address as the MAC Source Address when it sends frames.",
+      "id": "N079"
+    },
+    {
+      "section": "4.7.1",
+      "page": 65,
+      "text": "The Switch should implement a MIB and an SNMP agent.",
+      "id": "N080"
+    },
+    {
+      "section": "4.7.1",
+      "page": 65,
+      "text": "A fault detection should modify the status object of the MIB managed by the switch.",
+      "id": "N081"
+    },
+    {
+      "section": "4.7.1",
+      "page": 65,
+      "text": "The Fault/Healthy MIB variable should be updated every 100 ms (like the other MIB variables).",
+      "id": "N082"
+    },
+    {
+      "section": "4.7.1",
+      "page": 65,
+      "text": "The data recovered through an SNMP request should reflect the current status of the switch.",
+      "id": "N083"
+    },
+    {
+      "section": "4.7.1",
+      "page": 65,
+      "text": "The switch should have a Fault/Healthy indica tor.",
+      "id": "N084"
+    },
+    {
+      "section": "4.7.1",
+      "page": 65,
+      "text": "The Healthy/Fault indicator should be set to \"Fault\" when at least one used Ethernet port is in fault.",
+      "id": "N085"
+    },
+    {
+      "section": "4.7.1",
+      "page": 65,
+      "text": "The update of the Fault/Healthy indicator output should be performed at least every 100 ms.",
+      "id": "N086"
+    },
+    {
+      "section": "4.7.1",
+      "page": 65,
+      "text": "The implementation of this Healthy/fault indicator (e.g. discrete output) should be defined in an ARINC Specification.",
+      "id": "N087"
+    },
+    {
+      "section": "4.7.2",
+      "page": 66,
+      "text": "Nevertheless, if the implementer decides to use 12 pins, the following definitions should be used.",
+      "id": "N088"
+    },
+    {
+      "section": "4.7.2.3",
+      "page": 67,
+      "text": "The default port speed should be set to 100 Mbps, without auto negotiation.",
+      "id": "N089"
+    },
+    {
+      "section": "4.7.2.3",
+      "page": 67,
+      "text": "Justification of the name VL (0, position): • \"0\" indicates that it is a reception VL • \"Position\" to indicate that this VL depends on the position of the Switch in the aircraft The reception part of the Default_Configuration_Table of the Switch should contain at least, in nonvolatile memory, the following information (characteristics of the default reception VL): • VL identifiers (MAC destination address): VL (0,position) • Maximum allowed Total Ethernet Line size (smax) • Bandwidth Allocation Gap Default reception VLs are necessary to be able to communicate to the own End System of the Switch, even if it is not loaded with its OPS_Configuration_File (at least to perform dataloading).",
+      "id": "N090"
+    },
+    {
+      "section": "4.7.2.3",
+      "page": 67,
+      "text": "Attributes of the term VL (1, position) follow: • \"1\" indicates that it is a transmission VL • \"Position\" to indicate that this VL depends on the position of the Switch in the aircraft The transmission part of the Default_Configuration_Table of the Switch should contain at least, in non-volatile memory, the following information (characteristics of the default transmission VL):",
+      "id": "N091"
+    },
+    {
+      "section": "4.7.3.2",
+      "page": 69,
+      "text": "ARINC SPECIFICATION 664 PART 7 - Page 61 4.0 SWITCH SPECIFICATION Figure 4-8 - OPS_Configuration_File Overview Each of the tables of the OPS_Configuration_File contains: • The EndSystem_Configuration_Table • The Filtering_Policing_and_Forwarding_Configuration_Table The OPS_Configuration_File should be a field loadable software file compliant with ARINC 615A and ARINC 665.",
+      "id": "N092"
+    },
+    {
+      "section": "4.7.3.2",
+      "page": 69,
+      "text": "The Filtering_Policing_and_Forwarding_Configuration_Table should contain the following parameters.",
+      "id": "N093"
+    },
+    {
+      "section": "4.8.2.2",
+      "page": 72,
+      "text": "Figure 4-10 - Typical Switch Initialization Sequence The Switches should be operational before their subscribers (connected LRUs), to allow subscribers to communicate via AFDX during their own initialization phase.",
+      "id": "N094"
+    },
+    {
+      "section": "4.8.2.2",
+      "page": 72,
+      "text": "Therefore, the initialization sequence should be performed in less than a specified initialization time, from power rise to full OPS MODE (all OPS functions are running).",
+      "id": "N095"
+    },
+    {
+      "section": "4.8.2.2",
+      "page": 72,
+      "text": "System integrator or an ARINC Standard should define this initialization time both when Switch_Ground_Condition is active or not.",
+      "id": "N096"
+    },
+    {
+      "section": "4.8.2.2",
+      "page": 72,
+      "text": "During INIT, the Fault/Healthy indicator should stay in the Fault state.",
+      "id": "N097"
+    },
+    {
+      "section": "4.8.2.2",
+      "page": 72,
+      "text": "4.8.2.2 Ground_Condition System integrator or an ARINC Standard should define the ground condition value (number of signals, logical condition, confirmation…).",
+      "id": "N098"
+    },
+    {
+      "section": "4.9.1",
+      "page": 75,
+      "text": "ARINC SPECIFICATION 664 PART 7 - Page 67 4.0 SWITCH SPECIFICATION The Switch should not enter in OPS mode when one of the above conditions is true.",
+      "id": "N099"
+    },
+    {
+      "section": "4.9.1",
+      "page": 75,
+      "text": "When entering in PASSIVE Mode, the Switch should set the Fault/Healthy indicator in the Fault state. 4.8.7 QUIET In QUIET mode, the functions of the switch are stopped, the switch does not transmit frames or allow communication with the switch management function (SNMP).",
+      "id": "N100"
+    },
+    {
+      "section": "4.9.1",
+      "page": 75,
+      "text": "4.9.1 General Dataloading Requirements ARINC 615A and ARINC 665 should be used for the process and protocols to upload software and configuration tables into the switch.",
+      "id": "N101"
+    },
+    {
+      "section": "4.10",
+      "page": 76,
+      "text": "It is only changed in the repair shop, using specific procedures. • Two field loadable software PNs: o OPS_Software : field loadable operational software o OPS_Configuration_File : field loadable configuration tables of the Switch The Switch should not have more than two field loadable software (OPS_Configuration_File and OPS_Software).",
+      "id": "N102"
+    },
+    {
+      "section": "4.10",
+      "page": 76,
+      "text": "Those field loadable configuration file should be the same for all the Switches in the A/C.",
+      "id": "N103"
+    },
+    {
+      "section": "4.10",
+      "page": 76,
+      "text": "4.9.2.2 Switch-On Configuration Identification When the Switch is powered on, its configuration information should be accessible through the ARINC 615A \"information operation.”",
+      "id": "N104"
+    },
+    {
+      "section": "4.10",
+      "page": 76,
+      "text": "4.9.3 Dataloader IP Address The Switch should learn the IP address of the data loader by reading the IP source address of the data loader.",
+      "id": "N105"
+    },
+    {
+      "section": "4.10",
+      "page": 76,
+      "text": "4.10 Pin Programming SWITCH hardware pin programming should be used to determine the position of the SWITCH in the network and then to associate default MAC and IP addresses of the End System of the SWITCH.",
+      "id": "N106"
+    },
+    {
+      "section": "5.1",
+      "page": 80,
+      "text": "The End System designer should provide information on the processing capabilities in transmission and reception of the end-system.",
+      "id": "N107"
+    },
+    {
+      "section": "5.1",
+      "page": 80,
+      "text": "As a guide, the following invariant parameters should be provided: • Volume in transmission and reception given by: o Number of ports o Number of VLs o Number of SubVL o Frame size o Size of IP multicast group per VL • Speed in transmission given by: o Latency o Frame rate Burst1ms Processing time Technologacal latencyBurst Data received on B network Data received on A network Last frame latency 100 x 1 = 100 x 1 lastframelatency-technologicallatency+1 processing_time",
+      "id": "N108"
+    },
+    {
+      "section": "5.0",
+      "page": 81,
+      "text": "The End System designer should provide information regarding the data storage capacity in reception of the ES.",
+      "id": "N109"
+    },
+    {
+      "section": "Att1",
+      "page": 82,
+      "text": "Before we discuss the formats of these data elements the concept of abstract and transfer representations should be introduced.",
+      "id": "N110"
+    },
+    {
+      "section": "Att1",
+      "page": 88,
+      "text": "Unused bits at the most significant end of the 32-bit structure must be all binary zeros. bit 4 bit 5 bit 6 bit 3 bit 2 bit 1 bit 0 bit 28 bit 29 bit 30 bit 31 0 0 029th bool7th bool6th bool5th bool4th bool3rd bool2nd bool1st bool 32 Bits Figure 1-2.4.2 - Bit-Wise Packed Booleans (29 Bools) 1-2.5 Strings Strings are defined as a sequence of n ASCII characters (see Figure 1- 2.5.1).",
+      "id": "N111"
+    },
+    {
+      "section": "Att1",
+      "page": 89,
+      "text": "All unused bytes of an opaque data structure should be filled with binary zeros. 1-2.6.1 Fixed Length Opaque Data The fixed length opaque data structure is defined as a sequence of n bytes, numbered 1 through n.",
+      "id": "N112"
+    },
+    {
+      "section": "Att1",
+      "page": 91,
+      "text": "In cases where network-to-network communication might be performed with a layer 3 router, and transport layer translation will not exist in this case, system integrators should consider avoiding the use of transport layer port numbers in the range of 0 – 1023 at a minimum.",
+      "id": "N113"
+    },
+    {
+      "section": "Att1",
+      "page": 91,
+      "text": "For full assurance of avoiding addressing issues with adjacent networks, the second group of port numbers from 1024 to 49151 should be avoided as well. 1-3.2 Data Alignment Computers are more efficient at storing and retrieving data if the data is in proper alignment.",
+      "id": "N114"
+    },
+    {
+      "section": "Att1",
+      "page": 92,
+      "text": "In cases such as this, padding should be used to put the data on a 2-byte boundary (address evenly divisible by 2).",
+      "id": "N115"
+    },
+    {
+      "section": "Att1",
+      "page": 92,
+      "text": "The Reserved word at the beginning of the message should be aligned on a 32-bit boundary.",
+      "id": "N116"
+    },
+    {
+      "section": "Att1",
+      "page": 92,
+      "text": "Functional Status Sets should also be aligned on 32-bit boundaries throughout the message.",
+      "id": "N117"
+    },
+    {
+      "section": "Att1",
+      "page": 92,
+      "text": "When the message is transferred to the application on receive the message should be placed in a buffer in memory that is positioned such that the Reserved word is aligned.",
+      "id": "N118"
+    },
+    {
+      "section": "Att1",
+      "page": 92,
+      "text": "It must be stored at address 0x0010 leaving addresses 0x000C thru 0x000F unused, or padding.",
+      "id": "N119"
+    },
+    {
+      "section": "Att1",
+      "page": 93,
+      "text": "Both can be used for a new parameter that must be added to a message. 1-3.4 Functional Data Sets Functional Data sets (FDS) are a means of grouping data primitives together in a message (data primitives as defined in section 2 of this document).",
+      "id": "N120"
+    },
+    {
+      "section": "Att1",
+      "page": 94,
+      "text": "If no other DS are used in a FDS, the remaining 24 bits of the FSS must be zeros.",
+      "id": "N121"
+    },
+    {
+      "section": "Att1",
+      "page": 95,
+      "text": "Some data from each radio might be included in one Ethernet message but should be grouped in different DS so they are represented by different FS.",
+      "id": "N122"
+    },
+    {
+      "section": "Att1",
+      "page": 95,
+      "text": "A ND (no data) status indication should be used if even one data primitive in the DS is not available.",
+      "id": "N123"
+    },
+    {
+      "section": "Att1",
+      "page": 95,
+      "text": "In that case the condition with the highest priority should be encoded into the status field.",
+      "id": "N124"
+    },
+    {
+      "section": "Att1",
+      "page": 96,
+      "text": "Using a spare field can help reduce the cost of change by minimizing impact to application developers when data must be added to a set.",
+      "id": "N125"
+    },
+    {
+      "section": "Att1",
+      "page": 96,
+      "text": "It should be used with care to preserve network bandwidth.",
+      "id": "N126"
+    },
+    {
+      "section": "Att1",
+      "page": 96,
+      "text": "Spare data fields should be filled in with binary zeros if unused.",
+      "id": "N127"
+    },
+    {
+      "section": "Att1",
+      "page": 98,
+      "text": "ARINC SPECIFICATION 664 PART 7 - Page 90 ATTACHMENT 1 DATA FORMAT 32-bit reserved field should be filled with all binary zeros.",
+      "id": "N128"
+    },
+    {
+      "section": "Att1",
+      "page": 98,
+      "text": "This field might have sufficient space in it for a new FDS should it be considered likely that it will become necessary in the future.",
+      "id": "N129"
+    },
+    {
+      "section": "Att1",
+      "page": 98,
+      "text": "If this field is included in a message, it should be filled with all binary zeros.",
+      "id": "N130"
+    },
+    {
+      "section": "Att1",
+      "page": 98,
+      "text": "The Global spare field follows the final FDS, it might have space for a future DS that is part of FDSn or it could contain space for 2 additional DS for FDSn plus another complete FDS. 1-3.6 Guidelines for Designing Messages Care must be taken when the need arises to modify a message structure that has already been defined and is in use.",
+      "id": "N131"
+    },
+    {
+      "section": "Att1",
+      "page": 98,
+      "text": "In order to keep the cost of change as low as possible, messages should be modified in a manner that does not shift the position of the data sets in the message.",
+      "id": "N132"
+    },
+    {
+      "section": "Att2",
+      "page": 103,
+      "text": "Handle as 32-bit number 4.2.2.3 X In anticipation of the adoption of such an extension, TCP implementors should treat windows as 32 bits.",
+      "id": "N133"
+    },
+    {
+      "section": "Att2",
+      "page": 105,
+      "text": "In this case, it must be rejected.",
+      "id": "N134"
+    },
+    {
+      "section": "Att2",
+      "page": 107,
+      "text": "The lower bound SHOULD be measured in fractions of a second and the upper bound should be 2*MSL, i.e., 240 seconds.",
+      "id": "N135"
+    },
+    {
+      "section": "Att2",
+      "page": 107,
+      "text": "Delayed ACKs 4.2.3.2 X A TCP SHOULD implement a delayed ACK, but an ACK should not be excessively delayed.",
+      "id": "N136"
+    },
+    {
+      "section": "Att2",
+      "page": 110,
+      "text": "This should be handled the same way as Destination Unreachable codes 0, 1, 5.",
+      "id": "N137"
+    },
+    {
+      "section": "Att2",
+      "page": 110,
+      "text": "Reject SYN from invalid IP address 4.2.3.10 X An incoming SYN with an invalid source address must be ignored either by TCP or by the IP layer.",
+      "id": "N138"
+    },
+    {
+      "section": "Att2",
+      "page": 113,
+      "text": "Receiver option is to require checksum 4.1.3.4 X Checksum is not used in AFDX An application MAY optionally be able to control whether UDP datagrams without checksu ms should be discarded or passed to the application. kkk UDP Multihoming Pass spec-destination address to application 4.1.3.5 X When a UDP datagram is received, its specific-destination address MUST be passed up to the application layer.",
+      "id": "N139"
+    },
+    {
+      "section": "Att2",
+      "page": 113,
+      "text": "Bad IP source address silently discarded by UDP/IP 4.1.3.6 X A UDP datagram received with an invalid IP source address (e.g., a broadcast or multicast address) must be discarded by UDP or by the IP layer.",
+      "id": "N140"
+    },
+    {
+      "section": "Att2",
+      "page": 114,
+      "text": "Therefore Not Applicable An application-layer program MUST be able to set the TTL and TOS values as well as IP options for sending a UDP datagram, and these values must be passed transparently to the IP layer.",
+      "id": "N141"
+    },
+    {
+      "section": "Att2",
+      "page": 116,
+      "text": "Source address must be host's own IP address 3.2.1.3 X When a host sends any datagram, the IP source address MUST be one of its own IP addresses (but not a broadcast or multicast address).",
+      "id": "N142"
+    }
+  ]
+}

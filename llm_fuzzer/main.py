@@ -30,6 +30,15 @@ from llm_fuzzer.core.strategy_planner import LLMStrategyPlanner
 from llm_fuzzer.core.test_generator import TestGenerator
 from llm_fuzzer.utils.simulator_runner import SimulatorRunner
 
+# Planner variants: (feedback shown in the prompt, controller steering = redirection
+# and scheduled mechanism tests).
+ABLATIONS = {
+    "full": (True, True),
+    "A0": (False, False),
+    "A1": (False, True),
+    "A2": (True, False),
+}
+
 
 class LLMFuzzer:
     """
@@ -47,7 +56,9 @@ class LLMFuzzer:
         output_dir: str = "llm_fuzzer/output",
         max_iterations: int = 50,
         available_vls: Optional[List[int]] = None,
-        max_consecutive_failures: int = 5
+        max_consecutive_failures: int = 5,
+        ablation: str = "full",
+        work_dir: Optional[str] = None
     ):
         """
         Initialize the fuzzer.
@@ -61,6 +72,8 @@ class LLMFuzzer:
             max_iterations: Maximum number of fuzzing iterations
             available_vls: List of available VL IDs
             max_consecutive_failures: Stop after this many consecutive failed iterations
+            ablation: planner variant; see ABLATIONS
+            work_dir: isolated simulator working directory (for parallel campaigns)
         """
         self.spec_rules_path = spec_rules_path
         self.test_cases_path = test_cases_path
@@ -77,15 +90,19 @@ class LLMFuzzer:
         # Initialize components
         print("Initializing components...")
         self.feedback_analyzer = FeedbackAnalyzer()
+        self.ablation = ablation
+        feedback_enabled, steering_enabled = ABLATIONS[ablation]
         self.strategy_planner = LLMStrategyPlanner(
             spec_rules_path=spec_rules_path,
-            test_cases_path=test_cases_path
+            test_cases_path=test_cases_path,
+            feedback_enabled=feedback_enabled,
+            steering_enabled=steering_enabled
         )
         self.test_generator = TestGenerator(
             seed_frames_path=seed_frames_path,
             test_cases_path=test_cases_path
         )
-        self.simulator_runner = SimulatorRunner()
+        self.simulator_runner = SimulatorRunner(work_dir=work_dir)
         
         print("All components initialized successfully!")
     
@@ -227,6 +244,11 @@ class LLMFuzzer:
                 'iteration': iteration,
                 'timestamp': datetime.now().isoformat(),
                 'duration': (datetime.now() - iteration_start).total_seconds(),
+                'ablation_mode': self.ablation,
+                'planner_variant': strategy.get('planner_variant'),
+                'llm_usage': strategy.get('llm_usage'),
+                'sim_config': sim_result.get('sim_config'),
+                'test_mode': strategy.get('test_mode'),
                 'target_vl': strategy['target_vl'],
                 'mutation_type': mutation_type,
                 'protocol_rule': strategy['protocol_rule'],
@@ -607,6 +629,21 @@ Examples:
     )
 
     parser.add_argument(
+        '--ablation',
+        choices=sorted(ABLATIONS),
+        default='full',
+        help='Planner variant: full, A0 (no feedback, no steering), '
+             'A1 (steering only), A2 (feedback only)'
+    )
+
+    parser.add_argument(
+        '--work-dir',
+        type=str,
+        default=None,
+        help='Isolated simulator working directory, for parallel campaigns'
+    )
+
+    parser.add_argument(
         '--history-path',
         type=str,
         default='llm_fuzzer/data/iteration_history.jsonl',
@@ -636,7 +673,9 @@ Examples:
         history_path=args.history_path,
         max_iterations=args.max_iterations,
         available_vls=args.vls,
-        output_dir=args.output_dir
+        output_dir=args.output_dir,
+        ablation=args.ablation,
+        work_dir=args.work_dir
     )
     
     # Run

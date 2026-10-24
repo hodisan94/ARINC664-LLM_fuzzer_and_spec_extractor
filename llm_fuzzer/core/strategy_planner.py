@@ -15,6 +15,7 @@ The LLM has freedom to choose predefined test cases OR propose custom mutations.
 import json
 import os
 import re
+import time
 import pandas as pd
 from typing import Dict, List, Any, Optional
 from pathlib import Path
@@ -75,7 +76,11 @@ class LLMStrategyPlanner:
         api_key: Optional[str] = None,
         model: str = "gpt-5",
         spec_rules_path: str = "configs/spec_rules.json",
-        test_cases_path: str = "configs/test_cases.json"
+        test_cases_path: str = "configs/test_cases.json",
+        feedback_enabled: bool = True,
+        steering_enabled: bool = True,
+        redirect_mode: str = "replan",
+        vl_config_path: str = "examples/AFDX_V3/config/virtual_links.csv",
     ):
         """
         Initialize LLM Strategy Planner.
@@ -85,6 +90,14 @@ class LLMStrategyPlanner:
             model: LLM model to use (default: gpt-5)
             spec_rules_path: Path to spec_rules.json
             test_cases_path: Path to test_cases.json
+            feedback_enabled: Show prior outcomes, VL statistics and coverage state
+                in the prompt
+            steering_enabled: Apply the controller's coverage-driven redirection and
+                scheduled mechanism tests
+            redirect_mode: "replan" asks the LLM to plan a test for an untested rule
+                (label and parameters refer to the same rule); "clear" keeps the earlier
+                behavior that relabels the iteration and clears its parameters
+            vl_config_path: VL table shown to the LLM when it re-plans
             
         Raises:
             ImportError: If the requested LLM provider package is not installed
@@ -120,6 +133,29 @@ class LLMStrategyPlanner:
         # Build rule -> spec-category lookup for category-aware coverage
         self._rule_to_cat, self._cat_to_rules = self._build_category_maps(spec_rules_path)
         self._all_known_rules = sorted(set(self.spec_rules.keys()) | set(self.test_cases.keys()))
+
+        if redirect_mode not in ("replan", "clear"):
+            raise ValueError(f"redirect_mode must be 'replan' or 'clear', got {redirect_mode!r}")
+        self.feedback_enabled = feedback_enabled
+        self.steering_enabled = steering_enabled
+        self.redirect_mode = redirect_mode
+        self.vl_table = self._load_vl_table(vl_config_path)
+        self._usage: List[Dict[str, Any]] = []
+
+    @staticmethod
+    def _load_vl_table(csv_path: str) -> Dict[int, Dict[str, int]]:
+        """VL id -> BAG and frame-size limits, read from virtual_links.csv."""
+        table: Dict[int, Dict[str, int]] = {}
+        path = Path(csv_path)
+        if not path.exists():
+            return table
+        for line in path.read_text().splitlines():
+            parts = [p.strip() for p in line.split(',')]
+            if len(parts) < 9 or not parts[0].isdigit():
+                continue
+            table[int(parts[0])] = {"bag_ms": int(parts[6]), "max_frame": int(parts[7]),
+                                    "min_frame": int(parts[8])}
+        return table
     
     # ------------------------------------------------------------------
     # Category mapping helpers
@@ -257,6 +293,24 @@ class LLMStrategyPlanner:
         iteration: int = 1,
         system_config: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
+        """Plan the next iteration and record the LLM usage and the planner variant."""
+        self._usage = []
+        strategy = self._plan_next_iteration(history, iteration, system_config)
+        strategy["llm_usage"] = list(self._usage)
+        strategy["planner_variant"] = {
+            "model": self.model,
+            "feedback_enabled": self.feedback_enabled,
+            "steering_enabled": self.steering_enabled,
+            "redirect_mode": self.redirect_mode,
+        }
+        return strategy
+
+    def _plan_next_iteration(
+        self,
+        history: Optional[pd.DataFrame] = None,
+        iteration: int = 1,
+        system_config: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """
         Plan next fuzzing iteration using LLM.
         
@@ -281,9 +335,13 @@ class LLMStrategyPlanner:
                 "llm_raw_response": str
             }
         """
-        vl_stats = format_vl_statistics(history) if history is not None else {}
-        recent_results = self._prepare_recent_results(history, n=10)
         coverage_stats = self._compute_coverage_stats(history)
+        if self.feedback_enabled:
+            vl_stats = format_vl_statistics(history) if history is not None else {}
+            recent_results = self._prepare_recent_results(history, n=10)
+            prompt_coverage = coverage_stats
+        else:
+            vl_stats, recent_results, prompt_coverage = {}, [], None
         
         if system_config is None:
             system_config = {
@@ -297,7 +355,7 @@ class LLMStrategyPlanner:
             vl_statistics=vl_stats,
             system_config=system_config,
             iteration=iteration,
-            coverage_stats=coverage_stats
+            coverage_stats=prompt_coverage
         )
         
         # Retry once on LLM failure
@@ -329,13 +387,15 @@ class LLMStrategyPlanner:
         )
         strategy["compound_test"] = has_test_cases and has_direct_params
         strategy.setdefault("planner_actions", [])
+        if not self.steering_enabled:
+            return strategy
 
         # Scheduled mechanism coverage should be standalone, not stacked on
         # whatever strategy the LLM happened to choose for this iteration.
         used_mechs = coverage_stats.get("used_mutation_mechanisms", set())
         mech_schedule = [
             (21, "mac_address", "mac_mutation_type", "spoof_src",
-             "mac_mutation_type:spoof_src", {"prob": 1.0}),
+             "mac_mutation_type:spoof_src", None),
             (26, "mac_address", "dest_mac_mutation", "corrupt_prefix",
              "dest_mac_mutation:corrupt_prefix", None),
             (31, "frame_structure.ethernet", "frame_size", 2000,
@@ -411,6 +471,13 @@ class LLMStrategyPlanner:
                     reason = "unmapped category"
                 else:
                     reason = f"category '{rule_cats}' covered on VL {target_vl}"
+                if self.redirect_mode == "replan":
+                    candidates = self._redirect_candidates(
+                        uncovered_cats, tested_rule_vl_pairs, target_vl, strategy, system_config,
+                        exclude=self._inexpressible_rules(history))
+                    if not candidates:
+                        return strategy
+                    return self._replan_redirect(strategy, normalized, reason, candidates, system_config)
                 print(f"  [DEDUP] '{normalized}' ({reason}) -> '{redirect}'")
                 self._clear_mutation_fields(strategy)
                 strategy["redirected_from_rule"] = normalized
@@ -431,6 +498,148 @@ class LLMStrategyPlanner:
                     "reason": reason,
                 })
 
+        return strategy
+
+    REPLAN_FIELDS = ("bag_value", "frame_size", "timing_jitter_ms", "mac_mutation_type",
+                     "prob", "sequence_number_override", "dest_mac_mutation")
+    SRC_MAC_MUTATIONS = ("spoof_src", "spoof_dst", "broadcast", "invalid_src", "zero_mac")
+    DEST_MAC_MUTATIONS = ("corrupt_prefix", "wrong_vl", "zero")
+
+    @staticmethod
+    def _inexpressible_rules(history: Optional[pd.DataFrame]) -> set:
+        """Candidates that the LLM reported as not violable through the simulator interface."""
+        rules: set = set()
+        if history is None or history.empty or "planner_actions" not in history.columns:
+            return rules
+        for actions in history["planner_actions"]:
+            for action in actions if isinstance(actions, list) else []:
+                if action.get("type") == "redirect_skipped" and action.get("reason") == "not expressible":
+                    rules.update(action.get("candidates", []))
+        return rules
+
+    def _redirect_candidates(self, uncovered_cats, tested_rule_vl_pairs, target_vl,
+                             strategy, system_config, exclude: set = frozenset(),
+                             limit: int = 5) -> List[str]:
+        """First untested rule of each of the first uncovered categories."""
+        candidates: List[str] = []
+        for cat in uncovered_cats:
+            rule = self._pick_untested_rule_from_category(
+                [cat], tested_rule_vl_pairs, target_vl, strategy, system_config)
+            if (rule and rule not in candidates and rule not in exclude
+                    and self._norm(cat) in self._all_categories_for_rule(rule)):
+                candidates.append(rule)
+            if len(candidates) == limit:
+                break
+        return candidates
+
+    def _rule_text(self, rule: str) -> List[str]:
+        """Rule description for the re-plan prompt, from the test cases or the specification."""
+        tc = self.test_cases.get(rule, {})
+        lines = []
+        if tc.get("rule_summary"):
+            lines.append(f"   Rule: {str(tc['rule_summary'])[:400]}")
+        if tc.get("valid_range"):
+            lines.append(f"   Valid range: {str(tc['valid_range'])[:200]}")
+        for case in tc.get("test_cases", [])[:4]:
+            lines.append(f"   Example violation: {case.get('value')!r} ({case.get('violation_type')}): "
+                         f"{str(case.get('reason', ''))[:160]}")
+        spec = self.spec_rules.get(rule)
+        if not lines and isinstance(spec, dict):
+            for name, text in list(spec.items())[:4]:
+                lines.append(f"   Requirement {name}: {json.dumps(text)[:200]}")
+        return lines
+
+    def _build_replan_prompt(self, candidates: List[str], system_config: Dict[str, Any]) -> str:
+        lines = [
+            "You are planning ONE fuzzing iteration against an ns-3 AFDX (ARINC 664 Part 7) simulator.",
+            "The coverage controller asks you to test one of the untested protocol rules below.",
+            "Choose the rule that the simulator interface can violate most directly and set the",
+            "mutation parameters for that rule only. If none of the rules can be violated with these",
+            "parameters, choose the first rule, set every parameter to null, and set \"expressible\": false.",
+            "",
+            "Candidate rules:",
+        ]
+        for i, rule in enumerate(candidates, 1):
+            lines.append(f"{i}. {rule} (category: {self.rule_category(rule) or 'unmapped'})")
+            lines += self._rule_text(rule)
+        lines += ["", "Virtual links (id: BAG ms, min frame bytes, max frame bytes):"]
+        for vl in system_config.get("available_vls", []):
+            cfg = self.vl_table.get(vl)
+            if cfg:
+                lines.append(f"  {vl}: BAG {cfg['bag_ms']}, min {cfg['min_frame']}, max {cfg['max_frame']}")
+        lines += [
+            "",
+            "Simulator mutation interface (no other field reaches the simulator):",
+            "  frame_size: total frame size in bytes; sizes outside the VL limits or above 1518 are dropped by the switch",
+            "  bag_value: send interval in ms; a value below the VL BAG sends frames too fast",
+            "  timing_jitter_ms: offset added to the send interval (negative = faster, positive = slower)",
+            "  mac_mutation_type: 'spoof_src'|'spoof_dst'|'broadcast'|'invalid_src'|'zero_mac' (source MAC)",
+            "  dest_mac_mutation: 'corrupt_prefix'|'wrong_vl'|'zero' (destination MAC)",
+            "  sequence_number_override: 1-255 forces this sequence number on every frame (0 or null = no override)",
+            "  prob: 0.0-1.0 probability of dropping a frame at the sender",
+            "",
+            "Respond ONLY with JSON:",
+            '{"protocol_rule": "<one candidate name>", "expressible": <true|false>, "target_vl": <int>,',
+            ' "frame_size": <int or null>, "bag_value": <int or null>, "timing_jitter_ms": <int or null>,',
+            ' "mac_mutation_type": <string or null>, "dest_mac_mutation": <string or null>,',
+            ' "sequence_number_override": <int or null>, "prob": <float or null>,',
+            ' "strategy": "<conformance|edge-case|adversarial>", "reasoning": "<one sentence>"}',
+        ]
+        return "\n".join(lines)
+
+    def _sanitize_replan(self, plan: Dict[str, Any]) -> Dict[str, Any]:
+        def as_int(v):
+            return int(v) if isinstance(v, (int, float)) and not isinstance(v, bool) else None
+        prob = plan.get("prob")
+        seq = as_int(plan.get("sequence_number_override"))
+        return {
+            "bag_value": as_int(plan.get("bag_value")),
+            "frame_size": as_int(plan.get("frame_size")),
+            "timing_jitter_ms": as_int(plan.get("timing_jitter_ms")),
+            "sequence_number_override": seq if seq is not None and 1 <= seq <= 255 else None,
+            "prob": float(prob) if isinstance(prob, (int, float)) and 0 < prob <= 1 else None,
+            "mac_mutation_type": plan.get("mac_mutation_type")
+            if plan.get("mac_mutation_type") in self.SRC_MAC_MUTATIONS else None,
+            "dest_mac_mutation": plan.get("dest_mac_mutation")
+            if plan.get("dest_mac_mutation") in self.DEST_MAC_MUTATIONS else None,
+        }
+
+    def _replan_redirect(self, strategy: Dict[str, Any], from_rule: str, reason: str,
+                         candidates: List[str], system_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Re-plan the iteration for an untested rule so that label and parameters agree."""
+        try:
+            plan = json.loads(self._query_llm(self._build_replan_prompt(candidates, system_config)))
+        except Exception as e:
+            print(f"  [REDIRECT] re-plan failed ({e}); keeping the LLM's strategy")
+            self._append_planner_action(strategy, {
+                "type": "redirect_skipped", "from_rule": from_rule, "candidates": candidates,
+                "reason": reason, "error": str(e)})
+            return strategy
+        if plan.get("expressible") is False:
+            print(f"  [REDIRECT] none of {candidates} is expressible; keeping the LLM's strategy")
+            self._append_planner_action(strategy, {
+                "type": "redirect_skipped", "from_rule": from_rule, "candidates": candidates,
+                "reason": "not expressible", "redirect_trigger": reason})
+            return strategy
+        chosen = plan.get("protocol_rule") if plan.get("protocol_rule") in candidates else candidates[0]
+        print(f"  [REDIRECT] '{from_rule}' ({reason}) -> re-planned for '{chosen}'")
+        self._clear_mutation_fields(strategy)
+        strategy.update(self._sanitize_replan(plan))
+        if plan.get("target_vl") in system_config.get("available_vls", []):
+            strategy["target_vl"] = plan["target_vl"]
+        strategy["redirected_from_rule"] = from_rule
+        strategy["protocol_rule"] = chosen
+        strategy["mutation_type"] = chosen
+        strategy["primary_rule"] = chosen
+        strategy["compound_test"] = False
+        strategy["test_mode"] = "custom"
+        if plan.get("strategy") in ("conformance", "edge-case", "adversarial"):
+            strategy["strategy"] = plan["strategy"]
+        strategy["reasoning"] = f"[re-planned for {chosen}] {plan.get('reasoning', '')}"
+        self._append_planner_action(strategy, {
+            "type": "redirect", "mode": "replan", "from_rule": from_rule, "to_rule": chosen,
+            "candidates": candidates, "expressible": bool(plan.get("expressible")),
+            "reason": reason})
         return strategy
 
     def _all_categories_for_rule(self, rule_name: str) -> set:
@@ -532,23 +741,27 @@ class LLMStrategyPlanner:
         used_mechs = set()
         if not history.empty:
             for _, row in history.iterrows():
-                mt = row.get("mac_mutation_type") or ""
+                # Failed iterations leave NaN in these columns.
+                field = {k: None if isinstance(v := row.get(k), float) and v != v else v
+                         for k in ("mac_mutation_type", "dest_mac_mutation", "frame_size",
+                                   "timing_jitter_ms", "sequence_number_override", "bag_value")}
+                mt = field["mac_mutation_type"] or ""
                 if mt and mt not in ("none", ""):
                     used_mechs.add(f"mac_mutation_type:{mt}")
-                dm = row.get("dest_mac_mutation") or ""
+                dm = field["dest_mac_mutation"] or ""
                 if dm and dm not in ("none", ""):
                     used_mechs.add(f"dest_mac_mutation:{dm}")
-                fs = row.get("frame_size")
+                fs = field["frame_size"]
                 if fs and int(fs or 0) > 1518:
                     used_mechs.add("frame_size>1518")
-                tj = row.get("timing_jitter_ms")
+                tj = field["timing_jitter_ms"]
                 if tj and int(tj or 0) < 0:
                     used_mechs.add("timing_jitter_ms<0")
-                so = row.get("sequence_number_override")
+                so = field["sequence_number_override"]
                 if so and int(so or 0) > 0:
                     used_mechs.add("sequence_number_override>0")
-                fs_val = int(row.get("frame_size") or 0)
-                bag_val = row.get("bag_value")
+                fs_val = int(field["frame_size"] or 0)
+                bag_val = field["bag_value"]
                 if 1400 <= fs_val <= 1518 and bag_val is None:
                     used_mechs.add("token_bucket_stress")
 
@@ -608,6 +821,24 @@ class LLMStrategyPlanner:
         
         return results
     
+    def _record_usage(self, backend: str, model: str, usage: Any) -> None:
+        if usage is None:
+            return
+
+        def field(obj, *path):
+            for name in path:
+                obj = getattr(obj, name, None) if obj is not None else None
+            return obj
+
+        self._usage.append({
+            "backend": backend,
+            "model": model,
+            "prompt_tokens": field(usage, "prompt_tokens"),
+            "cached_tokens": field(usage, "prompt_tokens_details", "cached_tokens"),
+            "completion_tokens": field(usage, "completion_tokens"),
+            "reasoning_tokens": field(usage, "completion_tokens_details", "reasoning_tokens"),
+        })
+
     def _query_llm(self, prompt: str) -> str:
         """Query LLM with prompt, trying OpenAI first and Claude as fallback."""
         sys_msg = "You are an expert protocol fuzzing agent. Respond ONLY with valid JSON."
@@ -625,19 +856,27 @@ class LLMStrategyPlanner:
             }))
         last_err = None
         for name, client, model, extra_kwargs in openai_backends:
-            try:
-                response = client.chat.completions.create(
-                    model=model,
-                    messages=messages,
-                    **extra_kwargs
-                )
+            for wait_s in (0, 10, 30, 90):
+                if wait_s:
+                    time.sleep(wait_s)
+                try:
+                    response = client.chat.completions.create(
+                        model=model,
+                        messages=messages,
+                        **extra_kwargs
+                    )
+                except Exception as e:
+                    last_err = e
+                    print(f"[{name}] failed: {e}")
+                    continue
+                self._record_usage(name, model, getattr(response, "usage", None))
                 content = response.choices[0].message.content
                 print(f"[{name}] {model} -> {len(content) if content else 0} chars")
                 if content:
                     return content
-            except Exception as e:
-                last_err = e
-                print(f"[{name}] failed: {e}")
+                last_err = ValueError(f"{name} returned an empty response "
+                                      f"(finish_reason={response.choices[0].finish_reason})")
+                break
 
         # Try Claude as last resort
         if self.claude_client:
@@ -701,9 +940,25 @@ class LLMStrategyPlanner:
         
         # Check required fields
         required_fields = ["target_vl", "mutation_type", "strategy", "reasoning"]
+        unwrapped_from = None
+        if not (isinstance(strategy, dict) and all(f in strategy for f in required_fields)):
+            # The LLM sometimes nests the plan or returns several; use the first complete one.
+            nested = list(strategy.items()) if isinstance(strategy, dict) else list(enumerate(strategy))
+            for key, value in nested:
+                candidates = value if isinstance(value, list) else [value]
+                complete = [c for c in candidates
+                            if isinstance(c, dict) and all(f in c for f in required_fields)]
+                if complete:
+                    strategy, unwrapped_from = complete[0], str(key)
+                    break
+        if not isinstance(strategy, dict):
+            raise ValueError(f"LLM response is a {type(strategy).__name__}, not a JSON object")
         missing = [f for f in required_fields if f not in strategy]
         if missing:
-            raise ValueError(f"LLM response missing required fields: {missing}")
+            raise ValueError(f"LLM response missing required fields: {missing} "
+                             f"(top-level keys: {list(strategy)[:8]})")
+        if unwrapped_from is not None:
+            self._append_planner_action(strategy, {"type": "response_unwrapped", "key": unwrapped_from})
         
         # Ensure all parameter fields exist (can be null) - HYBRID SUPPORT
         all_params = ["test_cases", "bag_value", "frame_size", "sequence_number", 

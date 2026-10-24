@@ -1,0 +1,34 @@
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 200
+Successful: 200
+Failed: 0
+
+Reward Statistics:
+  Mean: 0.856
+  Max: 2.710
+  Min: -0.920
+
+Bugs Found: 0
+
+VLs Tested: 8 / 8
+  VL IDs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+
+Mutation Types Tested: 83
+  Types: ['aggressive_stress', 'bag_and_frame_envelope_violation_with_mac_dst_constant_field_corruption', 'bag_and_frame_size_boundary', 'bag_and_frame_size_violation', 'bag_and_size_and_mac_combo', 'bag_and_size_boundary', 'bag_and_size_violation', 'bag_and_size_violation_with_mac_and_seq_boundary', 'bag_boundary', 'bag_enforcement_and_address_integrity_combo', 'bag_envelope_seq_mac_combo', 'bag_interval_enforcement', 'bag_length_mac_seq_combo', 'bag_policing_and_mac_constant_field', 'bag_seq_jitter_oversize_reserved', 'bag_size_mac_seq_combo', 'bag_size_seq_combo', 'bag_violation', 'bag_violation_size_envelope', 'bag_violation_with_seq_boundary', 'boundary_conditions', 'byte_based_policing', 'combined_adversarial_policing_and_redundancy', 'combined_policing_and_filtering', 'combined_policing_integrity_mac', 'combined_stress', 'combined_test', 'constant_field_and_size_violations', 'constant_field_check', 'dest_mac_constant_field_and_rsn_boundary', 'destination_address_validity', 'first_win_redundancy_delivery', 'increasing_rsn_order', 'mac_destination_address_constant_field', 'mixed_redun_policing_mac', 'multi_violation_stress', 'policing_and_address_validation', 'policing_bag_and_size_plus_sequence_wrap', 'policing_bag_violation_rsn_wrap_mac_const_field', 'policing_envelope_violation', 'policing_sequence_combo', 'redundancy_first_valid_wins', 'redundancy_first_win_skew', 'redundancy_first_win_skew_boundary', 'redundancy_management', 'redundancy_management.first_valid_wins_policy', 'redundancy_rsn_skew_boundary', 'redundancy_rsn_skew_violation', 'redundancy_rsn_window', 'redundancy_rsn_wrap_skew', 'redundancy_seq_boundary_and_mac_constfield', 'redundancy_sequence_edge', 'redundancy_sequence_skew', 'redundancy_sequence_skew_boundary', 'redundancy_sequence_wrap', 'redundancy_sequence_wraparound', 'redundancy_skew_and_seq_boundary', 'redundancy_skew_boundary', 'redundancy_skew_rsn_wrap', 'redundancy_skew_wrap', 'redundancy_skew_wraparound', 'redundancy_skewmax_and_sequence_boundary', 'redundancy_skewmax_boundary', 'redundancy_skewmax_breach', 'redundancy_skewmax_seq_wrap', 'redundancy_skewmax_sequence', 'redundancy_skewmax_sequence_window', 'redundancy_skewmax_violation_with_rsn_edge', 'redundancy_wraparound_firstwin', 'redundancy_wraparound_skew', 'redundancy_wraparound_skewmax', 'sequence_and_jitter_boundary', 'sequence_exploration', 'sequence_number_and_skewmax', 'sequence_number_integrity', 'sequence_number_integrity_with_skew', 'sequence_number_wrap_redundancy_skew', 'skewmax_and_rsn_wraparound', 'skewmax_exceeded_sequence_wrap', 'traffic_shaping_bag_violation', 'udp_checksum', 'udp_checksum_validation', 'udp_checksum_violation']
+
+Strategy Distribution:
+  adversarial: 139
+  edge-case: 60
+  conformance: 1
+
+Top 5 Iterations (by reward):
+  Iter 0: VL=2001, mutation=combined_test, reward=2.710
+  Iter 1: VL=2001, mutation=bag_and_frame_size_violation, reward=2.710
+  Iter 3: VL=1003, mutation=bag_interval_enforcement, reward=2.710
+  Iter 7: VL=3002, mutation=aggressive_stress, reward=2.710
+  Iter 9: VL=2002, mutation=bag_violation_size_envelope, reward=2.710
+
+======================================================================

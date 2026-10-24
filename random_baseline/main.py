@@ -48,7 +48,8 @@ class RandomFuzzer:
         output_dir: str = "random_baseline/output",
         max_iterations: int = 50,
         available_vls: Optional[List[int]] = None,
-        random_seed: Optional[int] = None
+        random_seed: Optional[int] = None,
+        work_dir: Optional[str] = None
     ):
         """
         Initialize Random Baseline Fuzzer.
@@ -91,7 +92,7 @@ class RandomFuzzer:
             seed_frames_path=seed_frames_path,
             test_cases_path=test_cases_path
         )
-        self.simulator_runner = SimulatorRunner()
+        self.simulator_runner = SimulatorRunner(work_dir=work_dir)
         
         print("All components initialized successfully!")
         print(f"Random seed: {random_seed if random_seed is not None else 'None (non-deterministic)'}")
@@ -216,9 +217,19 @@ class RandomFuzzer:
                 'timestamp': datetime.now().isoformat(),
                 'duration': (datetime.now() - iteration_start).total_seconds(),
                 'fuzzer_type': 'RANDOM_BASELINE',
+                'random_seed': self.random_seed,
                 'target_vl': strategy['target_vl'],
                 'protocol_rule': strategy['protocol_rule'],
                 'test_mode': strategy['test_mode'],
+                'sim_config': sim_result.get('sim_config'),
+                'mac_mutation_type': strategy.get('mac_mutation_type'),
+                'dest_mac_mutation': strategy.get('dest_mac_mutation'),
+                'sequence_number_override': strategy.get('sequence_number_override'),
+                'timing_jitter_ms': strategy.get('timing_jitter_ms'),
+                'prob': strategy.get('prob'),
+                'bag_value': strategy.get('bag_value'),
+                'frame_size': strategy.get('frame_size'),
+                'sequence_number': strategy.get('sequence_number'),
                 'strategy': strategy['strategy'],
                 'test_cases': strategy.get('test_cases'),
                 'custom_mutation': strategy.get('custom_mutation'),
@@ -479,6 +490,20 @@ Examples:
         help='Output directory for results (default: random_baseline/output)'
     )
     
+    parser.add_argument(
+        '--history-path',
+        type=str,
+        default='random_baseline/data/iteration_history.jsonl',
+        help='Path to iteration history JSONL'
+    )
+
+    parser.add_argument(
+        '--work-dir',
+        type=str,
+        default=None,
+        help='Isolated simulator working directory, for parallel campaigns'
+    )
+    
     args = parser.parse_args()
     
     # Create fuzzer
@@ -486,7 +511,9 @@ Examples:
         max_iterations=args.max_iterations,
         available_vls=args.vls,
         output_dir=args.output_dir,
-        random_seed=args.seed
+        random_seed=args.seed,
+        history_path=args.history_path,
+        work_dir=args.work_dir
     )
     
     # Run

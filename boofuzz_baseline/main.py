@@ -55,6 +55,7 @@ class BoofuzzFuzzer:
         output_dir: str = "boofuzz_baseline/output",
         max_iterations: int = 50,
         available_vls: Optional[List[int]] = None,
+        work_dir: Optional[str] = None,
     ):
         self.max_iterations = max_iterations
         self.available_vls = available_vls or [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
@@ -75,7 +76,7 @@ class BoofuzzFuzzer:
         )
         self.feedback_analyzer = FeedbackAnalyzer()
         self.reward_calculator = RewardCalculator()
-        self.simulator_runner = SimulatorRunner()
+        self.simulator_runner = SimulatorRunner(work_dir=work_dir)
 
         self.iteration_history = []
 
@@ -208,6 +209,12 @@ class BoofuzzFuzzer:
                 'bag_value': strategy.get('bag_value'),
                 'frame_size': strategy.get('frame_size'),
                 'sequence_number': strategy.get('sequence_number'),
+                'sim_config': sim_result.get('sim_config'),
+                'mac_mutation_type': strategy.get('mac_mutation_type'),
+                'dest_mac_mutation': strategy.get('dest_mac_mutation'),
+                'sequence_number_override': strategy.get('sequence_number_override'),
+                'timing_jitter_ms': strategy.get('timing_jitter_ms'),
+                'prob': strategy.get('prob'),
                 'reasoning': strategy['reasoning'],
                 'num_frames': test_inputs['metadata']['num_frames'],
                 'simulation_success': sim_result['success'],
@@ -411,12 +418,23 @@ Examples:
         help='Output directory for results',
     )
 
+    parser.add_argument(
+        '--history-path', type=str, default='boofuzz_baseline/data/iteration_history.jsonl',
+        help='Path to iteration history JSONL',
+    )
+    parser.add_argument(
+        '--work-dir', type=str, default=None,
+        help='Isolated simulator working directory, for parallel campaigns',
+    )
+
     args = parser.parse_args()
 
     fuzzer = BoofuzzFuzzer(
         max_iterations=args.max_iterations,
         available_vls=args.vls,
         output_dir=args.output_dir,
+        history_path=args.history_path,
+        work_dir=args.work_dir,
     )
     try:
         fuzzer.run()

@@ -36,34 +36,51 @@ ARINC 664 Part 7 PDF
 
 The extraction stage produces machine-readable protocol rules and violation-oriented test cases. The fuzzing stage uses those rules and test cases to generate AFDX frame mutations. The evaluation stage compares the LLM-guided fuzzer against the two baselines and measures bug detection on injected-fault variants.
 
-## Main Results From The Current Run
+## Main Results (Revised Evaluation)
 
-The current checked-in result files describe the latest AFDX experiment:
+Specification extraction:
 
 - `774` validated protocol rules were extracted by the three-model pipeline.
 - `643` rules were retained as relevant to the AFDX simulator.
 - `2,703` violation test cases were generated.
-- The normalized SUT-relevant rule set contains `185` canonical rules/categories.
-- Under a fixed budget of `N = 200` iterations:
-  - LLM fuzzer: `85.4%` normalized rule coverage.
-  - Boofuzz baseline: `47.0%` normalized rule coverage.
-  - Random baseline: `29.2%` normalized rule coverage.
-- Injected-bug detection:
-  - LLM fuzzer: `6/8` bugs detected.
-  - Boofuzz baseline: `4/8` bugs detected.
-  - Random baseline: `2/8` bugs detected.
+- The normalized SUT-relevant rule set contains `185` rule categories.
 
-Primary result files:
+Fuzzing, `N = 200` iterations per run; LLM-guided fuzzer and random baseline: mean over five runs;
+BOOFUZZ-style baseline: one run (it is deterministic):
 
-- `evaluation/results/metrics_report.json`
-- `evaluation/results/bdr_report.json`
-- `evaluation/results/rule_correctness.json`
-- `evaluation/results/rule_completeness.json`
-- `llm_fuzzer/output/fuzzing_report_20260418_204517.txt`
-- `llm_fuzzer/output/history_20260418_204517.csv`
-- `llm_fuzzer/data/iteration_history.jsonl`
-- `random_baseline/data/iteration_history.jsonl`
-- `boofuzz_baseline/data/iteration_history.jsonl`
+| Metric | LLM-guided | BOOFUZZ-style | Random |
+|--------|-----------:|--------------:|-------:|
+| Executed Rule Coverage (categories of iterations with a mutation) | 47.6% (88.0) | 33.0% (61) | 21.4% (39.6) |
+| Rule Coverage (categories of recorded labels) | 51.6% (95.4) | 46.5% (86) | 25.5% (47.2) |
+| Executed Unique Findings per run triple (categories no other fuzzer exercises) | 40.0 | 9.2 | 4.6 |
+| Injected bugs detected (Experiment 3 replay) | 6/8 | 6/8 | 6/8 |
+
+Ablation (one run per variant): with steering but without feedback (A1) the planner reaches
+95 categories, within the range of the full fuzzer (87-107); without steering it reaches 49 with
+feedback (A2) and 6 without (A0).
+
+The results reported in the submitted version of the paper (85.4% / 47.0% / 29.2% coverage and
+6/8, 4/8, 2/8 bugs) are withdrawn. They were affected by three harness problems that are now fixed:
+coverage counted recorded rule labels whose test values never reached the simulator (and the
+coverage-driven redirection relabeled iterations without changing their traffic), the baseline
+histories did not log all simulator parameters, so the bug-detection replay lost their MAC and
+sequence-number mutations, and a crashed simulation was reported with the counters of the previous
+run. The files of the submitted evaluation are kept for reference (`evaluation/results/*.json`,
+`*/data/iteration_history.jsonl`).
+
+Result files of the revised evaluation:
+
+- `evaluation/results/revision/runs/` - iteration histories of all campaigns (`llm_full_r1-5`,
+  `random_s1-5`, `boofuzz`, ablation variants `llm_A0`, `llm_A1`, `llm_A2`); every iteration logs
+  its exact simulator input (`sim_config`).
+- `evaluation/results/revision/bdr_replay_v2_*.json` - Experiment 3 replays of every logged input
+  against the reference SUT and the eight buggy variants.
+- `evaluation/results/revision/campaign_metrics.json` - all metrics, per run and per fuzzer, with
+  exact Mann-Whitney tests.
+- `evaluation/results/revision/figures/` - coverage curves, ablation, and Unique Findings figures.
+- `evaluation/results/revision/rule_correctness_filtered.json`,
+  `rule_completeness_validated.json`, `normative_checklist.json`,
+  `judge_validation_second.json` - Experiment 1 re-audit on the final rule set.
 
 ## Repository Layout
 
@@ -77,6 +94,7 @@ Primary result files:
 |-- random_baseline/             # Random mutation baseline
 |-- boofuzz_baseline/            # Systematic/boofuzz-style baseline
 |-- evaluation/                  # Metrics, BDR, correctness, completeness
+|   `-- revision/                # Scripts of the revised evaluation (see below)
 |-- configs/                     # Runtime rule/test-case/config data
 |-- nav_experiment/              # AFDX-NAV experiment wrapper and results
 |-- context/                     # Internal architecture/setup notes
@@ -449,7 +467,13 @@ Options:
 - `--vls ID ...` - restrict the VLs available to the planner.
 - `--output-dir DIR` - output directory, default `llm_fuzzer/output`.
 - `--spec-rules PATH` - rule file, default `configs/spec_rules_filtered.json`.
-- `--resume` - accepted by the CLI; the run resumes automatically when the history file already exists.
+- `--test-cases PATH` - test-case file, default `configs/test_cases.json`.
+- `--seed-frames PATH` - seed frames, default `llm_fuzzer/data/seed_frames.json`.
+- `--history-path PATH` - iteration history, default `llm_fuzzer/data/iteration_history.jsonl`.
+- `--ablation {full,A0,A1,A2}` - planner variant: `full` (feedback and steering), `A2` (feedback only),
+  `A1` (steering only), `A0` (neither); default `full`.
+- `--work-dir DIR` - isolated simulator working directory, for parallel campaigns.
+- `--resume` / `--force` - continue an existing history, or delete it and start fresh.
 
 How it works:
 
@@ -514,6 +538,8 @@ Options:
 - `--seed N` - random seed for reproducibility.
 - `--vls ID ...` - restrict available VLs.
 - `--output-dir DIR` - output directory, default `random_baseline/output`.
+- `--history-path PATH` - iteration history, default `random_baseline/data/iteration_history.jsonl`.
+- `--work-dir DIR` - isolated simulator working directory, for parallel campaigns.
 
 How it differs from the LLM fuzzer:
 
@@ -552,6 +578,8 @@ Options:
 - `--max-iterations N` - number of iterations, default `50`.
 - `--vls ID ...` - restrict available VLs.
 - `--output-dir DIR` - output directory, default `boofuzz_baseline/output`.
+- `--history-path PATH` - iteration history, default `boofuzz_baseline/data/iteration_history.jsonl`.
+- `--work-dir DIR` - isolated simulator working directory, for parallel campaigns.
 
 How it differs from the LLM fuzzer:
 
@@ -692,6 +720,54 @@ Detection logic:
 - A clean run is compared to a buggy run.
 - A bug is detected when the expected metric changes, such as fewer drops, more forwarding, or fewer end-system rejections.
 - This is behavioral detection, not source-code coverage.
+
+## Revised Evaluation Workflow
+
+The revised evaluation uses the scripts in `evaluation/revision/`. No LLM API is used after the
+campaigns themselves.
+
+1. Run the campaigns, each with its own history and working directory, e.g.:
+
+```bash
+R=evaluation/results/revision/runs
+python3 llm_fuzzer/main.py --max-iterations 200 --history-path $R/llm_full_r1.jsonl \
+  --output-dir /tmp/llm_r1 --work-dir /tmp/sim_llm_r1
+python3 llm_fuzzer/main.py --max-iterations 200 --ablation A1 --history-path $R/llm_A1.jsonl \
+  --output-dir /tmp/llm_A1 --work-dir /tmp/sim_llm_A1
+python3 random_baseline/main.py --max-iterations 200 --seed 1 --history-path $R/random_s1.jsonl \
+  --output-dir /tmp/random_s1 --work-dir /tmp/sim_random_s1
+python3 boofuzz_baseline/main.py --max-iterations 200 --history-path $R/boofuzz.jsonl \
+  --output-dir /tmp/boofuzz --work-dir /tmp/sim_boofuzz
+```
+
+2. Replay every logged simulator input against the reference SUT and the eight buggy variants
+   (Experiment 3):
+
+```bash
+python3 evaluation/revision/bdr_replay.py \
+  --history $R/llm_full_r1.jsonl=$R/llm_full_r1.jsonl \
+  --out evaluation/results/revision/bdr_replay_v2_llm.json
+```
+
+3. Compute all metrics and the figures:
+
+```bash
+R=evaluation/results/revision
+PYTHONPATH=. python3 evaluation/revision/analyze_campaigns.py \
+  --campaign "LLM=$R/runs/llm_full_r*.jsonl" --campaign Boofuzz=$R/runs/boofuzz.jsonl \
+  --campaign "Random=$R/runs/random_s*.jsonl" --campaign A0=$R/runs/llm_A0.jsonl \
+  --campaign A1=$R/runs/llm_A1.jsonl --campaign A2=$R/runs/llm_A2.jsonl \
+  --bdr $R/bdr_replay_v2_baselines_original.json --bdr $R/bdr_replay_v2_ablation.json \
+  --bdr $R/bdr_replay_v2_llm.json --unique LLM,Boofuzz,Random --out $R/campaign_metrics.json
+PYTHONPATH=. python3 evaluation/revision/plot_revision_figures.py \
+  --bdr $R/bdr_replay_v2_baselines_original.json --bdr $R/bdr_replay_v2_ablation.json \
+  --bdr $R/bdr_replay_v2_llm.json
+```
+
+Other scripts: `audit_final_rules.py` (Experiment 1 re-audit on the final rules),
+`recompute_coverage_venn.py` (rule-label to category mapping), `executed_settings.py` and
+`executed_tests.py` (what each iteration actually sent to the simulator), `coverage_depth.py`, and
+`make_tables.py`.
 
 ## Evaluation Table Generation
 

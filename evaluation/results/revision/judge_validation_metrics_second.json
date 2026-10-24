@@ -1,0 +1,51 @@
+{
+  "reference": "second",
+  "labeled_rules": 108,
+  "accuracy": 0.917,
+  "cohen_kappa": 0.284,
+  "confusion_reference_rows_judge_columns": {
+    "correct": {
+      "correct": 97,
+      "incorrect": 1,
+      "unverifiable": 0
+    },
+    "incorrect": {
+      "correct": 5,
+      "incorrect": 1,
+      "unverifiable": 0
+    },
+    "unverifiable": {
+      "correct": 3,
+      "incorrect": 0,
+      "unverifiable": 1
+    }
+  },
+  "judge_correct_but_reference_not": 8,
+  "judge_incorrect_but_reference_correct": 1,
+  "agreement_by_stratum": {
+    "conflict": {
+      "n": 2,
+      "agree": 2
+    },
+    "full": {
+      "n": 23,
+      "agree": 19
+    },
+    "partial": {
+      "n": 5,
+      "agree": 5
+    },
+    "resolved": {
+      "n": 3,
+      "agree": 3
+    },
+    "unique_confirmed": {
+      "n": 70,
+      "agree": 65
+    },
+    "unique_unverified": {
+      "n": 5,
+      "agree": 5
+    }
+  }
+}

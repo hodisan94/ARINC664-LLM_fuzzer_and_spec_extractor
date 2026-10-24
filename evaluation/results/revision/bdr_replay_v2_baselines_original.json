@@ -1,0 +1,566 @@
+{
+  "original/LLM": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 74,
+    "bugs_detected": 6,
+    "bugs_total": 8,
+    "bdr": 0.75,
+    "mean_iterations_to_first_detection": 31.333333333333332,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 80
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 186,
+        "detecting_iterations": 1
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 2,
+        "detecting_iterations": 7
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 80
+      }
+    }
+  },
+  "original/Boofuzz": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 75,
+    "bugs_detected": 6,
+    "bugs_total": 8,
+    "bdr": 0.75,
+    "mean_iterations_to_first_detection": 3.5,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 32
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 13,
+        "detecting_iterations": 13
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 2,
+        "detecting_iterations": 23
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 32
+      }
+    }
+  },
+  "original_as_run/LLM": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 74,
+    "bugs_detected": 6,
+    "bugs_total": 8,
+    "bdr": 0.75,
+    "mean_iterations_to_first_detection": 31.333333333333332,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 80
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 186,
+        "detecting_iterations": 1
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 2,
+        "detecting_iterations": 7
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 80
+      }
+    }
+  },
+  "original_as_run/Boofuzz": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 62,
+    "bugs_detected": 4,
+    "bugs_total": 8,
+    "bdr": 0.5,
+    "mean_iterations_to_first_detection": 1.5,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 32
+      },
+      "skip_mac_validation": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 32
+      }
+    }
+  },
+  "original_as_run/Random": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 8,
+    "bugs_detected": 2,
+    "bugs_total": 8,
+    "bdr": 0.25,
+    "mean_iterations_to_first_detection": 0.0,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "skip_frame_validation": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_mac_validation": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "accept_oversized": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      }
+    }
+  },
+  "evaluation/results/revision/runs/boofuzz.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [
+      190,
+      191
+    ],
+    "distinct_inputs": 75,
+    "bugs_detected": 6,
+    "bugs_total": 8,
+    "bdr": 0.75,
+    "mean_iterations_to_first_detection": 2.5,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 198
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 39
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 11,
+        "detecting_iterations": 13
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 2,
+        "detecting_iterations": 24
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 198
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 39
+      }
+    }
+  },
+  "evaluation/results/revision/runs/random_s1.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 120,
+    "bugs_detected": 6,
+    "bugs_total": 8,
+    "bdr": 0.75,
+    "mean_iterations_to_first_detection": 3.3333333333333335,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 41
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 15,
+        "detecting_iterations": 16
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 13
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 41
+      }
+    }
+  },
+  "evaluation/results/revision/runs/random_s2.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 128,
+    "bugs_detected": 6,
+    "bugs_total": 8,
+    "bdr": 0.75,
+    "mean_iterations_to_first_detection": 2.6666666666666665,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 45
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 14
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 11,
+        "detecting_iterations": 16
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 45
+      }
+    }
+  },
+  "evaluation/results/revision/runs/random_s3.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 134,
+    "bugs_detected": 6,
+    "bugs_total": 8,
+    "bdr": 0.75,
+    "mean_iterations_to_first_detection": 2.8333333333333335,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 54
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 18
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 15,
+        "detecting_iterations": 12
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 54
+      }
+    }
+  },
+  "evaluation/results/revision/runs/random_s4.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 135,
+    "bugs_detected": 6,
+    "bugs_total": 8,
+    "bdr": 0.75,
+    "mean_iterations_to_first_detection": 4.5,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 52
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 22,
+        "detecting_iterations": 19
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 15
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 52
+      }
+    }
+  },
+  "evaluation/results/revision/runs/random_s5.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 132,
+    "bugs_detected": 6,
+    "bugs_total": 8,
+    "bdr": 0.75,
+    "mean_iterations_to_first_detection": 11.833333333333334,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 37
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 34,
+        "detecting_iterations": 20
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 37,
+        "detecting_iterations": 21
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 200
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 37
+      }
+    }
+  }
+}

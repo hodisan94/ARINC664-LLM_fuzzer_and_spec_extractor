@@ -1,0 +1,38 @@
+{
+  "LLM": {
+    "iterations": 200,
+    "executed": {
+      "direct_params": 126,
+      "generic": 60,
+      "mac_or_seq_only": 10,
+      "rule_test_case": 4
+    },
+    "rule_test_case_rule": {
+      "labeled_rule": 3,
+      "other_rule": 1
+    }
+  },
+  "Boofuzz": {
+    "iterations": 200,
+    "executed": {
+      "direct_params": 106,
+      "generic": 82,
+      "rule_test_case": 12
+    },
+    "rule_test_case_rule": {
+      "labeled_rule": 4,
+      "other_rule": 8
+    }
+  },
+  "Random": {
+    "iterations": 200,
+    "executed": {
+      "generic": 194,
+      "rule_test_case": 6
+    },
+    "rule_test_case_rule": {
+      "labeled_rule": 5,
+      "other_rule": 1
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "parameters_defining_a_setting": [
+    "mutation_type",
+    "bag_value",
+    "frame_size",
+    "sequence_number",
+    "sequence_number_override",
+    "timing_jitter_ms",
+    "payload_pattern",
+    "mac_mutation_type",
+    "dest_mac_mutation",
+    "test_cases"
+  ],
+  "fuzzers": {
+    "LLM": {
+      "covered_categories": 158,
+      "iterations_per_covered_category_mean": 1.44,
+      "iterations_per_covered_category_median": 1.0,
+      "iterations_per_covered_category_max": 17,
+      "categories_with_2plus_iterations": 21,
+      "categories_with_2plus_distinct_settings": 21,
+      "pct_categories_with_2plus_distinct_settings": 13.3
+    },
+    "Boofuzz": {
+      "covered_categories": 87,
+      "iterations_per_covered_category_mean": 2.74,
+      "iterations_per_covered_category_median": 2,
+      "iterations_per_covered_category_max": 25,
+      "categories_with_2plus_iterations": 55,
+      "categories_with_2plus_distinct_settings": 46,
+      "pct_categories_with_2plus_distinct_settings": 52.9
+    },
+    "Random": {
+      "covered_categories": 54,
+      "iterations_per_covered_category_mean": 2.37,
+      "iterations_per_covered_category_median": 1.5,
+      "iterations_per_covered_category_max": 18,
+      "categories_with_2plus_iterations": 27,
+      "categories_with_2plus_distinct_settings": 22,
+      "pct_categories_with_2plus_distinct_settings": 40.7
+    },
+    "LLM No-Feedback": {
+      "covered_categories": 10,
+      "iterations_per_covered_category_mean": 10.7,
+      "iterations_per_covered_category_median": 2.5,
+      "iterations_per_covered_category_max": 45,
+      "categories_with_2plus_iterations": 6,
+      "categories_with_2plus_distinct_settings": 6,
+      "pct_categories_with_2plus_distinct_settings": 60.0
+    }
+  }
+}

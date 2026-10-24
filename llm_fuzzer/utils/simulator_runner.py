@@ -34,11 +34,22 @@ class SimulatorRunner:
         mutations_file: str = "examples/AFDX_V3/mutations.json",
         output_dir: str = "examples/AFDX_V3/output",
         vl_config_file: str = "examples/AFDX_V3/config/virtual_links.csv",
-        skip_ns3_check: bool = False
+        skip_ns3_check: bool = False,
+        work_dir: Optional[str] = None
     ):
         self.ns3_path = Path(ns3_path)
-        self.mutations_file = self.ns3_path / mutations_file
-        self.output_dir = self.ns3_path / output_dir
+        # With work_dir, the simulator runs with that directory as its working
+        # directory, so its relative input and output paths do not collide with
+        # other simulator processes.
+        self.work_dir = Path(work_dir).resolve() if work_dir else None
+        base = self.work_dir or self.ns3_path
+        self.mutations_file = base / mutations_file
+        self.output_dir = base / output_dir
+        self.csv_output_file = base / "examples/AFDX_V3/output/csv/AFDX-LOG-OUTPUT.csv"
+        if self.work_dir:
+            for sub in ("output/csv", "output/pcap", "config"):
+                (self.work_dir / "examples/AFDX_V3" / sub).mkdir(parents=True, exist_ok=True)
+            shutil.copy2(self.ns3_path / vl_config_file, self.work_dir / vl_config_file)
         
         self.mutations_file.parent.mkdir(parents=True, exist_ok=True)
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -76,10 +87,11 @@ class SimulatorRunner:
     
     def run_simulation(
         self,
-        test_inputs: Dict[str, Any],
+        test_inputs: Optional[Dict[str, Any]] = None,
         scenario_name: str = "afdx-demo",
         timeout: int = 60,
-        run_id: Optional[str] = None
+        run_id: Optional[str] = None,
+        sim_config: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """
         Run ns-3 simulation with test inputs.
@@ -89,6 +101,8 @@ class SimulatorRunner:
             scenario_name: ns-3 scenario to run (default: afdx-demo)
             timeout: Simulation timeout in seconds
             run_id: Optional run identifier (generated if not provided)
+            sim_config: Already translated simulator input (as returned in an earlier
+                result); written as is instead of translating test_inputs
             
         Returns:
             Dictionary with:
@@ -105,16 +119,21 @@ class SimulatorRunner:
         
         try:
             # Step 1: Write mutations.json file
-            self._write_mutations_file(test_inputs)
+            if sim_config is None:
+                sim_config = self._write_mutations_file(test_inputs)
+            else:
+                with open(self.mutations_file, 'w') as f:
+                    json.dump(sim_config, f, indent=2)
             
-            # Step 2: Execute simulator
+            # Step 2: Execute simulator (a crashed run must not report the CSV of the previous one)
+            self.csv_output_file.unlink(missing_ok=True)
             log_content, stderr_content = self._execute_ns3(
                 scenario_name,
                 timeout=timeout
             )
             
             # Step 3: Read CSV output
-            csv_file = self.ns3_path / "examples/AFDX_V3/output/csv/AFDX-LOG-OUTPUT.csv"
+            csv_file = self.csv_output_file
             csv_content = ""
             if csv_file.exists():
                 with open(csv_file, 'r') as f:
@@ -130,7 +149,8 @@ class SimulatorRunner:
                 'stderr': stderr_content,
                 'run_id': run_id,
                 'duration': duration,
-                'error': None
+                'error': None,
+                'sim_config': sim_config
             }
             
         except Exception as e:
@@ -142,7 +162,8 @@ class SimulatorRunner:
                 'stderr': str(e),
                 'run_id': run_id,
                 'duration': duration,
-                'error': str(e)
+                'error': str(e),
+                'sim_config': sim_config
             }
     
     def _generate_run_id(self) -> str:
@@ -216,6 +237,7 @@ class SimulatorRunner:
         cpp_mutations = self._translate_to_cpp_format(test_inputs)
         with open(self.mutations_file, 'w') as f:
             json.dump(cpp_mutations, f, indent=2)
+        return cpp_mutations
     
     def _execute_ns3(
         self,
@@ -239,6 +261,8 @@ class SimulatorRunner:
             scenario_name,
             "--no-build"  # Assume already built
         ]
+        if self.work_dir:
+            cmd += ["--cwd", str(self.work_dir)]
         
         # Execute
         result = subprocess.run(
@@ -248,6 +272,9 @@ class SimulatorRunner:
             text=True,
             timeout=timeout
         )
+        if result.returncode != 0:
+            raise RuntimeError(f"ns-3 exited with code {result.returncode}: "
+                               f"{result.stderr.strip()[-300:]}")
         
         return result.stdout, result.stderr
     
