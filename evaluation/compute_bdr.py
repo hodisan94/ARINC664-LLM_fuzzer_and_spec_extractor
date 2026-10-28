@@ -51,7 +51,7 @@ BUGS = [
         "id": "skip_token_bucket",
         "description": "Switch skips token-bucket policing",
         "location": "afdx-switch.cc Step 4",
-        "detection_signal": "policing_drop_decrease",
+        "detection_signal": "token_bucket_drop_decrease",
     },
     {
         "id": "skip_vl_check",
@@ -114,6 +114,7 @@ def parse_metrics(sim_result: dict) -> Dict[str, float]:
     return {
         "frames_forwarded": m.get("frames_forwarded", 0),
         "frames_dropped_policing": m.get("frames_dropped_policing", 0),
+        "frames_dropped_token_bucket": m.get("frames_dropped_token_bucket", 0),
         "frames_dropped_frame_error": m.get("frames_dropped_frame_error", 0),
         "frames_dropped_mac_error": m.get("frames_dropped_mac_error", 0),
         "forward_rate": m.get("forward_rate", 0),
@@ -141,6 +142,11 @@ def bug_detected(baseline_metrics: dict, buggy_metrics: dict, bug: dict) -> bool
     if sig == "policing_drop_decrease":
         bl = baseline_metrics.get("frames_dropped_policing", 0)
         bg = buggy_metrics.get("frames_dropped_policing", 0)
+        return bl - bg > THRESHOLD
+
+    if sig == "token_bucket_drop_decrease":
+        bl = baseline_metrics.get("frames_dropped_token_bucket", 0)
+        bg = buggy_metrics.get("frames_dropped_token_bucket", 0)
         return bl - bg > THRESHOLD
 
     if sig == "frame_error_drop_decrease":

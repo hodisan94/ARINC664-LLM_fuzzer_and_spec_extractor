@@ -368,7 +368,8 @@ private:
   uint64_t m_framesReceived;
   uint64_t m_framesForwarded;
   uint64_t m_framesDropped;
-  uint64_t m_framesDroppedPolicing;
+  uint64_t m_framesDroppedPolicing;        ///< Frames dropped by the BAG inter-arrival check
+  uint64_t m_framesDroppedTokenBucket;     ///< Frames dropped by the token bucket
   uint64_t m_framesDroppedInvalidVL;
   uint64_t m_framesDroppedFrameError;
   uint64_t m_framesDroppedMACError;        ///< Frames dropped due to source MAC mismatch

@@ -32,6 +32,7 @@ class SimulatorLogParser:
         "frames_forwarded":        r"afdxFramesForwarded\.\d+\s*=\s*(\d+)",
         "frames_dropped_total":    r"afdxFramesDropped\.\d+\s*=\s*(\d+)",
         "frames_dropped_policing": r"afdxFramesDroppedPolicing\.\d+\s*=\s*(\d+)",
+        "frames_dropped_token_bucket": r"afdxFramesDroppedTokenBucket\.\d+\s*=\s*(\d+)",
         "frames_dropped_invalid_vl": r"afdxFramesDroppedInvalidVL\.\d+\s*=\s*(\d+)",
         "frames_dropped_frame_error": r"afdxFramesDroppedFrameError\.\d+\s*=\s*(\d+)",
         "frames_dropped_mac_error": r"afdxFramesDroppedMACError\.\d+\s*=\s*(\d+)",
@@ -181,6 +182,7 @@ class SimulatorLogParser:
             "frames_received": 0,
             "frames_forwarded": 0,
             "frames_dropped_policing": 0,
+            "frames_dropped_token_bucket": 0,
             "frames_dropped_invalid_vl": 0,
             "frames_dropped_frame_error": 0,
             "frames_dropped_mac_error": 0,
@@ -219,6 +221,8 @@ class SimulatorLogParser:
             merged["frames_forwarded"] = mib_metrics["frames_forwarded"]
         if mib_metrics.get("frames_dropped_policing"):
             merged["frames_dropped_policing"] = mib_metrics["frames_dropped_policing"]
+        if mib_metrics.get("frames_dropped_token_bucket"):
+            merged["frames_dropped_token_bucket"] = mib_metrics["frames_dropped_token_bucket"]
         if mib_metrics.get("frames_dropped_invalid_vl"):
             merged["frames_dropped_invalid_vl"] = mib_metrics["frames_dropped_invalid_vl"]
         if mib_metrics.get("frames_dropped_frame_error"):

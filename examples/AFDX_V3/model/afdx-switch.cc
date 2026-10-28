@@ -86,6 +86,7 @@ AfdxSwitch::AfdxSwitch()
     m_framesForwarded(0),
     m_framesDropped(0),
     m_framesDroppedPolicing(0),
+    m_framesDroppedTokenBucket(0),
     m_framesDroppedInvalidVL(0),
     m_framesDroppedFrameError(0),
     m_framesDroppedMACError(0),
@@ -364,11 +365,11 @@ AfdxSwitch::ProcessFrame(Ptr<const Packet> packet, uint32_t inPort)
   {
     if (!CheckTokenBucket(vlId, frameSize))
     {
+      // Counted apart from the BAG check, so the two policing steps can be told apart
       m_framesDropped++;
-      m_framesDroppedPolicing++;
+      m_framesDroppedTokenBucket++;
       m_vlStats[vlId].framesDropped++;
-      m_vlStats[vlId].policingViolations++;
-      LogDrop(vlId, "BAG_Violation");
+      LogDrop(vlId, "TokenBucket_Violation");
       return false;
     }
   }
@@ -807,6 +808,7 @@ AfdxSwitch::PrintStatistics(std::ostream& os) const
   os << "    - MAC Errors:         " << m_framesDroppedMACError << "\n";
   os << "    - Invalid VL:         " << m_framesDroppedInvalidVL << "\n";
   os << "    - Policing:           " << m_framesDroppedPolicing << "\n";
+  os << "    - Token Bucket:       " << m_framesDroppedTokenBucket << "\n";
   os << "    - Buffer Overflow:    " << m_framesDroppedBufferOverflow << "\n";
   os << "    - Aged Out:           " << m_framesDroppedAgedOut << "\n";
   
@@ -1038,6 +1040,7 @@ AfdxSwitch::ResetStatistics()
   m_framesForwarded = 0;
   m_framesDropped = 0;
   m_framesDroppedPolicing = 0;
+  m_framesDroppedTokenBucket = 0;
   m_framesDroppedInvalidVL = 0;
   m_framesDroppedFrameError = 0;
   m_framesDroppedMACError = 0;
@@ -1095,6 +1098,7 @@ AfdxSwitch::ExportMIB(std::ostream& os) const
   os << "afdxFramesForwarded.0 = " << m_framesForwarded << "\n";
   os << "afdxFramesDropped.0 = " << m_framesDropped << "\n";
   os << "afdxFramesDroppedPolicing.0 = " << m_framesDroppedPolicing << "\n";
+  os << "afdxFramesDroppedTokenBucket.0 = " << m_framesDroppedTokenBucket << "\n";
   os << "afdxFramesDroppedInvalidVL.0 = " << m_framesDroppedInvalidVL << "\n";
   os << "afdxFramesDroppedFrameError.0 = " << m_framesDroppedFrameError << "\n";
   os << "afdxFramesDroppedMACError.0 = " << m_framesDroppedMACError << "\n\n";
