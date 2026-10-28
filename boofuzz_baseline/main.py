@@ -305,6 +305,12 @@ class BoofuzzFuzzer:
         start_iteration = len(history) if not history.empty else 0
         if start_iteration > 0:
             print(f"\nResuming from iteration {start_iteration}")
+            # Continue the schedule where the history stopped instead of restarting it
+            generator = self.strategy_generator
+            schedule = generator.round_robin_schedule
+            generator.current_index = start_iteration % len(schedule)
+            generator.tested_violations.update(
+                schedule[i % len(schedule)]['id'] for i in range(start_iteration))
 
         start_time = datetime.now()
         consecutive_failures = 0
