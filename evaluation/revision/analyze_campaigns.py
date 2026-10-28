@@ -219,8 +219,26 @@ def main():
         per_run[name] = {p: history_metrics(p, categories_of, bdr, loose_categories_of, statements,
                                             rejected_only, single_category_of) for p in paths}
 
+    # The baselines draw their labels from the test-case catalogue, which reaches only part of
+    # the categories; the LLM planner can name any rule. Coverage restricted to the categories
+    # that the catalogue's labels reach compares the fuzzers on a common label universe.
+    test_cases = json.loads((ROOT / "configs/test_cases.json").read_text())
+    shared = set().union(*(categories_of(k) for k in test_cases))
+    shared_single = {c for c in map(single_category_of, test_cases) if c}
+    print(f"categories reachable by test-case labels: {len(shared)} of {N_CATEGORIES} "
+          f"(merged: {len(shared_single)} of {len(single_category_of.categories)})")
+    for runs in per_run.values():
+        for r in runs.values():
+            r["rule_coverage_shared"] = len(shared & set(r["categories"]))
+            r["rule_coverage_shared_executed"] = len(shared & set(r["categories_executed"]))
+            r["rule_coverage_single_shared"] = len(shared_single & set(r["categories_single"]))
+            r["rule_coverage_single_shared_executed"] = len(
+                shared_single & set(r["categories_single_executed"]))
+
     metrics = ("rule_coverage", "rule_coverage_executed", "rule_coverage_loose",
                "rule_coverage_single", "rule_coverage_single_executed",
+               "rule_coverage_shared", "rule_coverage_shared_executed",
+               "rule_coverage_single_shared", "rule_coverage_single_shared_executed",
                "rejected_only_covered", "rule_coverage_pct_without_rejected", "checklist_statements",
                "checklist_statements_executed", "distinct_labels", "labels_not_mapped", "noncrash_ratio",
                "bugs_detected", "llm_cost_usd")
