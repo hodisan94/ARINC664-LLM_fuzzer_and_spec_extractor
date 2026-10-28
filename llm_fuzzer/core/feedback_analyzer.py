@@ -123,10 +123,11 @@ class FeedbackAnalyzer:
         Returns:
             Analysis dictionary with recommendations
         """
-        policing_rate = metrics.get("policing_rate", 0.0)
-        forward_rate = metrics.get("forward_rate", 0.0)
+        # log_parser reports the rates in percent (0-100), not as fractions
+        policing_rate = metrics.get("policing_rate", 0.0) / 100.0
+        forward_rate = metrics.get("forward_rate", 0.0) / 100.0
         malformed_accepted = metrics.get("malformed_accepted", 0)
-        
+
         if policing_rate >= 0.8:
             policing_effectiveness = "Excellent - System correctly rejects most invalid frames"
         elif policing_rate >= 0.5:
@@ -276,8 +277,8 @@ class FeedbackAnalyzer:
             "",
             "Performance Metrics:",
             f"  Frames received:          {metrics.get('frames_received', 0)}",
-            f"  Frames forwarded:         {metrics.get('frames_forwarded', 0)} ({metrics.get('forward_rate', 0):.1%})",
-            f"  Frames dropped (policing): {metrics.get('frames_dropped_policing', 0)} ({metrics.get('policing_rate', 0):.1%})",
+            f"  Frames forwarded:         {metrics.get('frames_forwarded', 0)} ({metrics.get('forward_rate', 0):.1f}%)",
+            f"  Frames dropped (policing): {metrics.get('frames_dropped_policing', 0)} ({metrics.get('policing_rate', 0):.1f}%)",
             f"  Frames dropped (invalid VL): {metrics.get('frames_dropped_invalid_vl', 0)}",
             f"  Malformed accepted:       {metrics.get('malformed_accepted', 0)} {'[BUG]' if metrics.get('malformed_accepted', 0) > 0 else '[OK]'}",
             "",
