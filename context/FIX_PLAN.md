@@ -296,7 +296,7 @@ fuzzer. Review them in `category_mechanisms.json`.
 ### Stage 4 results
 
 All 8,199 distinct (input, bug) runs behind the submitted Experiment 3 were replayed on the
-fixed simulator (stages 1–2), as logged, with no LLM calls (commit 7e0ec5e). The submitted
+fixed simulator (stages 1–2), as logged, with no LLM calls (commit 306c301). The submitted
 `bdr_replay_v2_*.json` files are unchanged; the new results are `bdr_replay_fixed_*.json`.
 The same 2 BOOFUZZ inputs (out-of-range integers) crash both simulators.
 
