@@ -26,7 +26,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from llm_fuzzer.utils.spec_loader import SpecificationLoader
 from llm_fuzzer.utils.test_case_loader import TestCaseLoader
-from llm_fuzzer.prompts.fuzzing_agent import build_fuzzing_prompt, format_vl_statistics
+from llm_fuzzer.prompts.fuzzing_agent import PROMPT_VERSIONS, build_fuzzing_prompt, format_vl_statistics
 
 try:
     from openai import OpenAI
@@ -81,6 +81,7 @@ class LLMStrategyPlanner:
         steering_enabled: bool = True,
         redirect_mode: str = "replan",
         vl_config_path: str = "examples/AFDX_V3/config/virtual_links.csv",
+        prompt_version: str = "revised",
     ):
         """
         Initialize LLM Strategy Planner.
@@ -98,7 +99,9 @@ class LLMStrategyPlanner:
                 (label and parameters refer to the same rule); "clear" keeps the earlier
                 behavior that relabels the iteration and clears its parameters
             vl_config_path: VL table shown to the LLM when it re-plans
-            
+            prompt_version: planner prompt text, "revised" or "original" (the text of the
+                submitted campaigns); see fuzzing_agent.PROMPT_VERSIONS
+
         Raises:
             ImportError: If the requested LLM provider package is not installed
             ValueError: If API key not provided and not in environment
@@ -136,8 +139,11 @@ class LLMStrategyPlanner:
 
         if redirect_mode not in ("replan", "clear"):
             raise ValueError(f"redirect_mode must be 'replan' or 'clear', got {redirect_mode!r}")
+        if prompt_version not in PROMPT_VERSIONS:
+            raise ValueError(f"prompt_version must be one of {PROMPT_VERSIONS}, got {prompt_version!r}")
         self.feedback_enabled = feedback_enabled
         self.steering_enabled = steering_enabled
+        self.prompt_version = prompt_version
         self.redirect_mode = redirect_mode
         self.vl_table = self._load_vl_table(vl_config_path)
         self._usage: List[Dict[str, Any]] = []
@@ -355,7 +361,8 @@ class LLMStrategyPlanner:
             vl_statistics=vl_stats,
             system_config=system_config,
             iteration=iteration,
-            coverage_stats=prompt_coverage
+            coverage_stats=prompt_coverage,
+            prompt_version=self.prompt_version
         )
         
         # Retry once on LLM failure

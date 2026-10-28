@@ -11,6 +11,109 @@ from typing import Dict, List, Any, Optional
 import pandas as pd
 
 
+# Prompt versions (TAES revision). "original" is the text used in the submitted campaigns;
+# "revised" describes the mutation parameters as the simulator applies them (no test_cases
+# recommendation, no token-bucket claim, corrected sequence-number and wrong_vl semantics).
+# The two differ only in the passages below; everything else in the prompt is shared.
+PROMPT_VERSIONS = ("revised", "original")
+
+_MUTATION_PARAMETERS = {
+    "original": [
+        "\nMUTATION PARAMETERS THAT ACTUALLY AFFECT THE SIMULATOR:",
+        "  1. frame_size: frames exceeding MaxFrame trigger FrameError drop at switch",
+        "  2. timing_jitter_ms: changes send timing (negative=faster, positive=slower)",
+        "  3. bag_value: converted to jitter relative to BAG (e.g. bag_value=2 on VL with BAG=4 => jitter=-2)",
+        "  4. mac_mutation_type: 'spoof_src'|'spoof_dst'|'broadcast'|'invalid_src'|'zero_mac' => source MAC error drop at switch",
+        "  5. prob: 0.0-1.0 TX-drop probability (frames silently dropped before sending)",
+        "  6. sequence_number_override: force a specific seq num (e.g. 0=invalid, 255=stale) => rejection at receiving ES",
+        "  7. dest_mac_mutation: 'corrupt_prefix'|'wrong_vl'|'zero' => constant field rejection at receiving ES",
+        "",
+        "  NOTE: payload_pattern is NOT yet supported by the simulator.",
+    ],
+    "revised": [
+        "\nMUTATION PARAMETERS THAT ACTUALLY AFFECT THE SIMULATOR (nothing else reaches it):",
+        "  1. frame_size: total frame size in bytes. Frames above the VL's MaxFrame or below its",
+        "     MinFrame (or outside 64..1518) are dropped by the switch's frame validation; MaxFrame",
+        "     and MinFrame themselves are valid.",
+        "  2. timing_jitter_ms: fixed offset in ms added to EVERY send interval of the target VL",
+        "     (e.g. -1 on a VL with BAG=4 sends every 3 ms; negative = faster than the BAG, which",
+        "     the switch's BAG policing should drop; positive = slower).",
+        "  3. bag_value: send interval in ms; converted to an offset relative to the BAG and added",
+        "     to timing_jitter_ms (e.g. bag_value=2 on a VL with BAG=4 => offset -2).",
+        "  4. mac_mutation_type: 'spoof_src'|'spoof_dst'|'broadcast'|'invalid_src'|'zero_mac' changes the",
+        "     source MAC; frames whose source MAC does not match the VL are dropped at the switch.",
+        "  5. prob: 0.0-1.0 probability of dropping each frame of the target VL at the sender.",
+        "  6. sequence_number_override: 1-255 forces this sequence number on every frame; 0 or null =",
+        "     no override (use 256 to send sequence number 0). A constant number makes the receiver",
+        "     discard the repeated frames as duplicates.",
+        "  7. dest_mac_mutation: 'corrupt_prefix'|'zero' break the constant 03:00:00:00 prefix, which",
+        "     the receiving ES rejects; 'wrong_vl' changes only the VL bytes, which nothing checks.",
+        "",
+        "  NOTE: payload_pattern, sequence-number ranges in test cases, and the predefined",
+        "  test_cases themselves are NOT sent to the simulator; only the parameters above are.",
+    ],
+}
+
+_MECHANISM_DESCRIPTIONS = {
+    "original": {
+        "sequence_number_override>0": "Sequence number override — triggers ES sequence check",
+        "token_bucket_stress": "Token bucket stress (frame_size=1500 + default BAG timing) — overflows bandwidth budget",
+    },
+    "revised": {
+        "sequence_number_override>0": "Sequence number override — constant number on every frame (receiver discards repeats as duplicates)",
+        "token_bucket_stress": "Token bucket stress (frame_size=1500 + default BAG timing) — frame_size 1500 is above every VL's MaxFrame, so these frames are dropped by frame validation first",
+    },
+}
+
+# Decision guidelines 2-4; {total_rules} is filled in.
+_GUIDELINES_2_TO_4 = {
+    "original": """2. USE PREDEFINED TEST CASES (STRONGLY RECOMMENDED):
+   - Look at the "PREDEFINED TEST CASES" section — {total_rules}+ rules available
+   - Match your chosen rule name to find its test cases
+   - Set test_cases to e.g. ["TC0", "TC1"]
+
+3. CUSTOM MUTATIONS (when no predefined TCs exist):
+   - Propose specific values: bag_value, frame_size, sequence_number, etc.
+
+4. IMPORTANT — MUTATION MECHANISMS FOR BUG FINDING:
+   - mac_mutation_type: "spoof_src" => finds bugs in switch MAC validation
+   - dest_mac_mutation: "corrupt_prefix" => finds bugs in ES constant-field check
+   - frame_size: >1518 (e.g. 2000) => finds bugs in frame-size validation
+   - sequence_number_override: 0 or 255 => finds bugs in sequence checking
+   - timing_jitter_ms: negative value (e.g. -5) => finds bugs in BAG policing
+   - TOKEN BUCKET STRESS: frame_size=1500 (do NOT change bag_value!)
+     => Sends max-size VALID frames at the VL's NORMAL BAG rate.
+        CRITICAL: Do NOT set bag_value — keep default timing so BAG policing passes.
+        The large frame_size causes cumulative bandwidth to overflow the
+        token bucket, triggering policing drops from the bandwidth check.
+        This is the ONLY way to test token-bucket enforcement!""",
+    "revised": """2. PREDEFINED TEST CASES:
+   - Look at the "PREDEFINED TEST CASES" section — {total_rules}+ rules available
+   - Use them to choose violating VALUES for your rule. The test_cases field itself
+     (e.g. ["TC0", "TC1"]) is NOT sent to the simulator: to exercise the rule, also set
+     the mutation parameters (frame_size, timing_jitter_ms, ...) to those values.
+
+3. CUSTOM MUTATIONS:
+   - Propose specific values: bag_value, frame_size, timing_jitter_ms, etc.
+
+4. IMPORTANT — MUTATION MECHANISMS FOR BUG FINDING:
+   - mac_mutation_type: "spoof_src" => exercises switch source-MAC validation
+   - dest_mac_mutation: "corrupt_prefix" => exercises the ES constant-field check
+   - frame_size: above MaxFrame or below MinFrame of the VL => exercises frame-size validation
+   - sequence_number_override: forces one sequence number on every frame (the receiver
+     discards the repeats as duplicates)
+   - timing_jitter_ms: negative value (e.g. -1 on BAG=4) => exercises BAG policing
+   - Token bucket: frames that pass the BAG check never exceed the token bucket in this
+     switch configuration, so no input can exercise it.""",
+}
+
+_OUTPUT_OPTION_1 = {
+    "original": '1. Use PREDEFINED test cases: set "test_cases": ["TC0", "TC1"] (values from test cases list)',
+    "revised": ('1. Use PREDEFINED test cases to pick values, and set the matching parameters: the\n'
+                '   "test_cases" field alone is not sent to the simulator'),
+}
+
+
 def _build_coverage_section(coverage_stats: Optional[Dict[str, Any]], iteration: int) -> str:
     """Build coverage awareness section with category-level + rule-level info."""
     if not coverage_stats:
@@ -74,7 +177,8 @@ def build_fuzzing_prompt(
     vl_statistics: Dict[int, Dict[str, Any]],
     system_config: Dict[str, Any],
     iteration: int,
-    coverage_stats: Optional[Dict[str, Any]] = None
+    coverage_stats: Optional[Dict[str, Any]] = None,
+    prompt_version: str = "revised"
 ) -> str:
     """
     Build complete prompt for LLM-guided fuzzing.
@@ -94,19 +198,22 @@ def build_fuzzing_prompt(
         system_config: System configuration (available VLs, etc.)
         iteration: Current iteration number
         coverage_stats: Dict with covered_rules, uncovered_rules, mutation_type_counts
-        
+        prompt_version: "revised" (default) or "original"; see PROMPT_VERSIONS
+
     Returns:
         Complete prompt string for LLM
     """
-    
+    if prompt_version not in PROMPT_VERSIONS:
+        raise ValueError(f"prompt_version must be one of {PROMPT_VERSIONS}, got {prompt_version!r}")
+
     role_definition = _build_role_definition()
     coverage_section = _build_coverage_section(coverage_stats, iteration)
     protocol_rules_section = _build_protocol_rules_section(spec_rules)
     test_cases_section = _build_test_cases_section(test_cases)
     recent_performance = _build_recent_performance_section(recent_results)
-    vl_stats_section = _build_vl_statistics_section(vl_statistics, system_config)
-    decision_guidelines = _build_decision_guidelines(iteration, coverage_stats)
-    output_format = _build_output_format()
+    vl_stats_section = _build_vl_statistics_section(vl_statistics, system_config, prompt_version)
+    decision_guidelines = _build_decision_guidelines(iteration, coverage_stats, prompt_version)
+    output_format = _build_output_format(prompt_version)
     
     prompt = f"""
 {role_definition}
@@ -246,7 +353,8 @@ def _build_recent_performance_section(recent_results: List[Dict[str, Any]]) -> s
 
 def _build_vl_statistics_section(
     vl_statistics: Dict[int, Dict[str, Any]],
-    system_config: Dict[str, Any]
+    system_config: Dict[str, Any],
+    prompt_version: str = "revised"
 ) -> str:
     """Format VL testing statistics."""
     lines = ["\n" + "=" * 70]
@@ -269,27 +377,8 @@ def _build_vl_statistics_section(
     lines.append("  3001  |  32     |  1024    |    64    |  ES3   |  1007")
     lines.append("  3002  |  32     |  1024    |    64    |  ES3   |  1007")
     
-    lines.append("\nMUTATION PARAMETERS THAT ACTUALLY AFFECT THE SIMULATOR (nothing else reaches it):")
-    lines.append("  1. frame_size: total frame size in bytes. Frames above the VL's MaxFrame or below its")
-    lines.append("     MinFrame (or outside 64..1518) are dropped by the switch's frame validation; MaxFrame")
-    lines.append("     and MinFrame themselves are valid.")
-    lines.append("  2. timing_jitter_ms: fixed offset in ms added to EVERY send interval of the target VL")
-    lines.append("     (e.g. -1 on a VL with BAG=4 sends every 3 ms; negative = faster than the BAG, which")
-    lines.append("     the switch's BAG policing should drop; positive = slower).")
-    lines.append("  3. bag_value: send interval in ms; converted to an offset relative to the BAG and added")
-    lines.append("     to timing_jitter_ms (e.g. bag_value=2 on a VL with BAG=4 => offset -2).")
-    lines.append("  4. mac_mutation_type: 'spoof_src'|'spoof_dst'|'broadcast'|'invalid_src'|'zero_mac' changes the")
-    lines.append("     source MAC; frames whose source MAC does not match the VL are dropped at the switch.")
-    lines.append("  5. prob: 0.0-1.0 probability of dropping each frame of the target VL at the sender.")
-    lines.append("  6. sequence_number_override: 1-255 forces this sequence number on every frame; 0 or null =")
-    lines.append("     no override (use 256 to send sequence number 0). A constant number makes the receiver")
-    lines.append("     discard the repeated frames as duplicates.")
-    lines.append("  7. dest_mac_mutation: 'corrupt_prefix'|'zero' break the constant 03:00:00:00 prefix, which")
-    lines.append("     the receiving ES rejects; 'wrong_vl' changes only the VL bytes, which nothing checks.")
-    lines.append("")
-    lines.append("  NOTE: payload_pattern, sequence-number ranges in test cases, and the predefined")
-    lines.append("  test_cases themselves are NOT sent to the simulator; only the parameters above are.")
-    
+    lines.extend(_MUTATION_PARAMETERS[prompt_version])
+
     if not vl_statistics:
         lines.append("\nNo VL statistics yet (first iteration)")
         return "\n".join(lines)
@@ -307,7 +396,8 @@ def _build_vl_statistics_section(
     return "\n".join(lines)
 
 
-def _build_decision_guidelines(iteration: int, coverage_stats: Optional[Dict[str, Any]] = None) -> str:
+def _build_decision_guidelines(iteration: int, coverage_stats: Optional[Dict[str, Any]] = None,
+                               prompt_version: str = "revised") -> str:
     """Provide decision-making guidelines using category-level coverage."""
     cat_pct = coverage_stats.get("category_coverage_pct", 0.0) if coverage_stats else 0.0
     uncovered_cats = coverage_stats.get("uncovered_categories", []) if coverage_stats else []
@@ -335,8 +425,7 @@ def _build_decision_guidelines(iteration: int, coverage_stats: Optional[Dict[str
         "dest_mac_mutation:corrupt_prefix": "Dest MAC corruption — triggers ES constant-field check",
         "frame_size>1518": "Oversized frames — triggers switch frame-size validation",
         "timing_jitter_ms<0": "BAG violation (fast timing) — triggers BAG policing",
-        "sequence_number_override>0": "Sequence number override — constant number on every frame (receiver discards repeats as duplicates)",
-        "token_bucket_stress": "Token bucket stress (frame_size=1500 + default BAG timing) — frame_size 1500 is above every VL's MaxFrame, so these frames are dropped by frame validation first",
+        **_MECHANISM_DESCRIPTIONS[prompt_version],
     }
     untested_mechs = {k: v for k, v in all_mechs.items() if k not in used_mechs}
 
@@ -367,24 +456,7 @@ DECISION GUIDELINES — Phase: {phase} (category coverage {cat_pct:.0f}%)
    - Set your 'mutation_type' to EXACTLY a rule name from the test cases list
    - This covers a new spec category AND gives you +1.0 new-rule bonus
 
-2. PREDEFINED TEST CASES:
-   - Look at the "PREDEFINED TEST CASES" section — {total_rules}+ rules available
-   - Use them to choose violating VALUES for your rule. The test_cases field itself
-     (e.g. ["TC0", "TC1"]) is NOT sent to the simulator: to exercise the rule, also set
-     the mutation parameters (frame_size, timing_jitter_ms, ...) to those values.
-
-3. CUSTOM MUTATIONS:
-   - Propose specific values: bag_value, frame_size, timing_jitter_ms, etc.
-
-4. IMPORTANT — MUTATION MECHANISMS FOR BUG FINDING:
-   - mac_mutation_type: "spoof_src" => exercises switch source-MAC validation
-   - dest_mac_mutation: "corrupt_prefix" => exercises the ES constant-field check
-   - frame_size: above MaxFrame or below MinFrame of the VL => exercises frame-size validation
-   - sequence_number_override: forces one sequence number on every frame (the receiver
-     discards the repeats as duplicates)
-   - timing_jitter_ms: negative value (e.g. -1 on BAG=4) => exercises BAG policing
-   - Token bucket: frames that pass the BAG check never exceed the token bucket in this
-     switch configuration, so no input can exercise it.
+{_GUIDELINES_2_TO_4[prompt_version].format(total_rules=total_rules)}
    Combine these with different rules for maximum coverage!
 
 5. STRATEGY TYPES:
@@ -398,7 +470,7 @@ ITERATION {iteration}: {phase_msg}
 """
 
 
-def _build_output_format() -> str:
+def _build_output_format(prompt_version: str = "revised") -> str:
     """Specify the expected JSON output format - FULL FREEDOM FOR LLM."""
     return """
 {"=" * 70}
@@ -425,8 +497,7 @@ You have FULL CONTROL over testing approach. Choose what makes most sense:
 }
 
 YOUR CHOICE - MULTIPLE OPTIONS:
-1. Use PREDEFINED test cases to pick values, and set the matching parameters: the
-   "test_cases" field alone is not sent to the simulator
+""" + _OUTPUT_OPTION_1[prompt_version] + """
 2. Set SPECIFIC values yourself: set "bag_value": 0, etc. (you choose exact values)
 3. COMBINE both: use test cases AND add your own values
 4. You decide what's best based on protocol rules, history, and reward!

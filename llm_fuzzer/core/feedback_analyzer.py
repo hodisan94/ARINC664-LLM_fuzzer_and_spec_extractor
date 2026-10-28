@@ -35,15 +35,19 @@ class FeedbackAnalyzer:
     
     def __init__(
         self,
-        reward_calculator: Optional[RewardCalculator] = None
+        reward_calculator: Optional[RewardCalculator] = None,
+        prompt_version: str = "revised"
     ):
         """
         Initialize feedback analyzer.
-        
+
         Args:
             reward_calculator: RewardCalculator instance (creates default if None)
+            prompt_version: "revised" or "original"; selects the test_cases advice in the
+                recommendation (fuzzing_agent.PROMPT_VERSIONS)
         """
         self.reward_calculator = reward_calculator or RewardCalculator()
+        self.prompt_version = prompt_version
     
     def analyze(
         self,
@@ -190,7 +194,10 @@ class FeedbackAnalyzer:
             if n_seen < 20:
                 parts.append("Coverage is LOW. Prioritize untested rules.")
             
-            if strategy.get("test_cases"):
+            if self.prompt_version == "original":
+                if not strategy.get("test_cases"):
+                    parts.append("TIP: Try using predefined test_cases for broader rule coverage.")
+            elif strategy.get("test_cases"):
                 parts.append("NOTE: test_cases are not sent to the simulator; set the mutation "
                              "parameters to exercise the rule.")
         

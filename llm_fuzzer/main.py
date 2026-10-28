@@ -29,6 +29,7 @@ from llm_fuzzer.core.feedback_analyzer import FeedbackAnalyzer
 from llm_fuzzer.core.strategy_planner import LLMStrategyPlanner
 from llm_fuzzer.core.test_generator import TestGenerator
 from llm_fuzzer.utils.simulator_runner import SimulatorRunner
+from llm_fuzzer.prompts.fuzzing_agent import PROMPT_VERSIONS
 
 # Planner variants: (feedback shown in the prompt, controller steering = redirection
 # and scheduled mechanism tests).
@@ -58,7 +59,8 @@ class LLMFuzzer:
         available_vls: Optional[List[int]] = None,
         max_consecutive_failures: int = 5,
         ablation: str = "full",
-        work_dir: Optional[str] = None
+        work_dir: Optional[str] = None,
+        prompt_version: str = "revised"
     ):
         """
         Initialize the fuzzer.
@@ -74,6 +76,7 @@ class LLMFuzzer:
             max_consecutive_failures: Stop after this many consecutive failed iterations
             ablation: planner variant; see ABLATIONS
             work_dir: isolated simulator working directory (for parallel campaigns)
+            prompt_version: planner instructions, "revised" or "original" (submitted campaigns)
         """
         self.spec_rules_path = spec_rules_path
         self.test_cases_path = test_cases_path
@@ -89,14 +92,16 @@ class LLMFuzzer:
         
         # Initialize components
         print("Initializing components...")
-        self.feedback_analyzer = FeedbackAnalyzer()
+        self.feedback_analyzer = FeedbackAnalyzer(prompt_version=prompt_version)
         self.ablation = ablation
+        self.prompt_version = prompt_version
         feedback_enabled, steering_enabled = ABLATIONS[ablation]
         self.strategy_planner = LLMStrategyPlanner(
             spec_rules_path=spec_rules_path,
             test_cases_path=test_cases_path,
             feedback_enabled=feedback_enabled,
-            steering_enabled=steering_enabled
+            steering_enabled=steering_enabled,
+            prompt_version=prompt_version
         )
         self.test_generator = TestGenerator(
             seed_frames_path=seed_frames_path,
@@ -245,6 +250,7 @@ class LLMFuzzer:
                 'timestamp': datetime.now().isoformat(),
                 'duration': (datetime.now() - iteration_start).total_seconds(),
                 'ablation_mode': self.ablation,
+                'prompt_version': self.prompt_version,
                 'planner_variant': strategy.get('planner_variant'),
                 'llm_usage': strategy.get('llm_usage'),
                 'sim_config': sim_result.get('sim_config'),
@@ -637,6 +643,14 @@ Examples:
     )
 
     parser.add_argument(
+        '--prompt-version',
+        choices=PROMPT_VERSIONS,
+        default='revised',
+        help='Planner instructions: revised (default; describes the parameters as the '
+             'simulator applies them) or original (the text of the submitted campaigns)'
+    )
+
+    parser.add_argument(
         '--work-dir',
         type=str,
         default=None,
@@ -675,7 +689,8 @@ Examples:
         available_vls=args.vls,
         output_dir=args.output_dir,
         ablation=args.ablation,
-        work_dir=args.work_dir
+        work_dir=args.work_dir,
+        prompt_version=args.prompt_version
     )
     
     # Run
