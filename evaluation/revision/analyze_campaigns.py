@@ -109,8 +109,11 @@ def history_metrics(path, categories_of, bdr, loose_categories_of, statements, r
         "checklist_statements": sum(bool(c & labels) for c in statements.values()),
         "checklist_statements_executed": sum(bool(c & executed_labels) for c in statements.values()),
         "crashed_iterations": sorted(crashed),
-        "valid_ratio": sum(ran and (r.get("frames_received") or 0) > 0
-                           for r, ran in zip(rows, executed)) / len(rows),
+        # Share of iterations that ran without a simulator crash and received frames. With
+        # background traffic on all VLs this is every non-crashing iteration; it does not
+        # measure the validity of the mutated messages.
+        "noncrash_ratio": sum(ran and (r.get("frames_received") or 0) > 0
+                              for r, ran in zip(rows, executed)) / len(rows),
         "time_to_80pct": next((i + 1 for i, c in enumerate(curve) if c >= threshold), None),
         "median_iteration_s": statistics.median(durations) if durations else None,
         "executed": es.summarize([c for c, ran in zip(configs, executed) if c and ran]),
@@ -199,7 +202,7 @@ def main():
 
     metrics = ("rule_coverage", "rule_coverage_executed", "rule_coverage_loose",
                "rejected_only_covered", "rule_coverage_pct_without_rejected", "checklist_statements",
-               "checklist_statements_executed", "distinct_labels", "labels_not_mapped", "valid_ratio",
+               "checklist_statements_executed", "distinct_labels", "labels_not_mapped", "noncrash_ratio",
                "bugs_detected", "llm_cost_usd")
     for name, runs in per_run.items():
         per_fuzzer[name] = {m: summary([r[m] for r in runs.values()])

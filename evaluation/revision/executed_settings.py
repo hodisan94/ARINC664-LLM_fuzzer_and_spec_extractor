@@ -110,7 +110,10 @@ def summarize(configs):
         used = mechanisms(cfg)
         per_mechanism.update(used)
         no_mutation += not used
-    settings = {tuple(cfg[k] for k in SETTING_KEYS) for cfg in configs}
+    # Without a mutation the simulator output does not depend on the target VL, so all
+    # unmutated inputs are one setting.
+    settings = {tuple(cfg[k] for k in SETTING_KEYS) if mechanisms(cfg) else "no mutation"
+                for cfg in configs}
     return {"iterations": len(configs), "distinct_settings": len(settings),
             "iterations_per_mechanism": dict(per_mechanism),
             "iterations_without_mutation": no_mutation}

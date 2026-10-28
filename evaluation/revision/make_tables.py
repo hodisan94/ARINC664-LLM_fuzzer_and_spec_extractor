@@ -71,8 +71,9 @@ def main():
     t80 = [[r["time_to_80pct"] for r in runs[c].values()] for c in cols]
     print("Time to $80\\%$ Rule Coverage & " + " & ".join(
         "N/A" if all(v is None for v in t) else str(t) for t in t80) + " \\\\")
-    valid = [pf[c]["valid_ratio"] for c in cols]
-    print("Ratio of Valid Messages & " + " & ".join(
+    # Was printed as "Ratio of Valid Messages"; it is the share of non-crashing iterations.
+    valid = [pf[c]["noncrash_ratio"] for c in cols]
+    print("Non-crashing iterations & " + " & ".join(
         f"${100 * v['mean']:.1f}\\%$" if v["n"] == 1 or v["sd"] == 0 else cell(v, "{:.3f}") for v in valid) + " \\\\")
     if uf:
         print("Unique Findings (categories) & " + " & ".join(cell(uf[c]) for c in cols) + " \\\\")
