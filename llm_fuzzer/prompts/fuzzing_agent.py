@@ -269,16 +269,26 @@ def _build_vl_statistics_section(
     lines.append("  3001  |  32     |  1024    |    64    |  ES3   |  1007")
     lines.append("  3002  |  32     |  1024    |    64    |  ES3   |  1007")
     
-    lines.append("\nMUTATION PARAMETERS THAT ACTUALLY AFFECT THE SIMULATOR:")
-    lines.append("  1. frame_size: frames exceeding MaxFrame trigger FrameError drop at switch")
-    lines.append("  2. timing_jitter_ms: changes send timing (negative=faster, positive=slower)")
-    lines.append("  3. bag_value: converted to jitter relative to BAG (e.g. bag_value=2 on VL with BAG=4 => jitter=-2)")
-    lines.append("  4. mac_mutation_type: 'spoof_src'|'spoof_dst'|'broadcast'|'invalid_src'|'zero_mac' => source MAC error drop at switch")
-    lines.append("  5. prob: 0.0-1.0 TX-drop probability (frames silently dropped before sending)")
-    lines.append("  6. sequence_number_override: force a specific seq num (e.g. 0=invalid, 255=stale) => rejection at receiving ES")
-    lines.append("  7. dest_mac_mutation: 'corrupt_prefix'|'wrong_vl'|'zero' => constant field rejection at receiving ES")
+    lines.append("\nMUTATION PARAMETERS THAT ACTUALLY AFFECT THE SIMULATOR (nothing else reaches it):")
+    lines.append("  1. frame_size: total frame size in bytes. Frames above the VL's MaxFrame or below its")
+    lines.append("     MinFrame (or outside 64..1518) are dropped by the switch's frame validation; MaxFrame")
+    lines.append("     and MinFrame themselves are valid.")
+    lines.append("  2. timing_jitter_ms: fixed offset in ms added to EVERY send interval of the target VL")
+    lines.append("     (e.g. -1 on a VL with BAG=4 sends every 3 ms; negative = faster than the BAG, which")
+    lines.append("     the switch's BAG policing should drop; positive = slower).")
+    lines.append("  3. bag_value: send interval in ms; converted to an offset relative to the BAG and added")
+    lines.append("     to timing_jitter_ms (e.g. bag_value=2 on a VL with BAG=4 => offset -2).")
+    lines.append("  4. mac_mutation_type: 'spoof_src'|'spoof_dst'|'broadcast'|'invalid_src'|'zero_mac' changes the")
+    lines.append("     source MAC; frames whose source MAC does not match the VL are dropped at the switch.")
+    lines.append("  5. prob: 0.0-1.0 probability of dropping each frame of the target VL at the sender.")
+    lines.append("  6. sequence_number_override: 1-255 forces this sequence number on every frame; 0 or null =")
+    lines.append("     no override (use 256 to send sequence number 0). A constant number makes the receiver")
+    lines.append("     discard the repeated frames as duplicates.")
+    lines.append("  7. dest_mac_mutation: 'corrupt_prefix'|'zero' break the constant 03:00:00:00 prefix, which")
+    lines.append("     the receiving ES rejects; 'wrong_vl' changes only the VL bytes, which nothing checks.")
     lines.append("")
-    lines.append("  NOTE: payload_pattern is NOT yet supported by the simulator.")
+    lines.append("  NOTE: payload_pattern, sequence-number ranges in test cases, and the predefined")
+    lines.append("  test_cases themselves are NOT sent to the simulator; only the parameters above are.")
     
     if not vl_statistics:
         lines.append("\nNo VL statistics yet (first iteration)")
@@ -325,8 +335,8 @@ def _build_decision_guidelines(iteration: int, coverage_stats: Optional[Dict[str
         "dest_mac_mutation:corrupt_prefix": "Dest MAC corruption — triggers ES constant-field check",
         "frame_size>1518": "Oversized frames — triggers switch frame-size validation",
         "timing_jitter_ms<0": "BAG violation (fast timing) — triggers BAG policing",
-        "sequence_number_override>0": "Sequence number override — triggers ES sequence check",
-        "token_bucket_stress": "Token bucket stress (frame_size=1500 + default BAG timing) — overflows bandwidth budget",
+        "sequence_number_override>0": "Sequence number override — constant number on every frame (receiver discards repeats as duplicates)",
+        "token_bucket_stress": "Token bucket stress (frame_size=1500 + default BAG timing) — frame_size 1500 is above every VL's MaxFrame, so these frames are dropped by frame validation first",
     }
     untested_mechs = {k: v for k, v in all_mechs.items() if k not in used_mechs}
 
@@ -357,26 +367,24 @@ DECISION GUIDELINES — Phase: {phase} (category coverage {cat_pct:.0f}%)
    - Set your 'mutation_type' to EXACTLY a rule name from the test cases list
    - This covers a new spec category AND gives you +1.0 new-rule bonus
 
-2. USE PREDEFINED TEST CASES (STRONGLY RECOMMENDED):
+2. PREDEFINED TEST CASES:
    - Look at the "PREDEFINED TEST CASES" section — {total_rules}+ rules available
-   - Match your chosen rule name to find its test cases
-   - Set test_cases to e.g. ["TC0", "TC1"]
+   - Use them to choose violating VALUES for your rule. The test_cases field itself
+     (e.g. ["TC0", "TC1"]) is NOT sent to the simulator: to exercise the rule, also set
+     the mutation parameters (frame_size, timing_jitter_ms, ...) to those values.
 
-3. CUSTOM MUTATIONS (when no predefined TCs exist):
-   - Propose specific values: bag_value, frame_size, sequence_number, etc.
+3. CUSTOM MUTATIONS:
+   - Propose specific values: bag_value, frame_size, timing_jitter_ms, etc.
 
 4. IMPORTANT — MUTATION MECHANISMS FOR BUG FINDING:
-   - mac_mutation_type: "spoof_src" => finds bugs in switch MAC validation
-   - dest_mac_mutation: "corrupt_prefix" => finds bugs in ES constant-field check
-   - frame_size: >1518 (e.g. 2000) => finds bugs in frame-size validation
-   - sequence_number_override: 0 or 255 => finds bugs in sequence checking
-   - timing_jitter_ms: negative value (e.g. -5) => finds bugs in BAG policing
-   - TOKEN BUCKET STRESS: frame_size=1500 (do NOT change bag_value!)
-     => Sends max-size VALID frames at the VL's NORMAL BAG rate.
-        CRITICAL: Do NOT set bag_value — keep default timing so BAG policing passes.
-        The large frame_size causes cumulative bandwidth to overflow the
-        token bucket, triggering policing drops from the bandwidth check.
-        This is the ONLY way to test token-bucket enforcement!
+   - mac_mutation_type: "spoof_src" => exercises switch source-MAC validation
+   - dest_mac_mutation: "corrupt_prefix" => exercises the ES constant-field check
+   - frame_size: above MaxFrame or below MinFrame of the VL => exercises frame-size validation
+   - sequence_number_override: forces one sequence number on every frame (the receiver
+     discards the repeats as duplicates)
+   - timing_jitter_ms: negative value (e.g. -1 on BAG=4) => exercises BAG policing
+   - Token bucket: frames that pass the BAG check never exceed the token bucket in this
+     switch configuration, so no input can exercise it.
    Combine these with different rules for maximum coverage!
 
 5. STRATEGY TYPES:
@@ -417,7 +425,8 @@ You have FULL CONTROL over testing approach. Choose what makes most sense:
 }
 
 YOUR CHOICE - MULTIPLE OPTIONS:
-1. Use PREDEFINED test cases: set "test_cases": ["TC0", "TC1"] (values from test cases list)
+1. Use PREDEFINED test cases to pick values, and set the matching parameters: the
+   "test_cases" field alone is not sent to the simulator
 2. Set SPECIFIC values yourself: set "bag_value": 0, etc. (you choose exact values)
 3. COMBINE both: use test cases AND add your own values
 4. You decide what's best based on protocol rules, history, and reward!

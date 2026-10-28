@@ -190,8 +190,9 @@ class FeedbackAnalyzer:
             if n_seen < 20:
                 parts.append("Coverage is LOW. Prioritize untested rules.")
             
-            if not strategy.get("test_cases"):
-                parts.append("TIP: Try using predefined test_cases for broader rule coverage.")
+            if strategy.get("test_cases"):
+                parts.append("NOTE: test_cases are not sent to the simulator; set the mutation "
+                             "parameters to exercise the rule.")
         
         if reward > 1.5:
             parts.append("High reward, but ensure you are not repeating the same mutation.")
