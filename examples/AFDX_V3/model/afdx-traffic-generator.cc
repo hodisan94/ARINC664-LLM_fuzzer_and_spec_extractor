@@ -10,6 +10,7 @@
 #include "ns3/simulator.h"
 #include "ns3/packet.h"
 #include "ns3/random-variable-stream.h"
+#include <cstdlib>
 #include <iomanip>
 #include <sstream>
 #include <sys/stat.h>
@@ -53,6 +54,25 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE("AfdxTrafficGenerator");
 NS_OBJECT_ENSURE_REGISTERED(AfdxTrafficGenerator);
+
+// AI FUZZER: interval to the next frame of the target VL. timing_jitter_ms is a fixed
+// offset added to every send interval: negative sends faster than the BAG, positive
+// slower. Floored at 100 us. (The earlier version drew a random value with
+// GetInteger(0, 2 * jitter), whose unsigned arguments wrapped for negative offsets and
+// silenced the VL.)
+static Time
+FuzzedSendInterval(Time bag)
+{
+  int offsetMs = g_mutationConfig.timingJitterMs;
+  Time offset = MilliSeconds(static_cast<uint64_t>(std::abs(static_cast<int64_t>(offsetMs))));
+  Time next = offsetMs < 0 ? bag - offset : bag + offset;
+  if (next < MicroSeconds(100))
+  {
+    next = MicroSeconds(100);
+  }
+  g_mutationConfig.jitterAppliedMs = static_cast<int>((next - bag).GetMilliSeconds());
+  return next;
+}
 
 TypeId
 AfdxTrafficGenerator::GetTypeId()
@@ -508,22 +528,11 @@ AfdxTrafficGenerator::TransmitFrame(uint16_t vlId)
         config.sequenceNumber = 1;
       }
       
-      // Schedule next transmission (with jitter if applicable)
+      // Schedule next transmission (with the timing offset if applicable)
       Time nextSend = config.vl.GetBag();
       if (g_mutationConfig.timingJitterMs != 0)
       {
-        Ptr<UniformRandomVariable> jitterRng = CreateObject<UniformRandomVariable>();
-        int jitter_ms = g_mutationConfig.timingJitterMs;
-        // GetInteger requires min < max, so use [0, 2*jitter] and subtract jitter
-        int applied_jitter = static_cast<int>(jitterRng->GetInteger(0, 2 * jitter_ms)) - jitter_ms;
-        Time jitterTime = MilliSeconds(applied_jitter);
-        nextSend = nextSend + jitterTime;
-        if (nextSend.IsNegative() || nextSend < MicroSeconds(100))
-        {
-          nextSend = MicroSeconds(100);
-          applied_jitter = 0;
-        }
-        g_mutationConfig.jitterAppliedMs = applied_jitter;
+        nextSend = FuzzedSendInterval(nextSend);
       }
       
       config.transmitEvent = Simulator::Schedule(nextSend,
@@ -635,22 +644,8 @@ AfdxTrafficGenerator::TransmitFrame(uint16_t vlId)
   Time nextSend = config.vl.GetBag();
   if (g_mutationConfig.isActive && g_mutationConfig.targetVL == vlId && g_mutationConfig.timingJitterMs != 0)
   {
-    Ptr<UniformRandomVariable> jitterRng = CreateObject<UniformRandomVariable>();
-    int jitter_ms = g_mutationConfig.timingJitterMs;
-    // GetInteger requires min < max, so use [0, 2*jitter] and subtract jitter
-    int applied_jitter = static_cast<int>(jitterRng->GetInteger(0, 2 * jitter_ms)) - jitter_ms;
-    Time jitterTime = MilliSeconds(applied_jitter);
-    nextSend = nextSend + jitterTime;
-    
-    // Safety: never schedule in the past
-    if (nextSend.IsNegative() || nextSend < MicroSeconds(100))
-    {
-      nextSend = MicroSeconds(100);
-      applied_jitter = 0;
-    }
-    
-    g_mutationConfig.jitterAppliedMs = applied_jitter;
-    NS_LOG_INFO("VL " << vlId << " timing jitter applied: " << applied_jitter << "ms");
+    nextSend = FuzzedSendInterval(nextSend);
+    NS_LOG_INFO("VL " << vlId << " timing offset applied: " << g_mutationConfig.jitterAppliedMs << "ms");
   }
   
   // Schedule next transmission (BAG period + optional jitter)
