@@ -175,32 +175,40 @@ class SimulatorRunner:
         """
         return f"run_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
     
-    def _translate_to_cpp_format(self, test_inputs: Dict[str, Any]) -> Dict[str, Any]:
-        """Translate Python test_inputs into the flat JSON the C++ simulator expects."""
+    def _translate_to_cpp_format(self, test_inputs: Dict[str, Any],
+                                 legacy: bool = False) -> Dict[str, Any]:
+        """Translate Python test_inputs into the flat JSON the C++ simulator expects.
+
+        legacy=True reproduces the translation used by the recorded campaigns (up to commit
+        0253d49), which dropped frame_size=0, dropped bag_value when timing_jitter_ms was also
+        set, and ignored 'sequence_number'. Analyses that rebuild those campaigns use it.
+        """
         vl_id = test_inputs.get('vl_id', 0)
         metadata = test_inputs.get('metadata', {})
-        
+
         # Get VL config, with sensible defaults for unknown VLs
         if vl_id in self.vl_configs:
             vl_cfg = self.vl_configs[vl_id]
         else:
             vl_cfg = {'base_size': 288, 'bag_ms': 8, 'min_size': 64, 'max_size': 512}
-        
+
         # payload_delta_bytes: C++ applies base + delta, where base = (min+max)/2
         payload_delta = 0
         frame_size = metadata.get('frame_size')
-        if frame_size:
+        # 0 is a requested (invalid) size, not "no request"
+        if (frame_size if legacy else frame_size is not None):
             payload_delta = int(frame_size) - vl_cfg['base_size']
-        
+
         timing_jitter = metadata.get('timing_jitter_ms') or 0
-        
+
         # BAG violation: if a non-standard bag_value is specified, express it as
-        # negative jitter so the C++ traffic generator sends frames faster than BAG
+        # negative jitter so the C++ traffic generator sends frames faster than BAG.
+        # It adds to an explicit timing_jitter_ms instead of being dropped.
         bag_value = metadata.get('bag_value')
-        if bag_value is not None and timing_jitter == 0:
+        if bag_value is not None and (timing_jitter == 0 or not legacy):
             normal_bag = vl_cfg['bag_ms']
             if int(bag_value) != normal_bag:
-                timing_jitter = int(bag_value) - normal_bag
+                timing_jitter += int(bag_value) - normal_bag
         
         mutation_type = metadata.get('mutation_type', '')
         mac_mutation = "none"
@@ -216,6 +224,12 @@ class SimulatorRunner:
         is_extreme = True  # always enable fuzz mode so switch can validate
         
         seq_override = int(metadata.get('sequence_number_override') or 0)
+        # Planners also request a sequence number through 'sequence_number' (the planner
+        # prompt's examples and the random baseline do); the simulator only has the override.
+        sequence_number = metadata.get('sequence_number')
+        if (not legacy and not seq_override
+                and isinstance(sequence_number, (int, float)) and sequence_number > 0):
+            seq_override = int(sequence_number)
         dest_mac_mut = metadata.get('dest_mac_mutation') or 'none'
         
         inject_bug = metadata.get('inject_bug', 'none')

@@ -70,7 +70,10 @@ def git_show(commit, path, dest):
 
 
 class Translator:
-    """SimulatorRunner._translate_to_cpp_format without the runner's side effects."""
+    """SimulatorRunner._translate_to_cpp_format without the runner's side effects.
+
+    Uses the legacy translation, i.e. the one the recorded campaigns ran with.
+    """
 
     def __init__(self):
         sys.path.insert(0, str(ROOT))
@@ -80,7 +83,8 @@ class Translator:
             self.runner, ROOT / "examples/AFDX_V3/config/virtual_links.csv")
 
     def __call__(self, vl_id, metadata):
-        return self.runner._translate_to_cpp_format({"vl_id": vl_id, "metadata": metadata})
+        return self.runner._translate_to_cpp_format({"vl_id": vl_id, "metadata": metadata},
+                                                    legacy=True)
 
 
 def mechanisms(cfg):
