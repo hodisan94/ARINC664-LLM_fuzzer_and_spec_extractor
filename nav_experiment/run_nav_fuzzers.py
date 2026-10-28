@@ -12,7 +12,7 @@ import argparse
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from llm_fuzzer.utils.simulator_runner import SimulatorRunner
+from llm_fuzzer.utils.simulator_runner import DEFAULT_NS3_PATH, SimulatorRunner
 
 NAV_DEFAULTS = dict(
     mutations_file="examples/AFDX_NAV/mutations.json",
@@ -27,7 +27,7 @@ def patch_simulator_runner():
     """Monkey-patch SimulatorRunner for NAV paths."""
     _orig_init = SimulatorRunner.__init__
 
-    def _nav_init(self, ns3_path="/home/hodisan1994/ns-3-reset/ns-3", **kwargs):
+    def _nav_init(self, ns3_path=DEFAULT_NS3_PATH, **kwargs):
         merged = {**NAV_DEFAULTS, **kwargs}
         _orig_init(self, ns3_path=ns3_path, **merged)
 
@@ -39,7 +39,7 @@ def patch_simulator_runner():
         result = _orig_run(self, test_inputs, scenario_name=scenario_name, **kwargs)
         if result['success'] and not result.get('csv_content'):
             from pathlib import Path
-            csv_file = Path("/home/hodisan1994/ns-3-reset/ns-3") / NAV_CSV
+            csv_file = Path(self.ns3_path) / NAV_CSV
             if csv_file.exists():
                 result['csv_content'] = csv_file.read_text()
         return result

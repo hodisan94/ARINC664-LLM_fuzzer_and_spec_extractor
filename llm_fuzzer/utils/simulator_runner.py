@@ -17,6 +17,10 @@ from pathlib import Path
 from datetime import datetime
 
 
+# ns-3 tree that contains examples/AFDX_V3; override with the AFDX_NS3_PATH environment variable.
+DEFAULT_NS3_PATH = os.environ.get("AFDX_NS3_PATH", "/home/hodisan1994/ns-3-reset/ns-3")
+
+
 class SimulatorRunner:
     """
     Runs ns-3 simulator with test frames and collects feedback.
@@ -30,7 +34,7 @@ class SimulatorRunner:
     
     def __init__(
         self,
-        ns3_path: str = "/home/hodisan1994/ns-3-reset/ns-3",
+        ns3_path: str = DEFAULT_NS3_PATH,
         mutations_file: str = "examples/AFDX_V3/mutations.json",
         output_dir: str = "examples/AFDX_V3/output",
         vl_config_file: str = "examples/AFDX_V3/config/virtual_links.csv",

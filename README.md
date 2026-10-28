@@ -924,8 +924,8 @@ python3 -u nav_experiment/run_nav_fuzzers.py --fuzzer all --iterations 200
 
 ## Known Implementation Details
 
-- `llm_fuzzer/utils/simulator_runner.py` defaults `ns3_path` to `/home/hodisan1994/ns-3-reset/ns-3`. If the repository is moved, either run from the same path or update/parameterize this default.
-- `nav_experiment/run_nav_fuzzers.py` also uses the same absolute root in its NAV monkey patch.
+- `llm_fuzzer/utils/simulator_runner.py` defaults `ns3_path` to `/home/hodisan1994/ns-3-reset/ns-3`. Set the `AFDX_NS3_PATH` environment variable to point the fuzzers, baselines and evaluation scripts at another ns-3 tree.
+- `nav_experiment/run_nav_fuzzers.py` uses the same default (and `AFDX_NS3_PATH`) in its NAV monkey patch.
 - The root README intentionally documents this research fork, not upstream ns-3. Upstream ns-3 documentation remains available under `doc/`, `CHANGES.md`, and `RELEASE_NOTES.md`.
 - The LLM fuzzer uses OpenAI as primary backend and Claude as fallback.
 - Specification extraction uses OpenAI, Anthropic, and Mistral as independent extractor providers.
