@@ -775,28 +775,32 @@ int main(int argc, char* argv[])
             priority = AFDX_PRIORITY_LOW;
         vl.SetPriority(priority);
         
-        // Apply mutations if this is the target VL
+        // Apply mutations if this is the target VL.
+        // Sizes here are FRAME sizes, as in virtual_links.csv and as the fuzzer requests
+        // them; the generator takes a PAYLOAD size, so the AFDX header is subtracted when
+        // the VL is added below. (Passing the frame size as the payload made every frame
+        // 17 bytes larger than requested.)
         // Use mid-point as base_size (not minFrameSize) so payload_delta can vary bidirectionally
+        const uint32_t kAfdxHeaderBytes = 17;  // 6 + 6 + 2 + 2 + 1, see AfdxVirtualLink
         uint32_t baseSize = (vlConfig.minFrameSize + vlConfig.maxFrameSize) / 2;
         uint32_t frameSize = baseSize;
-        
+
         if (g_mutationConfig.isActive && g_mutationConfig.targetVL == vlConfig.vlId)
         {
             int64_t candidate = static_cast<int64_t>(baseSize) + static_cast<int64_t>(g_mutationConfig.payloadDeltaBytes);
-            
+
             if (g_mutationConfig.isExtremeTest)
             {
                 // FUZZ MODE: allow out-of-range sizes so the switch can
-                // exercise its ValidateFrame() checks.  Clamp only to
-                // absolute Ethernet limits (17 header bytes … 1518 total).
-                if (candidate < 17)  candidate = 17;
-                if (candidate > 9000) candidate = 9000;   // jumbo-safe cap
-                frameSize = static_cast<uint32_t>(candidate);
-                if (candidate < static_cast<int64_t>(vlConfig.minFrameSize) ||
-                    candidate > static_cast<int64_t>(vlConfig.maxFrameSize))
+                // exercise its ValidateFrame() checks. Clamp only to a frame with a
+                // 1-byte payload and to a jumbo-safe cap.
+                int64_t smallest = static_cast<int64_t>(kAfdxHeaderBytes) + 1;
+                if (candidate < smallest || candidate > 9000)
                 {
-                    g_mutationConfig.payloadClampCount = 0; // not clamped
+                    candidate = candidate < smallest ? smallest : 9000;
+                    g_mutationConfig.payloadClampCount++;
                 }
+                frameSize = static_cast<uint32_t>(candidate);
             }
             else
             {
@@ -826,7 +830,7 @@ int main(int argc, char* argv[])
                         << ", extreme=" << (g_mutationConfig.isExtremeTest ? "YES" : "NO") << ")");
         }
         
-        gen->AddVirtualLink(vl, frameSize);
+        gen->AddVirtualLink(vl, frameSize - kAfdxHeaderBytes);
         
         // Set dual network devices based on source ES
         if (vlConfig.sourceES == 1)
