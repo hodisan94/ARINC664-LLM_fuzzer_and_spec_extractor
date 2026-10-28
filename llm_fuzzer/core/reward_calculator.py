@@ -18,11 +18,16 @@ import pandas as pd
 from typing import Dict, Any, Optional
 
 
-BASELINE_RECEIVED = 3559
-BASELINE_FORWARDED = 1757
-BASELINE_POLICING = 1802
-BASELINE_ES_REJECTED = 130
-BASELINE_ES_DUPLICATES = 1644
+# Counters of an unmutated afdx-demo run, in the units log_parser reports: switch counters
+# summed over both switches, end-system counters over all three end systems. Measured on
+# the simulator with the stage 2 fixes (one sender per VL, exact frame sizes, fixed timing
+# offset). The earlier values (3559 / 1757 / 1802 / 130 / 1644) were one switch's counters
+# of the two-sender scenario and saturated the impact term in every iteration.
+BASELINE_RECEIVED = 3380
+BASELINE_FORWARDED = 3380
+BASELINE_POLICING = 0
+BASELINE_ES_REJECTED = 0
+BASELINE_ES_DUPLICATES = 3380
 
 
 class RewardCalculator:
@@ -108,11 +113,15 @@ class RewardCalculator:
         if recv == 0:
             return 0.0
 
-        delta_recv = abs(recv - BASELINE_RECEIVED) / max(BASELINE_RECEIVED, 1)
-        delta_fwd = abs(fwd - BASELINE_FORWARDED) / max(BASELINE_FORWARDED, 1)
-        delta_pol = abs(pol - BASELINE_POLICING) / max(BASELINE_POLICING, 1)
-        delta_es_rej = abs(es_rej - BASELINE_ES_REJECTED) / max(BASELINE_ES_REJECTED, 1)
-        delta_es_dup = abs(es_dup - BASELINE_ES_DUPLICATES) / max(BASELINE_ES_DUPLICATES, 1)
+        # Each change is measured as a share of the baseline traffic. The clean baseline has
+        # no policing drops or rejections, so a change relative to each counter's own
+        # baseline would divide by zero.
+        traffic = max(BASELINE_RECEIVED, 1)
+        delta_recv = abs(recv - BASELINE_RECEIVED) / traffic
+        delta_fwd = abs(fwd - BASELINE_FORWARDED) / traffic
+        delta_pol = abs(pol - BASELINE_POLICING) / traffic
+        delta_es_rej = abs(es_rej - BASELINE_ES_REJECTED) / traffic
+        delta_es_dup = abs(es_dup - BASELINE_ES_DUPLICATES) / traffic
 
         all_deltas = [delta_recv, delta_fwd, delta_pol, delta_es_rej, delta_es_dup]
         return min(1.0, sum(all_deltas) / len(all_deltas) * 5.0)
