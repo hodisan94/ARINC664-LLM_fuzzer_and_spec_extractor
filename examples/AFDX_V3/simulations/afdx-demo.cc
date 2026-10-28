@@ -733,11 +733,11 @@ int main(int argc, char* argv[])
         for (uint32_t subES : vlConfig.subscriberES)
         {
             if (subES == 1)
-                es1->AddReceiveVL(vlConfig.vlId);
+                es1->AddReceiveVL(vl);
             else if (subES == 2)
-                es2->AddReceiveVL(vlConfig.vlId);
+                es2->AddReceiveVL(vl);
             else if (subES == 3)
-                es3->AddReceiveVL(vlConfig.vlId);
+                es3->AddReceiveVL(vl);
         }
         
         // Store VL configuration for CSV logging

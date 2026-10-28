@@ -47,7 +47,8 @@ public:
   // VL Management
   void AddTransmitVL(const AfdxVirtualLink& vl);
   void AddReceiveVL(uint16_t vlId);
-  
+  void AddReceiveVL(const AfdxVirtualLink& vl);  // also enables the per-VL payload size check
+
   // Network interfaces (for redundancy)
   void SetNetworkADevice(Ptr<NetDevice> device);
   void SetNetworkBDevice(Ptr<NetDevice> device);
@@ -98,6 +99,7 @@ private:
   // Virtual Links
   std::map<uint16_t, AfdxVirtualLink> m_transmitVLs;  // VLs this ES transmits
   std::vector<uint16_t> m_receiveVLs;                 // VLs this ES receives
+  std::map<uint16_t, AfdxVirtualLink> m_receiveVLConfigs;  // Size limits of received VLs
 
   // Transmission state
   std::map<uint16_t, uint8_t> m_sequenceNumbers;      // Current seq num per VL

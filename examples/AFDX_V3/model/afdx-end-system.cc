@@ -125,6 +125,13 @@ AfdxEndSystem::AddReceiveVL(uint16_t vlId)
 }
 
 void
+AfdxEndSystem::AddReceiveVL(const AfdxVirtualLink& vl)
+{
+  m_receiveVLConfigs[vl.GetVlId()] = vl;
+  AddReceiveVL(vl.GetVlId());
+}
+
+void
 AfdxEndSystem::SetNetworkADevice(Ptr<NetDevice> device)
 {
   m_deviceA = device;
@@ -494,12 +501,24 @@ AfdxEndSystem::ValidateFrame(const AfdxFrame& frame, uint32_t frameSize)
     return false;
   }
 
-  // If we have a configured VL for this VL ID, validate payload size is within range
+  // If we have a configured VL for this VL ID, validate payload size is within range.
+  // A receiver normally does not transmit the VLs it receives, so look up the
+  // received-VL configuration first.
   uint16_t vlId = frame.GetVirtualLinkId();
-  auto it = m_transmitVLs.find(vlId);
-  if (it != m_transmitVLs.end())
+  const AfdxVirtualLink* configured = nullptr;
+  auto rx = m_receiveVLConfigs.find(vlId);
+  auto tx = m_transmitVLs.find(vlId);
+  if (rx != m_receiveVLConfigs.end())
   {
-    const AfdxVirtualLink& vl = it->second;
+    configured = &rx->second;
+  }
+  else if (tx != m_transmitVLs.end())
+  {
+    configured = &tx->second;
+  }
+  if (configured)
+  {
+    const AfdxVirtualLink& vl = *configured;
     uint32_t minPayload = vl.GetMinPayloadSize();
     uint32_t maxPayload = vl.GetMaxPayloadSize();
     uint32_t payloadSize = frame.GetPayloadSize();
