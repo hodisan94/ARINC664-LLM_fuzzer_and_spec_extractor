@@ -1,0 +1,854 @@
+{
+  "address_validation": {
+    "mechanisms": [
+      "dest_mac",
+      "src_mac"
+    ],
+    "keywords": [
+      "address"
+    ]
+  },
+  "addressing": {
+    "mechanisms": [
+      "dest_mac",
+      "src_mac"
+    ],
+    "keywords": [
+      "address"
+    ]
+  },
+  "afdx_specific": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "broadcast_addressing": {
+    "mechanisms": [
+      "dest_mac",
+      "src_mac"
+    ],
+    "keywords": [
+      "address",
+      "broadcast"
+    ]
+  },
+  "broadcast_handling": {
+    "mechanisms": [
+      "dest_mac"
+    ],
+    "keywords": [
+      "broadcast"
+    ]
+  },
+  "buffer_management": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "communication_mode": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "communication_ports": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "communication_services": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "configuration": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "configuration_management": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "data_alignment": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "data_encoding": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "data_format": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "data_formatting": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "data_handling": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "data_integrity": {
+    "mechanisms": [
+      "seq_override",
+      "tx_drop"
+    ],
+    "keywords": [
+      "integrity"
+    ]
+  },
+  "data_link_layer": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "data_representation": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "data_segmentation": {
+    "mechanisms": [
+      "frame_size"
+    ],
+    "keywords": [
+      "segmentation"
+    ]
+  },
+  "data_size": {
+    "mechanisms": [
+      "frame_size"
+    ],
+    "keywords": [
+      "data_size"
+    ]
+  },
+  "data_structure": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "data_validation": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "end_system_communication": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "end_system_configuration": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "end_system_performance": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "error_handling": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ethernet_frame_compliance": {
+    "mechanisms": [
+      "frame_size"
+    ],
+    "keywords": [
+      "ethernet_frame"
+    ]
+  },
+  "fault_handling": {
+    "mechanisms": [
+      "tx_drop"
+    ],
+    "keywords": [
+      "fault"
+    ]
+  },
+  "fault_tolerance": {
+    "mechanisms": [
+      "tx_drop"
+    ],
+    "keywords": [
+      "fault"
+    ]
+  },
+  "flow_control": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "flow_control"
+    ]
+  },
+  "fragmentation": {
+    "mechanisms": [
+      "frame_size"
+    ],
+    "keywords": [
+      "fragmentation"
+    ]
+  },
+  "fragmentation_reassembly": {
+    "mechanisms": [
+      "frame_size"
+    ],
+    "keywords": [
+      "fragmentation",
+      "reassembly"
+    ]
+  },
+  "frame_configuration": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "frame_construction": {
+    "mechanisms": [
+      "frame_size"
+    ],
+    "keywords": [
+      "frame_construction"
+    ]
+  },
+  "frame_filtering": {
+    "mechanisms": [
+      "dest_mac",
+      "src_mac"
+    ],
+    "keywords": [
+      "filtering"
+    ]
+  },
+  "frame_formatting": {
+    "mechanisms": [
+      "frame_size"
+    ],
+    "keywords": [
+      "frame_formatting"
+    ]
+  },
+  "frame_identification": {
+    "mechanisms": [
+      "dest_mac",
+      "src_mac"
+    ],
+    "keywords": [
+      "frame_identification"
+    ]
+  },
+  "frame_integrity": {
+    "mechanisms": [
+      "seq_override",
+      "tx_drop"
+    ],
+    "keywords": [
+      "integrity"
+    ]
+  },
+  "frame_latency": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "latency"
+    ]
+  },
+  "frame_length": {
+    "mechanisms": [
+      "frame_size"
+    ],
+    "keywords": [
+      "frame_length"
+    ]
+  },
+  "frame_routing": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "frame_size": {
+    "mechanisms": [
+      "frame_size"
+    ],
+    "keywords": [
+      "frame_size"
+    ]
+  },
+  "frame_structure": {
+    "mechanisms": [
+      "frame_size"
+    ],
+    "keywords": [
+      "frame_structure"
+    ]
+  },
+  "frame_transmission": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "frame_validation": {
+    "mechanisms": [
+      "frame_size"
+    ],
+    "keywords": [
+      "frame_validation"
+    ]
+  },
+  "initialization": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "integrity_checking": {
+    "mechanisms": [
+      "seq_override",
+      "tx_drop"
+    ],
+    "keywords": [
+      "integrity"
+    ]
+  },
+  "interoperability": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ip_addressing": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ip_datagram_processing": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ip_forwarding_ttl_management": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ip_header": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ip_layer_addressing": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ip_layer_configuration": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ip_layer_fragmentation_and_reassembly": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ip_layer_header_validation": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ip_layer_ip_options": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ip_layer_ttl_handling": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ip_layer_type_of_service": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ip_protocol": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ip_protocol_validation": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ipv4_packet_length": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ipv4_packet_structure": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "jitter": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "jitter"
+    ]
+  },
+  "latency_calculation": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "latency"
+    ]
+  },
+  "latency_determinism": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "latency"
+    ]
+  },
+  "link_behavior": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "mac_addressing": {
+    "mechanisms": [
+      "dest_mac",
+      "src_mac"
+    ],
+    "keywords": [
+      "mac",
+      "address"
+    ]
+  },
+  "mac_performance": {
+    "mechanisms": [
+      "dest_mac",
+      "src_mac"
+    ],
+    "keywords": [
+      "mac"
+    ]
+  },
+  "message_format": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "message_formatting": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "message_ordering": {
+    "mechanisms": [
+      "seq_override",
+      "tx_drop"
+    ],
+    "keywords": [
+      "message_ordering"
+    ]
+  },
+  "message_structure": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "message_transmission": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "network_architecture": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "network_behavior": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "network_functions": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "network_layer": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "network_monitoring": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "network_performance": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "operating_modes": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ordinal_integrity": {
+    "mechanisms": [
+      "seq_override",
+      "tx_drop"
+    ],
+    "keywords": [
+      "ordinal",
+      "integrity"
+    ]
+  },
+  "performance": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "physical_configuration": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "physical_layer": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "policing": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "policing"
+    ]
+  },
+  "port_allocation": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "port_configuration": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "port_management": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "ports": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "protocol_compliance": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "protocol_encapsulation": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "protocol_profile": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "protocol_stack": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "protocol_usage": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "quality_of_service": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "reassembly_and_fragmentation": {
+    "mechanisms": [
+      "frame_size"
+    ],
+    "keywords": [
+      "fragmentation",
+      "reassembly"
+    ]
+  },
+  "reception": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "redundancy": {
+    "mechanisms": [
+      "seq_override"
+    ],
+    "keywords": [
+      "redundancy"
+    ]
+  },
+  "redundancy_management": {
+    "mechanisms": [
+      "seq_override"
+    ],
+    "keywords": [
+      "redundancy"
+    ]
+  },
+  "reliability": {
+    "mechanisms": [
+      "tx_drop"
+    ],
+    "keywords": [
+      "reliability"
+    ]
+  },
+  "safety_critical_communication": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "sap_port": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "scheduling": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "scheduling"
+    ]
+  },
+  "sequence_numbering": {
+    "mechanisms": [
+      "seq_override",
+      "tx_drop"
+    ],
+    "keywords": [
+      "sequence"
+    ]
+  },
+  "service_guarantees": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "service_quality": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "status_indication": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "sub_vl_exclusivity": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "sub_vl_fragmentation": {
+    "mechanisms": [
+      "frame_size"
+    ],
+    "keywords": [
+      "fragmentation"
+    ]
+  },
+  "sub_vl_layering": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "sub_vl_queue_management": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "sub_vl_scheduling": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "scheduling"
+    ]
+  },
+  "switch": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "switch_behavior": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "switch_buffering": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "switch_configuration": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "switch_filtering": {
+    "mechanisms": [
+      "dest_mac",
+      "src_mac"
+    ],
+    "keywords": [
+      "filtering"
+    ]
+  },
+  "switch_initialization": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "switch_modes": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "switch_monitoring": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "switch_operating_modes": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "switch_operational_modes": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "switch_operations": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "switch_performance": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "switch_processing": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "switch_specification": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "switch_timing": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "timing"
+    ]
+  },
+  "switch_traffic_policing": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "policing"
+    ]
+  },
+  "switching": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "timing": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "timing"
+    ]
+  },
+  "traffic_control": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "traffic_control"
+    ]
+  },
+  "traffic_integrity": {
+    "mechanisms": [
+      "seq_override",
+      "tx_drop"
+    ],
+    "keywords": [
+      "integrity"
+    ]
+  },
+  "traffic_policing": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "policing"
+    ]
+  },
+  "traffic_prioritization": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "traffic_shaping": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "shaping"
+    ]
+  },
+  "transmission": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "transport_layer_addressing": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "udp_checksum_handling": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "udp_protocol": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "virtual_link": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "virtual_link_bandwidth": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "bandwidth"
+    ]
+  },
+  "virtual_link_bandwidth_isolation": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "bandwidth"
+    ]
+  },
+  "virtual_link_configuration": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "virtual_link_data_integrity": {
+    "mechanisms": [
+      "seq_override",
+      "tx_drop"
+    ],
+    "keywords": [
+      "integrity"
+    ]
+  },
+  "virtual_link_definition": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "virtual_link_latency": {
+    "mechanisms": [
+      "timing"
+    ],
+    "keywords": [
+      "latency"
+    ]
+  },
+  "virtual_link_management": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "virtual_link_partition_segregation": {
+    "mechanisms": [
+      "dest_mac",
+      "src_mac"
+    ],
+    "keywords": [
+      "segregation",
+      "partition"
+    ]
+  },
+  "virtual_link_source_uniqueness": {
+    "mechanisms": [
+      "dest_mac",
+      "src_mac"
+    ],
+    "keywords": [
+      "source_uniqueness"
+    ]
+  },
+  "virtual_links_default_configuration": {
+    "mechanisms": [],
+    "keywords": []
+  },
+  "vl_configuration": {
+    "mechanisms": [],
+    "keywords": []
+  }
+}

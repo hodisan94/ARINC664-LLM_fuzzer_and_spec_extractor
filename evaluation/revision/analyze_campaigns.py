@@ -34,6 +34,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "evaluation" / "revision"))
 
 import audit_final_rules as audit  # noqa: E402
+import category_mechanisms as cm  # noqa: E402
 import executed_settings as es  # noqa: E402
 import recompute_coverage_venn as rcv  # noqa: E402
 
@@ -69,7 +70,7 @@ def checklist_categories(categories_of):
 
 
 def history_metrics(path, categories_of, bdr, loose_categories_of, statements, rejected_only,
-                    single_category_of):
+                    single_category_of, category_mechanisms):
     rows = es.load(Path(path))
     configs = [r.get("sim_config") for r in rows]
     if any(c is None for c, r in zip(configs, rows) if r.get("simulation_success")):
@@ -80,16 +81,21 @@ def history_metrics(path, categories_of, bdr, loose_categories_of, statements, r
     labels, executed_labels, curve = set(), set(), []
     # One merged category per label (rcv.build_single_matcher), next to the paper's matcher
     single, single_executed = set(), set()
+    # ... and only when a mutation that can test that category was executed (category_mechanisms)
+    single_matched = set()
     for row, cfg, ran in zip(rows, configs, executed):
         cats = categories_of(row.get("protocol_rule") or "") if ran else set()
         labels |= cats
         one = single_category_of(row.get("protocol_rule") or "") if ran else None
         if one:
             single.add(one)
-        if cfg and es.mechanisms(cfg):
+        used = es.mechanisms(cfg) if cfg else []
+        if used:
             executed_labels |= cats
             if one:
                 single_executed.add(one)
+                if set(used) & set(category_mechanisms[one]["mechanisms"]):
+                    single_matched.add(one)
         curve.append(len(labels))
     run_labels = {r.get("protocol_rule") for r, ran in zip(rows, executed) if ran and r.get("protocol_rule")}
     threshold = 0.8 * N_CATEGORIES
@@ -113,6 +119,8 @@ def history_metrics(path, categories_of, bdr, loose_categories_of, statements, r
         "rule_coverage_single_executed": len(single_executed),
         "categories_single": sorted(single),
         "categories_single_executed": sorted(single_executed),
+        "rule_coverage_single_matched": len(single_matched),
+        "categories_single_matched": sorted(single_matched),
         "distinct_labels": len(run_labels),
         "labels_not_mapped": len({lbl for lbl in run_labels if not categories_of(lbl)}),
         "rule_coverage_loose": len(set().union(*(loose_categories_of(lbl) for lbl in run_labels))),
@@ -199,6 +207,9 @@ def main():
     loose_categories_of = rcv.build_loose_matcher(spec_rules, categories_of)
     single_category_of = rcv.build_single_matcher(spec_rules)
     print(f"merged categories (one per normalized name): {len(single_category_of.categories)}")
+    category_mechanisms = cm.build_table(spec_rules)
+    testable = {c for c, v in category_mechanisms.items() if v["mechanisms"]}
+    print(f"merged categories testable by a simulator mutation: {len(testable)}")
     statements, n_statements = checklist_categories(categories_of)
     rejected_only = rejected_only_categories(spec_rules)
     print(f"categories with only rejected rules: {len(rejected_only)}")
@@ -217,7 +228,8 @@ def main():
         if missing:
             print(f"WARNING: no BDR replay entry (crashes, bug detection) for {missing}")
         per_run[name] = {p: history_metrics(p, categories_of, bdr, loose_categories_of, statements,
-                                            rejected_only, single_category_of) for p in paths}
+                                            rejected_only, single_category_of, category_mechanisms)
+                         for p in paths}
 
     # The baselines draw their labels from the test-case catalogue, which reaches only part of
     # the categories; the LLM planner can name any rule. Coverage restricted to the categories
@@ -234,11 +246,14 @@ def main():
             r["rule_coverage_single_shared"] = len(shared_single & set(r["categories_single"]))
             r["rule_coverage_single_shared_executed"] = len(
                 shared_single & set(r["categories_single_executed"]))
+            r["rule_coverage_single_shared_matched"] = len(
+                shared_single & set(r["categories_single_matched"]))
 
     metrics = ("rule_coverage", "rule_coverage_executed", "rule_coverage_loose",
                "rule_coverage_single", "rule_coverage_single_executed",
                "rule_coverage_shared", "rule_coverage_shared_executed",
                "rule_coverage_single_shared", "rule_coverage_single_shared_executed",
+               "rule_coverage_single_matched", "rule_coverage_single_shared_matched",
                "rejected_only_covered", "rule_coverage_pct_without_rejected", "checklist_statements",
                "checklist_statements_executed", "distinct_labels", "labels_not_mapped", "noncrash_ratio",
                "bugs_detected", "llm_cost_usd")
