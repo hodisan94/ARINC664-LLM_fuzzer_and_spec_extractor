@@ -721,13 +721,12 @@ int main(int argc, char* argv[])
             priority = AFDX_PRIORITY_LOW;
         vl.SetPriority(priority);
 
-        // Add VL to source ES
-        if (vlConfig.sourceES == 1)
-            es1->AddTransmitVL(vl);
-        else if (vlConfig.sourceES == 2)
-            es2->AddTransmitVL(vl);
-        else if (vlConfig.sourceES == 3)
-            es3->AddTransmitVL(vl);
+        // The end systems only receive. Transmission is done by the AfdxTrafficGenerator
+        // created below, which applies the fuzzer's mutations. The end systems are
+        // aggregated to their nodes and therefore started at time 0 even without
+        // AddApplication, so giving them transmit VLs (AddTransmitVL) made every VL
+        // carry a second, unmutated stream that the switch then policed against the
+        // fuzzed one.
 
         // Add VL to subscriber ES (for receiving)
         for (uint32_t subES : vlConfig.subscriberES)
