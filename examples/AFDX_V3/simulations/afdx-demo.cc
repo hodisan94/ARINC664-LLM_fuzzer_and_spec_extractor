@@ -514,9 +514,12 @@ std::vector<VLConfig> ParseVirtualLinksCSV(const std::string& filename)
     // Skip header and comments
     while (std::getline(file, line))
     {
+        // Accept Windows (CRLF) line endings: a bare "\r" line would otherwise reach stoi
+        if (!line.empty() && line.back() == '\r')
+            line.pop_back();
         if (line.empty() || line[0] == '#')
             continue;
-            
+
         std::istringstream ss(line);
         VLConfig config;
         std::string token;
