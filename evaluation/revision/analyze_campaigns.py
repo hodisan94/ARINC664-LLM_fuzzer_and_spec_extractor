@@ -68,7 +68,8 @@ def checklist_categories(categories_of):
             if v["status"] == "covered" and rule_of(v.get("rule_id"))}, len(items)
 
 
-def history_metrics(path, categories_of, bdr, loose_categories_of, statements, rejected_only):
+def history_metrics(path, categories_of, bdr, loose_categories_of, statements, rejected_only,
+                    single_category_of):
     rows = es.load(Path(path))
     configs = [r.get("sim_config") for r in rows]
     if any(c is None for c, r in zip(configs, rows) if r.get("simulation_success")):
@@ -77,11 +78,18 @@ def history_metrics(path, categories_of, bdr, loose_categories_of, statements, r
     crashed = set(bdr[str(path)]["crashed_iterations"]) if bdr and str(path) in bdr else set()
     executed = [bool(r.get("simulation_success")) and r.get("iteration") not in crashed for r in rows]
     labels, executed_labels, curve = set(), set(), []
+    # One merged category per label (rcv.build_single_matcher), next to the paper's matcher
+    single, single_executed = set(), set()
     for row, cfg, ran in zip(rows, configs, executed):
         cats = categories_of(row.get("protocol_rule") or "") if ran else set()
         labels |= cats
+        one = single_category_of(row.get("protocol_rule") or "") if ran else None
+        if one:
+            single.add(one)
         if cfg and es.mechanisms(cfg):
             executed_labels |= cats
+            if one:
+                single_executed.add(one)
         curve.append(len(labels))
     run_labels = {r.get("protocol_rule") for r, ran in zip(rows, executed) if ran and r.get("protocol_rule")}
     threshold = 0.8 * N_CATEGORIES
@@ -101,6 +109,10 @@ def history_metrics(path, categories_of, bdr, loose_categories_of, statements, r
         "rule_coverage_executed": len(executed_labels),
         "categories": sorted(labels),
         "categories_executed": sorted(executed_labels),
+        "rule_coverage_single": len(single),
+        "rule_coverage_single_executed": len(single_executed),
+        "categories_single": sorted(single),
+        "categories_single_executed": sorted(single_executed),
         "distinct_labels": len(run_labels),
         "labels_not_mapped": len({lbl for lbl in run_labels if not categories_of(lbl)}),
         "rule_coverage_loose": len(set().union(*(loose_categories_of(lbl) for lbl in run_labels))),
@@ -185,6 +197,8 @@ def main():
     spec_rules = json.loads((ROOT / "configs/spec_rules_filtered.json").read_text())
     categories_of = rcv.build_matcher(spec_rules)
     loose_categories_of = rcv.build_loose_matcher(spec_rules, categories_of)
+    single_category_of = rcv.build_single_matcher(spec_rules)
+    print(f"merged categories (one per normalized name): {len(single_category_of.categories)}")
     statements, n_statements = checklist_categories(categories_of)
     rejected_only = rejected_only_categories(spec_rules)
     print(f"categories with only rejected rules: {len(rejected_only)}")
@@ -203,9 +217,10 @@ def main():
         if missing:
             print(f"WARNING: no BDR replay entry (crashes, bug detection) for {missing}")
         per_run[name] = {p: history_metrics(p, categories_of, bdr, loose_categories_of, statements,
-                                            rejected_only) for p in paths}
+                                            rejected_only, single_category_of) for p in paths}
 
     metrics = ("rule_coverage", "rule_coverage_executed", "rule_coverage_loose",
+               "rule_coverage_single", "rule_coverage_single_executed",
                "rejected_only_covered", "rule_coverage_pct_without_rejected", "checklist_statements",
                "checklist_statements_executed", "distinct_labels", "labels_not_mapped", "noncrash_ratio",
                "bugs_detected", "llm_cost_usd")

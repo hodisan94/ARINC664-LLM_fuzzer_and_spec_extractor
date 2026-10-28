@@ -79,6 +79,58 @@ def build_matcher(spec_rules):
     return categories_of
 
 
+def build_single_matcher(spec_rules):
+    """At most one category per label, in merged-category units.
+
+    build_matcher can give one label several categories: an exact sub-rule match, the part
+    after and before a dot, and prefix matches in both directions (e.g. "switch" matches 16
+    categories). The 185 categories also contain 31 groups whose names differ only in case,
+    spaces, underscores or hyphens ("Frame Size" / "frame_size"); they are merged here into
+    one category per normalized name (153).
+
+    Returns a function label -> normalized category name, or None. Order of preference:
+      1. the label is a category name;
+      2. the label is a sub-rule name;
+      3. the part after the last dot is a sub-rule name (preferring a sub-rule of the
+         category named before the first dot);
+      4. the part before the first dot is a category name;
+      5. the most specific (longest) category name that the label starts with.
+    A sub-rule name listed under several categories is resolved by step 3's preference,
+    else by the alphabetically first category, so the result is deterministic.
+    """
+    cats = sorted({normalize_rule_name(c) for c in spec_rules})
+    cat_set = set(cats)
+    sub_to_cats = {}
+    for cat, content in spec_rules.items():
+        if isinstance(content, dict):
+            for sub in content:
+                sub_to_cats.setdefault(normalize_rule_name(sub), set()).add(normalize_rule_name(cat))
+
+    def pick(candidates, preferred=None):
+        if preferred in candidates:
+            return preferred
+        return sorted(candidates)[0]
+
+    def category_of(raw_rule):
+        norm = normalize_rule_name(raw_rule)
+        if norm in cat_set:
+            return norm
+        if norm in sub_to_cats:
+            return pick(sub_to_cats[norm])
+        parts = raw_rule.split(".")
+        if len(parts) > 1:
+            first, last = normalize_rule_name(parts[0]), normalize_rule_name(parts[-1])
+            if last in sub_to_cats:
+                return pick(sub_to_cats[last], preferred=first)
+            if first in cat_set:
+                return first
+        prefixes = [c for c in cats if norm.startswith(c + "_")]
+        return max(prefixes, key=len) if prefixes else None
+
+    category_of.categories = cats
+    return category_of
+
+
 def build_loose_matcher(spec_rules, strict, threshold=0.5):
     """Sensitivity mapping: strict match first; otherwise the category of the
     best token-Jaccard match among category and rule names, if >= threshold."""
