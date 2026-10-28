@@ -239,8 +239,29 @@ independent review.
 
 **Why it matters.** The fuzzer could only ever test the first three switch checks. The
 token bucket, forwarding, and all receiver checks described in the paper never saw fuzzed
-traffic. This affects every fuzzer equally, so it is not unfair by itself. But it changes
-what Experiments 2 and 3 can claim.
+traffic. This changes what Experiments 2 and 3 can claim.
+
+**It does not affect all fuzzers equally** (corrected; an earlier version of this document
+said it did). Which mutations the hidden sender also applies depends on the mutation type:
+
+- **Can reach the receivers through the hidden sender:** sequence-number override and
+  destination MAC (`afdx-end-system.cc:218-256`).
+- **Applied only to the fuzzer's own frames, which the switch drops:** frame size, source
+  MAC, timing and sender drop.
+
+The three fuzzers use different mixes of these:
+
+| Fuzzer (mean per run) | Mutated iterations | Include a sequence or destination-MAC mutation | Only size, source-MAC, timing or drop mutations |
+|---|---|---|---|
+| LLM full (5 runs) | 154.8 | 24.4 (16%) | 130.4 |
+| Random (5 runs) | 135.2 | 34.0 (25%) | 101.2 |
+| BOOFUZZ (1 run) | 130.0 | 45.0 (35%) | 85.0 |
+
+Bugs 2 and 3 are also uneven: random sends about twice as many negative-jitter tests as
+the LLM fuzzer, and the 17-byte error helps the LLM fuzzer and hurts the baselines. So
+the simulator bugs can change the **ranking** of the fuzzers, not only the absolute
+numbers. A replay on a fixed simulator is needed to know how. (This point was raised by a
+second review, by Cursor, of this document.)
 
 **Suggested fix.** Do not call `AddTransmitVL` on the end systems, as tested above, or do
 not start the generator. Then re-run the simulator's unit tests and replay all logged
@@ -294,7 +315,8 @@ LLM runs r1–r5, 44 times in BOOFUZZ, and 63–80 times per random run.
 **Why it matters.**
 
 - Every BAG-violation test in the paper, for every fuzzer, actually tested "two frames,
-  then silence".
+  then silence". The waste is uneven: about 70 tests per random run, 44 for BOOFUZZ, and
+  about 31 per LLM run.
 - The planner prompt (`fuzzing_agent.py`), the paper and the letter all describe the
   parameter as a timing offset ("negative = faster, positive = slower").
 - `context/DIAGNOSIS.md` concluded "Jitter WORKS — frame counts change". The counts
@@ -334,6 +356,10 @@ Reviewer counts, consistent with the examples:
 
 - Legal sizes that were dropped: 70, 74, 62, 56, 69 iterations in LLM runs r1–r5.
 - Illegal sizes that were accepted: 47 iterations in BOOFUZZ and 15–20 in each random run.
+  These counts include only sizes within 17 bytes below the minimum (the Bug 3 effect).
+  Counting every undersize request that caused no frame-error drop gives 51 for BOOFUZZ
+  and 36 / 28 for random s1 / s2. The difference is mostly `frame_size = 0`, which is a
+  separate bug (Bug 16).
 - Of the LLM's frame-validation detections, 56–74 per run come from legal sizes.
 
 **How it was found.**
@@ -593,7 +619,9 @@ one point for every topic it touched.
 - The LLM may choose from the whole book (the rule list) and can reach all 185.
 
 The LLM's higher score partly reflects the bigger book, not better fuzzing. Counting only
-the 90 topics that every fuzzer can reach, BOOFUZZ scores highest.
+the 90 topics that every fuzzer can reach, BOOFUZZ has the most labeled topics. Because
+labels are not proof of testing, this shows that the LLM's lead disappears, not that
+BOOFUZZ is better.
 
 **Details.**
 
