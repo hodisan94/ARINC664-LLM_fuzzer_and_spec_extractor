@@ -122,5 +122,39 @@ campaigns.
 
 | Stage | Status |
 |---|---|
-| 1 | In progress |
+| 1 | Done (2026-10-28), branch `fix/revision-bugs`, one commit per bug |
 | 2–8 | Not started |
+
+### Stage 1 results
+
+**How it was checked**
+
+- **Simulator test programs.** Built in `/tmp/ns3_fixtest` from the fix branch; all
+  145 tests pass (58 sending end system, 46 switch, 41 receiving end system), the same
+  as on the unchanged code.
+- **Translation.** The previous translation is kept as `legacy=True`.
+  `executed_settings.Translator`, and through it `bdr_replay.py`, uses it, so analyses of
+  the recorded campaigns are unchanged. Legacy mode reproduces the logged `sim_config`
+  of all 2,800 recorded iterations.
+
+**What each fix changes**
+
+| Bug | Fix | Effect |
+|---|---|---|
+| 25 | CRLF `virtual_links.csv` | The simulator loads LF and CRLF files with identical results. |
+| 12 | BAG tolerance | **This changes the clean baseline.** Forwarded 3,626 → 3,651, BAG drops 3,492 → 3,467, receiver rejections 264 → 214. Reverting only this line restores the original numbers exactly, so the whole change comes from this fix. Some frames arrive a few microseconds early because of queueing, and the old zero tolerance dropped them. This contradicts the "no demonstrated effect" status of Bug 12 in `REVISION_FINDINGS.md`. |
+| 13 | Separate token-bucket counter | New counter `afdxFramesDroppedTokenBucket`, 0 in all checked runs. `skip_token_bucket` is now detected through it. |
+| 14 | Receiver size check | No change in the clean run. With Bug 1 still present, oversized fuzzer frames never reach the receivers, even with frame validation skipped. It becomes observable after Stage 2. |
+| 16 | Ignored requests | The fixed translation differs from the logged inputs in 0–22 iterations per run (random 16–22, LLM 7–15, BOOFUZZ 3). |
+| 20 | Policing rate units | On the logged runs every iteration is now labelled "Fair" instead of "Excellent", because of the 49% clean drop rate (Bug 1). It becomes informative after Stage 2. `bugs_found` is unchanged: it is a valid oracle that the bug-free simulator never triggers. |
+| 21 | Metric names | `distinct_settings` falls by 6–7 per run (A0 and A1 are unchanged). `valid_ratio` is renamed `noncrash_ratio`; the table row is now "Non-crashing iterations". |
+| 22 | Windows paths | Checked: a backslash path now finds the BOOFUZZ crash list. |
+| 23 | BOOFUZZ resume | A campaign resumed at iteration 120 now plans the same 200 violations as an uninterrupted one. The old code did not. |
+| 24 | ns-3 path | Set with `AFDX_NS3_PATH`; the default is unchanged. |
+
+**Notes for Stage 2**
+
+- `compute_bdr.run_single_iteration` (the original Experiment 3 script) still calls the
+  runner's current translation. Use `bdr_replay.py` to reproduce the recorded results.
+- The planner prompt says `sequence_number_override` 0 means "invalid". In the
+  simulator, 0 means "no override". Fix this with the other prompt corrections.
