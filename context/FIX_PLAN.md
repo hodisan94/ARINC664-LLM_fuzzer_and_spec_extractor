@@ -124,7 +124,8 @@ campaigns.
 |---|---|
 | 1 | Done (2026-10-28), branch `fix/revision-bugs`, one commit per bug |
 | 2 | Done (2026-10-28), same branch, one commit per fix |
-| 3–8 | Not started |
+| 3 | Done (2026-10-28), same branch; recorded campaigns re-scored, nothing re-run |
+| 4–8 | Not started |
 
 ### Stage 1 results
 
@@ -229,3 +230,64 @@ The author has **not** confirmed whether the second sender (Bug 1) was intended.
 - These inputs never detect the sequence, token-bucket and VL-check bugs. That is
   Bugs 7, 8 and 11, for Stage 5.
 - `skip_frame_validation` and `accept_oversized` are still the same check (Bug 9).
+
+### Stage 3 results
+
+**Commits**
+
+| Commit | Change |
+|---|---|
+| `1116a2d` | Bug 17: one category per label (`build_single_matcher`) |
+| `f866995` | Bug 4: coverage on the label universe shared by all fuzzers |
+| `52d5a49` | Bug 18: mechanism-matched coverage |
+| `5516145` | Re-scored metrics saved as `evaluation/results/revision/campaign_metrics_rescored.json` |
+
+The original `campaign_metrics.json` is untouched. Every metric present in both files is
+identical, except `distinct_settings` (Stage 1) and `valid_ratio`, which is renamed
+`noncrash_ratio`.
+
+**New finding (Bug 26): the 185 categories are 153 distinct names.** 31 groups differ
+only in case, spaces, underscores or hyphens ("Frame Size" / "frame_size", "Physical
+Layer" / "Physical_Layer" / "physical_layer"). The paper's matcher merges each group to
+one member, so the others are almost unreachable, and every coverage percentage over 185
+is understated. The new measures count over the 153 merged names.
+
+**The mechanism table (Bug 18).** It is approximate, built from category names. 54 of
+the 153 merged categories can be tested by at least one simulator parameter. The other
+99 cannot: IP and UDP fields, ports, configuration, initialization, and generic names
+such as "Switch" or "Performance". The rules are conservative and identical for every
+fuzzer. Review them in `category_mechanisms.json`.
+
+**Re-scored recorded campaigns** (mean over runs; LLM and Random have 5 runs, the others
+1):
+
+| Measure | Universe | LLM | BOOFUZZ | Random | A1 | A2 | A0 |
+|---|---|---|---|---|---|---|---|
+| Labels, paper matcher | 185 | 95.4 | 86 | 47.2 | 95 | 49 | 6 |
+| Executed, paper matcher | 185 | 88.0 | 61 | 39.6 | 95 | 43 | 6 |
+| Labels, one category per label | 153 merged | 85.0 | 72 | 41.0 | 88 | 42 | 5 |
+| Executed, one category per label | 153 merged | 79.2 | 51 | 34.4 | 88 | 35 | 5 |
+| Labels, shared universe | 90 | 65.4 | **86** | 47.2 | 54 | 49 | 6 |
+| Executed, shared universe | 90 | 58.2 | **61** | 39.6 | 54 | 43 | 6 |
+| Labels, merged and shared | 75 | 54.0 | **72** | 41.0 | 47 | 42 | 5 |
+| Executed, merged and shared | 75 | 48.4 | **51** | 34.4 | 47 | 35 | 5 |
+| Mechanism-matched | 54 testable | **24.0** | 14 | 6.4 | 32 | 8 | 3 |
+| Mechanism-matched and shared | 27 | 14.2 | 14 | 6.4 | 17 | 8 | 3 |
+
+**How to read the table**
+
+- On every measure restricted to the shared label universe, BOOFUZZ is level with or
+  ahead of the LLM fuzzer.
+- Only the mechanism-matched measure over all testable categories favors the LLM fuzzer
+  (24.0 vs 14). That lead comes from categories the baselines cannot name.
+- These numbers come from the **recorded campaigns**, which ran on the unfixed simulator.
+  Coverage is computed from labels and planned parameters, so the simulator bugs do not
+  change it directly. They did shape what the LLM was told and which feedback it received.
+
+**Other notes**
+
+- Running `analyze_campaigns.py` on Windows needs `PYTHONUTF8=1`: some files are read with
+  the system's default encoding. This is a portability issue only.
+- The controller's steering (`strategy_planner.rule_category`) still uses the paper's
+  matcher. Changing it would change future campaigns, so it is left for the Stage 7
+  decision.
