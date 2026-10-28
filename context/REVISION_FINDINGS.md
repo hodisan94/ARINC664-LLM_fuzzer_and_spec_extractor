@@ -6,6 +6,23 @@ the response letter for the TAES major revision (TAES-2026-2779), after the harn
 in commit `0253d49`.
 **No LLM API was called. Nothing in the code or the results has been changed.**
 
+**Independent verification (2026-10-28).** A colleague checked this report independently
+against commit `0253d49`. They rebuilt `afdx-demo` from the official ns-3.45 source in
+Docker, mounted the repository read-only, ran their own simulator probes, and recomputed
+the metrics from all 2,800 saved iterations. Their review confirmed the major bugs and
+corrected several statements in an earlier version of this document:
+
+- `configs/` **is** tracked by git. The earlier claim that it was not came from a file
+  listing that filtered out `.json` files.
+- They proved that the test cases date from March (Bug 5).
+- They corrected one count in Bug 5.
+- They narrowed Bugs 1, 4, 6, 15 and 19.
+- They marked Bugs 12, 13, 14 and 23 as not shown to affect the reported results.
+- They found a portability bug (Bug 25).
+
+All of these corrections were re-checked and are applied below. Their verdicts appear in
+the **Status** lines as "Independently confirmed".
+
 ## How to read this document
 
 Each bug has the same parts:
@@ -18,7 +35,10 @@ Each bug has the same parts:
 - **Suggested fix.**
 - **Status:**
   - *Verified*: checked directly against the code, the logs or a simulator run.
+  - *Independently confirmed*: also confirmed by the colleague's separate verification.
   - *Reported*: found by a code reviewer and not independently re-checked.
+  - *No demonstrated effect*: a real code problem that has not been shown to change any
+    reported result.
 
 ### Methods used
 
@@ -62,30 +82,31 @@ Each bug has the same parts:
 
 | # | Bug | Area | Severity | Status |
 |---|---|---|---|---|
-| 1 | Two senders on every VL; the fuzzer's frames are dropped by the switch | Simulator | High | Verified |
-| 2 | "Send faster" makes the VL go silent; "slower" is random | Simulator | High | Verified |
-| 3 | Every frame is 17 bytes larger than requested | Harness + simulator | High | Verified |
-| 4 | The baselines can only reach 90 of the 185 categories; the LLM can reach all | Evaluation fairness | High | Verified |
-| 5 | The test-case list was built from an older version of the rules | Data | High (cause of 4) | Verified |
-| 6 | The impact part of the reward is always at its maximum | Reward | High | Verified |
-| 7 | The token-bucket bug can never be detected | Bug suite | High | Verified |
-| 8 | The VL-check bug can never be detected | Bug suite | High | Verified |
-| 9 | Two bug IDs disable the same check | Bug suite | Medium | Verified |
-| 10 | Two bugs are "detected" with no mutation at all | Bug suite | High (consequence of 1) | Verified |
-| 11 | A constant sequence number is discarded as a duplicate, not checked | Simulator | Medium | Verified |
-| 12 | The BAG tolerance rounds down to 0 | Simulator | Low | Verified |
-| 13 | Token-bucket drops are counted as BAG drops | Simulator counters | Low | Verified |
-| 14 | The receiver checks payload size against the wrong table | Simulator | Low | Verified |
-| 15 | No check exists for a wrong destination MAC | Simulator | Medium | Verified (run) |
-| 16 | Some requested mutations are silently ignored | Harness | Medium | Verified |
-| 17 | One label can count for many categories (prefix matching) | Evaluation | Medium | Verified (examples) |
-| 18 | Executed Rule Coverage credits unrelated mutations | Evaluation | Medium | Verified |
-| 19 | Every metric mixes both senders, all 8 VLs and both switches | Metrics | Medium | Verified |
-| 20 | Feedback labels and `bugs_found` carry no information | Feedback | Medium | Verified |
+| 1 | Two senders on every VL; the fuzzer's frames are dropped by the switch | Simulator | High | Verified, independently confirmed |
+| 2 | "Send faster" makes the VL go silent; "slower" is random | Simulator | High | Verified, independently confirmed |
+| 3 | Every frame is 17 bytes larger than requested | Harness + simulator | High | Verified, independently confirmed |
+| 4 | The baselines can only reach 90 of the 185 categories; the LLM can reach all | Evaluation fairness | High | Verified, independently confirmed |
+| 5 | The test-case list is the March version, paired with April's rules | Data | High (cause of 4) | Verified, independently confirmed (proved by git history) |
+| 6 | The impact part of the reward is always at its maximum | Reward | High | Verified, independently confirmed |
+| 7 | The token-bucket bug can never be detected | Bug suite | High | Verified, independently confirmed |
+| 8 | The VL-check bug can never be detected | Bug suite | High | Verified, independently confirmed |
+| 9 | Two bug IDs disable the same check | Bug suite | Medium | Verified, independently confirmed |
+| 10 | Two bugs are "detected" with no mutation at all | Bug suite | High (consequence of 1) | Verified, independently confirmed |
+| 11 | A constant sequence number is discarded as a duplicate, not checked | Simulator | Medium | Verified; exact effect not measured |
+| 12 | The BAG tolerance rounds down to 0 | Simulator | Low | Verified; no demonstrated effect |
+| 13 | Token-bucket drops are counted as BAG drops | Simulator counters | Low | Verified; no demonstrated effect |
+| 14 | The receiver checks payload size against the wrong table | Simulator | Low | Verified; no demonstrated effect |
+| 15 | The VL-specific part of the destination MAC is never checked | Simulator | Medium | Verified (narrowed by review) |
+| 16 | Some requested mutations are silently ignored | Harness | Medium | Verified, independently confirmed |
+| 17 | One label can count for many categories (prefix matching) | Evaluation | Medium | Verified, independently confirmed (examples) |
+| 18 | Executed Rule Coverage credits unrelated mutations | Evaluation | Medium | Verified, independently confirmed |
+| 19 | The summary counters mix both senders, all 8 VLs and both switches | Metrics | Medium | Verified (narrowed by review) |
+| 20 | Feedback labels and `bugs_found` carry no information | Feedback | Medium | Verified, independently confirmed |
 | 21 | Metric names that do not mean what they say | Evaluation | Low | Verified / Reported |
-| 22 | The crash fix was not active when the campaigns were recorded | Harness | Low | Verified |
-| 23 | Resuming a BOOFUZZ campaign restarts its schedule | Baseline | Low | Reported |
-| 24 | Other code-health issues | Various | Low | Verified |
+| 22 | The crash fix was not active when the campaigns were recorded | Harness | Low | Verified, independently confirmed |
+| 23 | Resuming a BOOFUZZ campaign restarts its schedule | Baseline | Low | Code-confirmed; no demonstrated effect |
+| 24 | Other code-health issues | Various | Low | Mixed (see section) |
+| 25 | Windows line endings in `virtual_links.csv` crash the simulator | Portability | Low | Found by the independent review |
 
 Section 25 lists statements in the paper and the response letter that do not match the
 code. Section 26 explains how to reproduce the simulator results. Section 27 lists open
@@ -210,6 +231,12 @@ Injected bugs detected (rule from `compute_bdr.py`: counter difference > 0.5):
 After the change, clean traffic is clean, the "free" detections disappear (Bug 10), and
 the remaining detections are caused by the fuzzer's input.
 
+**Scope of the evidence** (narrowed after the independent review). The masking was
+measured on VLs 1002, 2001 and 3001 with the inputs above. It has not been shown that
+*every* fuzzer frame is dropped for *every* input. For example, on VL 1001 switch A
+forwarded a mix of both senders' frames. The fix test above was not repeated by the
+independent review.
+
 **Why it matters.** The fuzzer could only ever test the first three switch checks. The
 token bucket, forwarding, and all receiver checks described in the paper never saw fuzzed
 traffic. This affects every fuzzer equally, so it is not unfair by itself. But it changes
@@ -260,6 +287,9 @@ value gives byte-identical counters. For example, VL 1001 with −1 to −5 alwa
 2. Checking the `GetInteger` signature in the installed ns-3 source.
 3. Log analysis showed identical results for every negative value.
 4. Simulator runs with −1, −3 and +2 confirmed it.
+
+**Frequency** (independent review). Negative jitter occurs 27, 36, 30, 35 and 26 times in
+LLM runs r1–r5, 44 times in BOOFUZZ, and 63–80 times per random run.
 
 **Why it matters.**
 
@@ -477,9 +507,10 @@ which `MilliSeconds` truncates to a whole number: 0.
 
 **How it was found.** The independent review, then code reading.
 
-**Why it matters.** Small. With Bug 1 fixed, the clean run had 0 policing drops, so it
-does not affect the baseline on its own. It makes the switch stricter than the paper's
-"tolerance of 1%".
+**Why it matters.** Small, and **not shown to change any reported result**. The clean
+two-sender gap is far larger than the tolerance, and with Bug 1 fixed the clean run had 0
+policing drops. It makes the switch stricter than the paper's "tolerance of 1%"; only
+arrivals very close to the BAG boundary could be affected.
 
 **Suggested fix.** `MicroSeconds(bag.GetMicroSeconds() / 100)`.
 
@@ -497,6 +528,10 @@ a total.
 
 **How it was found.** The independent review, then code reading.
 
+**Effect.** **Not shown to change any reported result.** The token bucket never rejects a
+frame in the current configuration (Bug 7), so this counter path is never used in the
+recorded runs.
+
 ---
 
 ### Bug 14. The receiver checks payload size against the wrong table
@@ -510,24 +545,39 @@ configuration.
 
 **How it was found.** The independent review, then code reading.
 
+**Effect.** **Not shown to change any reported result.** The switch's frame validation
+may already discard the relevant frames. Proving an effect would need a frame that
+reaches a receiver while violating that VL's payload limit.
+
 ---
 
-### Bug 15. No check exists for a wrong destination MAC
+### Bug 15. The VL-specific part of the destination MAC is never checked
 
-**In plain words.** The fuzzer can set a wrong destination MAC (`wrong_vl`), but no check
-in the switch or the receiver compares the destination MAC with the VL. The mutation is
-invisible.
+**In plain words.** An AFDX destination MAC has two parts:
+
+- a fixed prefix, `03:00:00:00`;
+- two bytes that identify the VL.
+
+The receiver checks the fixed prefix, so the `corrupt_prefix` mutation can be detected.
+Nothing checks that the last two bytes match the VL, so the `wrong_vl` mutation is
+invisible. (An earlier version of this document said "no check exists". The independent
+review correctly pointed out the prefix check.)
 
 **Details.**
 
-- The only comparison is a log warning in `AfdxFrame::Serialize`
+- The receiver's constant-field check (`afdx-end-system.cc:411-428`) checks only bytes 0–3.
+- The only comparison of the VL bytes is a log warning in `AfdxFrame::Serialize`
   (`afdx-frame.cc:240-245`).
 - That warning fires on every normal frame anyway: `virtual_links.csv` writes the VL id in
   hexadecimal in the MAC (VL 1001 → `03:00:00:00:10:01`), while the code expects decimal.
 
-**Evidence.** In the fix test, "wrong destination MAC" detects no bug, before or after.
+**Evidence.** In the fix test, "wrong destination MAC" (`wrong_vl`) detects no bug,
+before or after.
 
-**How it was found.** The independent review, checked by a simulator run.
+**How it was found.** The C++ code review, checked by a simulator run, then narrowed by
+the independent verification.
+
+**Effect.** This is potentially missed coverage, not a proven change to a score.
 
 ---
 
@@ -593,7 +643,11 @@ the existing logs only.
 
 - The paper's coverage lead (for example 88 vs. 61 executed categories) and most of the
   LLM's Unique Findings come from categories the baselines could never reach.
-- On the categories everyone can reach, BOOFUZZ leads in every run, by both measures.
+- On the categories everyone can reach, BOOFUZZ has more labeled categories in every run,
+  by both measures. This is still **only a label comparison**: a label is not proof that
+  the network behaviour behind the rule was exercised (Bug 18). So it does not show that
+  BOOFUZZ is the better fuzzer. It shows that the LLM's apparent lead disappears on a
+  level field. (This was narrowed after the independent review.)
 - Random's 0 Unique Findings follows by construction.
 - The Mann–Whitney test on coverage partly tests this imbalance.
 
@@ -603,32 +657,47 @@ covers the current rules.
 
 ---
 
-### Bug 5. The test-case list was built from an older version of the rules
+### Bug 5. The test-case list is the March version, paired with April's rules
 
 **In plain words.** The rule list and the test-case list should describe the same rules.
-Most of the test-case names, however, do not exist in the current rule list. It looks as
-if the rules were extracted again and renamed after the test cases had been generated, and
-the test cases were never regenerated.
+But the test cases were generated in March from an earlier extraction. In April the rules
+were extracted again with new names, the old test-case file was deleted, and it was then
+put back unchanged. Most of its rule names do not exist in the current rule list.
 
 **Details.**
 
-- `configs/test_cases.json`: 423 rule names, each with test cases.
+- Git history shows the same file, `configs/test_cases.json`, unchanged since March
+  (blob `2d28bee`):
+
+  | Commit | Date | What happened to the file |
+  |---|---|---|
+  | `8552e02` | 2026-03-10 | Test cases generated |
+  | `153f49e` | 2026-04-04 | New 3-LLM rule extraction ("774 rules"); file deleted |
+  | `00a742e` | 2026-04-13 | File restored byte-for-byte: "Restored configs/test_cases.json (needed by fuzzers)" |
+
+  The current `0253d49` still uses it. Meanwhile `spec_rules_filtered.json` was replaced
+  in both April commits.
+- `configs/test_cases.json` holds 423 rule names, each with test cases.
 - The current rule list, `configs/spec_rules_filtered.json`, has 185 categories and
   626 sub-rules.
-- Of the 217 test-case names that match no category:
-  - 36 exist only in the unfiltered list `configs/spec_rules.json` (231 categories,
-    757 sub-rules);
-  - **181 exist in neither file**, for example `domain_id_coding`,
+- Only 206 of the 423 test-case names map to any category with the project's matcher.
+  For the 217 that do not, the independent review used the project's matcher on the
+  unfiltered `configs/spec_rules.json` and found:
+  - **48** match only the unfiltered rules;
+  - **169** match neither file, for example `domain_id_coding`,
     `fifo_discipline_for_queuing`, `signed_32_integer`, `ethernet_bit_order`.
+
+  (An earlier version of this document gave 36 / 181, computed with a simplified name
+  comparison. Use 48 / 169.)
 - Only 63 of the 626 current sub-rules have a test case under their own name.
 - 87 of the 185 categories have no test case for any of their sub-rules.
-- `spec_extraction/extract_test_cases.py` generates test cases from `configs/spec_rules.json`
-  by default. Git history shows a new 3-LLM extraction ("774 rules") on 2026-04-04, after
-  test-case generation was added (2026-03-10). `configs/` is not tracked by git, so the
-  generation date of `test_cases.json` cannot be confirmed.
 
-**How it was found.** Investigating why the test-case names reach only 90 categories
-(Bug 4): every test-case name was compared against both rule files.
+**How it was found.**
+
+1. Investigating why the test-case names reach only 90 categories (Bug 4): every
+   test-case name was compared against both rule files.
+2. The independent review then proved the age of the file from git blob hashes. I
+   re-checked them with `git rev-parse <commit>:configs/test_cases.json`.
 
 **Why it matters.**
 
@@ -666,7 +735,10 @@ exact copy of `_compute_impact_score` over every logged iteration.
 
 **Why it matters.**
 
-- The impact term (weight 0.5) gave the LLM no information.
+- The impact term (weight 0.5) gave the LLM no information. The other reward components
+  (new violations, novelty, repeat and overuse penalties, edge and new-rule bonuses) still
+  vary, so the total reward is not constant. Only this term cannot rank inputs. (This was
+  narrowed after the independent review.)
 - This is consistent with the ablation finding that feedback adds little: the feedback had
   little to say.
 - The paper should not describe the reward as informative without this caveat.
@@ -761,10 +833,12 @@ the labeled rule". It still relies on it for its strongest results.
 
 ---
 
-### Bug 19. Every metric mixes both senders, all 8 VLs and both switches
+### Bug 19. The summary counters mix both senders, all 8 VLs and both switches
 
-**In plain words.** The numbers used for the reward and for bug detection are totals over
-the whole network. Because of Bug 1, they mix the fuzzer's frames with the hidden
+**In plain words.** The summary numbers used for the reward, the feedback and bug
+detection are totals over the whole network. (The detailed per-frame CSV log keeps
+per-frame information, so not every output is mixed. This was narrowed after the
+independent review.) Because of Bug 1, they mix the fuzzer's frames with the hidden
 sender's. The fuzzer mutates one VL, but the totals also include the 7 other VLs, which
 dilutes its effect.
 
@@ -852,9 +926,11 @@ history reported 0 failures. The comment in `analyze_campaigns.py` confirmed it.
 from the beginning again.
 
 **Details.** `boofuzz_baseline/main.py:305` resumes at `len(history)`, but the generator's
-`current_index` starts at 0 (`boofuzz_strategy_generator.py:56`). The revised BOOFUZZ run
-was not resumed, so its results are not affected. This may explain how the original,
-stitched BOOFUZZ history came about. *Reported; line 56 verified.*
+`current_index` starts at 0 (`boofuzz_strategy_generator.py:56`).
+
+**Effect.** **Not shown to change any reported result.** The revised BOOFUZZ run was not
+shown to have been resumed. Whether this explains the stitched original BOOFUZZ history
+needs a separate check. *Code-confirmed, also by the independent review.*
 
 ---
 
@@ -872,14 +948,41 @@ stitched BOOFUZZ history came about. *Reported; line 56 verified.*
   dead code (`afdx-traffic-generator.cc:189, 749, 769, 861-907`).
 - **Every generator frame gets a random bit flip.** `PollMutations` turns on fuzz mode
   whenever `mutations.json` exists (`afdx-traffic-generator.cc:1033`). *Reported.*
-- **`configs/` is not tracked by git**, and the ns-3 path is hard-coded
-  (`simulator_runner.py`: `/home/hodisan1994/ns-3-reset/ns-3`). The public repository
-  cannot reproduce the results as it is.
-- **The WSL ns-3 tree links into this repository.** In
+- **The ns-3 path is hard-coded** (`simulator_runner.py`:
+  `/home/hodisan1994/ns-3-reset/ns-3`), which hurts reproducibility. (An earlier version
+  of this document also said that `configs/` is not tracked by git. **That was wrong**:
+  `configs/` is tracked, as the independent review pointed out.)
+- **Specific to the author's machine:** the WSL ns-3 tree links into this repository. In
   `/home/hodisan1994/ns-3-reset/ns-3`, `examples/AFDX_V3`, `examples/AFDX_NAV`,
-  `llm_fuzzer`, `configs`, `evaluation` and others are symlinks to this Windows folder.
+  `llm_fuzzer`, `configs`, `evaluation` and others are symlinks to the Windows checkout.
   Editing "the WSL copy" edits the repository, and `cp` or `tar` copies keep the links.
-- **`virtual_links.csv`** shows as modified in git; the difference is line endings only.
+  This does not apply to other checkouts.
+- **Specific to the author's machine:** `virtual_links.csv` shows as modified in git; the
+  difference is line endings only. See Bug 25.
+
+---
+
+### Bug 25. Windows line endings in `virtual_links.csv` crash the simulator
+
+**In plain words.** If `examples/AFDX_V3/config/virtual_links.csv` has Windows line
+endings (CRLF) instead of Unix ones (LF), the simulator crashes while reading it.
+
+**Details.**
+
+- The simulator parses the file with `std::stoi`. With a trailing carriage return it
+  throws `std::invalid_argument`.
+- In the repository the file has LF endings. But a Windows checkout with
+  `core.autocrlf=true` (the setting on the author's machine) converts it to CRLF. The
+  simulator then fails when run on that copy, for example through WSL or Docker.
+
+**How it was found.** The independent review hit the crash when copying the file from a
+Windows checkout into its Docker build, and fixed its own copy by converting the line
+endings.
+
+**Effect.** Portability only; it does not affect the recorded results.
+
+**Suggested fix.** Add a `.gitattributes` rule (`*.csv text eol=lf`), or strip `\r` in the
+C++ parser.
 
 ---
 
@@ -894,11 +997,11 @@ stitched BOOFUZZ history came about. *Reported; line 56 verified.*
 | Letter summary; paper V-B; planner prompt | `timing_jitter_ms` is a timing offset | Random ±j for positive values, silence for negative (Bug 2) |
 | Planner prompt; Exp. 3 interpretation | `frame_size` is the frame size | The sent frame is frame_size + 17 (Bug 3) |
 | Letter (R2 C1) | The two missed bugs "cannot be reached through the mutation interface" | The token bucket cannot fail at all (Bug 7); the VL check is unreachable (Bug 8) |
-| Letter (summary, R1 C2/C3); paper Exp. 2 | The LLM fuzzer exercises more categories, and the lead is not an artifact of the shared denominator | The baselines' label pool reaches only 90 categories; on those, BOOFUZZ leads (Bugs 4, 5) |
+| Letter (summary, R1 C2/C3); paper Exp. 2 | The LLM fuzzer exercises more categories, and the lead is not an artifact of the shared denominator | The baselines' label pool reaches only 90 categories; on those, the LLM's label lead disappears (Bugs 4, 5) |
 | Letter (Additional corrections) | Baselines re-run "on the final rule base" | Their labels come from test cases built on an older rule base (Bug 5) |
 | Paper V-B; letter (R1 C4a) | The reward guides the planner | The impact term is constant (Bug 6) |
 | Letter (Additional corrections) | "With the corrected runner, these iterations count as not executed" | The histories were recorded before the fix worked (Bug 22) |
-| Letter (R1 C4b) | The public repository reproduces the results | `configs/` is untracked and the ns-3 path is hard-coded (Bug 24) |
+| Letter (R1 C4b) | The public repository reproduces the results | The ns-3 path is hard-coded (Bug 24), and a Windows checkout can break the simulator's CSV parsing (Bug 25) |
 | Letter (R1 C3) | Interrupted LLM campaigns "resumed from their history" | Also: 40 failed records removed, and run r3 discarded and re-run (Bug 22) |
 | Letter (R2 C6) | Coverage comes from the controller's steering, not the LLM | Steering's re-plan step is itself an LLM call; a "controller + random planner" control is needed to separate them |
 
@@ -957,5 +1060,9 @@ cd $NS && ./ns3 run afdx-demo --no-build --cwd $W > $W/stdout.txt
    constant during the campaigns.
 6. Find the exact source of the 264 baseline receiver rejections (Bug 11).
 7. Correct the statements in Section 25 before resubmission.
-8. Commit `configs/` (or archive it with the artifact), and make the ns-3 path
-   configurable.
+8. Make the ns-3 path configurable, and fix the CSV line-ending issue (Bug 25).
+9. When reporting Experiment 3, describe "6/8" accurately. It is a correct description of
+   the replay's counter-difference rule, not six distinct flaws found by meaningful inputs.
+   A corrected detection rate cannot be computed arithmetically, because removing the
+   extra sender changes which frames reach later checks. A new replay is required (point
+   made by the independent review).
