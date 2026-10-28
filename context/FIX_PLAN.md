@@ -123,7 +123,8 @@ campaigns.
 | Stage | Status |
 |---|---|
 | 1 | Done (2026-10-28), branch `fix/revision-bugs`, one commit per bug |
-| 2–8 | Not started |
+| 2 | Done (2026-10-28), same branch, one commit per fix |
+| 3–8 | Not started |
 
 ### Stage 1 results
 
@@ -157,4 +158,74 @@ campaigns.
 - `compute_bdr.run_single_iteration` (the original Experiment 3 script) still calls the
   runner's current translation. Use `bdr_replay.py` to reproduce the recorded results.
 - The planner prompt says `sequence_number_override` 0 means "invalid". In the
-  simulator, 0 means "no override". Fix this with the other prompt corrections.
+  simulator, 0 means "no override". *(Fixed in Stage 2.)*
+
+### Stage 2 results
+
+**Commits**
+
+| Commit | Fix |
+|---|---|
+| `203302e` | Bug 1: the end systems only receive; one sender per VL |
+| `7f68b29` | Bug 2: `timing_jitter_ms` is a fixed signed offset |
+| `f0e35af` | Bug 3: exact frame size; the extreme-mode clamp counter is fixed |
+| `0d6d02b` | Bug 6: reward impact baseline from the fixed simulator, as a share of traffic |
+| `1e3bfc9` | Planner prompt and feedback describe the parameters as the simulator applies them |
+
+The author has **not** confirmed whether the second sender (Bug 1) was intended.
+
+**Checks** (fixed build in `/tmp/ns3_fixtest`)
+
+- **Simulator test programs:** all 145 still pass.
+- **Clean run:** received 3,380 = forwarded 3,380 = end-system received 3,380. Policing
+  drops 0, token-bucket drops 0, frame and MAC errors 0, receiver rejections 0. Each frame's
+  network-B copy is discarded as a duplicate (3,380), as A/B redundancy intends.
+- **Frame-size boundaries, all 8 VLs:** frame sizes Min and Max pass; Min−1 and Max+1 are
+  rejected by frame validation.
+- **Timing, VL 1002 (BAG 4 ms):**
+
+  | `timing_jitter_ms` | Result |
+  |---|---|
+  | 0 | 450 frames, gap 4.0 ms |
+  | −1 | 600 frames, every gap 3.0 ms, 600 policing drops |
+  | −3 | every gap 1.0 ms |
+  | +2 | every gap 6.0 ms, no drops |
+  | −1 with `skip_bag_policing` | no policing drops |
+
+- **The receivers get the fuzzer's frames:** 450 per network per subscriber on VL 1002,
+  all from the traffic generator.
+- **Reward impact term:**
+
+  | Input | Impact |
+  |---|---|
+  | Clean run | 0.000 |
+  | Legal frame size | 0.000 |
+  | Size violations | 0.067–0.533 |
+  | Timing −1 ms | 0.444 |
+  | Timing −3 ms | 1.000 |
+  | Timing +2 ms (legal, slower) | 0.266 |
+
+  Impact measures the change in traffic, not whether a rule was violated.
+
+**Injected-bug detection**
+
+8 inputs from before, plus 2 new ones, each run bug-free and with each of the 8 bugs:
+
+| Input | Original simulator | After stages 1–2 |
+|---|---|---|
+| No mutation | BAG, sequence | none |
+| Frame 1,000 B on VL 3002 (legal) | BAG, sequence | none |
+| Fake source MAC | BAG, MAC, sequence | MAC |
+| Wrong destination MAC (`wrong_vl`) | BAG, sequence | none |
+| Forced sequence number 255 | BAG, sequence | none |
+| Timing −12 ms (VL 2002) | BAG, sequence | **BAG** |
+| Frame 1,000 B + timing +100 ms | BAG, sequence | none |
+| Drop half at sender | BAG, sequence | none |
+| Frame 1,025 B on VL 3001 (new) | — | frame, oversized |
+| Corrupt destination prefix (new) | — | constant field |
+
+**Still to do**
+
+- These inputs never detect the sequence, token-bucket and VL-check bugs. That is
+  Bugs 7, 8 and 11, for Stage 5.
+- `skip_frame_validation` and `accept_oversized` are still the same check (Bug 9).
