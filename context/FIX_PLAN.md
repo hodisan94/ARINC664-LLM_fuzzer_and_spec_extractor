@@ -125,7 +125,8 @@ campaigns.
 | 1 | Done (2026-10-28), branch `fix/revision-bugs`, one commit per bug |
 | 2 | Done (2026-10-28), same branch, one commit per fix |
 | 3 | Done (2026-10-28), same branch; recorded campaigns re-scored, nothing re-run |
-| 4–8 | Not started |
+| 4 | Done (2026-10-28), same branch; all logged inputs replayed on the fixed simulator |
+| 5–8 | Not started (switch for old/new planner instructions added, 580f802) |
 
 ### Stage 1 results
 
@@ -291,3 +292,66 @@ fuzzer. Review them in `category_mechanisms.json`.
 - The controller's steering (`strategy_planner.rule_category`) still uses the paper's
   matcher. Changing it would change future campaigns, so it is left for the Stage 7
   decision.
+
+### Stage 4 results
+
+All 8,199 distinct (input, bug) runs behind the submitted Experiment 3 were replayed on the
+fixed simulator (stages 1–2), as logged, with no LLM calls (commit 7e0ec5e). The submitted
+`bdr_replay_v2_*.json` files are unchanged; the new results are `bdr_replay_fixed_*.json`.
+The same 2 BOOFUZZ inputs (out-of-range integers) crash both simulators.
+
+**Bugs detected (of 8), submitted → fixed simulator**
+
+| Campaign | Submitted | Fixed | Lost |
+|---|---|---|---|
+| LLM, 5 runs | 6, 6, 6, 6, 6 | 6, 5, 5, 5, 6 | sequence check in r2–r4 |
+| BOOFUZZ re-run | 6 | 6 | – |
+| Random, 5 seeds | 6 each | 6 each | – |
+| A0 / A1 / A2 | 6 / 6 / 6 | 5 / 6 / 5 | sequence check (A0, A2) |
+| Submitted LLM / BOOFUZZ (reconstructed) | 6 / 6 | 6 / 6 | – |
+| Submitted Random, as compute_bdr rebuilt it | 2 | 0 | BAG, sequence check |
+
+Token bucket and VL check are detected by no campaign on either simulator (bugs 7, 15;
+stage 5).
+
+**What changed underneath the counts**
+
+- On the submitted simulator, BAG-policing and sequence-check detection fired in **every**
+  iteration (200 of 200). The hidden second sender (bug 1) produced 3,492 policing drops
+  and 264 rejections even in the clean run, so any input "detected" those bugs. On the
+  fixed simulator the clean run has 0 drops and 0 rejections, and detection needs an input
+  that actually violates the rule. Example: BAG detection, LLM mean 31.6 detecting
+  iterations of 200, Random 31.2, BOOFUZZ 25.
+- **Sequence check** is now found by a constant sequence-number override. The LLM runs did
+  this in 0–2 iterations (found in 2 of 5 runs); Random in about 13 per seed (5 of 5);
+  BOOFUZZ in 8.
+- **Frame size** (skip_frame_validation, accept_oversized): the frame size starts at the
+  midpoint of the VL's range plus the logged delta. The LLM mostly chose deltas that land
+  **exactly on** MaxFrame or MinFrame (e.g. +224 on VL 1001 = 512 bytes). The 17-byte
+  header bug (bug 3) made those frames invalid, so they "detected" the bug; now they are
+  valid. LLM detecting iterations fell from 82.6 to 17.8 per run. BOOFUZZ and Random chose
+  deltas one byte **beyond** the limit (e.g. −225 = 63 bytes), which the header bug made
+  valid; their detecting iterations rose (BOOFUZZ 39 → 86, Random 45.8 → 65.0).
+
+**How many logged inputs change anything** (`replay_effects.py`; counters compared with
+the clean run of the same simulator; of 200)
+
+| Campaign | Submitted simulator | Fixed simulator |
+|---|---|---|
+| LLM r1–r5 | 105–117 | 54–68 |
+| BOOFUZZ | 97 | 122 |
+| Random s1–s5 | 115–128 | 103–126 |
+
+On the submitted simulator any change to the fuzzed VL's timing moved the noisy policing
+count, so these numbers overstate effective tests there.
+
+**How to read this**
+
+- The headline BDR (6/8 for every fuzzer) barely moves, but on the submitted simulator two
+  of those six bugs were found by every input. On the fixed simulator the LLM's recorded
+  tests find **fewer** bugs than both baselines and change the bug-free simulator in only
+  about a third of iterations, against about half or more for the baselines.
+- These are the **same inputs**, chosen while the LLM was steered by wrong feedback and
+  wrong instructions. They show what the submitted tests do, not what the LLM fuzzer does
+  on a correct simulator. That needs new campaigns (stage 7).
+- Before stage 7, stage 5 must make the token-bucket, VL and sequence bugs detectable.
