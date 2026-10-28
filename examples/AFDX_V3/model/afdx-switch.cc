@@ -472,7 +472,8 @@ AfdxSwitch::CheckBagPolicing(uint16_t vlId)
   // ARINC 664 Part 7: BAG policing
   // Frames arriving faster than BAG rate should be dropped
   // Allow small tolerance (1% of BAG) for jitter
-  Time tolerance = MilliSeconds(bag.GetMilliSeconds() * 0.01);
+  // Integer microseconds: MilliSeconds(GetMilliSeconds() * 0.01) truncated to 0 for every BAG
+  Time tolerance = MicroSeconds(bag.GetMicroSeconds() / 100);
   Time minGap = bag - tolerance;
   
   if (timeSinceLastFrame < minGap)
