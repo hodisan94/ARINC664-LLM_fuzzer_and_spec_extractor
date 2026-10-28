@@ -190,13 +190,18 @@ def main():
     print(f"categories with only rejected rules: {len(rejected_only)}")
     print(f"checklist: {n_statements} statements, {len(statements)} covered by a validated rule, "
           f"{sum(bool(c) for c in statements.values())} of them map to a category")
-    bdr = {k: v for f in args.bdr for k, v in json.loads(Path(f).read_text()).items()}
+    # History paths are keys into the BDR reports; use forward slashes on every OS so that
+    # Windows backslash paths from glob still match.
+    bdr = {Path(k).as_posix(): v for f in args.bdr for k, v in json.loads(Path(f).read_text()).items()}
     per_run, per_fuzzer = {}, {}
     for spec in args.campaign:
         name, pattern = spec.split("=", 1)
-        paths = sorted(glob.glob(pattern))
+        paths = sorted(Path(p).as_posix() for p in glob.glob(pattern))
         if not paths:
             raise SystemExit(f"no history matches {pattern}")
+        missing = [p for p in paths if bdr and p not in bdr]
+        if missing:
+            print(f"WARNING: no BDR replay entry (crashes, bug detection) for {missing}")
         per_run[name] = {p: history_metrics(p, categories_of, bdr, loose_categories_of, statements,
                                             rejected_only) for p in paths}
 
