@@ -484,6 +484,11 @@ AfdxSwitch::CheckBagPolicing(uint16_t vlId)
   // Allow small tolerance (1% of BAG) for jitter
   // Integer microseconds: MilliSeconds(GetMilliSeconds() * 0.01) truncated to 0 for every BAG
   Time tolerance = MicroSeconds(bag.GetMicroSeconds() / 100);
+  // BDR bug injection: loose_bag_tolerance allows 10% early arrival instead of 1%
+  if (g_mutationConfig.injectBug == "loose_bag_tolerance")
+  {
+    tolerance = MicroSeconds(bag.GetMicroSeconds() / 10);
+  }
   Time minGap = bag - tolerance;
   
   if (timeSinceLastFrame < minGap)

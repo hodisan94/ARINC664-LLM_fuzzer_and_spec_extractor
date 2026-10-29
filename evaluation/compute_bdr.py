@@ -83,6 +83,12 @@ BUGS = [
         "location": "afdx-switch.cc ValidateFrame",
         "detection_signal": "frame_error_drop_decrease",
     },
+    {
+        "id": "loose_bag_tolerance",
+        "description": "Switch BAG check allows 10% early arrival instead of 1%",
+        "location": "afdx-switch.cc CheckBagPolicing",
+        "detection_signal": "policing_drop_decrease",
+    },
 ]
 
 
