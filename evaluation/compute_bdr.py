@@ -52,12 +52,16 @@ BUGS = [
         "description": "Switch skips token-bucket policing",
         "location": "afdx-switch.cc Step 4",
         "detection_signal": "token_bucket_drop_decrease",
+        # Frames that pass the BAG check never exceed the bucket (REVISION_FINDINGS Bug 7)
+        "reachable": False,
     },
     {
         "id": "skip_vl_check",
         "description": "Switch skips VL authorization",
         "location": "afdx-switch.cc Step 2",
         "detection_signal": "forward_increase",
+        # No mutation parameter sets an unknown VL id (REVISION_FINDINGS Bug 8)
+        "reachable": False,
     },
     {
         "id": "skip_constant_field",

@@ -151,10 +151,15 @@ def evaluate(records, pool):
                               "detecting_iterations": len(detecting)}
     firsts = [b["first_detection_iter"] for b in per_bug.values() if b["detected"]]
     found = sum(b["detected"] for b in per_bug.values())
+    # Bugs that no input of the mutation interface can expose (compute_bdr "reachable")
+    reachable = [b["id"] for b in BUGS if b.get("reachable", True)]
+    found_reachable = sum(per_bug[b]["detected"] for b in reachable)
     return {"iterations": len(records),
             "crashed_iterations": crashed(records, pool, ["none"] + [b["id"] for b in BUGS]),
             "distinct_inputs": len({config_key(cfg) for _, cfg in records}),
             "bugs_detected": found, "bugs_total": len(BUGS), "bdr": found / len(BUGS),
+            "bugs_detected_reachable": found_reachable, "bugs_reachable": len(reachable),
+            "bdr_reachable": found_reachable / len(reachable),
             "mean_iterations_to_first_detection": sum(firsts) / len(firsts) if firsts else None,
             "per_bug": per_bug}
 
@@ -211,7 +216,9 @@ def main():
     Path(args.out).write_text(json.dumps(report, indent=2))
     for name, r in report.items():
         hits = ", ".join(f"{b}({v['detecting_iterations']})" for b, v in r["per_bug"].items() if v["detected"])
-        print(f"{name:28s} {r['bugs_detected']}/{r['bugs_total']}  inputs={r['distinct_inputs']:3d}  {hits}")
+        print(f"{name:28s} {r['bugs_detected']}/{r['bugs_total']} "
+              f"({r['bugs_detected_reachable']}/{r['bugs_reachable']} reachable)  "
+              f"inputs={r['distinct_inputs']:3d}  {hits}")
     print(f"-> {args.out}")
 
 
