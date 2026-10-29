@@ -299,8 +299,8 @@ AfdxSwitch::ProcessFrame(Ptr<const Packet> packet, uint32_t inPort)
   // BDR bug injection: read active bug ID
   const std::string& activeBug = g_mutationConfig.injectBug;
 
-  // Step 1: Frame validation (CRC, size)
-  if (activeBug != "skip_frame_validation" && activeBug != "accept_oversized")
+  // Step 1: Frame validation (CRC, size); accept_oversized is handled in ValidateFrame
+  if (activeBug != "skip_frame_validation")
   {
     if (m_frameValidation && !ValidateFrame(frame))
     {
@@ -408,8 +408,11 @@ AfdxSwitch::ValidateFrame(const AfdxFrame& frame) const
   // ARINC 664 Part 7: Frame size validation
   // Valid Ethernet frame: 64 to 1518 bytes (including FCS)
   uint32_t frameSize = frame.GetSerializedSize();
-  
-  if (frameSize < 64 || frameSize > 1518)
+
+  // BDR bug injection: accept_oversized skips only the upper size bounds
+  bool checkUpper = g_mutationConfig.injectBug != "accept_oversized";
+
+  if (frameSize < 64 || (checkUpper && frameSize > 1518))
   {
     NS_LOG_WARN("Switch " << m_switchId << " invalid frame size: " << frameSize);
     return false;
@@ -426,7 +429,7 @@ AfdxSwitch::ValidateFrame(const AfdxFrame& frame) const
     const AfdxVirtualLink& vl = m_vlConfig.at(vlId);
     uint32_t payloadSize = frame.GetPayloadSize();
     
-    if (payloadSize < vl.GetMinPayloadSize() || payloadSize > vl.GetMaxPayloadSize())
+    if (payloadSize < vl.GetMinPayloadSize() || (checkUpper && payloadSize > vl.GetMaxPayloadSize()))
     {
       NS_LOG_WARN("Switch " << m_switchId << " VL " << vlId 
                   << " payload " << payloadSize << " out of range ["

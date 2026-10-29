@@ -73,7 +73,7 @@ BUGS = [
     },
     {
         "id": "accept_oversized",
-        "description": "Switch accepts frames larger than 1518 bytes",
+        "description": "Switch skips the upper frame-size bounds (VL MaxFrame and 1518 bytes)",
         "location": "afdx-switch.cc ValidateFrame",
         "detection_signal": "frame_error_drop_decrease",
     },
