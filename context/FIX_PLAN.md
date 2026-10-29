@@ -126,7 +126,8 @@ campaigns.
 | 2 | Done (2026-10-28), same branch, one commit per fix |
 | 3 | Done (2026-10-28), same branch; recorded campaigns re-scored, nothing re-run |
 | 4 | Done (2026-10-28), same branch; all logged inputs replayed on the fixed simulator |
-| 5–8 | Not started (switch for old/new planner instructions added, 580f802; pilot of both run, d3b7e46) |
+| 5 | Done (2026-10-29), same branch; 10-bug suite built, checked and used to re-score all recorded inputs; see `context/BUG_SUITE.md` |
+| 6–8 | Not started (switch for old/new planner instructions added, 580f802; pilot of both run, d3b7e46) |
 
 ### Stage 5 bug suite, fixed before any scoring (decided 2026-10-29)
 
@@ -153,6 +154,24 @@ bugs listed as unreachable. Results are reported per bug and as "detected of 10"
 
 Known bias to report: in Stage 4 BOOFUZZ and Random often sent frames exactly one byte past
 the limit, and the LLM frames exactly at the limit, so bug 9 may favour the baselines.
+
+**Correction after scoring (the list above was not changed):** the baseline frames "one byte
+past the limit" were one byte below MinFrame, not above MaxFrame. No baseline input is
+exactly MaxFrame + 1, and every LLM-guided run has 4–7 such inputs, so bug 9 favours the
+LLM-guided fuzzer, not the baselines.
+
+### Stage 5 results
+
+Full description, acceptance checks and per-bug results: `context/BUG_SUITE.md`.
+
+- All 10 bugs pass both acceptance checks on the fixed simulator; the two unreachable bugs
+  are detected by no probe, as expected. All AFDX unit tests pass.
+- Recorded inputs re-scored against the 10-bug suite (found of 10; the two unreachable bugs
+  are found by nobody, so this equals found of 8 reachable): LLM-guided 8, 7, 7, 7, 8;
+  BOOFUZZ-style 7; Random 7 in every seed; A0 6, A1 8, A2 7; pilot original 7, 8; pilot
+  revised 8, 8.
+- `max_frame_off_by_one` is found by every LLM-guided run and by no baseline run;
+  `skip_sequence_check` by every baseline run and by 2 of 5 LLM-guided runs.
 
 ### Open: planner instructions reveal the simulator's implementation (decided 2026-10-29 to postpone)
 
