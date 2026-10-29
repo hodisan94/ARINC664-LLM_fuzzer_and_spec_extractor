@@ -128,6 +128,32 @@ campaigns.
 | 4 | Done (2026-10-28), same branch; all logged inputs replayed on the fixed simulator |
 | 5–8 | Not started (switch for old/new planner instructions added, 580f802; pilot of both run, d3b7e46) |
 
+### Stage 5 bug suite, fixed before any scoring (decided 2026-10-29)
+
+This list was agreed before any campaign was scored against it, so that no bug is chosen
+for the fuzzer that finds it. Every fuzzer is scored against the same list.
+
+| # | Bug ID | What it switches off | Status |
+|---|---|---|---|
+| 1 | `skip_bag_policing` | Switch BAG check | Kept |
+| 2 | `skip_frame_validation` | Whole switch frame-size check (too big and too small) | Kept |
+| 3 | `skip_mac_validation` | Switch source-MAC check | Kept |
+| 4 | `skip_token_bucket` | Switch token bucket | Kept, reported as unreachable (Bug 7) |
+| 5 | `skip_vl_check` | Switch VL authorization | Kept, reported as unreachable (Bug 8) |
+| 6 | `skip_constant_field` | Receiver check of the 03:00:00:00 MAC prefix | Kept |
+| 7 | `skip_sequence_check` | Receiver sequence-number check | Kept; reachable only indirectly (Bug 11), documented |
+| 8 | `accept_oversized` | Only the "too big" half of the switch frame-size check | Changed: no longer identical to #2 (Bug 9) |
+| 9 | `max_frame_off_by_one` | Switch accepts a frame one byte above the VL's MaxFrame | New |
+| 10 | `loose_bag_tolerance` | Switch BAG check allows 10% early arrival instead of 1% | New |
+
+Acceptance checks for every bug: (a) an input with no mutation does not detect it;
+(b) at least one input that the mutation parameters can express detects it, except the two
+bugs listed as unreachable. Results are reported per bug and as "detected of 10" and
+"detected of 8 reachable".
+
+Known bias to report: in Stage 4 BOOFUZZ and Random often sent frames exactly one byte past
+the limit, and the LLM frames exactly at the limit, so bug 9 may favour the baselines.
+
 ### Open: planner instructions reveal the simulator's implementation (decided 2026-10-29 to postpone)
 
 Both the original and the revised planner instructions (`llm_fuzzer/prompts/fuzzing_agent.py`,
