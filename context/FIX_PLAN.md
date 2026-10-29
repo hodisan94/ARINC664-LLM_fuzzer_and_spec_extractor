@@ -126,7 +126,26 @@ campaigns.
 | 2 | Done (2026-10-28), same branch, one commit per fix |
 | 3 | Done (2026-10-28), same branch; recorded campaigns re-scored, nothing re-run |
 | 4 | Done (2026-10-28), same branch; all logged inputs replayed on the fixed simulator |
-| 5–8 | Not started (switch for old/new planner instructions added, 580f802) |
+| 5–8 | Not started (switch for old/new planner instructions added, 580f802; pilot of both run, d3b7e46) |
+
+### Open: planner instructions reveal the simulator's implementation (decided 2026-10-29 to postpone)
+
+Both the original and the revised planner instructions (`llm_fuzzer/prompts/fuzzing_agent.py`,
+`_MUTATION_PARAMETERS`, `_MECHANISM_DESCRIPTIONS`, `_GUIDELINES_2_TO_4`) contain hand-written
+knowledge of how this simulator is built, which a real tester would not have and BOOFUZZ and
+Random do not get. Original: "`spoof_src` => finds bugs in switch MAC validation", "negative
+jitter => finds bugs in BAG policing". Revised: "`wrong_vl` ... nothing checks", "no input can
+exercise" the token bucket, "the receiver discards repeats as duplicates", "dropped at the
+switch", "the receiving ES rejects".
+
+To do before the Stage 7 campaigns:
+- Add a third, "neutral" prompt version that keeps only how to operate the mutation parameters
+  (what each one changes, allowed values, 0 = no override, `test_cases` are not sent to the
+  simulator) and protocol facts from the extracted rules; remove every statement of what the
+  simulator drops, rejects, ignores or "finds bugs" in.
+- Pilot it like the original/revised pilot (2 runs x 100 iterations, about $16, ask first).
+- Say in the paper that the prompt describes the mutation interface, and that the submitted
+  version also contained implementation hints.
 
 ### Stage 1 results
 
