@@ -77,6 +77,12 @@ BUGS = [
         "location": "afdx-switch.cc ValidateFrame",
         "detection_signal": "frame_error_drop_decrease",
     },
+    {
+        "id": "max_frame_off_by_one",
+        "description": "Switch accepts a frame one byte above the VL's MaxFrame",
+        "location": "afdx-switch.cc ValidateFrame",
+        "detection_signal": "frame_error_drop_decrease",
+    },
 ]
 
 

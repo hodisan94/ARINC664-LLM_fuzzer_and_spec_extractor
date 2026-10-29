@@ -428,8 +428,14 @@ AfdxSwitch::ValidateFrame(const AfdxFrame& frame) const
   {
     const AfdxVirtualLink& vl = m_vlConfig.at(vlId);
     uint32_t payloadSize = frame.GetPayloadSize();
-    
-    if (payloadSize < vl.GetMinPayloadSize() || (checkUpper && payloadSize > vl.GetMaxPayloadSize()))
+    uint32_t maxPayload = vl.GetMaxPayloadSize();
+    // BDR bug injection: max_frame_off_by_one accepts one byte above the VL's MaxFrame
+    if (g_mutationConfig.injectBug == "max_frame_off_by_one")
+    {
+      maxPayload += 1;
+    }
+
+    if (payloadSize < vl.GetMinPayloadSize() || (checkUpper && payloadSize > maxPayload))
     {
       NS_LOG_WARN("Switch " << m_switchId << " VL " << vlId 
                   << " payload " << payloadSize << " out of range ["
