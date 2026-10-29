@@ -1,0 +1,322 @@
+{
+  "evaluation/results/revision/runs/llm_full_r1.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 93,
+    "bugs_detected": 8,
+    "bugs_total": 10,
+    "bdr": 0.8,
+    "bugs_detected_reachable": 8,
+    "bugs_reachable": 8,
+    "bdr_reachable": 1.0,
+    "mean_iterations_to_first_detection": 20.5,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 8,
+        "detecting_iterations": 28
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 7,
+        "detecting_iterations": 12
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 6,
+        "detecting_iterations": 6
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 4,
+        "detecting_iterations": 8
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 52,
+        "detecting_iterations": 1
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 7,
+        "detecting_iterations": 12
+      },
+      "max_frame_off_by_one": {
+        "detected": true,
+        "first_detection_iter": 54,
+        "detecting_iterations": 4
+      },
+      "loose_bag_tolerance": {
+        "detected": true,
+        "first_detection_iter": 26,
+        "detecting_iterations": 11
+      }
+    }
+  },
+  "evaluation/results/revision/runs/llm_full_r2.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 88,
+    "bugs_detected": 7,
+    "bugs_total": 10,
+    "bdr": 0.7,
+    "bugs_detected_reachable": 7,
+    "bugs_reachable": 8,
+    "bdr_reachable": 0.875,
+    "mean_iterations_to_first_detection": 15.714285714285714,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 37
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 20
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 4,
+        "detecting_iterations": 3
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 6
+      },
+      "skip_sequence_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 19
+      },
+      "max_frame_off_by_one": {
+        "detected": true,
+        "first_detection_iter": 75,
+        "detecting_iterations": 7
+      },
+      "loose_bag_tolerance": {
+        "detected": true,
+        "first_detection_iter": 24,
+        "detecting_iterations": 10
+      }
+    }
+  },
+  "evaluation/results/revision/runs/llm_full_r3.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 100,
+    "bugs_detected": 7,
+    "bugs_total": 10,
+    "bdr": 0.7,
+    "bugs_detected_reachable": 7,
+    "bugs_reachable": 8,
+    "bdr_reachable": 0.875,
+    "mean_iterations_to_first_detection": 16.428571428571427,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 29
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 4,
+        "detecting_iterations": 21
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 8
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 10
+      },
+      "skip_sequence_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 4,
+        "detecting_iterations": 18
+      },
+      "max_frame_off_by_one": {
+        "detected": true,
+        "first_detection_iter": 42,
+        "detecting_iterations": 7
+      },
+      "loose_bag_tolerance": {
+        "detected": true,
+        "first_detection_iter": 61,
+        "detecting_iterations": 11
+      }
+    }
+  },
+  "evaluation/results/revision/runs/llm_full_r4.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 91,
+    "bugs_detected": 7,
+    "bugs_total": 10,
+    "bdr": 0.7,
+    "bugs_detected_reachable": 7,
+    "bugs_reachable": 8,
+    "bdr_reachable": 0.875,
+    "mean_iterations_to_first_detection": 13.428571428571429,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 37
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 20
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 6,
+        "detecting_iterations": 3
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 4,
+        "detecting_iterations": 7
+      },
+      "skip_sequence_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 19
+      },
+      "max_frame_off_by_one": {
+        "detected": true,
+        "first_detection_iter": 57,
+        "detecting_iterations": 7
+      },
+      "loose_bag_tolerance": {
+        "detected": true,
+        "first_detection_iter": 22,
+        "detecting_iterations": 8
+      }
+    }
+  },
+  "evaluation/results/revision/runs/llm_full_r5.jsonl": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 88,
+    "bugs_detected": 8,
+    "bugs_total": 10,
+    "bdr": 0.8,
+    "bugs_detected_reachable": 8,
+    "bugs_reachable": 8,
+    "bdr_reachable": 1.0,
+    "mean_iterations_to_first_detection": 10.75,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 27
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 16
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 23,
+        "detecting_iterations": 7
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 5
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 43,
+        "detecting_iterations": 2
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 14
+      },
+      "max_frame_off_by_one": {
+        "detected": true,
+        "first_detection_iter": 11,
+        "detecting_iterations": 6
+      },
+      "loose_bag_tolerance": {
+        "detected": true,
+        "first_detection_iter": 2,
+        "detecting_iterations": 12
+      }
+    }
+  }
+}
