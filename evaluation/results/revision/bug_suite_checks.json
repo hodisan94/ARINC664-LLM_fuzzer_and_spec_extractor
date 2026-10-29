@@ -1,0 +1,485 @@
+{
+  "probes": {
+    "no mutation (VL 1001)": {
+      "vlId": 1001,
+      "prob": 0.0,
+      "payload_delta_bytes": 0,
+      "timing_jitter_ms": 0,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    },
+    "no mutation (VL 3001)": {
+      "vlId": 3001,
+      "prob": 0.0,
+      "payload_delta_bytes": 0,
+      "timing_jitter_ms": 0,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    },
+    "frame 1 byte below MinFrame (VL 1001, 63 B)": {
+      "vlId": 1001,
+      "prob": 0.0,
+      "payload_delta_bytes": -225,
+      "timing_jitter_ms": 0,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    },
+    "frame exactly MaxFrame (VL 1001, 512 B)": {
+      "vlId": 1001,
+      "prob": 0.0,
+      "payload_delta_bytes": 224,
+      "timing_jitter_ms": 0,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    },
+    "frame 1 byte above MaxFrame (VL 1001, 513 B)": {
+      "vlId": 1001,
+      "prob": 0.0,
+      "payload_delta_bytes": 225,
+      "timing_jitter_ms": 0,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    },
+    "frame 2 bytes above MaxFrame (VL 1001, 514 B)": {
+      "vlId": 1001,
+      "prob": 0.0,
+      "payload_delta_bytes": 226,
+      "timing_jitter_ms": 0,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    },
+    "frame above 1518 B (VL 1001, 2000 B)": {
+      "vlId": 1001,
+      "prob": 0.0,
+      "payload_delta_bytes": 1712,
+      "timing_jitter_ms": 0,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    },
+    "send every 3 ms on BAG 4 (VL 1001, jitter -1)": {
+      "vlId": 1001,
+      "prob": 0.0,
+      "payload_delta_bytes": 0,
+      "timing_jitter_ms": -1,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    },
+    "send every 31 ms on BAG 32 (VL 3001, jitter -1)": {
+      "vlId": 3001,
+      "prob": 0.0,
+      "payload_delta_bytes": 0,
+      "timing_jitter_ms": -1,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    },
+    "send every 29 ms on BAG 32 (VL 3001, jitter -3)": {
+      "vlId": 3001,
+      "prob": 0.0,
+      "payload_delta_bytes": 0,
+      "timing_jitter_ms": -3,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    },
+    "send every 28 ms on BAG 32 (VL 3001, jitter -4)": {
+      "vlId": 3001,
+      "prob": 0.0,
+      "payload_delta_bytes": 0,
+      "timing_jitter_ms": -4,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    },
+    "spoofed source MAC (VL 1001)": {
+      "vlId": 1001,
+      "prob": 0.0,
+      "payload_delta_bytes": 0,
+      "timing_jitter_ms": 0,
+      "mac_mutation": "spoof_src",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    },
+    "corrupted MAC prefix (VL 1001)": {
+      "vlId": 1001,
+      "prob": 0.0,
+      "payload_delta_bytes": 0,
+      "timing_jitter_ms": 0,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "corrupt_prefix"
+    },
+    "wrong VL bytes in dest MAC (VL 1001)": {
+      "vlId": 1001,
+      "prob": 0.0,
+      "payload_delta_bytes": 0,
+      "timing_jitter_ms": 0,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "wrong_vl"
+    },
+    "constant sequence number 255 (VL 1001)": {
+      "vlId": 1001,
+      "prob": 0.0,
+      "payload_delta_bytes": 0,
+      "timing_jitter_ms": 0,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 255,
+      "dest_mac_mutation": "none"
+    },
+    "sequence number 0 (VL 1001)": {
+      "vlId": 1001,
+      "prob": 0.0,
+      "payload_delta_bytes": 0,
+      "timing_jitter_ms": 0,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 256,
+      "dest_mac_mutation": "none"
+    },
+    "512 B frames at BAG 4 (VL 1001, token-bucket stress)": {
+      "vlId": 1001,
+      "prob": 0.0,
+      "payload_delta_bytes": 224,
+      "timing_jitter_ms": 0,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    },
+    "large frames sent fast (VL 1002, +212 B, jitter -5)": {
+      "vlId": 1002,
+      "prob": 0.0,
+      "payload_delta_bytes": 212,
+      "timing_jitter_ms": -5,
+      "mac_mutation": "none",
+      "is_extreme_test": true,
+      "sequence_number_override": 0,
+      "dest_mac_mutation": "none"
+    }
+  },
+  "bugs": {
+    "skip_bag_policing": {
+      "detected_by": [
+        "send every 3 ms on BAG 4 (VL 1001, jitter -1)",
+        "send every 31 ms on BAG 32 (VL 3001, jitter -1)",
+        "send every 29 ms on BAG 32 (VL 3001, jitter -3)",
+        "send every 28 ms on BAG 32 (VL 3001, jitter -4)",
+        "large frames sent fast (VL 1002, +212 B, jitter -5)"
+      ],
+      "check_a_not_detected_without_mutation": true,
+      "check_b_detected_by_some_input": true,
+      "listed_unreachable": false,
+      "passes": true
+    },
+    "skip_frame_validation": {
+      "detected_by": [
+        "frame 1 byte below MinFrame (VL 1001, 63 B)",
+        "frame 1 byte above MaxFrame (VL 1001, 513 B)",
+        "frame 2 bytes above MaxFrame (VL 1001, 514 B)",
+        "frame above 1518 B (VL 1001, 2000 B)"
+      ],
+      "check_a_not_detected_without_mutation": true,
+      "check_b_detected_by_some_input": true,
+      "listed_unreachable": false,
+      "passes": true
+    },
+    "skip_mac_validation": {
+      "detected_by": [
+        "spoofed source MAC (VL 1001)"
+      ],
+      "check_a_not_detected_without_mutation": true,
+      "check_b_detected_by_some_input": true,
+      "listed_unreachable": false,
+      "passes": true
+    },
+    "skip_token_bucket": {
+      "detected_by": [],
+      "check_a_not_detected_without_mutation": true,
+      "check_b_detected_by_some_input": false,
+      "listed_unreachable": true,
+      "passes": true
+    },
+    "skip_vl_check": {
+      "detected_by": [],
+      "check_a_not_detected_without_mutation": true,
+      "check_b_detected_by_some_input": false,
+      "listed_unreachable": true,
+      "passes": true
+    },
+    "skip_constant_field": {
+      "detected_by": [
+        "corrupted MAC prefix (VL 1001)"
+      ],
+      "check_a_not_detected_without_mutation": true,
+      "check_b_detected_by_some_input": true,
+      "listed_unreachable": false,
+      "passes": true
+    },
+    "skip_sequence_check": {
+      "detected_by": [
+        "sequence number 0 (VL 1001)",
+        "large frames sent fast (VL 1002, +212 B, jitter -5)"
+      ],
+      "check_a_not_detected_without_mutation": true,
+      "check_b_detected_by_some_input": true,
+      "listed_unreachable": false,
+      "passes": true
+    },
+    "accept_oversized": {
+      "detected_by": [
+        "frame 1 byte above MaxFrame (VL 1001, 513 B)",
+        "frame 2 bytes above MaxFrame (VL 1001, 514 B)",
+        "frame above 1518 B (VL 1001, 2000 B)"
+      ],
+      "check_a_not_detected_without_mutation": true,
+      "check_b_detected_by_some_input": true,
+      "listed_unreachable": false,
+      "passes": true
+    },
+    "max_frame_off_by_one": {
+      "detected_by": [
+        "frame 1 byte above MaxFrame (VL 1001, 513 B)"
+      ],
+      "check_a_not_detected_without_mutation": true,
+      "check_b_detected_by_some_input": true,
+      "listed_unreachable": false,
+      "passes": true
+    },
+    "loose_bag_tolerance": {
+      "detected_by": [
+        "send every 31 ms on BAG 32 (VL 3001, jitter -1)",
+        "send every 29 ms on BAG 32 (VL 3001, jitter -3)",
+        "large frames sent fast (VL 1002, +212 B, jitter -5)"
+      ],
+      "check_a_not_detected_without_mutation": true,
+      "check_b_detected_by_some_input": true,
+      "listed_unreachable": false,
+      "passes": true
+    }
+  },
+  "reference_metrics": {
+    "no mutation (VL 1001)": {
+      "frames_forwarded": 3380,
+      "frames_dropped_policing": 0,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 100.0,
+      "policing_rate": 0.0,
+      "es_frames_rejected": 0,
+      "es_frames_received": 3380
+    },
+    "no mutation (VL 3001)": {
+      "frames_forwarded": 3380,
+      "frames_dropped_policing": 0,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 100.0,
+      "policing_rate": 0.0,
+      "es_frames_rejected": 0,
+      "es_frames_received": 3380
+    },
+    "frame 1 byte below MinFrame (VL 1001, 63 B)": {
+      "frames_forwarded": 2480,
+      "frames_dropped_policing": 0,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 900,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 73.37278106508876,
+      "policing_rate": 0.0,
+      "es_frames_rejected": 0,
+      "es_frames_received": 2480
+    },
+    "frame exactly MaxFrame (VL 1001, 512 B)": {
+      "frames_forwarded": 3380,
+      "frames_dropped_policing": 0,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 100.0,
+      "policing_rate": 0.0,
+      "es_frames_rejected": 0,
+      "es_frames_received": 3380
+    },
+    "frame 1 byte above MaxFrame (VL 1001, 513 B)": {
+      "frames_forwarded": 2480,
+      "frames_dropped_policing": 0,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 900,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 73.37278106508876,
+      "policing_rate": 0.0,
+      "es_frames_rejected": 0,
+      "es_frames_received": 2480
+    },
+    "frame 2 bytes above MaxFrame (VL 1001, 514 B)": {
+      "frames_forwarded": 2480,
+      "frames_dropped_policing": 0,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 900,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 73.37278106508876,
+      "policing_rate": 0.0,
+      "es_frames_rejected": 0,
+      "es_frames_received": 2480
+    },
+    "frame above 1518 B (VL 1001, 2000 B)": {
+      "frames_forwarded": 2480,
+      "frames_dropped_policing": 0,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 900,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 73.37278106508876,
+      "policing_rate": 0.0,
+      "es_frames_rejected": 0,
+      "es_frames_received": 2480
+    },
+    "send every 3 ms on BAG 4 (VL 1001, jitter -1)": {
+      "frames_forwarded": 3080,
+      "frames_dropped_policing": 600,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 83.69565217391305,
+      "policing_rate": 16.304347826086957,
+      "es_frames_rejected": 0,
+      "es_frames_received": 3080
+    },
+    "send every 31 ms on BAG 32 (VL 3001, jitter -1)": {
+      "frames_forwarded": 3326,
+      "frames_dropped_policing": 58,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 98.28605200945626,
+      "policing_rate": 1.7139479905437354,
+      "es_frames_rejected": 0,
+      "es_frames_received": 3326
+    },
+    "send every 29 ms on BAG 32 (VL 3001, jitter -3)": {
+      "frames_forwarded": 3330,
+      "frames_dropped_policing": 62,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 98.17216981132076,
+      "policing_rate": 1.8278301886792452,
+      "es_frames_rejected": 0,
+      "es_frames_received": 3330
+    },
+    "send every 28 ms on BAG 32 (VL 3001, jitter -4)": {
+      "frames_forwarded": 3332,
+      "frames_dropped_policing": 64,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 98.11542991755006,
+      "policing_rate": 1.884570082449941,
+      "es_frames_rejected": 0,
+      "es_frames_received": 3332
+    },
+    "spoofed source MAC (VL 1001)": {
+      "frames_forwarded": 2480,
+      "frames_dropped_policing": 0,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 900,
+      "forward_rate": 73.37278106508876,
+      "policing_rate": 0.0,
+      "es_frames_rejected": 0,
+      "es_frames_received": 2480
+    },
+    "corrupted MAC prefix (VL 1001)": {
+      "frames_forwarded": 3380,
+      "frames_dropped_policing": 0,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 100.0,
+      "policing_rate": 0.0,
+      "es_frames_rejected": 1800,
+      "es_frames_received": 2480
+    },
+    "wrong VL bytes in dest MAC (VL 1001)": {
+      "frames_forwarded": 3380,
+      "frames_dropped_policing": 0,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 100.0,
+      "policing_rate": 0.0,
+      "es_frames_rejected": 0,
+      "es_frames_received": 3380
+    },
+    "constant sequence number 255 (VL 1001)": {
+      "frames_forwarded": 3380,
+      "frames_dropped_policing": 0,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 100.0,
+      "policing_rate": 0.0,
+      "es_frames_rejected": 0,
+      "es_frames_received": 2482
+    },
+    "sequence number 0 (VL 1001)": {
+      "frames_forwarded": 3380,
+      "frames_dropped_policing": 0,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 100.0,
+      "policing_rate": 0.0,
+      "es_frames_rejected": 1800,
+      "es_frames_received": 2480
+    },
+    "512 B frames at BAG 4 (VL 1001, token-bucket stress)": {
+      "frames_forwarded": 3380,
+      "frames_dropped_policing": 0,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 100.0,
+      "policing_rate": 0.0,
+      "es_frames_rejected": 0,
+      "es_frames_received": 3380
+    },
+    "large frames sent fast (VL 1002, +212 B, jitter -5)": {
+      "frames_forwarded": 3378,
+      "frames_dropped_policing": 35062,
+      "frames_dropped_token_bucket": 0,
+      "frames_dropped_frame_error": 0,
+      "frames_dropped_mac_error": 0,
+      "forward_rate": 8.787721123829344,
+      "policing_rate": 91.21227887617066,
+      "es_frames_rejected": 4,
+      "es_frames_received": 3384
+    }
+  },
+  "failed_runs": []
+}
