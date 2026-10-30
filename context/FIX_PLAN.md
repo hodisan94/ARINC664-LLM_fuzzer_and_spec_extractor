@@ -223,6 +223,16 @@ with this text):
 - `prompt_version` (and `ablation_mode`) are missing from the error records of
   `llm_fuzzer/main.py`, and `--resume` does not check that the version matches.
 
+**Neutral version written (2026-10-30, `8018ba4`)**: `--prompt-version neutral`. Not yet
+piloted.
+
+**Also implementation knowledge, outside the prompt:** the controller's steering
+(`strategy_planner.py:402-440`, active in `full` and `A1`) injects a fixed schedule of
+standalone tests at iterations 21, 26, 31, 36, 41 and 46: `spoof_src`, `corrupt_prefix`,
+frame size 2000, timing −5 ms, sequence override 255, and the token-bucket stress. These
+target the injected bugs directly, whatever the prompt says. A neutral prompt does not
+remove this; it needs its own decision (keep and disclose, or remove).
+
 To do before the Stage 7 campaigns:
 - Add a third, "neutral" prompt version that keeps only how to operate the mutation parameters
   (what each one changes, allowed values, 0 = no override, `test_cases` are not sent to the
