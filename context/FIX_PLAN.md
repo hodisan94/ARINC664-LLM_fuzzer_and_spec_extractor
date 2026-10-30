@@ -127,7 +127,29 @@ campaigns.
 | 3 | Done (2026-10-28), same branch; recorded campaigns re-scored, nothing re-run |
 | 4 | Done (2026-10-28), same branch; all logged inputs replayed on the fixed simulator |
 | 5 | Done (2026-10-29), same branch; 10-bug suite built, checked and used to re-score all recorded inputs; see `context/BUG_SUITE.md` |
-| 6–8 | Not started (switch for old/new planner instructions added, 580f802; pilot of both run, d3b7e46) |
+| 6 | Done (2026-10-30), same branch; test cases regenerated from the current rules, `configs/test_cases_rules_2026-10.json` |
+| 7–8 | Not started (switch for old/new planner instructions added, 580f802; pilot of both run, d3b7e46) |
+
+### Stage 6 results
+
+- **Root cause found first** (`1ddfb79`): the test-case schema let the LLM name each
+  parameter itself, so the keys of `test_cases.json` often matched no rule. Regenerating
+  without this fix would have repeated Bug 5. Test cases are now filed under the rule's full
+  name (`Category.rule`); the LLM's own parameter name is kept inside each test case.
+- **Generation** (`b2acfbf`): 626 rules of `configs/spec_rules_filtered.json`, one call each,
+  GPT-4o (`gpt-4o-2024-08-06`, temperature 0.7, as in the paper), 2026-10-30, 48 minutes,
+  **$3.98** at list prices (266,659 input and 331,566 output tokens). Every rule answered;
+  3,989 test cases (4–18 per rule, mostly 6–7). A 10-rule sample ($0.06) was run first.
+- **Reach:** every one of the 626 names maps to a rule category, reaching **184 of 185**
+  categories, which is every category the matcher reaches from rule names (one category is
+  reached by no rule name at all, a matcher artifact). The old file reaches 90.
+- The old `configs/test_cases.json` is unchanged. The per-call log with token use is
+  `spec_extraction/test_case_extraction_2026-10.jsonl`.
+- **Needed before Stage 7:** the LLM fuzzer takes `--test-cases`, but the BOOFUZZ and random
+  baselines read `configs/test_cases.json` from a constructor default and have no command-line
+  option. Add the option so that all three use the new file.
+- **Note for the paper:** the paper reports 2,703 test cases; the new file has 3,989.
+
 
 ### Stage 5 bug suite, fixed before any scoring (decided 2026-10-29)
 
