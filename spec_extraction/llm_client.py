@@ -73,6 +73,13 @@ class LLMClient:
                 kwargs["response_format"] = response_format
             
             response = self.client.chat.completions.create(**kwargs)
+            # Token use of the last call, for cost accounting by the callers
+            usage = response.usage
+            self.last_usage = {
+                "model": response.model,
+                "prompt_tokens": usage.prompt_tokens if usage else None,
+                "completion_tokens": usage.completion_tokens if usage else None,
+            }
             return response.choices[0].message.content.strip()
         
         except Exception as e:

@@ -65,17 +65,19 @@ def extract_test_cases_for_rule(
     old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
     signal.alarm(timeout_seconds)
     try:
-        test_cases = llm_client.query_json(
+        response = llm_client.query_json(
             system_prompt=SYSTEM_PROMPT_TEST_CASE_EXTRACTION,
             user_prompt=user_prompt
         )
         signal.alarm(0)
-        
+        test_cases = key_by_rule(rule_name, response)
+
         if checkpoint_file:
             with open(checkpoint_file, 'a') as f:
                 checkpoint_entry = {
                     "rule_name": rule_name,
-                    "test_cases": test_cases
+                    "test_cases": test_cases,
+                    "usage": getattr(llm_client, "last_usage", None)
                 }
                 f.write(json.dumps(checkpoint_entry) + "\n")
         
@@ -94,6 +96,32 @@ def extract_test_cases_for_rule(
         return {}
     finally:
         signal.signal(signal.SIGALRM, old_handler)
+
+
+def key_by_rule(rule_name: str, response: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    File the LLM's test cases under the rule they were generated for.
+
+    The LLM names the parameter itself ("parameter_name" in the schema), so the same rule
+    could come back as "bag", "bag_value" or "address_validation". The fuzzers use these
+    keys as rule labels, so a free-form name may match no rule category. All parameter
+    blocks of one response are merged under the rule's own name instead.
+    """
+    blocks = [b for b in response.values() if isinstance(b, dict)]
+    if not blocks:
+        return {}
+    merged = {
+        "rule_summary": blocks[0].get("rule_summary", ""),
+        "valid_range": blocks[0].get("valid_range", ""),
+        "test_cases": [],
+    }
+    for param_name, block in response.items():
+        if not isinstance(block, dict):
+            continue
+        for case in block.get("test_cases", []):
+            if isinstance(case, dict):
+                merged["test_cases"].append(dict(case, parameter=param_name))
+    return {rule_name: merged}
 
 
 def flatten_rules(rules: Dict[str, Any], prefix: str = "") -> List[tuple]:
@@ -256,8 +284,15 @@ def main():
         help="Checkpoint file for resuming extraction"
     )
     
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=None,
+        help="Process only the first N rules (for a cost sample)"
+    )
+
     args = parser.parse_args()
-    
+
     # Ensure output directory exists
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
     os.makedirs(os.path.dirname(args.checkpoint), exist_ok=True)
@@ -273,6 +308,9 @@ def main():
     # Flatten rules
     flattened_rules = flatten_rules(spec_rules)
     print(f"Found {len(flattened_rules)} extractable rules")
+    if args.limit is not None:
+        flattened_rules = flattened_rules[:args.limit]
+        print(f"Limited to the first {len(flattened_rules)} rules")
     
     # Initialize LLM client
     print("\nInitializing LLM client...")
