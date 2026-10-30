@@ -54,9 +54,18 @@ Code: `evaluation/compute_bdr.py` (catalogue `BUGS`, `bug_detected`),
 
 ## 2. The suite
 
-The list was fixed and committed (`b2e6ef8`) **before** any campaign was scored against it,
-so no bug was chosen for the fuzzer that finds it. All fuzzers are scored against the same
-list.
+The list was fixed and committed (`b2e6ef8`) **before** any campaign was scored against it.
+All fuzzers are scored against the same list.
+
+**Caveat on "before scoring".** The recorded inputs were already in the logs when the list
+was chosen, and the Stage 4 notes already said that the LLM often aims exactly at MaxFrame.
+Whether a fuzzer ever sends exactly MaxFrame + 1 could therefore have been looked up; it was
+not, and the prediction written down with the list ("may favour the baselines") was wrong
+(Section 6, caveat 2). The difference in bugs found between the LLM-guided runs and the
+baselines comes almost entirely from `max_frame_off_by_one`. Describe the list as chosen
+before scoring, not as blind to the data, and report this bug's effect separately. The new
+campaigns of Stage 7 are scored against a list fixed before they ran, so for them the
+pre-registration is clean.
 
 | # | Bug ID | What it switches off | Site | ARINC 664 P7 clause | Detection signal | Reachable |
 |---|---|---|---|---|---|---|
@@ -213,7 +222,8 @@ Every bug must pass two checks:
 - **(b)** at least one input that the mutation parameters can express **does** detect it,
   except bugs 4 and 5, for which no input should.
 
-`evaluation/revision/check_bug_suite.py` runs 18 hand-written probes against the reference
+`evaluation/revision/check_bug_suite.py` runs 18 hand-written probes (17 distinct inputs;
+the token-bucket probe is the same input as "exactly MaxFrame") against the reference
 simulator and all 10 variants (187 simulator runs). Results:
 `evaluation/results/revision/bug_suite_checks.json`. All AFDX unit tests passed on the same
 build (sending ES 58, switch 46, receiving ES 41).
@@ -314,8 +324,8 @@ Pilot iterations are out of 100, all others out of 200.
 - **The suite now separates the fuzzers.** On the old suite every baseline scored 6/8.
   Now the LLM-guided runs and the baselines differ on two bugs, in opposite directions:
   - **`max_frame_off_by_one`** is found by every LLM-guided run and by no baseline run. In the
-    recorded runs the LLM often aimed exactly at the VL's MaxFrame (47 iterations at exactly
-    MaxFrame: 42–47 iterations per run) and sometimes one byte above it (4–7 iterations per
+    recorded runs the LLM often aimed exactly at the VL's MaxFrame (42–47 iterations per
+    run) and sometimes one byte above it (4–7 iterations per
     run). The baselines' frame sizes come from the test-case catalogue and from fixed
     generation rules; in all six baseline runs no input is exactly MaxFrame or MaxFrame + 1
     on any VL.
@@ -325,7 +335,9 @@ Pilot iterations are out of 100, all others out of 200.
   validation: 86 detecting iterations for BOOFUZZ and 65 on average for Random, against 17.8
   for the LLM.
 - **With the revised instructions** the LLM finds all 8 reachable bugs in both pilot runs,
-  and triggers most bugs about two to three times as often as with the original instructions.
+  and triggers every reachable bug more often than with the original instructions: from
+  1.5 times (source MAC, off-by-one) to 7.7 times (sequence check), and 2–3 times for 5 of
+  the 8 bugs (mean detecting iterations per run, revised over original).
 
 ### Caveats
 
@@ -346,6 +358,20 @@ Pilot iterations are out of 100, all others out of 200.
    pilot runs per instruction version. A one-bug difference is a single bug.
 5. **Detection uses whole-run counters.** A difference of one frame anywhere in the run
    counts. This is the paper's definition and is kept unchanged.
+6. **Very large frames disturb timing on other VLs.** 9 of the 1,037 distinct recorded inputs
+   have no timing offset yet detect `skip_bag_policing` and `loose_bag_tolerance`. All send
+   frames of about 8–9 KB (extreme mode allows up to 9,000 bytes). These frames are dropped
+   for their size, but transmitting them delays other VLs' frames on the shared links, and
+   some of those then arrive too early. This is a real network effect, not a scoring error,
+   but it means a size-only input can detect the two BAG bugs.
+7. **`loose_bag_tolerance` is only reachable on the 16 ms and 32 ms BAG VLs** by a timing
+   offset (Section 3, bug 10), because offsets are whole milliseconds. A fuzzer that never
+   targets VLs 2002, 2003, 3001 or 3002 with a small negative offset cannot find it except
+   through effect 6.
+8. **Reconstructed submitted campaigns.** The table uses the `original/` reconstruction. The
+   `original_as_run/` inputs (as the submitted `compute_bdr.py` rebuilt them) score lower:
+   BOOFUZZ 5 of 10 and Random 0 of 10, because that script lost most baseline mutations
+   (letter, problem 2).
 
 ---
 

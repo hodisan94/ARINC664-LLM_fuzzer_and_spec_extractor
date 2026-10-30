@@ -205,6 +205,24 @@ jitter => finds bugs in BAG policing". Revised: "`wrong_vl` ... nothing checks",
 exercise" the token bucket, "the receiver discards repeats as duplicates", "dropped at the
 switch", "the receiving ES rejects".
 
+**Errors in the revised text found by the review of 2026-10-30** (the pilot of `d3b7e46` ran
+with this text):
+
+- It still recommends test cases in three passages shared by both versions
+  (`fuzzing_agent.py:314`, "Example 1 - Using PREDEFINED test cases" at line 513 with every
+  mutation parameter null, and "3. COMBINE both" at line 502). Commit `1e3bfc9` claimed to
+  remove the recommendation; it removed it only from the guidelines.
+- It says all five `mac_mutation_type` values change the source MAC; in
+  `afdx-traffic-generator.cc:372-416` `spoof_dst` and `broadcast` change the destination
+  MAC and `zero_mac` changes both.
+- It says no input can exercise the token bucket, but the mechanism list still advertises
+  `token_bucket_stress` as an untested mechanism, and the controller still schedules it
+  (`strategy_planner.py:429`).
+- The output schema still says `sequence_number_override` is 0–255, while parameter 6 says
+  256 sends sequence number 0.
+- `prompt_version` (and `ablation_mode`) are missing from the error records of
+  `llm_fuzzer/main.py`, and `--resume` does not check that the version matches.
+
 To do before the Stage 7 campaigns:
 - Add a third, "neutral" prompt version that keeps only how to operate the mutation parameters
   (what each one changes, allowed values, 0 = no override, `test_cases` are not sent to the
@@ -397,27 +415,33 @@ The same 2 BOOFUZZ inputs (out-of-range integers) crash both simulators.
 | Submitted LLM / BOOFUZZ (reconstructed) | 6 / 6 | 6 / 6 | – |
 | Submitted Random, as compute_bdr rebuilt it | 2 | 0 | BAG, sequence check |
 
-Token bucket and VL check are detected by no campaign on either simulator (bugs 7, 15;
+Token bucket and VL check are detected by no campaign on either simulator (bugs 7, 8;
 stage 5).
 
 **What changed underneath the counts**
 
 - On the submitted simulator, BAG-policing and sequence-check detection fired in **every**
-  iteration (200 of 200). The hidden second sender (bug 1) produced 3,492 policing drops
+  iteration (200 of 200; 198 for BOOFUZZ, whose 2 crashed iterations do not count). The hidden second sender (bug 1) produced 3,492 policing drops
   and 264 rejections even in the clean run, so any input "detected" those bugs. On the
   fixed simulator the clean run has 0 drops and 0 rejections, and detection needs an input
   that actually violates the rule. Example: BAG detection, LLM mean 31.6 detecting
   iterations of 200, Random 31.2, BOOFUZZ 25.
-- **Sequence check** is now found by a constant sequence-number override. The LLM runs did
-  this in 0–2 iterations (found in 2 of 5 runs); Random in about 13 per seed (5 of 5);
-  BOOFUZZ in 8.
+- **Sequence check** is now found mainly through timing overload, not through the
+  sequence-number override: sending a VL far faster than its BAG causes long bursts of
+  policing drops, and the resulting gaps in the received sequence numbers trip the
+  receiver's check. Of the 70 detecting inputs in the Stage 5 cache, 63 have a negative
+  timing offset and 57 have no sequence override; a constant non-zero override is discarded
+  earlier as a duplicate (Bug 11). *(Corrected 2026-10-30; an earlier version said the
+  override found it.)* Detecting iterations: LLM 0–2 (found in 2 of 5 runs); Random about
+  13 per seed (5 of 5); BOOFUZZ 8.
 - **Frame size** (skip_frame_validation, accept_oversized): the frame size starts at the
-  midpoint of the VL's range plus the logged delta. The LLM mostly chose deltas that land
-  **exactly on** MaxFrame or MinFrame (e.g. +224 on VL 1001 = 512 bytes). The 17-byte
-  header bug (bug 3) made those frames invalid, so they "detected" the bug; now they are
-  valid. LLM detecting iterations fell from 82.6 to 17.8 per run. BOOFUZZ and Random chose
-  deltas one byte **beyond** the limit (e.g. −225 = 63 bytes), which the header bug made
-  valid; their detecting iterations rose (BOOFUZZ 39 → 86, Random 45.8 → 65.0).
+  midpoint of the VL's range plus the logged delta. The LLM often chose deltas that land
+  **exactly on** MaxFrame or MinFrame (e.g. +224 on VL 1001 = 512 bytes; 39–43% of the
+  iterations with a size change). The 17-byte header bug (bug 3) made those frames
+  invalid, so they "detected" the bug; now they are valid. LLM detecting iterations fell
+  from 82.6 to 17.8 per run. BOOFUZZ and Random chose deltas one byte **below MinFrame**
+  (e.g. −225 = 63 bytes), which the header bug made valid; their detecting iterations rose
+  (BOOFUZZ 39 → 86, Random 45.8 → 65.0).
 
 **How many logged inputs change anything** (`replay_effects.py`; counters compared with
 the clean run of the same simulator; of 200)
