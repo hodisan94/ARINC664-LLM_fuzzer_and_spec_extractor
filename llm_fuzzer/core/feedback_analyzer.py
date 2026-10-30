@@ -43,8 +43,9 @@ class FeedbackAnalyzer:
 
         Args:
             reward_calculator: RewardCalculator instance (creates default if None)
-            prompt_version: "revised" or "original"; selects the test_cases advice in the
-                recommendation (fuzzing_agent.PROMPT_VERSIONS)
+            prompt_version: "revised", "original" or "neutral"; selects the test_cases advice
+                in the recommendation ("neutral" gets the revised advice)
+                (fuzzing_agent.PROMPT_VERSIONS)
         """
         self.reward_calculator = reward_calculator or RewardCalculator()
         self.prompt_version = prompt_version

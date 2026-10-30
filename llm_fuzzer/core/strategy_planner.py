@@ -99,8 +99,8 @@ class LLMStrategyPlanner:
                 (label and parameters refer to the same rule); "clear" keeps the earlier
                 behavior that relabels the iteration and clears its parameters
             vl_config_path: VL table shown to the LLM when it re-plans
-            prompt_version: planner prompt text, "revised" or "original" (the text of the
-                submitted campaigns); see fuzzing_agent.PROMPT_VERSIONS
+            prompt_version: planner prompt text, "revised", "original" (the text of the
+                submitted campaigns) or "neutral"; see fuzzing_agent.PROMPT_VERSIONS
 
         Raises:
             ImportError: If the requested LLM provider package is not installed
@@ -772,6 +772,23 @@ class LLMStrategyPlanner:
                 if 1400 <= fs_val <= 1518 and bag_val is None:
                     used_mechs.add("token_bucket_stress")
 
+        # Parameters set to a non-default value at least once (neutral prompt version)
+        used_params = set()
+        if not history.empty:
+            for _, row in history.iterrows():
+                for param in ("frame_size", "bag_value", "timing_jitter_ms", "prob",
+                              "sequence_number_override", "mac_mutation_type", "dest_mac_mutation"):
+                    v = row.get(param)
+                    if v is None or (isinstance(v, float) and v != v):
+                        continue
+                    if param in ("frame_size", "bag_value"):
+                        used_params.add(param)
+                    elif param in ("mac_mutation_type", "dest_mac_mutation"):
+                        if v not in ("none", ""):
+                            used_params.add(param)
+                    elif v != 0:
+                        used_params.add(param)
+
         return {
             "covered_rules": covered,
             "uncovered_rules": uncovered,
@@ -782,6 +799,7 @@ class LLMStrategyPlanner:
             "category_coverage_pct": cat_pct,
             "cat_to_rules": self._cat_to_rules,
             "used_mutation_mechanisms": used_mechs,
+            "used_parameters": used_params,
         }
     
     def _prepare_recent_results(

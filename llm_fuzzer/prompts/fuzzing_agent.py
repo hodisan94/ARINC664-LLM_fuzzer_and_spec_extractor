@@ -15,7 +15,11 @@ import pandas as pd
 # "revised" describes the mutation parameters as the simulator applies them (no test_cases
 # recommendation, no token-bucket claim, corrected sequence-number and wrong_vl semantics).
 # The two differ only in the passages below; everything else in the prompt is shared.
-PROMPT_VERSIONS = ("revised", "original")
+# "neutral" describes only what each mutation parameter changes in the traffic and the
+# protocol rules, and says nothing about how this simulator reacts (what it drops, rejects
+# or ignores, or which mutation "finds bugs"); it also replaces the shared mechanism list,
+# test-case footer and output examples, which contain such statements.
+PROMPT_VERSIONS = ("revised", "original", "neutral")
 
 _MUTATION_PARAMETERS = {
     "original": [
@@ -52,6 +56,29 @@ _MUTATION_PARAMETERS = {
         "  NOTE: payload_pattern, sequence-number ranges in test cases, and the predefined",
         "  test_cases themselves are NOT sent to the simulator; only the parameters above are.",
     ],
+    "neutral": [
+        "\nMUTATION PARAMETERS (only these change the traffic; every other field is ignored):",
+        "  All of them apply to the frames of target_vl only.",
+        "  1. frame_size: total frame size in bytes (the VL table gives MinFrame and MaxFrame;",
+        "     any value from 18 to 9000 can be sent).",
+        "  2. timing_jitter_ms: whole milliseconds added to every send interval",
+        "     (e.g. -1 on a VL with BAG=4 sends every 3 ms; +2 sends every 6 ms).",
+        "  3. bag_value: a send interval in ms; bag_value minus the VL's BAG is added to",
+        "     timing_jitter_ms (e.g. bag_value=2 on a VL with BAG=4 adds -2).",
+        "  4. mac_mutation_type: 'spoof_src' sets a random unicast source MAC; 'invalid_src' a",
+        "     random multicast source MAC; 'spoof_dst' a random multicast destination MAC;",
+        "     'broadcast' the destination MAC ff:ff:ff:ff:ff:ff; 'zero_mac' both MACs to zero.",
+        "  5. prob: probability 0.0-1.0 that each frame is not sent.",
+        "  6. sequence_number_override: 1-255 writes this sequence number into every frame;",
+        "     256 writes 0; 0 or null leaves the sequence numbers unchanged.",
+        "     (sequence_number is used the same way when sequence_number_override is not set.)",
+        "  7. dest_mac_mutation: 'corrupt_prefix' sets the first byte of the destination MAC",
+        "     to 04 (the AFDX constant field is 03:00:00:00); 'wrong_vl' adds 1 to the fifth",
+        "     byte (the VL identifier); 'zero' sets the destination MAC to zero.",
+        "",
+        "  NOTE: test_cases and payload_pattern are not applied to the traffic. To test a rule,",
+        "  set the parameters above to the values you want to send.",
+    ],
 }
 
 _MECHANISM_DESCRIPTIONS = {
@@ -63,7 +90,13 @@ _MECHANISM_DESCRIPTIONS = {
         "sequence_number_override>0": "Sequence number override — constant number on every frame (receiver discards repeats as duplicates)",
         "token_bucket_stress": "Token bucket stress (frame_size=1500 + default BAG timing) — frame_size 1500 is above every VL's MaxFrame, so these frames are dropped by frame validation first",
     },
+    # The neutral version lists unused parameters instead (_build_unused_parameters_section)
+    "neutral": {},
 }
+
+# Parameters whose use the neutral version tracks, in the order of _MUTATION_PARAMETERS
+_NEUTRAL_PARAMETERS = ("frame_size", "timing_jitter_ms", "bag_value", "mac_mutation_type", "prob",
+                       "sequence_number_override", "dest_mac_mutation")
 
 # Decision guidelines 2-4; {total_rules} is filled in.
 _GUIDELINES_2_TO_4 = {
@@ -105,12 +138,34 @@ _GUIDELINES_2_TO_4 = {
    - timing_jitter_ms: negative value (e.g. -1 on BAG=4) => exercises BAG policing
    - Token bucket: frames that pass the BAG check never exceed the token bucket in this
      switch configuration, so no input can exercise it.""",
+    "neutral": """2. PREDEFINED TEST CASES:
+   - Look at the "PREDEFINED TEST CASES" section — {total_rules}+ rules available
+   - Use them as ideas for violating VALUES of a rule. The test_cases field is not applied
+     to the traffic: set the mutation parameters to the values you want to send.
+
+3. CHOOSING VALUES:
+   - Base them on the protocol rules and the VL table: limits, allowed sets, field formats.
+   - Vary them across iterations: below, at and above limits, and far outside them.
+
+4. USE ALL PARAMETERS:
+   - Over the campaign, try every mutation parameter, alone and in combination, on
+     different VLs.""",
 }
 
 _OUTPUT_OPTION_1 = {
     "original": '1. Use PREDEFINED test cases: set "test_cases": ["TC0", "TC1"] (values from test cases list)',
     "revised": ('1. Use PREDEFINED test cases to pick values, and set the matching parameters: the\n'
                 '   "test_cases" field alone is not sent to the simulator'),
+}
+
+# Footer of the test-case section (shared by "original" and "revised")
+_TEST_CASES_FOOTER = {
+    "shared": ["\nTo use a test case: set protocol_rule to the rule name above "
+               "and test_cases to e.g. [\"TC0\", \"TC1\"].",
+               "You can ALSO propose CUSTOM mutations beyond these test cases!"],
+    "neutral": ["\nTo use a test case: set protocol_rule to the rule name above and set the "
+                "mutation parameters to its values.",
+                "You can also choose values that are not in any test case."],
 }
 
 
@@ -198,7 +253,7 @@ def build_fuzzing_prompt(
         system_config: System configuration (available VLs, etc.)
         iteration: Current iteration number
         coverage_stats: Dict with covered_rules, uncovered_rules, mutation_type_counts
-        prompt_version: "revised" (default) or "original"; see PROMPT_VERSIONS
+        prompt_version: "revised" (default), "original" or "neutral"; see PROMPT_VERSIONS
 
     Returns:
         Complete prompt string for LLM
@@ -209,7 +264,7 @@ def build_fuzzing_prompt(
     role_definition = _build_role_definition()
     coverage_section = _build_coverage_section(coverage_stats, iteration)
     protocol_rules_section = _build_protocol_rules_section(spec_rules)
-    test_cases_section = _build_test_cases_section(test_cases)
+    test_cases_section = _build_test_cases_section(test_cases, prompt_version)
     recent_performance = _build_recent_performance_section(recent_results)
     vl_stats_section = _build_vl_statistics_section(vl_statistics, system_config, prompt_version)
     decision_guidelines = _build_decision_guidelines(iteration, coverage_stats, prompt_version)
@@ -277,7 +332,7 @@ def _build_protocol_rules_section(spec_rules: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def _build_test_cases_section(test_cases: Dict[str, Any]) -> str:
+def _build_test_cases_section(test_cases: Dict[str, Any], prompt_version: str = "revised") -> str:
     """Format test cases for the prompt.
 
     Shows ALL rule names with summary + case count so the LLM can pick
@@ -310,9 +365,7 @@ def _build_test_cases_section(test_cases: Dict[str, Any]) -> str:
             short_summary = f" — {summary[:80]}" if summary else ""
             lines.append(f"  {rule_name} ({len(cases)} TCs){short_summary}")
 
-    lines.append("\nTo use a test case: set protocol_rule to the rule name above "
-                 "and test_cases to e.g. [\"TC0\", \"TC1\"].")
-    lines.append("You can ALSO propose CUSTOM mutations beyond these test cases!")
+    lines.extend(_TEST_CASES_FOOTER["neutral" if prompt_version == "neutral" else "shared"])
 
     return "\n".join(lines)
 
@@ -418,6 +471,32 @@ def _build_decision_guidelines(iteration: int, coverage_stats: Optional[Dict[str
                      f"Now DEEPEN: re-test covered categories with different VLs, "
                      f"parameters, and strategies. Overuse penalty is reduced.")
 
+    if prompt_version == "neutral":
+        return f"""
+{"=" * 70}
+DECISION GUIDELINES — Phase: {phase} (category coverage {cat_pct:.0f}%)
+{"=" * 70}
+
+{phase_msg}
+{_build_unused_parameters_section(coverage_stats)}
+
+1. PICK YOUR RULE:
+   - Look at the UNCOVERED CATEGORIES list above — each shows example rules
+   - Set your 'mutation_type' to EXACTLY a rule name from the test cases list
+   - This covers a new spec category AND gives you +1.0 new-rule bonus
+
+{_GUIDELINES_2_TO_4[prompt_version].format(total_rules=total_rules)}
+
+5. STRATEGY TYPES:
+   - "edge-case": boundary values
+   - "adversarial": extreme violations, stress testing
+   - "conformance": valid parameters, verify compliance
+
+6. VL ROTATION: spread tests across VLs (1001-3002)
+
+ITERATION {iteration}: {phase_msg}
+"""
+
     # Build mutation mechanism coverage section
     used_mechs = coverage_stats.get("used_mutation_mechanisms", set()) if coverage_stats else set()
     all_mechs = {
@@ -470,8 +549,20 @@ ITERATION {iteration}: {phase_msg}
 """
 
 
+def _build_unused_parameters_section(coverage_stats: Optional[Dict[str, Any]]) -> str:
+    """Neutral version: name the mutation parameters this campaign has not used yet."""
+    used = coverage_stats.get("used_parameters", set()) if coverage_stats else set()
+    unused = [p for p in _NEUTRAL_PARAMETERS if p not in used]
+    if not unused:
+        return ""
+    return ("\nMUTATION PARAMETERS NOT USED YET in this campaign (no iteration has set them "
+            "to a non-default value):\n  " + ", ".join(unused))
+
+
 def _build_output_format(prompt_version: str = "revised") -> str:
     """Specify the expected JSON output format - FULL FREEDOM FOR LLM."""
+    if prompt_version == "neutral":
+        return _NEUTRAL_OUTPUT_FORMAT
     return """
 {"=" * 70}
 OUTPUT FORMAT (JSON):
@@ -641,6 +732,87 @@ THINK STEP BY STEP:
 4. What strategy (conformance/edge-case/adversarial)?
 5. What do I expect to learn?
 6. Have I tested ALL mutation mechanisms? (mac_mutation_type, dest_mac_mutation, etc.)
+"""
+
+
+_NEUTRAL_OUTPUT_FORMAT = "\n" + "=" * 70 + """
+OUTPUT FORMAT (JSON):
+""" + "=" * 70 + """
+
+{
+  "target_vl": <int, one of the available VLs>,
+  "mutation_type": "<rule name you are testing>",
+  "test_cases": ["<tc_id>", ...] OR null,
+  "bag_value": <int or null>,
+  "frame_size": <int or null>,
+  "timing_jitter_ms": <int or null>,
+  "mac_mutation_type": "<spoof_src|invalid_src|spoof_dst|broadcast|zero_mac or null>",
+  "prob": <float 0.0-1.0 or null>,
+  "sequence_number_override": <int 1-256 or null>,
+  "dest_mac_mutation": "<corrupt_prefix|wrong_vl|zero or null>",
+  "strategy": "conformance" OR "edge-case" OR "adversarial",
+  "reasoning": "<brief explanation of your choice>"
+}
+
+Only the mutation parameters (bag_value, frame_size, timing_jitter_ms, mac_mutation_type,
+prob, sequence_number_override, dest_mac_mutation) change the traffic. A strategy that sets
+none of them sends normal traffic. test_cases only records which test cases your values
+come from.
+
+EXAMPLES (format only; choose your own rules, VLs and values):
+
+Example 1 - one parameter:
+{
+  "target_vl": 2002,
+  "mutation_type": "Traffic Shaping.bag_value",
+  "test_cases": null,
+  "bag_value": 8,
+  "frame_size": null,
+  "timing_jitter_ms": null,
+  "mac_mutation_type": null,
+  "prob": null,
+  "sequence_number_override": null,
+  "dest_mac_mutation": null,
+  "strategy": "edge-case",
+  "reasoning": "The rule fixes the BAG of each VL; VL 2002 has BAG 16 ms, so this sends every 8 ms."
+}
+
+Example 2 - values taken from a predefined test case:
+{
+  "target_vl": 1003,
+  "mutation_type": "<rule name from the test cases list>",
+  "test_cases": ["TC2"],
+  "bag_value": null,
+  "frame_size": 40,
+  "timing_jitter_ms": null,
+  "mac_mutation_type": null,
+  "prob": null,
+  "sequence_number_override": null,
+  "dest_mac_mutation": null,
+  "strategy": "edge-case",
+  "reasoning": "TC2 of this rule is a 40-byte frame; frame_size is set to that value."
+}
+
+Example 3 - several parameters together:
+{
+  "target_vl": 3002,
+  "mutation_type": "<rule name>",
+  "test_cases": null,
+  "bag_value": null,
+  "frame_size": 1100,
+  "timing_jitter_ms": -6,
+  "mac_mutation_type": null,
+  "prob": 0.2,
+  "sequence_number_override": null,
+  "dest_mac_mutation": "zero",
+  "strategy": "adversarial",
+  "reasoning": "Combines a frame above this VL's MaxFrame, a shorter interval, sender loss and an all-zero destination address."
+}
+
+THINK STEP BY STEP:
+1. Which rule and which VL? Why?
+2. Which parameter values express a violation (or a boundary) of that rule?
+3. Have I varied the parameters, values and VLs across iterations?
 """
 
 

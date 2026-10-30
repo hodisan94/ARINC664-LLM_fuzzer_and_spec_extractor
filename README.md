@@ -472,9 +472,10 @@ Options:
 - `--history-path PATH` - iteration history, default `llm_fuzzer/data/iteration_history.jsonl`.
 - `--ablation {full,A0,A1,A2}` - planner variant: `full` (feedback and steering), `A2` (feedback only),
   `A1` (steering only), `A0` (neither); default `full`.
-- `--prompt-version {revised,original}` - planner instructions: `revised` (default) describes the
+- `--prompt-version {revised,original,neutral}` - planner instructions: `revised` (default) describes the
   mutation parameters as the simulator applies them; `original` is the text used in the submitted
-  campaigns. Recorded per iteration as `prompt_version`.
+  campaigns; `neutral` says only what each parameter changes in the traffic, without how the
+  simulator reacts. Recorded per iteration as `prompt_version`.
 - `--work-dir DIR` - isolated simulator working directory, for parallel campaigns.
 - `--resume` / `--force` - continue an existing history, or delete it and start fresh.
 

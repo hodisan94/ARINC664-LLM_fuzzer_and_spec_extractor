@@ -76,7 +76,8 @@ class LLMFuzzer:
             max_consecutive_failures: Stop after this many consecutive failed iterations
             ablation: planner variant; see ABLATIONS
             work_dir: isolated simulator working directory (for parallel campaigns)
-            prompt_version: planner instructions, "revised" or "original" (submitted campaigns)
+            prompt_version: planner instructions, "revised", "original" (submitted campaigns)
+                or "neutral"
         """
         self.spec_rules_path = spec_rules_path
         self.test_cases_path = test_cases_path
@@ -647,7 +648,8 @@ Examples:
         choices=PROMPT_VERSIONS,
         default='revised',
         help='Planner instructions: revised (default; describes the parameters as the '
-             'simulator applies them) or original (the text of the submitted campaigns)'
+             'simulator applies them), original (the text of the submitted campaigns) or '
+             'neutral (what each parameter changes, without how the simulator reacts)'
     )
 
     parser.add_argument(
