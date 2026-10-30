@@ -503,11 +503,19 @@ Examples:
         default=None,
         help='Isolated simulator working directory, for parallel campaigns'
     )
-    
+
+    parser.add_argument(
+        '--test-cases',
+        type=str,
+        default='configs/test_cases.json',
+        help='Path to violation test cases JSON (default: configs/test_cases.json)'
+    )
+
     args = parser.parse_args()
-    
+
     # Create fuzzer
     fuzzer = RandomFuzzer(
+        test_cases_path=args.test_cases,
         max_iterations=args.max_iterations,
         available_vls=args.vls,
         output_dir=args.output_dir,
