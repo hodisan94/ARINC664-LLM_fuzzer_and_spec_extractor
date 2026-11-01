@@ -179,6 +179,29 @@ tested. Unique Findings (labels, paired runs): BOOFUZZ 30–35, LLM 0, random 0.
 - **Interim result, same picture:** at the first 65 iterations of every run, LLM 51–54 vs.
   random 52–59 by labels, 21–23 vs. 5–11 matched, bugs 8,7,8,8,8 vs. 7.
 
+### Open after Stage 7 (found 2026-11-01, must be done before the final numbers)
+
+1. **Fix Bug 24 (test-case values never reach the simulator).** Only the ns-3 path part of
+   Bug 24 was fixed. `TestGenerator` builds frames from the test-case values (TC0, TC1, …),
+   but only the 7 `sim_config` fields reach ns-3. This hurts the random baseline most: in its
+   "predefined" mode (half of its iterations) it picks test cases only, so 65 of the 90
+   predefined iterations of `random_s1` sent no mutation. Many test-case values are text
+   (e.g. "Frames sent at intervals shorter than BAG_i by 1 ms"), so the fix needs a
+   translation from test-case values to the 7 parameters. Then re-run the baselines (free).
+2. **Sequence number 0 is never sent.** The simulator applies the override only when it is
+   `> 0` (`afdx-end-system.cc:227`, `afdx-traffic-generator.cc:333`), so a request for
+   sequence 0 means "no change". BOOFUZZ requested it in 31 Stage 7 iterations (in 14 it was
+   the only change), random in 4–5 per run, the LLM never. Fix together with item 1, before
+   re-running the baselines.
+3. **BOOFUZZ keyword mapping** (`boofuzz_strategy_generator.py:200-205, 243-267`): rules whose
+   names contain "ip", "switch", "vl_", "priority", … get no mutation (54 Stage 7
+   iterations), and numeric values can land in the wrong parameter (a size of 1300 sent as a
+   BAG of 1300 ms, iteration 4). Decide whether to change it or describe it.
+4. **Rebuild the mechanism-matched table** (`category_mechanisms.py`) per rule instead of by
+   keywords in category names, and have an author review it, before using the metric.
+   Known errors: "Frame Configuration.virtual_link_frame_size_range" counts as untestable,
+   "Traffic Control.maximum_frame_size" expects timing.
+
 ### Stage 6 results
 
 - **Root cause found first** (`1ddfb79`): the test-case schema let the LLM name each
