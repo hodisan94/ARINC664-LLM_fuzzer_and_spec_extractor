@@ -87,7 +87,7 @@ The test cases still come from March, from an older rule extraction (Bug 5). Eit
 
 Either way, the baselines get the same label universe as the LLM fuzzer.
 
-## Stage 7: new fuzzing campaigns (2–3 days, about $150–200, approval needed)
+## Stage 7: new fuzzing campaigns (2–3 days, about $150–200, approval needed; done, see Status)
 
 These run only after Stages 2, 5 and 6.
 
@@ -128,7 +128,56 @@ campaigns.
 | 4 | Done (2026-10-28), same branch; all logged inputs replayed on the fixed simulator |
 | 5 | Done (2026-10-29), same branch; 10-bug suite built, checked and used to re-score all recorded inputs; see `context/BUG_SUITE.md` |
 | 6 | Done (2026-10-30), same branch; test cases regenerated from the current rules, `configs/test_cases_rules_2026-10.json` |
-| 7–8 | Not started (switch for old/new planner instructions added, 580f802; pilot of both run, d3b7e46) |
+| 7 | Done (2026-10-31), same branch; 14 campaigns of 200 iterations, scored; `ec29788`, see "Stage 7 results" |
+| 8 | Not started |
+
+### Stage 7 results
+
+Details of the runs, the interruption and the scoring commands:
+`evaluation/results/revision/runs/stage7/README.md`. Metrics:
+`evaluation/results/revision/campaign_metrics_stage7.json`; bug replay:
+`bdr_replay_stage7.json`.
+
+- **Setup.** Code `c348e53`, fixed simulator, 10-bug suite, new test cases (626 rules), neutral
+  planner instructions, gpt-5. LLM full ×5, A0, A1, A2, random ×5 (seeds 1–5), BOOFUZZ ×1;
+  200 iterations each. The controller's fixed test schedule (iterations 21–46) was kept (6.1a
+  in PAPER_CHANGES). No "controller + random planner" control was run.
+- **Interruption.** The OpenAI project spend limit stopped the 8 LLM runs at iterations
+  65–135; the 40 failed records (5 per run) were removed and kept, and the runs were resumed
+  from their histories after the limit was raised. Verified that the kept prefixes are
+  unchanged and the planner flags match before and after.
+- **Cost.** $106.60 (full runs $15.90–16.52, A0 $4.82, A1 $6.49, A2 $14.28). One BOOFUZZ
+  simulator failure; no crash in the replay.
+
+| Fuzzer | Rule Coverage (paper, of 185) | Mechanism-matched coverage (of 54 testable) | Bugs found (of 10; 8 reachable) | Iterations without mutation |
+|---|---|---|---|---|
+| LLM full (5 runs) | 121, 113, 110, 112, 114 (mean 114.0) | 35, 38, 37, 37, 39 (mean 37.2) | 8, 8, 8, 8, 8 | 2–4 |
+| Random (5 runs) | 106, 112, 108, 103, 102 (mean 106.2) | 20, 15, 18, 15, 18 (mean 17.2) | 7, 7, 7, 7, 7 | 55–69 |
+| BOOFUZZ (1 run) | 184 | 27 | 7 | 68 |
+| A0 | 8 | 4 | 7 | 0 |
+| A1 (steering only) | 78 | 31 | 8 | 0 |
+| A2 (feedback only) | 83 | 27 | 8 | 3 |
+
+Exact two-sided Mann–Whitney, LLM full vs. random (5 vs. 5): Rule Coverage p = 0.024,
+mechanism-matched coverage p = 0.008, bugs found p = 0.008. BOOFUZZ has one run, so it is not
+tested. Unique Findings (labels, paired runs): BOOFUZZ 30–35, LLM 0, random 0. BOOFUZZ reaches
+80% of the categories at iteration 119; no other run reaches 80%.
+
+- **Bugs.** All runs find the same 7 reachable bugs; only the LLM-guided runs (and A0–A2) also
+  find `max_frame_off_by_one` (1–4 detecting inputs per full run). As predicted before the
+  runs (BUG_SUITE §6), this bug favours the LLM. The LLM-guided runs also trigger the BAG
+  bugs far more often (`skip_bag_policing` 59–72 detecting inputs vs. 11–28;
+  `loose_bag_tolerance` 39–53 vs. 11–22).
+- **Coverage.** By labels, BOOFUZZ is highest because it walks through the test-case list;
+  with the new list that reaches 184 categories. Counting only categories whose iteration
+  executed a mutation that can exercise them, the LLM fuzzer is highest.
+- **Ablation.** One run per variant. Steering alone (A1) keeps most of the matched coverage;
+  without steering and feedback (A0) the planner repeats a few rules (40 of its first 65
+  iterations used one label).
+- **Not usable for these runs:** the "shared" universe in `analyze_campaigns.py` is still
+  computed from the old `configs/test_cases.json`.
+- **Interim result, same picture:** at the first 65 iterations of every run, LLM 51–54 vs.
+  random 52–59 by labels, 21–23 vs. 5–11 matched, bugs 8,7,8,8,8 vs. 7.
 
 ### Stage 6 results
 

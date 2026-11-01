@@ -57,10 +57,11 @@ manuscript of 2026-10-24 and its response letter.
 
 | # | Where | What the paper says now | What to change | Source | Status |
 |---|---|---|---|---|---|
-| 4.1 | VII-C, abstract, letter | The LLM-guided fuzzer covers more categories; the order "is not an artifact of the shared denominator" | In the submitted and re-run campaigns the baselines could reach only 90 of 185 categories (their labels come from the old test-case file; 90 with the coverage matcher of `recompute_coverage_venn.py`, 81 with BOOFUZZ's own category lookup; state which matcher a number uses). On those 90, BOOFUZZ-style had more labeled categories than the LLM in every run. With the new test cases the baselines can reach 184; the comparison must be redone on the new campaigns. | Bugs 4, 5 | Needs Stage 7 |
-| 4.2 | VII-A, Eq. (4) | Rule Coverage counts categories of labels | One label could count for several categories. Add the one-category-per-label count. | Bug 17, `1116a2d` | Ready (definition); Needs Stage 7 (numbers) |
-| 4.3 | VII-A | Executed Rule Coverage counts labels of iterations with any mutation | Any mutation counted, even one unrelated to the rule. Add mechanism-matched coverage (only 54 of 153 categories are testable by any simulator parameter), and say so. | Bug 18, `52d5a49` | Ready (definition); Needs Stage 7 (numbers) |
-| 4.4 | VII-C | Coverage tables and Venn figures | All numbers to be replaced by the Stage 7 campaigns. | — | Needs Stage 7 |
+| 4.1 | VII-C, abstract, letter | The LLM-guided fuzzer covers more categories; the order "is not an artifact of the shared denominator" | In the submitted and re-run campaigns the baselines could reach only 90 of 185 categories (their labels come from the old test-case file; 90 with the coverage matcher of `recompute_coverage_venn.py`, 81 with BOOFUZZ's own category lookup; state which matcher a number uses). On those 90, BOOFUZZ-style had more labeled categories than the LLM in every run. With the new test cases the baselines can reach 184; the comparison must be redone on the new campaigns. **Stage 7 (FIX_PLAN "Stage 7 results"):** by labels, BOOFUZZ 184, LLM 110–121 (mean 114), random 102–112 (mean 106), LLM vs. random p = 0.024; Unique Findings BOOFUZZ 30–35, LLM 0. The claim "the LLM-guided fuzzer covers more categories" holds against random only, not against BOOFUZZ. | Bugs 4, 5 | Ready (numbers); framing: Decision (4.7) |
+| 4.2 | VII-A, Eq. (4) | Rule Coverage counts categories of labels | One label could count for several categories. Add the one-category-per-label count. **Stage 7 (of 153 merged categories):** LLM 90–97 (mean 93.6), random 78–86 (mean 81.2), BOOFUZZ 150; LLM vs. random p = 0.008. | Bug 17, `1116a2d` | Ready |
+| 4.3 | VII-A | Executed Rule Coverage counts labels of iterations with any mutation | Any mutation counted, even one unrelated to the rule. Add mechanism-matched coverage (only 54 of 153 categories are testable by any simulator parameter), and say so. **Stage 7:** LLM 35–39 (mean 37.2), random 15–20 (mean 17.2), BOOFUZZ 27; LLM vs. random p = 0.008. | Bug 18, `52d5a49` | Ready |
+| 4.4 | VII-C | Coverage tables and Venn figures | All numbers to be replaced by the Stage 7 campaigns (`campaign_metrics_stage7.json`). Do not use its "shared" fields: they are still computed from the old test-case file. | — | Ready (numbers); tables and figures to redraw |
+| 4.7 | VII-A, VII-C, abstract | Rule Coverage by labels is the headline metric | Labels are not tests: about a third of the baselines' iterations change nothing (55–69 of 200 for random, 68 for BOOFUZZ, 2–4 for the LLM), and BOOFUZZ reaches 184 labels by walking the list. Proposal sent to the advisor (2026-10-31): make mechanism-matched coverage the main metric and keep the label metric, explained. Disclose that the category-to-mechanism table (`category_mechanisms.py`) was built from the rule text, not from results, and have it checked by an author. | Stage 7 | Decision |
 | 4.5 | VIII (limitations) | — | State that 99 of 153 categories (IP/UDP fields, ports, configuration …) cannot be exercised by any simulator parameter, so coverage of them is by label only, for every fuzzer. | Stage 3 | Ready |
 | 4.6 | VII-B (baselines) | The baselines "apply each test value to a seed frame" | The baselines map each test case to a parameter by keywords in the rule name and use fixed defaults when the value is not numeric (e.g. 63 or 1519 bytes, sequence 0). Describe this. | `boofuzz_strategy_generator.py:243-301` | Ready |
 
@@ -72,11 +73,11 @@ Details and numbers: `context/BUG_SUITE.md`.
 |---|---|---|---|---|---|
 | 5.1 | VII-B setup, Table III | Eight bugs, `accept_oversized` "accepts frames larger than the 1518-byte AFDX limit" and is identical to `skip_frame_validation` | Ten bugs. `accept_oversized` now skips only the upper bounds. New: `max_frame_off_by_one`, `loose_bag_tolerance`. Add their rows to Table III (clauses to confirm: §4.2.1 and §4.2.2). | `2205a1f`, `5b23991`, `1c8a1e6` | Ready (clauses: Verify) |
 | 5.2 | VII-B | "it does not include faults such as off-by-one window checks, incorrect sequence-number wraparound, or wrong BAG units" (also lines ~2551, ~2633) | The suite now includes one off-by-one fault and one threshold fault; update the sentence and the limitation. | BUG_SUITE §4 | Ready |
-| 5.3 | VII-B / Table VII | BDR out of 8 | Report found of 10 and found of 8 reachable, and say why `skip_token_bucket` and `skip_vl_check` are unreachable through the mutation interface (arithmetic of the bucket; no VL-id parameter). | Bugs 7, 8, `4b7f210` | Ready (text); Needs Stage 7 (numbers) |
+| 5.3 | VII-B / Table VII | BDR out of 8 | Report found of 10 and found of 8 reachable, and say why `skip_token_bucket` and `skip_vl_check` are unreachable through the mutation interface (arithmetic of the bucket; no VL-id parameter). **Stage 7:** LLM 8/10 (8/8 reachable) in all 5 runs; random 7/10 in all 5; BOOFUZZ 7/10; A0 7, A1 8, A2 8. | Bugs 7, 8, `4b7f210` | Ready |
 | 5.4 | VII-B, letter (R2 C1) | The two missed bugs "cannot be reached through the mutation interface" | The token bucket cannot fail at all after the BAG check (not an interface limit). Correct the wording. | Bug 7 | Ready |
 | 5.5 | VII-C, letter | "Two of the six bugs are exposed without any mutation … 3,492 policing drops and 264 rejections" | This came from the second sender (Bug 1), not from normal traffic. On the corrected simulator a run without mutation has 0 drops and 0 rejections, and no bug is detected without mutation (acceptance check (a) in BUG_SUITE §5). Replace the paragraph. | Bugs 1, 10 | Ready |
 | 5.6 | VII-B | `skip_sequence_check` detected by out-of-window sequence numbers | A constant sequence number is discarded earlier as a duplicate; the check is reached by sequence number 0 or by long drop bursts. Describe this. | Bug 11, BUG_SUITE §3 | Ready |
-| 5.7 | Table VII, VIII | Detection results | Replace with Stage 7 numbers. Note: on the recorded inputs, `max_frame_off_by_one` is found only by the LLM-guided runs and `skip_sequence_check` by every baseline run but 2 of 5 LLM-guided runs. | BUG_SUITE §6 | Needs Stage 7 |
+| 5.7 | Table VII, VIII | Detection results | Replace with Stage 7 numbers. Note: on the recorded inputs, `max_frame_off_by_one` is found only by the LLM-guided runs and `skip_sequence_check` by every baseline run but 2 of 5 LLM-guided runs. **Stage 7:** every run finds the same 7 reachable bugs; only the LLM-guided runs also find `max_frame_off_by_one` (1–4 inputs per full run; no baseline input detects it). Say that this bug favours the LLM, as predicted before the runs. The LLM-guided runs trigger the BAG bugs far more often (`skip_bag_policing` 59–72 inputs vs. 11–28). LLM vs. random p = 0.008. The difference is one bug: do not overstate it. | BUG_SUITE §6, Stage 7 | Ready |
 | 5.8 | VII-B | Bug selection | State that the 10-bug list was fixed before the new campaigns ran and before any campaign was scored against it (`b2e6ef8`), and that each bug passed two acceptance checks. For the recorded campaigns, do not call it blind: their inputs were already logged (BUG_SUITE §2 caveat). | BUG_SUITE §2, §5 | Ready |
 
 ## 6. Planner instructions and fairness
@@ -93,8 +94,8 @@ Details and numbers: `context/BUG_SUITE.md`.
 
 | # | What to change | Status |
 |---|---|---|
-| 7.1 | Every coverage and detection number (abstract, intro contributions, results, conclusion) comes from the Stage 7 campaigns. | Needs Stage 7 |
-| 7.2 | Choose the framing after Stage 7. On the recorded inputs replayed on the corrected simulator, the LLM-guided fuzzer did not outperform the baselines in bug detection (6, 5, 5, 5, 6 of 8 vs. 6 for every baseline run). Do not keep a claim the new numbers do not support. | Needs Stage 7 |
+| 7.1 | Every coverage and detection number (abstract, intro contributions, results, conclusion) comes from the Stage 7 campaigns (FIX_PLAN "Stage 7 results"). | Ready (numbers) |
+| 7.2 | Choose the framing after Stage 7. On the recorded inputs replayed on the corrected simulator, the LLM-guided fuzzer did not outperform the baselines in bug detection (6, 5, 5, 5, 6 of 8 vs. 6 for every baseline run). In Stage 7 it finds 8 of 8 reachable bugs in every run vs. 7 for every baseline run, and leads on mechanism-matched coverage (37 vs. 17 random, 27 BOOFUZZ), but not on label coverage against BOOFUZZ (114 vs. 184). A supported framing: the LLM-guided fuzzer runs more meaningful tests and finds one more bug; it does not touch more rule names than a fuzzer that walks the whole list. Depends on 4.7. | Decision |
 | 7.3 | Ablation conclusion ("coverage comes mainly from steering, not feedback"): the steering's re-plan step is itself an LLM call, so this does not separate the controller from the LLM. Add the "controller + random planner" control or soften the claim. | Decision |
 
 ## 8. Reproducibility (Section VI, letter R1 C4b)
@@ -103,8 +104,8 @@ Details and numbers: `context/BUG_SUITE.md`.
 |---|---|---|---|
 | 8.1 | The ns-3 path was hard-coded; now set with `AFDX_NS3_PATH`. | Bug 24, `302ebd5` | Ready |
 | 8.2 | A Windows checkout could break the simulator's CSV parsing (CRLF); fixed. | Bug 25, `63203b1` | Ready |
-| 8.3 | Report the code commit and the simulator build used for the final campaigns. | Stage 7 | Needs Stage 7 |
-| 8.4 | Interrupted LLM campaigns: besides resuming from history, 40 failed records were removed and run r3 was discarded and re-run. Say so, or avoid it in Stage 7. | Bug 22 | Ready |
+| 8.3 | Report the code commit and the simulator build used for the final campaigns: `c348e53` on `fix/revision-bugs`, fixed simulator (stage 1–2 fixes, 10-bug suite), gpt-5, neutral instructions, `configs/test_cases_rules_2026-10.json`. | Stage 7 README | Ready |
+| 8.4 | Interrupted LLM campaigns: besides resuming from history, 40 failed records were removed and run r3 was discarded and re-run. Say so, or avoid it in Stage 7. **It happened again in Stage 7:** the OpenAI spend limit stopped all 8 LLM runs at iterations 65–135; 40 failed records (5 per run) were removed (kept in `spend_limit_records_removed.jsonl`) and the runs were resumed from their histories. No run was discarded. Disclose it. | Bug 22, Stage 7 README | Ready |
 
 ## 9. Response letter
 
@@ -113,8 +114,8 @@ Corrections to the letter of 2026-10-24, in addition to the items above that it 
 | # | Letter passage | Correction | Source |
 |---|---|---|---|
 | 9.1 | Summary of main changes | Add the simulator corrections (Bugs 1, 2, 3, 12–14) as a fourth problem found during the revision, with their effect on the results. | Bugs 1–3 |
-| 9.2 | Summary, "Bug detection. All fuzzers detect the same 6 of 8 bugs" | Replace with the Stage 7 numbers on the 10-bug suite. | Stage 7 |
-| 9.3 | R1 C2 "the order is not an artifact of the shared denominator" | Not supported: the baselines' labels reached 90 categories. Rewrite with the new test cases and the Stage 7 numbers. | Bugs 4, 5 |
+| 9.2 | Summary, "Bug detection. All fuzzers detect the same 6 of 8 bugs" | Replace with the Stage 7 numbers on the 10-bug suite: LLM 8/10 (8/8 reachable) in every run, random and BOOFUZZ 7/10 (see 5.7). | Stage 7 |
+| 9.3 | R1 C2 "the order is not an artifact of the shared denominator" | Not supported: the baselines' labels reached 90 categories. Rewrite with the new test cases and the Stage 7 numbers: with the same label universe, BOOFUZZ has the highest label coverage (184); the LLM leads on mechanism-matched coverage (see 4.1, 4.3, 4.7). | Bugs 4, 5 |
 | 9.4 | Additional corrections, "Baseline campaigns … re-run … on the final rule base" | Their labels came from test cases built on an older rule base; now regenerated. | Bug 5 |
 | 9.5 | Additional corrections, "Simulator crash … With the corrected runner, these iterations count as not executed" | The recorded histories were made before that fix worked; state how they were handled. | Bug 22 |
 | 9.6 | R1 C4a, reward | The impact term was constant in the submitted campaigns. | Bug 6 |
@@ -124,7 +125,8 @@ Corrections to the letter of 2026-10-24, in addition to the items above that it 
 
 ## 10. Open decisions that change the text
 
-1. Neutral planner instructions for Stage 7 (6.1).
+1. Neutral planner instructions for Stage 7 (6.1). Decided and used.
+1a. Main coverage metric: labels or mechanism-matched (4.7), and the framing that follows (7.2).
 2. Number of ablation runs, and whether to add the "controller + random planner" control (7.3).
 3. A/B copies 100 µs apart: correct the text or the code (1.4).
 4. 185 vs. 153 categories (3.6).
