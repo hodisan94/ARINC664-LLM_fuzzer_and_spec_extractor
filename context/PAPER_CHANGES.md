@@ -67,7 +67,7 @@ manuscript of 2026-10-24 and its response letter.
 
 ### 4.8 Testing depth: boundary-value coverage (answers R2, "coverage of boundary values")
 
-Status: **Ready (text); metric not implemented yet.** Fix Bug 24 and the sequence-0 bug
+Status: **Ready (text); implemented; numbers preliminary.** Fix Bug 24 and the sequence-0 bug
 (FIX_PLAN "Open after Stage 7") before computing it, and fix the class list below before
 looking at any result.
 
@@ -95,10 +95,31 @@ Class list (79 classes):
 | Frame size, per VL | MinFrame = 64 and MaxFrame (256, 512 or 1,024) from `virtual_links.csv` | 63, 64, 65 and MaxFrame−1, MaxFrame, MaxFrame+1, on each of the 8 VLs | 48 |
 | Frame size, any VL | Maximum Ethernet frame, 1,518 bytes (IEEE 802.3) | 1,517, 1,518, 1,519 | 3 |
 | Timing, per VL | BAG of the VL (4, 8, 16 or 32 ms) from `virtual_links.csv` | BAG−1 ms and BAG+1 ms on each of the 8 VLs (BAG itself is the unmutated traffic) | 16 |
-| Sequence number | Range 0–255, 0 is reserved for reset (ARINC 664 Part 7) | 0, 1, 254, 255 (−1 and 256 cannot be sent: the field has 8 bits) | 4 |
+| Sequence number | Range 0–255, 0 is reserved for reset (ARINC 664 Part 7) | 0, 1, 254, 255 of the value actually sent (the field has 8 bits: an override of 256 sends 0; an override of 0 means "no change") | 4 |
 | Source address | Types supported by the simulator | `spoof_src`, `spoof_dst`, `broadcast`, `invalid_src`, `zero_mac` | 5 |
 | Destination address | Types supported by the simulator | `corrupt_prefix`, `wrong_vl`, `zero` | 3 |
 | **Total** | | | **79** |
+
+Coarser level, ranges (equivalence classes), 51 classes: frame size below MinFrame, inside
+the range, above MaxFrame on each VL (24) and above 1,518 bytes on any VL (1); timing faster
+or slower than BAG on each VL (16); sequence number 0 or 1–255 (2); the 8 address types (8).
+
+**Implemented** in `evaluation/revision/boundary_coverage.py` (one function, `classify()`,
+for every fuzzer; reads only `sim_config`), with hand-checked cases in
+`test_boundary_coverage.py`. **Preliminary Stage 7 numbers** (baselines before the Bug 24 and
+sequence-0 fixes, so they may change), `boundary_coverage_stage7.json`:
+
+| Fuzzer | Points (of 79) | Ranges (of 51) |
+|---|---|---|
+| LLM (5 runs) | 31, 33, 32, 31, 34 | 46, 46, 45, 47, 47 |
+| Random (5 runs) | 25, 23, 24, 23, 24 | 37, 36, 40, 35, 39 |
+| BOOFUZZ | 14 | 33 |
+| A0 / A1 / A2 | 17 / 22 / 30 | 23 / 27 / 47 |
+
+LLM vs. random p = 0.008 for both. Neither baseline hits any MaxFrame−1/MaxFrame/MaxFrame+1
+class (their frame sizes are fixed lists such as 63, 65, 1518, 1519, 2000); all 81 inputs that
+detect `max_frame_off_by_one` hit a MaxFrame+1 class. All fuzzers hit few timing points (at most
+4 of 16).
 
 Notes for the text and the limitations:
 - Not included: the sender drop probability (no boundary in the standard) and combinations

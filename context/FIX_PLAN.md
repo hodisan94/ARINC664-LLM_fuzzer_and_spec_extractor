@@ -190,7 +190,8 @@ tested. Unique Findings (labels, paired runs): BOOFUZZ 30–35, LLM 0, random 0.
    translation from test-case values to the 7 parameters. Then re-run the baselines (free).
 2. **Sequence number 0 is never sent.** The simulator applies the override only when it is
    `> 0` (`afdx-end-system.cc:227`, `afdx-traffic-generator.cc:333`), so a request for
-   sequence 0 means "no change". BOOFUZZ requested it in 31 Stage 7 iterations (in 14 it was
+   sequence 0 means "no change". (It keeps the low 8 bits, so an override of 256 does send 0;
+   every LLM run and one random run reach 0 that way; BOOFUZZ requests 0 directly.) BOOFUZZ requested it in 31 Stage 7 iterations (in 14 it was
    the only change), random in 4–5 per run, the LLM never. Fix together with item 1, before
    re-running the baselines.
 3. **BOOFUZZ keyword mapping** (`boofuzz_strategy_generator.py:200-205, 243-267`): rules whose
