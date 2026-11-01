@@ -65,6 +65,50 @@ manuscript of 2026-10-24 and its response letter.
 | 4.5 | VIII (limitations) | — | State that 99 of 153 categories (IP/UDP fields, ports, configuration …) cannot be exercised by any simulator parameter, so coverage of them is by label only, for every fuzzer. | Stage 3 | Ready |
 | 4.6 | VII-B (baselines) | The baselines "apply each test value to a seed frame" | The baselines map each test case to a parameter by keywords in the rule name and use fixed defaults when the value is not numeric (e.g. 63 or 1519 bytes, sequence 0). Describe this. | `boofuzz_strategy_generator.py:243-301` | Ready |
 
+### 4.8 Testing depth: boundary-value coverage (answers R2, "coverage of boundary values")
+
+Status: **Ready (text); metric not implemented yet.** Fix Bug 24 and the sequence-0 bug
+(FIX_PLAN "Open after Stage 7") before computing it, and fix the class list below before
+looking at any result.
+
+Draft paragraph for Section VII-A:
+
+> Rule Coverage shows which rule categories a fuzzer targeted, not how thoroughly it tested
+> them. To measure testing depth, we apply boundary-value analysis [Myers, *The Art of
+> Software Testing*; ISO/IEC/IEEE 29119-4] to the parameters that the simulator accepts.
+> The boundaries are not produced by our extraction pipeline: they are taken from the
+> configuration of each virtual link (minimum and maximum frame size, BAG) and from the
+> standard (maximum Ethernet frame size, sequence-number range). For each boundary *b* we
+> consider the values *b*−1, *b* and *b*+1; for the address fields, which have no numeric
+> boundary, we use one equivalence class per supported invalid-address type. A class is
+> covered when at least one executed test sent a value in it, as recorded in the simulator
+> input, independently of the rule label of the test. The class list is identical for all
+> fuzzers and runs and was fixed before the metric was computed. Boundary-value coverage
+> is the fraction of the 79 classes that a run covered. For each injected bug we also report
+> which classes detect it, which shows whether a fuzzer that did not reach a class could
+> have found the bug.
+
+Class list (79 classes):
+
+| Parameter | Boundaries (source) | Classes | Count |
+|---|---|---|---|
+| Frame size, per VL | MinFrame = 64 and MaxFrame (256, 512 or 1,024) from `virtual_links.csv` | 63, 64, 65 and MaxFrame−1, MaxFrame, MaxFrame+1, on each of the 8 VLs | 48 |
+| Frame size, any VL | Maximum Ethernet frame, 1,518 bytes (IEEE 802.3) | 1,517, 1,518, 1,519 | 3 |
+| Timing, per VL | BAG of the VL (4, 8, 16 or 32 ms) from `virtual_links.csv` | BAG−1 ms and BAG+1 ms on each of the 8 VLs (BAG itself is the unmutated traffic) | 16 |
+| Sequence number | Range 0–255, 0 is reserved for reset (ARINC 664 Part 7) | 0, 1, 254, 255 (−1 and 256 cannot be sent: the field has 8 bits) | 4 |
+| Source address | Types supported by the simulator | `spoof_src`, `spoof_dst`, `broadcast`, `invalid_src`, `zero_mac` | 5 |
+| Destination address | Types supported by the simulator | `corrupt_prefix`, `wrong_vl`, `zero` | 3 |
+| **Total** | | | **79** |
+
+Notes for the text and the limitations:
+- Not included: the sender drop probability (no boundary in the standard) and combinations
+  of classes (can be added as pairs if needed).
+- Timing can only change in whole milliseconds, so only BAG±1 ms is tested around BAG.
+- Some injected bugs were built around these boundaries (e.g. `max_frame_off_by_one` needs
+  MaxFrame+1), so do not claim that depth *causes* detection; report which classes each bug
+  needs.
+- Check the clause numbers for the sequence-number range and MinFrame before citing them.
+
 ## 5. Experiment 3: injected bugs
 
 Details and numbers: `context/BUG_SUITE.md`.
