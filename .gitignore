@@ -32,6 +32,8 @@
 !random_baseline/**
 !boofuzz_baseline/
 !boofuzz_baseline/**
+!boofuzz_model_baseline/
+!boofuzz_model_baseline/**
 
 # =============================================================
 # TRACK: Evaluation

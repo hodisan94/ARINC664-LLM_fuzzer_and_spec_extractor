@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+"""Export the test values that the boofuzz library generates for our message fields.
+
+Run once, in an environment where boofuzz is installed (it is not needed to run the baseline):
+
+    python3 -m venv ~/boofuzz_venv && ~/boofuzz_venv/bin/pip install boofuzz==0.4.2
+    ~/boofuzz_venv/bin/python boofuzz_model_baseline/export_boofuzz_values.py
+
+Writes boofuzz_model_baseline/boofuzz_values.json. The values come from each primitive's own
+mutations() generator, i.e. boofuzz's fuzz library, not from this project. The baseline reads
+the JSON, so its run environment does not need boofuzz.
+
+Two properties of boofuzz 0.4.2 found when this was written (2026-11-02):
+  * BitField.mutations() yields the raw unsigned numbers also for signed=True fields; the sign
+    is applied only when the value is rendered to bytes. This script renders each value and
+    reads it back as a signed integer, so the JSON holds the values boofuzz actually sends.
+  * The documented fuzz_values option is accepted but not used by BitField.mutations(), so
+    tester-defined values (the AFDX limits) are added by model.py, not through boofuzz.
+"""
+
+import json
+from pathlib import Path
+
+from boofuzz import BitField, Byte, Group, Word
+from importlib.metadata import version
+
+OUT = Path(__file__).resolve().parent / "boofuzz_values.json"
+
+
+def signed_values(field):
+    """Values of a signed BitField as sent: render each mutation and read it back signed."""
+    values = []
+    for raw in field.mutations(field.original_value()):
+        rendered = field.encode(raw, None)
+        signed = int.from_bytes(rendered, byteorder="little" if field.endian == "<" else "big",
+                                signed=True)
+        assert signed == (raw - 256 if raw >= 128 else raw), (raw, rendered)
+        values.append(signed)
+    return values
+
+
+def main():
+    frame = Word(name="frame_size", default_value=0)
+    seq = Byte(name="sequence_number", default_value=0)
+    timing = BitField(name="timing_offset_ms", default_value=0, width=8, signed=True)
+    src = Group(name="src_mac", default_value="none",
+                values=["none", "spoof_src", "spoof_dst", "broadcast", "invalid_src", "zero_mac"])
+    dst = Group(name="dst_mac", default_value="none",
+                values=["none", "corrupt_prefix", "wrong_vl", "zero"])
+    drop = Group(name="drop_probability", default_value="0", values=["0", "0.1", "0.5", "1.0"])
+
+    def group_values(g):
+        return [v.decode() if isinstance(v, bytes) else v for v in g.mutations(g.original_value())]
+
+    report = {
+        "boofuzz_version": version("boofuzz"),
+        "fields": {
+            "frame_size": {"primitive": "Word (16-bit unsigned)",
+                           "values": list(frame.mutations(frame.original_value()))},
+            "timing_offset_ms": {"primitive": "BitField(width=8, signed=True)",
+                                 "values": signed_values(timing)},
+            "sequence_number": {"primitive": "Byte (8-bit unsigned)",
+                                "values": list(seq.mutations(seq.original_value()))},
+            "src_mac": {"primitive": "Group", "values": group_values(src)},
+            "dst_mac": {"primitive": "Group", "values": group_values(dst)},
+            "drop_probability": {"primitive": "Group",
+                                 "values": [float(v) for v in group_values(drop)]},
+        },
+    }
+    OUT.write_text(json.dumps(report, indent=1) + "\n")
+    for name, f in report["fields"].items():
+        print(f"{name:18} {len(f['values']):4d} values  {f['values'][:6]} ... {f['values'][-3:]}")
+    print(f"boofuzz {report['boofuzz_version']} -> {OUT}")
+
+
+if __name__ == "__main__":
+    main()
