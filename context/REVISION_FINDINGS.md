@@ -1458,6 +1458,7 @@ grouped by label category (`categories_of(label)`).
 | Letter (Additional corrections) | "With the corrected runner, these iterations count as not executed" | The histories were recorded before the fix worked (Bug 22) |
 | Letter (R1 C4b) | The public repository reproduces the results | The ns-3 path is hard-coded (Bug 24), and a Windows checkout can break the simulator's CSV parsing (Bug 25) |
 | Letter (R1 C3) | Interrupted LLM campaigns "resumed from their history" | Also: 40 failed records removed, and run r3 discarded and re-run (Bug 22) |
+| Paper VII-B (Exp. 1, completeness) | The checklist was built by "cross-referencing the 122 validation criteria of Villegas et al. [19]" | Villegas et al. (IEEE Access 10, 2022, doi 10.1109/ACCESS.2022.3184329; full text read on IEEE Xplore 2026-11-02) define no list of validation criteria. The paper presents a Simulink event-based AFDX simulator plus network calculus (AVVorks), validated on worst-case end-to-end delay against EPL and BNCOG, and reports delay, jitter (its Eq. 1 bound), throughput, discarded packets and execution time. Nothing in the repository mentions Villegas or 122 criteria. Reviewer 1 (comment 2) asks to use these criteria as ground truth. Ask the student where the number comes from; otherwise remove the claim |
 | Letter (R2 C6) | Coverage comes from the controller's steering, not the LLM | Steering's re-plan step is itself an LLM call; a "controller + random planner" control is needed to separate them |
 
 ---
