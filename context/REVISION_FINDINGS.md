@@ -107,6 +107,20 @@ Each bug has the same parts:
 | 23 | Resuming a BOOFUZZ campaign restarts its schedule | Baseline | Low | Code-confirmed; no demonstrated effect |
 | 24 | Other code-health issues | Various | Low | Mixed (see section) |
 | 25 | Windows line endings in `virtual_links.csv` crash the simulator | Portability | Low | Found by the independent review |
+| 26 | BOOFUZZ runs only TC0 of 200 of the 626 rules (5% of the test cases) | Baseline | High | Verified (Part C) |
+| 27 | BOOFUZZ sends no mutation for 27% of the rules (keyword `pass`, substring matches) | Baseline | High | Verified |
+| 28 | BOOFUZZ replaces non-numeric test-case values (most of them) with fixed defaults | Baseline | High | Verified |
+| 29 | BOOFUZZ puts numbers into the wrong parameter, ignoring units | Baseline | Medium | Verified |
+| 30 | CRC ("frame check sequence") rules tested as sequence-number rules | Baseline | Low | Verified |
+| 31 | A requested sequence number 0 (or negative) is never sent | Harness + simulator | Medium | Verified |
+| 32 | Random's "predefined" mode mostly sends nothing (consequence of Bug 24) | Baseline | High | Verified |
+| 33 | Baselines use fixed value lists independent of the VL; only the LLM sees the VL limits | Fairness | High | Verified |
+| 34 | BOOFUZZ chooses the VL by rotation, unrelated to the rule | Baseline | Low | Verified |
+| 35 | Boolean test-case values are used as numbers | Baseline | Low | Verified |
+| 36 | The "AFDX grammar" for BOOFUZZ is dead code | Baseline / paper | Medium | Verified |
+| 37 | Baseline code and documentation describe a different baseline (not real boofuzz) | Baseline / paper | Medium | Verified |
+| 38 | The mechanism-matched coverage table (added in this revision) is too rough | Evaluation | Medium | Verified |
+| 39 | The existing testing-depth script measures requests and labels | Evaluation | Medium | Verified |
 
 Section 25 lists statements in the paper and the response letter that do not match the
 code. Section 26 explains how to reproduce the simulator results. Section 27 lists open
@@ -1011,6 +1025,419 @@ endings.
 
 **Suggested fix.** Add a `.gitattributes` rule (`*.csv text eol=lf`), or strip `\r` in the
 C++ parser.
+
+---
+
+## Part C: The baselines and the coverage tools (found after Stage 7, 2026-11-01 to 11-02)
+
+These bugs were found while analyzing the Stage 7 campaigns (fixed simulator, 10-bug suite,
+regenerated test cases `configs/test_cases_rules_2026-10.json`, 200 iterations per run; see
+`evaluation/results/revision/runs/stage7/README.md`). They are not fixed. Unless stated
+otherwise, the numbers come from the Stage 7 histories and from running the baselines' own
+code on the new test-case file (no simulator run, no LLM call).
+
+### Background: what the baselines receive
+
+The test-case file has **626 rules**, each with about 6–7 test cases (TC0, TC1, …),
+**3,989 test cases** in total. Each test case has a `value` field, the value it suggests
+sending, but in the new file most values are text. Value types over all 3,989 test cases:
+2,446 text, 799 integers, 156 decimals, 369 structures (dict), 128 lists, 73 empty,
+18 booleans. Example (rule `Traffic Shaping.bandwidth_limitation_per_virtual_link`):
+`"Frames sent at intervals shorter than BAG_i by 1 ms"`.
+
+Only the 7 fields of `sim_config` reach the simulator (frame-size change, timing change,
+source MAC change, destination MAC change, sequence-number override, sender drop
+probability, target VL). Whatever a baseline "means" to test must end up in these 7 fields.
+
+The BOOFUZZ-style baseline is `boofuzz_baseline/` (written in February–March 2026; the
+commits are marked "Made-with: Cursor"). It never imports the boofuzz library: it walks the
+test-case list in a fixed order and turns each test case into the 7 fields. The random
+baseline is `random_baseline/random_strategy_generator.py`.
+
+---
+
+### Bug 26. BOOFUZZ runs only the first test case of 200 rules
+
+**In plain words.** BOOFUZZ is described as testing every test case in order. In a run of
+200 tests it reaches only the first test case (TC0) of 200 of the 626 rules. 426 rules are
+never tested, and TC1, TC2, … of every rule are never used: 200 of 3,989 test cases (5%) run.
+
+**Details.**
+
+- `_build_round_robin_schedule` (`boofuzz_strategy_generator.py:96-144`) builds one list of
+  all 3,989 test cases in rounds: round 1 is TC0 of every rule (626 entries), round 2 is TC1
+  of every rule, and so on. Within a round, rules are interleaved so that consecutive
+  entries come from different rule categories (the docstring: "maximising specification
+  coverage in the fewest iterations").
+- `plan_next_iteration` (line 164) takes the next entry. With 200 iterations, the run ends
+  inside round 1.
+
+**Evidence.** Running the generator on the new test-case file: schedule length 3,989; the
+first 200 entries are 200 different rules, all TC0. The Stage 7 BOOFUZZ history matches the
+schedule entry by entry (`violation_id`).
+
+**How it was found.** Running `BoofuzzStrategyGenerator` on the Stage 7 test-case file and
+comparing its schedule with the logged `violation_id` of every iteration.
+
+**Why it matters.**
+
+- It explains BOOFUZZ's Rule Coverage of 184 of 185: because each early test comes from a
+  new category, almost every test adds a category. This is the fastest possible way to
+  increase a label-based metric.
+- It explains its low depth: one value per rule. Boundary-value coverage (79 classes,
+  `boundary_coverage.py`): BOOFUZZ 14, LLM 31–34, random 23–25.
+- The code docstrings ("Exhaustive: Tests every violation"), the README and the paper
+  describe an exhaustive sweep; within the budget it is not.
+
+**Suggested fix.** Describe the schedule accurately. If the baseline is kept, either state
+that it tests one test case per rule, or change the order so that several test cases of a
+rule are used.
+
+**Status.** Verified (code and log).
+
+---
+
+### Bug 27. A quarter of the rules get no mutation at all in BOOFUZZ
+
+**In plain words.** BOOFUZZ decides what to change from words in the rule name. For rules
+whose name contains certain words, it deliberately changes nothing: the test sends normal
+traffic, but its label still counts for coverage.
+
+**Details.**
+
+- `_classify_mutation` (`boofuzz_strategy_generator.py:243-267`) matches substrings of the
+  rule name, in this order: `bag`/`bandwidth`/`traffic_shaping` → BAG; `sequence`,
+  `ordinal`, `integrity_check`, `duplicate`, `redundancy` → sequence number; `frame`,
+  `ethernet`, `fragment`, … → frame size; `ip`, `ttl`, `routing`, `datagram`, `header` →
+  `ip_header`; `virtual_link`, `vl_`, `switching`, `switch`, `forwarding` → `vl_id`;
+  `priority`, `qos`, `quality` → `priority`; `mac`, `address`, … → MAC; otherwise `generic`.
+- For `ip_header`, `vl_id` and `priority` the code does nothing (lines 200–205: `pass`).
+- The match is on substrings, so `ip` also matches inside other words: `multiple`,
+  `subscription`, `discipline`.
+
+**Evidence.**
+
+- Of the 626 rules: `ip_header` 46, `vl_id` 112, `priority` 8, so **166 rules (27%) never get
+  a mutation**. Six of them are `ip_header` only through a substring, e.g.
+  `Communication Ports.queuing_service_fifo_discipline`,
+  `Switch Configuration.default_reception_vl_subscription`.
+- In the Stage 7 run, 54 of 200 tests fell in these classes and sent no mutation
+  (`ip_header` 20, `vl_id` 29, `priority` 5). Example: iteration 0,
+  `AFDX-Specific.ttl_default_value_in_afdx` (`ttl`) → no change.
+- With the 14 tests of Bug 31, BOOFUZZ sent no mutation in 68 of 200 tests.
+
+**How it was found.** Classifying every no-mutation BOOFUZZ test with the baseline's own
+`_classify_mutation`.
+
+**Why it matters.**
+
+- Rule Coverage counts these tests: part of the 184.
+- Executed Rule Coverage drops BOOFUZZ from 184 to 122 mostly because of them.
+- They are 27% of the budget that tests nothing, for bug detection and for depth.
+- Some of these rules could be exercised: e.g. `Quality of Service.timely_delivery_requirement`
+  by a timing change, and `Sub-VL Scheduling.sub_vl_round_robin_scheduling`.
+
+**Suggested fix.** Use whole-word matching at least; decide whether rules with no simulator
+parameter should get a mutation of some other field (as real boofuzz always mutates some
+field) or be skipped and not counted.
+
+**Status.** Verified (code and log).
+
+---
+
+### Bug 28. Most test-case values are replaced by fixed defaults in BOOFUZZ
+
+**In plain words.** BOOFUZZ uses a test case's value only when it is a plain whole number.
+Otherwise it ignores the value and sends a fixed default, so most tests send the same few
+settings regardless of what the test case says.
+
+**Details.** `plan_next_iteration` (lines 186–208):
+`bag_value = int(value) if isinstance(value, (int, float)) else 1`,
+`frame_size = value if isinstance(value, int) else 63`,
+`sequence_number_override = … else 0`; the `generic` fallback (lines 270–301) uses 1, 63,
+1519, 0 or 17 when the value is not a number.
+
+**Evidence.**
+
+- Value types of the 200 test cases BOOFUZZ ran: 119 text, 15 structures, 7 lists, 4 empty,
+  2 decimals, 1 boolean, 52 integers.
+- Example: iteration 18, `Ethernet Frame Compliance.ethernet_frame_compliance`, value
+  `{'preamble': '0xAAAA', 'size': 60}` → frame size 63, not 60.
+- Example: iteration 21, `Flow Control.transmission_flow_control_mechanism`, value
+  `"BAG_minus_1"` (a timing test) → frame size 1519 and sequence 0 (the sequence 0 was then
+  dropped, Bug 31): the timing test never happened.
+- BOOFUZZ sent 63 distinct simulator inputs in 200 tests; the most common were "no change"
+  (68), a 1,519-byte frame on a VL with base size 288 (delta +1231, 15), a 63-byte frame on
+  the same VLs (delta −225, 15) and on VLs 3001/3002 (delta −481, 11). `distinct_settings` in
+  `campaign_metrics_stage7.json`: BOOFUZZ 55, random 114–133, LLM 148–163.
+
+**How it was found.** Comparing the value of each scheduled test case with the logged
+strategy and `sim_config`.
+
+**Why it matters.** The protocol knowledge that BOOFUZZ is said to receive from the test
+cases mostly does not reach the simulator. The label of a test says "test X" while the
+simulator receives a generic default. Low diversity lowers boundary-value coverage.
+
+**Suggested fix.** Translate test-case values into the 7 fields (see Bug 24), or generate
+values from a field model as real boofuzz does (FIX_PLAN "Open after Stage 7").
+
+**Status.** Verified (code and log).
+
+---
+
+### Bug 29. BOOFUZZ puts numbers into the wrong parameter, ignoring units
+
+**In plain words.** For rules with no matching keyword (`generic`, 198 of 626 rules), BOOFUZZ
+decides where a number goes from the iteration number, not from the number's meaning. A size
+can become a send interval, an alignment value can become a frame size.
+
+**Details.** `_generic_fallback` (lines 270–301) cycles on `iteration % 4`: cycle 0 → BAG =
+value, frame 63; cycle 1 → frame size = value, sequence 0; cycle 2 → BAG = value, destination
+MAC `corrupt_prefix`; cycle 3 → frame 17, `wrong_vl`, sequence 255. For the `bag` and
+`frame_size` classes, any number is used as milliseconds or bytes respectively.
+
+**Evidence** (Stage 7 run):
+
+| Iteration | Rule | Value | What the simulator received |
+|---|---|---|---|
+| 4 | `Communication Ports.sampling_message_size_constraint` | 1300 (a size) | BAG 1300 ms (timing +1284 ms on VL 2002) and frame 63 |
+| 7 | `Data Structure.reserved_word_alignment` | 1 | frame size 1 (clamped to 18 bytes) on VL 3002, sequence 255 |
+| 29 | `Frame Length.maximum_afdx_frame_length` | 0 | frame size 0 (clamped to 18 bytes) on VL 2003 |
+| 48 | `Jitter.maximum_jitter_bound` | 501 | BAG 501 ms on VL 1001 (timing +497 ms) |
+
+**How it was found.** Listing every BOOFUZZ test whose test-case value is a number, with the
+logged strategy fields.
+
+**Why it matters.** Fewer tests than Bugs 27–28, but each is a test that does not test its
+rule while counting toward that rule's coverage.
+
+**Suggested fix.** Same as Bug 28.
+
+**Status.** Verified (code and log).
+
+---
+
+### Bug 30. CRC rules are tested as sequence-number rules
+
+**In plain words.** "Frame check sequence" is the frame's CRC (error-detection field), not
+the AFDX sequence number. Because the rule names contain the word "sequence", BOOFUZZ changes
+the sequence number for them. The CRC is never tested, but these rules count as covered.
+
+**Evidence.** Five rules: `frame_integrity.frame_check_sequence_preservation`,
+`Switching.frame_check_sequence_preservation`,
+`frame_validation.frame_check_sequence_validation_requirement`,
+`Frame Validation.frame_check_sequence_validation`,
+`Frame Filtering.frame_check_sequence_validity`. The random baseline's keyword rules
+(`random_strategy_generator.py:131-142`) check `frame` before `sequence`, so for the same
+rules it changes the frame size instead; also unrelated to the CRC.
+
+**Why it matters.** Small in number; an example of what keyword matching produces.
+
+**Status.** Verified (code).
+
+---
+
+### Bug 31. A requested sequence number of 0 is never sent
+
+**In plain words.** The simulator treats an override of 0 as "no change". When a baseline asks
+to send sequence number 0 (a special value in AFDX, used after a reset), normal frames are
+sent instead. Negative values are ignored the same way.
+
+**Details.**
+
+- The runner passes the value as is: `seq_override = int(metadata.get('sequence_number_override') or 0)`
+  (`simulator_runner.py:230`).
+- The simulator applies it only when `g_mutationConfig.sequenceNumberOverride > 0`
+  (`afdx-end-system.cc:227`, `afdx-traffic-generator.cc:333`), and keeps the low 8 bits
+  (`& 0xFF`).
+- So 0 and negative values mean "no change", while 256 sends 0.
+- BOOFUZZ uses 0 as its default when a sequence test-case value is not a number
+  (`boofuzz_strategy_generator.py:195`) and in its generic fallback.
+
+**Evidence.** BOOFUZZ requested sequence 0 in 31 Stage 7 iterations; in 14 it was the only
+requested change, so nothing was sent. Random requested it 4–5 times per run. Iteration 147 of
+BOOFUZZ requested −1. Every LLM run reached sequence 0 through an override of 256; one random
+run did too; BOOFUZZ never did (boundary classes, `boundary_coverage_stage7.json`).
+
+**Why it matters.** It removes a meaningful boundary test from the baselines only, and it
+touches `skip_sequence_check`, one of the injected bugs.
+
+**Suggested fix.** Use a separate "no override" value (e.g. −1 or a flag) in the runner and
+the simulator, so that 0 can be sent.
+
+**Status.** Verified (code and log).
+
+---
+
+### Bug 32. Random's "predefined" mode mostly sends nothing (consequence of Bug 24)
+
+**In plain words.** In half of its iterations, the random baseline picks only test-case
+numbers (TC0, TC1, …) and sets no simulator field. The test-case values never reach the
+simulator (Bug 24), so these iterations send normal traffic unless one of the random 10%
+extras happens to fire.
+
+**Details.** `random_strategy_generator.py:113-154`: `test_mode` is drawn from
+`["predefined", "custom"]`; only `custom` sets `bag_value`/`frame_size`/…; then four 10%
+extras (drop probability, source MAC, sequence override, destination MAC).
+
+**Evidence** (Stage 7, predefined iterations / of which no mutation): s1 90 / 62,
+s2 107 / 55, s3 97 / 59, s4 105 / 69, s5 99 / 56. Almost all of random's no-mutation
+iterations (55–69 per run) are predefined ones.
+
+**Why it matters.** About 30% of random's budget tests nothing. This hurts the random
+baseline on executed coverage, depth and detection, so it is unfair to it.
+
+**Suggested fix.** Fix Bug 24 (translate test-case values into the 7 fields), or draw custom
+parameters in every iteration. Re-run (free).
+
+**Status.** Verified (code and log).
+
+---
+
+### Bug 33. The baselines use fixed value lists that do not depend on the VL
+
+**In plain words.** The random baseline draws values from short fixed lists, and BOOFUZZ uses
+fixed defaults. These lists are the same for every VL, but the VLs' limits differ, so the
+baselines can never hit the upper frame-size limit of any VL. The LLM sees each VL's limits in
+its prompt.
+
+**Details.**
+
+- Random (`random_strategy_generator.py:132-151`): frame size from
+  `[0, 17, 63, 65, 1518, 1519, 2000, 10000]` or `[0, 63, 1519, 5000]`; BAG from
+  `[0, 1, 2, 3, 4, 16, 32, 64, 128]`; sequence from `[-1, 0, 256, 65535, 99999]` or
+  `[0, 1, 127, 255]`.
+- MaxFrame is 256, 512 or 1,024 depending on the VL (`virtual_links.csv`); no list contains
+  255–257, 511–513 or 1,023–1,025. MinFrame is 64 for every VL, so 63 and 65 do hit it.
+- The LLM's prompt contains the VL table with BAG, MaxFrame and MinFrame
+  (`llm_fuzzer/prompts/fuzzing_agent.py:422`). The baselines do not receive it.
+
+**Evidence** (boundary classes, `boundary_coverage_stage7.json`): MaxFrame−1/MaxFrame/
+MaxFrame+1 classes hit: random 0 in all runs, BOOFUZZ 0, LLM 8–11 of 24. MinFrame classes:
+random 9–11, BOOFUZZ 8, LLM 7–12. All 81 inputs that detect `max_frame_off_by_one` hit a
+MaxFrame+1 class.
+
+**Why it matters.** Part of the LLM's advantage on upper boundaries, and its detection of
+`max_frame_off_by_one`, comes from information the baselines do not have, not from
+the strategy. The paper says all fuzzers have "an identical system configuration".
+
+**Suggested fix.** Give the baselines the VL table (it is system configuration, not output of
+our pipeline), or state the difference in the paper.
+
+**Status.** Verified (code and log).
+
+---
+
+### Bug 34. BOOFUZZ chooses the VL by rotation, unrelated to the rule
+
+**In plain words.** BOOFUZZ sends test number N to VL number N mod 8, whatever the rule or
+value. A value that only makes sense on one VL (e.g. a frame size near that VL's limit) is
+sent to whichever VL is next.
+
+**Details.** `boofuzz_strategy_generator.py:170`:
+`target_vl = available_vls[iteration % len(available_vls)]`.
+
+**Why it matters.** Small on its own; together with Bug 33 it makes exact boundary tests
+unlikely.
+
+**Status.** Verified (code).
+
+---
+
+### Bug 35. Boolean test-case values are used as numbers
+
+**In plain words.** In Python, `True` counts as the integer 1 and `False` as 0, so a test case
+whose value is "true"/"false" passes the "is it a number?" check and is sent as 1 or 0.
+
+**Evidence.** 18 test cases in the new file have boolean values, e.g.
+`Integrity Checking.integrity_checking_disablement_per_vl` TC0 and TC4,
+`Communication Ports.sampling_port_freshness_indication` TC0. One of them is among the 200
+that BOOFUZZ ran.
+
+**Status.** Verified (code and data); small effect.
+
+---
+
+### Bug 36. The "AFDX grammar" for BOOFUZZ is dead code
+
+**In plain words.** The paper says an AFDX grammar was written by hand for the BOOFUZZ
+baseline. Code that looks like that exists (`boofuzz_baseline/afdx_protocol.py`:
+`generate_afdx_frame`, which maps rule names to fields such as BAG, sequence number, frame
+size, IP version, VL id and priority, and `generate_test_sequence`). Nothing in the repository
+calls these functions; only `get_all_violations` (the test-case list) is used.
+
+**Evidence.** A search of every `.py` file for `generate_afdx_frame` and
+`generate_test_sequence` finds only their definitions.
+
+**Why it matters.** The paper describes a mechanism that does not run. The response must
+describe the baseline as it is.
+
+**Status.** Verified (code search).
+
+---
+
+### Bug 37. The baselines' code and documentation describe a different baseline
+
+**In plain words.** The docstrings and README call the BOOFUZZ baseline "industry-standard",
+"exhaustive" and say it uses the "same frame generator" as the LLM fuzzer. It is a custom
+re-implementation (it does not use the boofuzz library), it is not exhaustive within the
+budget (Bug 26), and the frames of the shared generator never reach the simulator (Bug 24).
+
+**How real boofuzz differs** (boofuzz documentation and source, `jtpereyda/boofuzz`): the
+tester describes the message as typed fields with default values; boofuzz itself generates
+the test values for each field (for integers: 0, the maximum, fractions of the maximum, and
+values around each; for strings: a library of malformed strings); it mutates one field at a
+time and sends each case to the target over a network connection, with monitors to detect
+failures. Even real boofuzz takes integer boundaries from the field width, not from AFDX
+limits, unless the tester adds them.
+
+**Why it matters.** Calling the baseline "BOOFUZZ" may mislead reviewers. Rename it (e.g.
+"BOOFUZZ-style test-case sweep") and describe what it does.
+
+**Status.** Verified (code; boofuzz sources read 2026-11-01).
+
+---
+
+### Bug 38. The mechanism-matched coverage table is too rough (our own tool)
+
+**In plain words.** The stricter coverage measure added during this revision
+(`evaluation/revision/category_mechanisms.py`, commit `52d5a49`) decides which simulator
+change can test each rule category from keywords in the category name. It has visible
+errors, so its numbers should not be used until it is rebuilt.
+
+**Evidence.**
+
+- Any category whose name contains "configuration" is excluded, so
+  `Frame Configuration.virtual_link_frame_size_range` counts as untestable although a frame-size
+  change tests it directly.
+- `Transmission.bag_interval_range_constraint` counts as untestable although a timing change
+  tests it.
+- `Traffic Control.maximum_frame_size` expects a timing change (from "traffic_control").
+
+**Suggested fix.** Build the table per rule, not per category name, and have an author review
+it before using the metric.
+
+**Status.** Verified (code and examples). The boundary-value metric
+(`boundary_coverage.py`) does not use this table.
+
+---
+
+### Bug 39. The existing "testing depth" script measures requests and labels
+
+**In plain words.** `evaluation/revision/coverage_depth.py` (2026-10-24), written to answer
+the reviewer's question on testing depth, counts how many tests and how many different
+"settings" each covered category received. A setting is built from the fields a fuzzer
+*requested*, including the rule label itself and the test-case numbers, which never reach the
+simulator (Bug 24). So two tests that sent the same input count as different settings, and a
+test that sent nothing counts as depth.
+
+**Details.** `PARAMS` includes `mutation_type` (the label) and `test_cases`; the depth is
+grouped by label category (`categories_of(label)`).
+
+**Why it matters.** Do not use it for the answer on testing depth. Use
+`boundary_coverage.py`, which reads only what the simulator received.
+
+**Status.** Verified (code).
 
 ---
 

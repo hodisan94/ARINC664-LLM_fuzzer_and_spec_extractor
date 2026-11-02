@@ -184,8 +184,9 @@ tested. Unique Findings (labels, paired runs): BOOFUZZ 30–35, LLM 0, random 0.
 1. **Fix Bug 24 (test-case values never reach the simulator).** Only the ns-3 path part of
    Bug 24 was fixed. `TestGenerator` builds frames from the test-case values (TC0, TC1, …),
    but only the 7 `sim_config` fields reach ns-3. This hurts the random baseline most: in its
-   "predefined" mode (half of its iterations) it picks test cases only, so 65 of the 90
-   predefined iterations of `random_s1` sent no mutation. Many test-case values are text
+   "predefined" mode (half of its iterations) it picks test cases only, so 62 of the 90
+   predefined iterations of `random_s1` sent no mutation (55–69 per run; REVISION_FINDINGS
+   Bug 32). The BOOFUZZ-style baseline has further problems: REVISION_FINDINGS Bugs 26–37. Many test-case values are text
    (e.g. "Frames sent at intervals shorter than BAG_i by 1 ms"), so the fix needs a
    translation from test-case values to the 7 parameters. Then re-run the baselines (free).
 2. **Sequence number 0 is never sent.** The simulator applies the override only when it is
