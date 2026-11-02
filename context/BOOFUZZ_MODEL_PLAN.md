@@ -1,7 +1,9 @@
 # Plan: a model-based BOOFUZZ baseline
 
 **Status:** implemented and run on 2026-11-02 (`boofuzz_model_baseline/`, commits `415d132`,
-`904af3e` and the commit that adds section 7). Results in section 7. Written 2026-11-02.
+`904af3e`, `919a822` and later). Results in section 7. **Decision D1 was reversed and the
+paper's BOOFUZZ variant is `--mode config` (D5); see section 8 before using any number.**
+Written 2026-11-02.
 **Branch:** `fix/revision-bugs`. Related documents: `REVISION_FINDINGS.md` (Bugs 24, 26–37),
 `FIX_PLAN.md` ("Open after Stage 7"), `PAPER_CHANGES.md` (4.8, boundary-value coverage).
 
@@ -66,10 +68,11 @@ such as MaxFrame = 512, unless the tester adds them.
 
 | # | Question | Decision | Reason |
 |---|---|---|---|
-| D1 | Add the AFDX limits as the tester's own values (MinFrame/MaxFrame per VL, BAG±1 per VL, 1,518)? | **Yes**, and say so in the paper | A tester writing an AFDX model would know them; it is the same VL table the LLM receives (fixes the fairness problem of Bug 33); boofuzz documents this kind of addition (`fuzz_values`) |
+| D1 | Add the AFDX limits as the tester's own values (MinFrame/MaxFrame per VL, BAG±1 per VL, 1,518)? | ~~Yes, and say so in the paper~~ **Reversed on 2026-11-02, see section 8 and D5.** Kept only as the reference variant `--mode expert` | Original reason: a tester writing an AFDX model would know them; it is the same VL table the LLM receives (Bug 33); boofuzz documents this kind of addition (`fuzz_values`). Why it was wrong: section 8 |
 | D2 | Replace the current baseline, or add a new one? | **Add.** Keep the current one under an accurate name ("BOOFUZZ-style test-case sweep") | The current one is the only label-based baseline besides random, so it keeps the Rule Coverage comparison that the paper needs; the new one answers how a real tool performs |
 | D3 | Use the test-case list? | **No** | Real boofuzz does not read rule lists; extracting the rules is part of our contribution |
 | D4 | Change the simulator so that sequence number 0 can be sent? | **No** (see step 2) | Not needed: an override of 256 already sends 0 |
+| D5 | Which variant is the BOOFUZZ result of the paper? (2026-11-02) | **`--mode config`**: each VL's frame-size field is declared with that VL's maximum (boofuzz's `max_num`), and boofuzz generates every value itself | It gives boofuzz exactly the information the LLM gets (the VL table) and no human test rule (principles P1–P2, section 8) |
 
 ## 4. Open questions (to settle before or during implementation)
 
@@ -87,7 +90,8 @@ such as MaxFrame = 512, unless the tester adds them.
 
 ### Step 0: decisions
 
-Done: D1 and D2 accepted (2026-11-02).
+Done: D1 and D2 accepted (2026-11-02). D1 was reversed the same day and replaced by D5
+(section 8).
 
 ### Step 1: check how to get boofuzz's values (about half a day)
 
@@ -324,7 +328,82 @@ Where the boundary points come from:
   values both come from `virtual_links.csv`). That run shows what systematic testing of known
   limits achieves, not what boofuzz's method finds by itself. The run with boofuzz's values only
   shows the method; on boundary points it equals the sweep (14) and is below the LLM (31–34).
-  Report both, and say so.
+  Report both, and say so. **Superseded by section 8:** neither of these two is the paper's
+  BOOFUZZ result.
+
+## 8. Review of D1, the fairness principles, and the paper's variant (2026-11-02)
+
+### 8.1 What D1 did, in the code
+
+In `--mode expert`, `model.py` adds, for every VL, the frame sizes MinFrame−1, MinFrame,
+MinFrame+1, MaxFrame−1, MaxFrame, MaxFrame+1, the timing offsets −1 and +1 ms, and the sizes
+1,517–1,519 (`field_groups`, the `if afdx:` blocks). boofuzz does not compute these values:
+they are written in our code. In other words, the baseline was told exactly what to test.
+
+### 8.2 Why D1 was wrong
+
+1. **It mixed information with a test rule.** Fairness requires that boofuzz gets the same
+   *information* as the LLM fuzzer: the VL table (BAG, MinFrame, MaxFrame). D1 also gave it a
+   *test rule*, "test exactly each limit −1, 0, +1" (boundary-value analysis). That rule is an
+   expert's decision about what to test, not information about the network. The LLM fuzzer
+   receives the table and must decide by itself which values to test.
+2. **The rule is the boundary metric's own definition.** The boundary-value metric
+   (`boundary_coverage.py`, PAPER_CHANGES 4.8) checks exactly MinFrame/MaxFrame ±1 and BAG ±1.
+   So `--mode expert` reaches 71 of 79 points because it was given the metric's list of points,
+   not because of anything boofuzz did. The comparison is circular.
+3. **It is not boofuzz.** boofuzz generates values from each field's definition. Writing the
+   values by hand is possible in the library (the `Group` / `s_group` primitive sends a listed
+   set of values exactly; checked in boofuzz 0.4.2), but it is a person deciding the tests.
+4. **It works against the paper's claim.** The point of the approach is that no human needs to
+   model the protocol or decide the test values. A baseline in which a human wrote the test
+   values measures something else (an expert with a tool), not the tool.
+5. **The plan did not say this clearly.** D1 was presented as "add the AFDX limits as the
+   tester's own values" and accepted. It should have said that this means hand-written test
+   values that coincide with the metric's points.
+
+### 8.3 The principles (decided 2026-11-02)
+
+- **P1. Configure every fuzzer by fairness alone, before looking at results:** the same
+  information for every fuzzer, and no human test rules for any of them.
+- **P2. Do not optimize any fuzzer, or the choice of variant, toward one metric.** Fix all
+  metrics in advance (bug detection, boundary-value coverage, input diversity, tests without
+  mutation, and label-based coverage where labels exist), measure every fuzzer with all of them,
+  and report the results whatever they show. A variant that wins on one metric because it was
+  built around that metric's definition is not a fair comparison point.
+
+### 8.4 The paper's BOOFUZZ variant: `--mode config` (decision D5)
+
+- **What it does:** each VL's frame-size field is declared with that VL's maximum frame size
+  from the configuration, using boofuzz's own `max_num` parameter (`max_num = MaxFrame + 1`, the
+  field holds 0…MaxFrame). boofuzz then builds its boundaries from that maximum (0, max/2,
+  max/3, max/4, max/8, max/16, max/32, max) and tries the values around each, as for any
+  field. The values of each VL are sent on that VL. Timing, sequence number, MAC changes and
+  drop probability are as in `--mode boofuzz`: BAG is not a field of the frame, so boofuzz has
+  no native way to use it.
+- **Why it is the fair one:** it gets exactly the information the LLM fuzzer gets and no human
+  test rule (P1), and it was chosen by that principle, not by any metric (P2).
+- **What boofuzz produces this way** (checked against the library before the run; exported in
+  `boofuzz_values.json`, key `frame_size_by_max_frame`): 112, 132 and 140 values for MaxFrame
+  256, 512 and 1,024. They include 63, 64, 65 (64 is 1/4, 1/8 or 1/16 of each MaxFrame) and
+  MaxFrame−1 and MaxFrame, but **never MaxFrame+1**: boofuzz does not generate values above the
+  maximum a field is declared with.
+- **Results:** section 9 (run on 2026-11-02).
+
+### 8.5 The other variants
+
+| Variant | Status in the paper |
+|---|---|
+| `--mode config` | **The BOOFUZZ result** (D5) |
+| `--mode boofuzz` (field types only, no configuration) | Optional supplementary row: boofuzz used as is, without the information the LLM gets |
+| `--mode expert` (hand-written boundary values) | At most a clearly labeled reference point ("an expert with boofuzz"), never the comparison; or omitted |
+
+The code of all three is kept (`--mode`), so every number in this document can be reproduced.
+
+### 8.6 Claim for the paper
+
+The comparison shows what the LLM-guided approach achieves without a human writing test values,
+against boofuzz given the same information. All metrics are reported, including those on which
+boofuzz does better.
 
 ## 6. Effort, cost and risks
 
