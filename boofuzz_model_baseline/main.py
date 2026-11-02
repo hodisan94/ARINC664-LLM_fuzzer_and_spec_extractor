@@ -25,7 +25,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from boofuzz_model_baseline.generator import build_test_list  # noqa: E402
-from boofuzz_model_baseline.model import load_boofuzz_values, load_vls  # noqa: E402
+from boofuzz_model_baseline.model import MODES, load_boofuzz_values, load_vls  # noqa: E402
 from llm_fuzzer.utils.log_parser import SimulatorLogParser  # noqa: E402
 from llm_fuzzer.utils.simulator_runner import SimulatorRunner  # noqa: E402
 
@@ -35,7 +35,7 @@ COUNTERS = ("frames_received", "frames_forwarded", "frames_dropped_policing",
 MAX_CONSECUTIVE_FAILURES = 5  # as in the other baselines
 
 
-def run(max_iterations, history_path, work_dir, resume, force, afdx=True):
+def run(max_iterations, history_path, work_dir, resume, force, mode="expert"):
     history_path = Path(history_path)
     if history_path.exists() and history_path.stat().st_size > 0:
         if force:
@@ -46,8 +46,8 @@ def run(max_iterations, history_path, work_dir, resume, force, afdx=True):
     history_path.parent.mkdir(parents=True, exist_ok=True)
 
     version, values = load_boofuzz_values()
-    tests, skipped = build_test_list(load_vls(), values, afdx)
-    print(f"boofuzz {version}, AFDX values {'on' if afdx else 'off'}: {len(tests)} tests in the list "
+    tests, skipped = build_test_list(load_vls(), values, mode)
+    print(f"boofuzz {version}, mode {mode}: {len(tests)} tests in the list "
           f"({len(skipped)} skipped as identical inputs); running "
           f"{min(max_iterations, len(tests)) - done} from #{done}")
     runner = SimulatorRunner(work_dir=work_dir)
@@ -63,7 +63,8 @@ def run(max_iterations, history_path, work_dir, resume, force, afdx=True):
             "duration": (datetime.now() - start).total_seconds(),
             "fuzzer_type": "BOOFUZZ_MODEL",
             "boofuzz_version": version,
-            "afdx_values": afdx,
+            "mode": mode,
+            "afdx_values": mode == "expert",
             "target_vl": t["vl"],
             "protocol_rule": None,
             "boofuzz_field": t["field"],
@@ -97,11 +98,15 @@ def main():
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--resume", action="store_true", help="continue an existing history")
     mode.add_argument("--force", action="store_true", help="delete an existing history first")
+    parser.add_argument("--mode", choices=MODES, default="expert",
+                        help="expert: with the tester's AFDX boundary values; boofuzz: boofuzz's "
+                             "values for the field types only; config: frame-size fields declared "
+                             "with each VL's maximum (see model.py)")
     parser.add_argument("--no-afdx-values", action="store_true",
-                        help="use boofuzz's own values only, without the tester-defined AFDX limits")
+                        help="same as --mode boofuzz (kept for the earlier run)")
     args = parser.parse_args()
     run(args.max_iterations, args.history_path, args.work_dir, args.resume, args.force,
-        afdx=not args.no_afdx_values)
+        mode="boofuzz" if args.no_afdx_values else args.mode)
 
 
 if __name__ == "__main__":

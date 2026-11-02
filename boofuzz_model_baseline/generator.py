@@ -2,7 +2,7 @@
 """The fixed test list of the model-based BOOFUZZ baseline (context/BOOFUZZ_MODEL_PLAN.md, step 4).
 
 Kept from boofuzz: each test mutates exactly one field, the others keep their defaults; the
-values are boofuzz's (plus the AFDX limits, decision D1); the order is fixed; nothing is
+values are boofuzz's (in mode "expert" also hand-written limits; see model.py); the order is fixed; nothing is
 learned from results.
 
 Adapted to the 200-test budget (boofuzz itself would exhaust the first field before moving on):
@@ -27,15 +27,17 @@ def config_key(cfg):
     return json.dumps({k: v for k, v in cfg.items() if k != "inject_bug"}, sort_keys=True)
 
 
-def build_test_list(vls=None, boofuzz_values=None, afdx=True):
+def build_test_list(vls=None, boofuzz_values=None, mode="expert"):
     """All tests in order, and the skipped ones with the reason.
 
-    afdx=False builds the list from boofuzz's own values only (no tester-defined AFDX limits).
+    mode: "expert" (with the tester's AFDX boundary values), "boofuzz" (boofuzz's values for
+    the field types only) or "config" (frame-size fields declared with each VL's maximum);
+    see model.py.
     """
     vls = vls or load_vls()
     if boofuzz_values is None:
         _, boofuzz_values = load_boofuzz_values()
-    groups = field_groups(boofuzz_values, vls, afdx)
+    groups = field_groups(boofuzz_values, vls, mode)
     queues = {f: field_sequence(groups[f]) for f in FIELDS}
     vl_order = sorted(vls)
     next_vl = 0

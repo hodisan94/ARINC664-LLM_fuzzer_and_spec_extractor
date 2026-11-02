@@ -25,6 +25,17 @@ from boofuzz import BitField, Byte, Group, Word
 from importlib.metadata import version
 
 OUT = Path(__file__).resolve().parent / "boofuzz_values.json"
+VL_CONFIG = Path(__file__).resolve().parents[1] / "examples/AFDX_V3/config/virtual_links.csv"
+
+
+def max_frame_sizes(path=VL_CONFIG):
+    """The distinct MaxFrame values of the network configuration (column 8 of virtual_links.csv)."""
+    sizes = set()
+    for line in path.read_text().splitlines():
+        parts = line.strip().split(",")
+        if line.strip() and not line.startswith("#") and len(parts) >= 9:
+            sizes.add(int(parts[7]))
+    return sorted(sizes)
 
 
 def signed_values(field):
@@ -66,9 +77,18 @@ def main():
             "drop_probability": {"primitive": "Group",
                                  "values": [float(v) for v in group_values(drop)]},
         },
+        # Configuration variant: the frame-size field of a VL is declared with that VL's maximum
+        # (boofuzz's max_num = MaxFrame + 1, i.e. the field holds 0..MaxFrame). boofuzz then builds
+        # its boundaries from that maximum; it never generates a value above it.
+        "frame_size_by_max_frame": {
+            str(m): {"primitive": f"Word(max_num={m + 1})",
+                     "values": list(Word(name=f"frame_size_{m}", default_value=0,
+                                         max_num=m + 1).mutations(0))}
+            for m in max_frame_sizes()},
     }
     OUT.write_text(json.dumps(report, indent=1) + "\n")
-    for name, f in report["fields"].items():
+    for name, f in list(report["fields"].items()) + [
+            (f"frame_size max {m}", f) for m, f in report["frame_size_by_max_frame"].items()]:
         print(f"{name:18} {len(f['values']):4d} values  {f['values'][:6]} ... {f['values'][-3:]}")
     print(f"boofuzz {report['boofuzz_version']} -> {OUT}")
 

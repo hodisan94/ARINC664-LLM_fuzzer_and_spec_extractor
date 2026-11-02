@@ -28,19 +28,24 @@ list.
 - **One field per test,** the others at their defaults.
 - **A fixed order** and **no learning** from results.
 
-## What is added or adapted, and why
+## Three modes (`--mode`)
 
-- **The AFDX limits as the tester's own values** (decision D1): MinFrame−1, MinFrame,
-  MinFrame+1, MaxFrame−1, MaxFrame, MaxFrame+1 and BAG±1 ms for each VL, and 1,517–1,519 bytes.
-  boofuzz documents such additions (`fuzz_values`), but version 0.4.2 does not apply them to
-  integer fields, so `model.py` adds them. They are the same VL table the LLM fuzzer receives.
+| Mode | Frame-size values | Status |
+|---|---|---|
+| `config` | Each VL's field is declared with that VL's MaxFrame (boofuzz's `max_num`); boofuzz generates the values (never above MaxFrame) | **The paper's BOOFUZZ result** (decision D5): the same information as the LLM fuzzer, no human test rule |
+| `boofuzz` | A plain 16-bit field (0–9, around 2,048, 4,096, … 65,535) | boofuzz used as is, without the configuration |
+| `expert` | The 16-bit values plus hand-written MinFrame/MaxFrame ±1, BAG ±1 ms and 1,517–1,519 | Reference only. These are the boundary metric's own points, so it reaches them by construction; not a fair comparison (BOOFUZZ_MODEL_PLAN §8) |
+
+## What is adapted, and why
+
 - **Order** (`generator.py`): boofuzz would test all values of one field before the next, so
   200 tests would cover only small frame sizes. Here the fields take turns, and inside a field
-  one value is taken from each boundary window in turn. AFDX values go to their own VL; other
-  values to the next VL of the rotation.
+  one value is taken from each boundary window in turn. Values that belong to a VL (`config`
+  and `expert`) go to that VL; other values to the next VL of the rotation.
 - **Identical inputs are skipped.** The simulator clamps frames to 18–9,000 bytes and send
   intervals to at least 100 µs, so many of boofuzz's values send the same input; such tests,
-  and the one that changes nothing (timing 0), are skipped. Of 442 candidate tests, 366 remain.
+  and the one that changes nothing (timing 0), are skipped. Tests kept: 1,134 (`config`),
+  302 (`boofuzz`), 366 (`expert`); a run uses the first 200.
 - **Sequence number 0 is sent as an override of 256** (the simulator keeps the low 8 bits;
   an override of 0 means "no change"; REVISION_FINDINGS Bug 31).
 - **Delivery:** instead of a network connection, each test is passed to the same

@@ -14,23 +14,25 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from boofuzz_model_baseline.adapter import to_sim_config, unmutated  # noqa: E402
 from boofuzz_model_baseline.generator import build_test_list, config_key  # noqa: E402
-from boofuzz_model_baseline.model import load_boofuzz_values, load_vls  # noqa: E402
+from boofuzz_model_baseline.model import (load_boofuzz_values, load_config_frame_values,  # noqa: E402
+                                          load_vls)
 
 VLS = load_vls()
 VERSION, VALUES = load_boofuzz_values()
+CONFIG = load_config_frame_values()
 TESTS, SKIPPED = build_test_list(VLS, VALUES)
 MUTABLE = ("prob", "payload_delta_bytes", "timing_jitter_ms", "mac_mutation",
            "sequence_number_override", "dest_mac_mutation")
 
 
-def independent_bitfield_values(width):
+def independent_bitfield_values(width, max_num=None):
     """boofuzz 0.4.2 BitField rule, rewritten from its source (bit_field.py), not imported.
 
-    Boundaries 0, max/2, max/3, max/4, max/8, max/16, max/32 and max (max = 2**width), sorted;
-    around each, the values from 10 below to 9 above that lie strictly between the last value
-    produced and max.
+    Boundaries 0, max/2, max/3, max/4, max/8, max/16, max/32 and max (max = max_num, by default
+    2**width), sorted; around each, the values from 10 below to 9 above that lie strictly
+    between the last value produced and max.
     """
-    max_num = 2 ** width
+    max_num = max_num or 2 ** width
     boundaries = sorted([0, max_num // 2, max_num // 3, max_num // 4, max_num // 8,
                          max_num // 16, max_num // 32, max_num])
     values, lower = [], -1
@@ -62,6 +64,14 @@ class TestValues(unittest.TestCase):
         self.assertEqual(VALUES["sequence_number"], list(Byte(name="s", default_value=0).mutations(0)))
         raw = list(BitField(name="t", default_value=0, width=8, signed=True).mutations(0))
         self.assertEqual(VALUES["timing_offset_ms"], [v - 256 if v >= 128 else v for v in raw])
+        for m, values in CONFIG.items():
+            self.assertEqual(values, list(Word(name="f", default_value=0, max_num=m + 1).mutations(0)))
+
+    def test_config_values_follow_boofuzz_rule(self):
+        self.assertEqual(sorted(CONFIG), sorted({v["max"] for v in VLS.values()}))
+        for m, values in CONFIG.items():
+            self.assertEqual(values, independent_bitfield_values(16, max_num=m + 1), m)
+            self.assertEqual(max(values), m)  # boofuzz never goes above the declared maximum
 
 
 class TestAdapter(unittest.TestCase):
@@ -134,8 +144,26 @@ class TestList(unittest.TestCase):
                 cfg = to_sim_config({"field": "timing_offset_ms", "value": offset}, vl, VLS)
                 self.assertIn(config_key(cfg), kept, (vl, offset))
 
+    def test_config_mode(self):
+        tests, skipped = build_test_list(VLS, VALUES, mode="config")
+        frame = [t for t in tests + skipped if t["field"] == "frame_size"]
+        # every frame-size value is boofuzz's value for that VL's MaxFrame, sent on that VL
+        for vl, v in VLS.items():
+            sent = sorted(t["value"] for t in frame if t["vl"] == vl)
+            self.assertEqual(sent, sorted(CONFIG[v["max"]]), vl)
+        self.assertTrue(all(t["source"] == "config" for t in frame))
+        # nothing else is added: the other fields are those of the "boofuzz" mode
+        others = [(t["field"], t["value"]) for t in tests + skipped if t["field"] != "frame_size"]
+        pure, pure_skipped = build_test_list(VLS, VALUES, mode="boofuzz")
+        self.assertEqual(sorted(others, key=str), sorted(
+            [(t["field"], t["value"]) for t in pure + pure_skipped if t["field"] != "frame_size"], key=str))
+        for t in tests:
+            base = unmutated(t["vl"])
+            self.assertEqual(sum(t["sim_config"][k] != base[k] for k in MUTABLE), 1, t)
+        self.assertEqual(build_test_list(VLS, VALUES, mode="config"), (tests, skipped))
+
     def test_without_afdx_values(self):
-        pure, pure_skipped = build_test_list(VLS, VALUES, afdx=False)
+        pure, pure_skipped = build_test_list(VLS, VALUES, mode="boofuzz")
         self.assertTrue(all(t["source"] == "boofuzz" for t in pure + pure_skipped))
         # every boofuzz value is still used or skipped, and each test mutates one field
         for field, values in VALUES.items():
@@ -144,7 +172,7 @@ class TestList(unittest.TestCase):
         for t in pure:
             base = unmutated(t["vl"])
             self.assertEqual(sum(t["sim_config"][k] != base[k] for k in MUTABLE), 1, t)
-        self.assertEqual(build_test_list(VLS, VALUES, afdx=False), (pure, pure_skipped))
+        self.assertEqual(build_test_list(VLS, VALUES, mode="boofuzz"), (pure, pure_skipped))
 
     def test_no_rule_labels_or_test_cases(self):
         source = (Path(__file__).resolve().parent / "generator.py").read_text() + \
