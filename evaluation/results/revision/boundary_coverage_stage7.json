@@ -227,11 +227,11 @@
         "first_iteration_per_point": {
           "dst|corrupt_prefix": 0,
           "size|2001|max-1": 1,
-          "dst|wrong_vl": 4,
           "seq|0": 4,
           "src|spoof_src": 4,
-          "src|broadcast": 6,
+          "dst|wrong_vl": 4,
           "size|1002|min": 6,
+          "src|broadcast": 6,
           "src|zero_mac": 12,
           "src|invalid_src": 14,
           "seq|1": 17,
@@ -722,10 +722,10 @@
           "dst|corrupt_prefix": 1,
           "seq|0": 2,
           "timing|2003|bag+1": 6,
-          "dst|wrong_vl": 7,
           "src|spoof_src": 7,
-          "size|3002|min": 9,
+          "dst|wrong_vl": 7,
           "src|broadcast": 9,
+          "size|3002|min": 9,
           "size|2002|max+1": 10,
           "size|1001|max": 17,
           "size|3002|max": 18,
@@ -930,8 +930,8 @@
           "seq|1": 0,
           "size|eth|1519": 1,
           "dst|zero": 10,
-          "dst|wrong_vl": 11,
           "timing|1002|bag-1": 11,
+          "dst|wrong_vl": 11,
           "dst|corrupt_prefix": 16,
           "src|broadcast": 18,
           "src|zero_mac": 20,
@@ -1237,10 +1237,10 @@
           "src|zero_mac": 56,
           "dst|corrupt_prefix": 61,
           "size|2003|min-1": 78,
-          "dst|wrong_vl": 83,
           "timing|1002|bag-1": 83,
-          "timing|1001|bag-1": 88,
+          "dst|wrong_vl": 83,
           "dst|zero": 88,
+          "timing|1001|bag-1": 88,
           "size|1002|min+1": 105,
           "size|3002|min-1": 120,
           "size|2003|min+1": 123,
@@ -1307,8 +1307,8 @@
           "timing|3001|slower"
         ],
         "first_iteration_per_point": {
-          "dst|wrong_vl": 1,
           "src|spoof_src": 1,
+          "dst|wrong_vl": 1,
           "dst|corrupt_prefix": 3,
           "size|2002|min-1": 4,
           "seq|255": 7,
@@ -1613,6 +1613,88 @@
         }
       }
     },
+    "BOOFUZZ_MODEL_CONFIG": {
+      "evaluation/results/revision/runs/stage7/boofuzz_model_config.jsonl": {
+        "executed_inputs": 200,
+        "point_classes": 14,
+        "point_coverage": 0.17721518987341772,
+        "range_classes": 39,
+        "range_coverage": 0.7647058823529411,
+        "points": [
+          "dst|corrupt_prefix",
+          "dst|wrong_vl",
+          "dst|zero",
+          "seq|0",
+          "seq|1",
+          "seq|254",
+          "seq|255",
+          "src|broadcast",
+          "src|invalid_src",
+          "src|spoof_dst",
+          "src|spoof_src",
+          "src|zero_mac",
+          "timing|2002|bag+1",
+          "timing|2002|bag-1"
+        ],
+        "ranges": [
+          "dst|corrupt_prefix",
+          "dst|wrong_vl",
+          "dst|zero",
+          "seq|1-255",
+          "seq|reserved_0",
+          "size|1001|below_min",
+          "size|1001|inside",
+          "size|1002|below_min",
+          "size|1002|inside",
+          "size|1003|below_min",
+          "size|1003|inside",
+          "size|2001|below_min",
+          "size|2001|inside",
+          "size|2002|below_min",
+          "size|2002|inside",
+          "size|2003|below_min",
+          "size|2003|inside",
+          "size|3001|below_min",
+          "size|3001|inside",
+          "size|3002|below_min",
+          "size|3002|inside",
+          "src|broadcast",
+          "src|invalid_src",
+          "src|spoof_dst",
+          "src|spoof_src",
+          "src|zero_mac",
+          "timing|1001|faster",
+          "timing|1001|slower",
+          "timing|1002|faster",
+          "timing|1002|slower",
+          "timing|1003|faster",
+          "timing|1003|slower",
+          "timing|2001|faster",
+          "timing|2002|faster",
+          "timing|2002|slower",
+          "timing|2003|slower",
+          "timing|3001|faster",
+          "timing|3001|slower",
+          "timing|3002|slower"
+        ],
+        "first_iteration_per_point": {
+          "seq|0": 1,
+          "src|spoof_src": 2,
+          "dst|corrupt_prefix": 3,
+          "src|spoof_dst": 8,
+          "dst|wrong_vl": 9,
+          "src|broadcast": 14,
+          "dst|zero": 15,
+          "src|invalid_src": 20,
+          "src|zero_mac": 24,
+          "timing|2002|bag+1": 26,
+          "seq|1": 27,
+          "seq|254": 144,
+          "timing|2002|bag-1": 158,
+          "seq|255": 159
+        }
+      }
+    },
     "A0": {
       "evaluation/results/revision/runs/stage7/llm_A0.jsonl": {
         "executed_inputs": 200,
@@ -1669,8 +1751,8 @@
           "size|2001|min": 2,
           "src|invalid_src": 3,
           "seq|0": 3,
-          "dst|wrong_vl": 4,
           "seq|1": 4,
+          "dst|wrong_vl": 4,
           "size|2001|max+1": 11,
           "size|2001|max": 28,
           "size|1001|min": 34,
@@ -2021,6 +2103,28 @@
         ]
       }
     },
+    "BOOFUZZ_MODEL_CONFIG": {
+      "point_classes": {
+        "n": 1,
+        "mean": 14,
+        "sd": 0.0,
+        "min": 14,
+        "max": 14,
+        "values": [
+          14
+        ]
+      },
+      "range_classes": {
+        "n": 1,
+        "mean": 39,
+        "sd": 0.0,
+        "min": 39,
+        "max": 39,
+        "values": [
+          39
+        ]
+      }
+    },
     "A0": {
       "point_classes": {
         "n": 1,
@@ -2094,8 +2198,8 @@
   },
   "per_bug": {
     "skip_bag_policing": {
-      "detecting_inputs": 664,
-      "detecting_inputs_without_point_class": 319,
+      "detecting_inputs": 695,
+      "detecting_inputs_without_point_class": 348,
       "point_classes_of_detecting_inputs": {
         "size|3001|max": 57,
         "size|3002|max": 50,
@@ -2115,17 +2219,17 @@
         "size|2003|min": 6,
         "timing|1001|bag+1": 6,
         "timing|1002|bag-1": 6,
-        "timing|2002|bag-1": 4,
+        "timing|2002|bag-1": 5,
         "src|broadcast": 4,
         "size|2001|min": 4,
         "dst|wrong_vl": 4,
         "dst|zero": 4,
         "size|1002|min": 3,
+        "timing|2002|bag+1": 3,
         "size|1003|min": 3,
         "timing|2001|bag-1": 3,
         "seq|255": 3,
         "timing|1002|bag+1": 2,
-        "timing|2002|bag+1": 2,
         "timing|2003|bag+1": 2,
         "src|zero_mac": 2,
         "timing|1003|bag-1": 2,
@@ -2139,8 +2243,8 @@
       }
     },
     "skip_frame_validation": {
-      "detecting_inputs": 1060,
-      "detecting_inputs_without_point_class": 502,
+      "detecting_inputs": 1081,
+      "detecting_inputs_without_point_class": 523,
       "point_classes_of_detecting_inputs": {
         "size|eth|1519": 128,
         "dst|corrupt_prefix": 99,
@@ -2174,12 +2278,12 @@
       }
     },
     "skip_mac_validation": {
-      "detecting_inputs": 127,
+      "detecting_inputs": 130,
       "detecting_inputs_without_point_class": 0,
       "point_classes_of_detecting_inputs": {
-        "src|spoof_src": 65,
-        "src|invalid_src": 37,
-        "src|zero_mac": 25,
+        "src|spoof_src": 66,
+        "src|invalid_src": 38,
+        "src|zero_mac": 26,
         "dst|wrong_vl": 8,
         "dst|corrupt_prefix": 6,
         "size|1001|min": 5,
@@ -2202,13 +2306,13 @@
       "point_classes_of_detecting_inputs": {}
     },
     "skip_constant_field": {
-      "detecting_inputs": 290,
+      "detecting_inputs": 294,
       "detecting_inputs_without_point_class": 0,
       "point_classes_of_detecting_inputs": {
-        "dst|corrupt_prefix": 140,
-        "src|broadcast": 54,
-        "src|spoof_dst": 49,
-        "dst|zero": 47,
+        "dst|corrupt_prefix": 141,
+        "src|broadcast": 55,
+        "src|spoof_dst": 50,
+        "dst|zero": 48,
         "size|1001|min": 6,
         "seq|255": 3,
         "size|3002|min": 2,
@@ -2222,10 +2326,10 @@
       }
     },
     "skip_sequence_check": {
-      "detecting_inputs": 199,
-      "detecting_inputs_without_point_class": 83,
+      "detecting_inputs": 212,
+      "detecting_inputs_without_point_class": 94,
       "point_classes_of_detecting_inputs": {
-        "seq|0": 54,
+        "seq|0": 55,
         "size|eth|1519": 19,
         "size|3001|max": 11,
         "size|3002|max": 8,
@@ -2235,10 +2339,10 @@
         "size|3002|min": 3,
         "dst|zero": 3,
         "seq|255": 3,
+        "seq|254": 3,
         "size|1002|min": 2,
         "size|1003|max": 2,
         "dst|wrong_vl": 2,
-        "seq|254": 2,
         "size|2001|min": 1,
         "size|1003|min": 1,
         "size|3001|min": 1,
@@ -2290,8 +2394,8 @@
       }
     },
     "loose_bag_tolerance": {
-      "detecting_inputs": 452,
-      "detecting_inputs_without_point_class": 214,
+      "detecting_inputs": 478,
+      "detecting_inputs_without_point_class": 238,
       "point_classes_of_detecting_inputs": {
         "size|3001|max": 51,
         "size|3002|max": 46,
@@ -2304,15 +2408,15 @@
         "size|2003|max": 8,
         "size|1003|max": 8,
         "size|2003|min": 6,
-        "size|1001|min": 6,
         "timing|1001|bag+1": 6,
+        "size|1001|min": 6,
+        "timing|2002|bag-1": 5,
         "size|2002|min": 4,
-        "timing|2002|bag-1": 4,
         "dst|zero": 4,
+        "timing|2002|bag+1": 3,
         "dst|wrong_vl": 3,
         "seq|255": 3,
         "timing|1002|bag+1": 2,
-        "timing|2002|bag+1": 2,
         "timing|2003|bag+1": 2,
         "size|1003|min": 2,
         "src|zero_mac": 2,

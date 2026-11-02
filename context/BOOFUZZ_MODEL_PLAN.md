@@ -387,7 +387,7 @@ they are written in our code. In other words, the baseline was told exactly what
   256, 512 and 1,024. They include 63, 64, 65 (64 is 1/4, 1/8 or 1/16 of each MaxFrame) and
   MaxFrame−1 and MaxFrame, but **never MaxFrame+1**: boofuzz does not generate values above the
   maximum a field is declared with.
-- **Results:** section 9 (run on 2026-11-02).
+- **Results:** section 9 (run on 2026-11-02): 6 of 8 reachable bugs, 14 of 79 boundary points.
 
 ### 8.5 The other variants
 
@@ -399,7 +399,42 @@ they are written in our code. In other words, the baseline was told exactly what
 
 The code of all three is kept (`--mode`), so every number in this document can be reproduced.
 
-### 8.6 Claim for the paper
+### 8.6 Results of `--mode config` (section 9 below)
+
+## 9. Results of the paper's variant, `--mode config` (2026-11-02)
+
+200 tests on the fixed simulator, no simulator failure, 200 distinct inputs, none without a
+mutation. History `runs/stage7/boofuzz_model_config.jsonl`; bug replay
+`bdr_replay_boofuzz_model_config.json`; boundary classes in `boundary_coverage_stage7.json`.
+
+| Fuzzer | Bugs found (of 8 reachable) | Boundary points (of 79) | Boundary ranges (of 51) | Tests without mutation |
+|---|---|---|---|---|
+| LLM (5 runs) | 8, 8, 8, 8, 8 | 31–34 | 45–47 | 2–4 |
+| Random (5 runs) | 7 in each | 23–25 | 35–40 | 55–69 |
+| BOOFUZZ-style test-case sweep | 7 | 14 | 33 | 68 |
+| **Model-based BOOFUZZ, `--mode config`** | **6** | **14** | **39** | 0 |
+
+(Baseline numbers other than this one are still before the Bug 24 / sequence-0 fixes.)
+
+- **Bugs:** found `skip_bag_policing`, `skip_frame_validation`, `skip_mac_validation`,
+  `skip_constant_field`, `skip_sequence_check`, `loose_bag_tolerance`; missed
+  `accept_oversized` and `max_frame_off_by_one`. The configuration declares MaxFrame as the
+  field's maximum and boofuzz never goes above it, so this variant sends no frame larger than the
+  VL allows, and the two bugs about oversized frames cannot be found by it.
+- **Boundary points:** 14, all outside frame size (sequence number 4, MAC types 8, timing 2). Its
+  frame-size list does contain 63, 64, 65, MaxFrame−1 and MaxFrame, but **the first 200 tests did
+  not reach them.** The frame-size field got 62 of the 200 tests; with 8 VLs and several boundary
+  windows per VL, each window gets one or two values, and boofuzz orders a window from its
+  boundary −10 upward. The sizes actually sent were the starts of windows, e.g. on VL 1001:
+  0, 54, 55, 118, 119, 161, 162, 246, 247, 503, 504.
+- **This is the order rule fixed before the run (Q1, step 4), applied unchanged.** It is not
+  changed after seeing the result (P2). What the variant would reach with more tests is a
+  separate question (time to reach), not a reason to reorder.
+- **Reading:** with the same information as the LLM fuzzer and the same 200-test budget,
+  boofuzz's own value generation found 6 of 8 reachable bugs and 14 of 79 boundary points; the
+  LLM fuzzer found 8 of 8 and 31–34.
+
+### 9.1 Claim for the paper
 
 The comparison shows what the LLM-guided approach achieves without a human writing test values,
 against boofuzz given the same information. All metrics are reported, including those on which
