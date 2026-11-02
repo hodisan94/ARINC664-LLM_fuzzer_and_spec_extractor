@@ -64,7 +64,7 @@ manuscript of 2026-10-24 and its response letter.
 | 4.7 | VII-A, VII-C, abstract | Rule Coverage by labels is the headline metric | Labels are not tests: about a third of the baselines' iterations change nothing (55–69 of 200 for random, 68 for BOOFUZZ, 2–4 for the LLM), and BOOFUZZ reaches 184 labels by walking the list. Proposal sent to the advisor (2026-10-31): make mechanism-matched coverage the main metric and keep the label metric, explained. Disclose that the category-to-mechanism table (`category_mechanisms.py`) was built from the rule text, not from results, and have it checked by an author. | Stage 7 | Decision |
 | 4.5 | VIII (limitations) | — | State that 99 of 153 categories (IP/UDP fields, ports, configuration …) cannot be exercised by any simulator parameter, so coverage of them is by label only, for every fuzzer. | Stage 3 | Ready |
 | 4.5a | VIII (limitations) | — | The simulator implements no IP fragmentation or reassembly (no such code in `examples/AFDX_V3/model/` or `afdx-demo.cc`); the fuzzers inject frames directly at the frame level, below that layer. So rules about fragmentation and reassembly (e.g. `Fragmentation.no_local_fragmentation_constraint`, the "IP Layer – Fragmentation and Reassembly" category) cannot be tested by any fuzzer, although label-based coverage can count them. Also state that the sender clamps a requested frame size to 18–9,000 bytes (`afdx-demo.cc:797-803`): a request above 9,000 is sent as 9,000 bytes. Every frame above 1,518 bytes is dropped at the switch's first check in the same way, so this does not change what is tested; the boundary metric and the bug replay use the size actually sent. Noted 2026-11-02, not yet explained to the advisor. | Code reading | Ready |
-| 4.6a | VII-B (baselines), VII-C | Only the BOOFUZZ-style test-case sweep | Add the model-based BOOFUZZ baseline (`boofuzz_model_baseline/`, `context/BOOFUZZ_MODEL_PLAN.md`): boofuzz 0.4.2's own values over the 6 simulator input fields, one field per test, no test-case list, no labels. **Decided 2026-11-02 (D5): the paper's BOOFUZZ result is `--mode config`**, where each VL's frame-size field is declared with that VL's MaxFrame (boofuzz's `max_num`) and boofuzz generates all values itself: the same information as the LLM fuzzer, no human test rule. Do **not** use `--mode expert` (hand-written MinFrame/MaxFrame ±1 and BAG ±1, which are the boundary metric's own points; 71/79 by construction) as the comparison; at most a labeled reference point. `--mode boofuzz` (7/8 bugs, 14/79) is optional as "boofuzz used as is". Principles P1–P2 (BOOFUZZ_MODEL_PLAN §8.3): same information for all fuzzers, no human test rules, no tuning toward one metric, all metrics reported. Rename the old baseline "BOOFUZZ-style test-case sweep". Label metrics: n/a for this baseline. **`--mode config` result (200 tests): 6/8 reachable bugs (misses the two oversize-frame bugs: boofuzz never exceeds the declared MaxFrame), 14/79 boundary points, 39/51 ranges, 0 tests without mutation** (BOOFUZZ_MODEL_PLAN §9). | BOOFUZZ_MODEL_PLAN §8–9 | Ready |
+| 4.6a | VII-B (baselines), VII-C | Only the BOOFUZZ-style test-case sweep | Add the model-based BOOFUZZ baseline (`boofuzz_model_baseline/`, `context/BOOFUZZ_MODEL_PLAN.md`): boofuzz 0.4.2's own values over the 6 simulator input fields, one field per test, no test-case list, no labels. **D5 (`--mode config` as the paper's result) was reopened on 2026-11-02:** `max_num` is the largest value boofuzz may generate, so `--mode config` caps frame sizes at MaxFrame and never sends an oversized frame; boofuzz has no native way to use a legal limit as a test target. Open decision between `--mode boofuzz` alone and both modes (BOOFUZZ_MODEL_PLAN §10). Do **not** use `--mode expert` (hand-written MinFrame/MaxFrame ±1 and BAG ±1, which are the boundary metric's own points; 71/79 by construction) as the comparison; at most a labeled reference point. `--mode boofuzz` (7/8 bugs, 14/79) is optional as "boofuzz used as is". Principles P1–P2 (BOOFUZZ_MODEL_PLAN §8.3): same information for all fuzzers, no human test rules, no tuning toward one metric, all metrics reported. Rename the old baseline "BOOFUZZ-style test-case sweep". Label metrics: n/a for this baseline. **`--mode config` result (200 tests): 6/8 reachable bugs (misses the two oversize-frame bugs: boofuzz never exceeds the declared MaxFrame), 14/79 boundary points, 39/51 ranges, 0 tests without mutation** (BOOFUZZ_MODEL_PLAN §9). | BOOFUZZ_MODEL_PLAN §8–10 | Decision (which BOOFUZZ variant) |
 | 4.6 | VII-B (baselines) | The baselines "apply each test value to a seed frame" | The baselines map each test case to a parameter by keywords in the rule name and use fixed defaults when the value is not numeric (e.g. 63 or 1519 bytes, sequence 0). Describe this. | `boofuzz_strategy_generator.py:243-301` | Ready |
 
 ### 4.8 Testing depth: boundary-value coverage (answers R2, "coverage of boundary values")
@@ -131,6 +131,85 @@ Notes for the text and the limitations:
   MaxFrame+1), so do not claim that depth *causes* detection; report which classes each bug
   needs.
 - Check the clause numbers for the sequence-number range and MinFrame before citing them.
+
+### 4.9 Evaluation metrics independent of our method (noted 2026-11-02; to be continued)
+
+**The concern.** Rule Coverage counts categories of our own extracted rules, reached through
+labels that the fuzzers declare. It depends on our pipeline and favors the LLM-guided fuzzer by
+construction (Reviewer 1, comment 2). The evaluation needs metrics that depend only on what
+happened in the system under test.
+
+Which of the current metrics are independent:
+
+| Metric | Independent of our method? | Why |
+|---|---|---|
+| Rule Coverage (labels) | No | Our extracted rules; labels declared by the fuzzers |
+| Executed Rule Coverage | No | The same, plus "any mutation" |
+| Coverage of the 142-statement checklist | Partly | The denominator comes from the standard's text, but the mapping goes through labels (4.10) |
+| Bug detection (injected bugs) | Mostly | Only the simulator input matters; the bug list is ours, so it was fixed before the runs and documented |
+| Boundary-value coverage (4.8) | Yes | From the configuration and the standard, by a standard method, on the inputs actually sent |
+| Input diversity, tests without mutation | Yes, but weak | Little about quality |
+| Code coverage of the simulator | Yes; **not measured yet** | See below |
+
+**Code coverage: what it is.** The simulator is code. Code coverage measures which parts of that
+code ran during the tests: line coverage (which lines ran at least once) and branch coverage
+(for each condition, whether both its true and false outcomes were reached). Example: the
+switch's check "drop a frame larger than MaxFrame" has a drop branch that runs only if some test
+sent an oversized frame. It counts only what ran in the simulator, so it depends on no rule,
+label or table of ours, and it applies to any fuzzer in the same way.
+
+**What the fuzzing-evaluation literature says.** G. Klees, A. Ruef, B. Cooper, S. Wei,
+M. Hicks, "Evaluating Fuzz Testing", ACM CCS 2018 (arXiv:1808.09700), reviewed the evaluations
+of 32 fuzzing papers and found problems in every one. On coverage: "14 out of 32 papers we
+examined used code coverage to assess fuzzing effectiveness", but "the correlation may be weak,
+so directly measuring the number of bugs found is preferred". They recommend measuring against
+ground truth (known bugs), multiple trials, and the Mann–Whitney U test (which we already
+use). So: **bug detection is the primary measure, code coverage the common secondary one.**
+(Quotes from the arXiv HTML version, sections 1 and 4, read 2026-11-02.)
+
+**Tools.** The simulator is C++, so Python's `coverage.py` does not apply (it would measure the
+fuzzers' own Python code). Use GCC's **gcov** (the compiler records which lines and branches ran)
+and **gcovr** (a Python package, `pip install gcovr`, that turns gcov's data into reports per
+file, line and branch, including HTML).
+
+**How it could be done (free, no LLM).**
+1. Build a separate copy of the simulator with coverage instrumentation (`--coverage` in the
+   build flags).
+2. Replay every recorded simulator input of every run (the histories hold the exact inputs; no
+   fuzzer is re-run).
+3. Measure line and branch coverage per run, restricted to the AFDX code
+   (`examples/AFDX_V3/model/`, `afdx-demo.cc`), not ns-3 itself.
+
+**Caveat.** The simulator is small, so coverage may come out similar for all fuzzers. Report it
+whatever it shows (BOOFUZZ_MODEL_PLAN §8.3, P2).
+
+**Suggested metric set:** bug detection (primary), code coverage (secondary, independent),
+boundary-value coverage (testing depth, R2), Rule Coverage (secondary, with an explanation of
+why it is not independent).
+
+### 4.10 Coverage of the specification checklist without labels (noted 2026-11-02; to be continued)
+
+**How it is computed today.** `analyze_campaigns.py` maps each test's label to rule categories
+and counts the checklist statements whose covering rule falls in one of those categories
+(`checklist_statements`). It needs labels, so it is not independent, and it cannot be computed
+for a label-free fuzzer such as the model-based BOOFUZZ.
+
+**Without labels**, a statement can count as tested only through some link between the statement
+and what happens in the simulator. The cleanest link fits the code coverage of 4.9:
+
+1. A one-time traceability table, built and reviewed by a person: for each checklist statement
+   that the simulator implements, the check in the code that implements it. Example: "the switch
+   shall discard a frame exceeding Lmax" → the size check in `afdx-switch.cc` (`ValidateFrame`).
+2. A statement counts as tested if both outcomes of that check ran (accepted and dropped), as
+   measured by code coverage.
+
+Statements that the simulator does not implement (IP layer, fragmentation, configuration
+procedures, …) cannot be tested by any fuzzer; report them as a limitation.
+
+**Cost and risk.** It is another hand-built table that must be checked, like the
+mechanism-matched table that was set aside (REVISION_FINDINGS Bug 38). If there is no time for
+it, drop this metric rather than compute it with labels; bug detection and code coverage give an
+independent evaluation without it.
 
 ## 5. Experiment 3: injected bugs
 

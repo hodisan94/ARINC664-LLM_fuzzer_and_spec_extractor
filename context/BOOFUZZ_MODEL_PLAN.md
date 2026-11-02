@@ -1,8 +1,9 @@
 # Plan: a model-based BOOFUZZ baseline
 
 **Status:** implemented and run on 2026-11-02 (`boofuzz_model_baseline/`, commits `415d132`,
-`904af3e`, `919a822` and later). Results in section 7. **Decision D1 was reversed and the
-paper's BOOFUZZ variant is `--mode config` (D5); see section 8 before using any number.**
+`904af3e`, `919a822` and later). Results in sections 7 and 9. **Decision D1 was reversed
+(section 8), and D5 (`--mode config` as the paper's variant) was reopened (section 10). Read
+both sections before using any number.**
 Written 2026-11-02.
 **Branch:** `fix/revision-bugs`. Related documents: `REVISION_FINDINGS.md` (Bugs 24, 26–37),
 `FIX_PLAN.md` ("Open after Stage 7"), `PAPER_CHANGES.md` (4.8, boundary-value coverage).
@@ -72,7 +73,7 @@ such as MaxFrame = 512, unless the tester adds them.
 | D2 | Replace the current baseline, or add a new one? | **Add.** Keep the current one under an accurate name ("BOOFUZZ-style test-case sweep") | The current one is the only label-based baseline besides random, so it keeps the Rule Coverage comparison that the paper needs; the new one answers how a real tool performs |
 | D3 | Use the test-case list? | **No** | Real boofuzz does not read rule lists; extracting the rules is part of our contribution |
 | D4 | Change the simulator so that sequence number 0 can be sent? | **No** (see step 2) | Not needed: an override of 256 already sends 0 |
-| D5 | Which variant is the BOOFUZZ result of the paper? (2026-11-02) | **`--mode config`**: each VL's frame-size field is declared with that VL's maximum (boofuzz's `max_num`), and boofuzz generates every value itself | It gives boofuzz exactly the information the LLM gets (the VL table) and no human test rule (principles P1–P2, section 8) |
+| D5 | Which variant is the BOOFUZZ result of the paper? (2026-11-02) | ~~`--mode config`~~ **Reopened the same day, see section 10.** | Original reason: it gives boofuzz the VL table and no human test rule. Problem found: `max_num` is the largest value boofuzz may generate, so declaring it as MaxFrame forbids every oversized frame (section 10) |
 
 ## 4. Open questions (to settle before or during implementation)
 
@@ -439,6 +440,44 @@ mutation. History `runs/stage7/boofuzz_model_config.jsonl`; bug replay
 The comparison shows what the LLM-guided approach achieves without a human writing test values,
 against boofuzz given the same information. All metrics are reported, including those on which
 boofuzz does better.
+
+## 10. D5 reopened: what `max_num` means (2026-11-02)
+
+**What `max_num` is in boofuzz.** It is the upper limit of a field's value range: boofuzz
+generates values below it and never above it (BitField builds its boundaries 0, max/2 … max and
+keeps only values `< max_num`). It describes what the field can hold. boofuzz has no notion of a
+protocol's *legal* limit.
+
+**What `--mode config` therefore does.** It sets `max_num = MaxFrame + 1` from the
+configuration, i.e. it tells boofuzz that the field cannot hold more than MaxFrame. boofuzz then
+never sends a frame larger than the VL allows, which is exactly the side of the limit a tester
+wants to probe. It does not "give boofuzz the limit to test around"; it uses the legal limit as a
+cap on what boofuzz may send.
+
+**Consequence.** boofuzz has no native mechanism that takes a legal limit and tests around and
+beyond it. The VL table can be used in boofuzz only
+1. as a range cap (`max_num`), which removes oversized values (`--mode config`), or
+2. as hand-written values (`Group`), which is a human test rule (`--mode expert`, rejected in
+   section 8).
+
+So `--mode config` is not the fair comparison either.
+
+**Check that the configuration was used** (in answer to the question whether `--mode config`
+differs from `--mode boofuzz`, since their boundary totals are both 14). It does. Frame sizes
+sent on VL 1001: `--mode boofuzz` 18, 2,046, 4,087, 4,091, 8,184, 8,186, 9,000 (mostly above
+MaxFrame); `--mode config` 18, 54, 55, 118, 119, 161, 162, 246, 247, 503, 504 (never above 512).
+Bugs: 7 versus 6 (`--mode config` cannot find `accept_oversized`). Neither hits a frame-size
+boundary point, and their other points (sequence number, MAC types) are the same, hence the same
+total.
+
+**Open decision (for the authors):**
+
+| Option | Meaning |
+|---|---|
+| A. `--mode boofuzz` as the comparison | boofuzz used as it is, without the configuration. State that boofuzz has no native way to use the VL limits as test targets while the LLM fuzzer can; that is a difference between the approaches, not a weakness of the setup |
+| B. Report `--mode boofuzz` and `--mode config` | Explain what each one means; `--mode config` shows boofuzz capped by the configuration |
+
+`--mode expert` stays out of the comparison in either case (section 8).
 
 ## 6. Effort, cost and risks
 
