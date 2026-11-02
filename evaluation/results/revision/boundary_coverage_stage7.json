@@ -230,8 +230,8 @@
           "dst|wrong_vl": 4,
           "seq|0": 4,
           "src|spoof_src": 4,
-          "size|1002|min": 6,
           "src|broadcast": 6,
+          "size|1002|min": 6,
           "src|zero_mac": 12,
           "src|invalid_src": 14,
           "seq|1": 17,
@@ -747,8 +747,8 @@
           "seq|1": 106,
           "size|1003|max": 119,
           "size|1003|min+1": 144,
-          "size|2001|max": 146,
           "timing|2001|bag-1": 146,
+          "size|2001|max": 146,
           "size|1002|max": 153,
           "size|2001|max-1": 170,
           "size|2003|min": 178,
@@ -1122,8 +1122,8 @@
           "timing|3002|faster"
         ],
         "first_iteration_per_point": {
-          "size|2001|min-1": 1,
           "dst|zero": 1,
+          "size|2001|min-1": 1,
           "dst|corrupt_prefix": 4,
           "size|2002|min-1": 5,
           "src|broadcast": 8,
@@ -1531,6 +1531,88 @@
         }
       }
     },
+    "BOOFUZZ_MODEL_PURE": {
+      "evaluation/results/revision/runs/stage7/boofuzz_model_pure.jsonl": {
+        "executed_inputs": 200,
+        "point_classes": 14,
+        "point_coverage": 0.17721518987341772,
+        "range_classes": 39,
+        "range_coverage": 0.7647058823529411,
+        "points": [
+          "dst|corrupt_prefix",
+          "dst|wrong_vl",
+          "dst|zero",
+          "seq|0",
+          "seq|1",
+          "seq|254",
+          "seq|255",
+          "src|broadcast",
+          "src|invalid_src",
+          "src|spoof_dst",
+          "src|spoof_src",
+          "src|zero_mac",
+          "timing|1003|bag+1",
+          "timing|1003|bag-1"
+        ],
+        "ranges": [
+          "dst|corrupt_prefix",
+          "dst|wrong_vl",
+          "dst|zero",
+          "seq|1-255",
+          "seq|reserved_0",
+          "size|1001|above_max",
+          "size|1001|below_min",
+          "size|1002|above_max",
+          "size|1003|above_max",
+          "size|1003|below_min",
+          "size|2001|above_max",
+          "size|2001|below_min",
+          "size|2002|above_max",
+          "size|2003|above_max",
+          "size|2003|below_min",
+          "size|3001|above_max",
+          "size|3002|above_max",
+          "size|3002|below_min",
+          "size|eth|above",
+          "src|broadcast",
+          "src|invalid_src",
+          "src|spoof_dst",
+          "src|spoof_src",
+          "src|zero_mac",
+          "timing|1001|slower",
+          "timing|1002|faster",
+          "timing|1002|slower",
+          "timing|1003|faster",
+          "timing|1003|slower",
+          "timing|2001|faster",
+          "timing|2001|slower",
+          "timing|2002|faster",
+          "timing|2002|slower",
+          "timing|2003|faster",
+          "timing|2003|slower",
+          "timing|3001|faster",
+          "timing|3001|slower",
+          "timing|3002|faster",
+          "timing|3002|slower"
+        ],
+        "first_iteration_per_point": {
+          "seq|0": 1,
+          "src|spoof_src": 2,
+          "dst|corrupt_prefix": 3,
+          "src|spoof_dst": 8,
+          "dst|wrong_vl": 9,
+          "src|broadcast": 14,
+          "dst|zero": 15,
+          "src|invalid_src": 20,
+          "src|zero_mac": 24,
+          "timing|1003|bag+1": 26,
+          "seq|1": 27,
+          "seq|254": 127,
+          "timing|1003|bag-1": 138,
+          "seq|255": 139
+        }
+      }
+    },
     "A0": {
       "evaluation/results/revision/runs/stage7/llm_A0.jsonl": {
         "executed_inputs": 200,
@@ -1585,10 +1667,10 @@
         "first_iteration_per_point": {
           "dst|corrupt_prefix": 1,
           "size|2001|min": 2,
-          "seq|0": 3,
           "src|invalid_src": 3,
-          "seq|1": 4,
+          "seq|0": 3,
           "dst|wrong_vl": 4,
+          "seq|1": 4,
           "size|2001|max+1": 11,
           "size|2001|max": 28,
           "size|1001|min": 34,
@@ -1668,12 +1750,12 @@
           "dst|wrong_vl": 1,
           "size|2001|max+1": 2,
           "size|2001|max": 3,
-          "size|1001|min": 6,
           "dst|zero": 6,
+          "size|1001|min": 6,
           "size|3001|max": 8,
           "timing|1001|bag-1": 13,
-          "seq|0": 16,
           "src|invalid_src": 16,
+          "seq|0": 16,
           "src|spoof_src": 21,
           "size|3001|min": 23,
           "timing|1001|bag+1": 26,
@@ -1917,6 +1999,28 @@
         ]
       }
     },
+    "BOOFUZZ_MODEL_PURE": {
+      "point_classes": {
+        "n": 1,
+        "mean": 14,
+        "sd": 0.0,
+        "min": 14,
+        "max": 14,
+        "values": [
+          14
+        ]
+      },
+      "range_classes": {
+        "n": 1,
+        "mean": 39,
+        "sd": 0.0,
+        "min": 39,
+        "max": 39,
+        "values": [
+          39
+        ]
+      }
+    },
     "A0": {
       "point_classes": {
         "n": 1,
@@ -1990,8 +2094,8 @@
   },
   "per_bug": {
     "skip_bag_policing": {
-      "detecting_inputs": 617,
-      "detecting_inputs_without_point_class": 274,
+      "detecting_inputs": 664,
+      "detecting_inputs_without_point_class": 319,
       "point_classes_of_detecting_inputs": {
         "size|3001|max": 57,
         "size|3002|max": 50,
@@ -2024,19 +2128,19 @@
         "timing|2002|bag+1": 2,
         "timing|2003|bag+1": 2,
         "src|zero_mac": 2,
+        "timing|1003|bag-1": 2,
+        "timing|1003|bag+1": 2,
         "size|2001|max-1": 1,
         "seq|0": 1,
         "src|spoof_src": 1,
-        "timing|1003|bag-1": 1,
         "timing|2003|bag-1": 1,
         "timing|3001|bag-1": 1,
-        "timing|3002|bag-1": 1,
-        "timing|1003|bag+1": 1
+        "timing|3002|bag-1": 1
       }
     },
     "skip_frame_validation": {
-      "detecting_inputs": 1018,
-      "detecting_inputs_without_point_class": 460,
+      "detecting_inputs": 1060,
+      "detecting_inputs_without_point_class": 502,
       "point_classes_of_detecting_inputs": {
         "size|eth|1519": 128,
         "dst|corrupt_prefix": 99,
@@ -2070,12 +2174,12 @@
       }
     },
     "skip_mac_validation": {
-      "detecting_inputs": 124,
+      "detecting_inputs": 127,
       "detecting_inputs_without_point_class": 0,
       "point_classes_of_detecting_inputs": {
-        "src|spoof_src": 64,
-        "src|invalid_src": 36,
-        "src|zero_mac": 24,
+        "src|spoof_src": 65,
+        "src|invalid_src": 37,
+        "src|zero_mac": 25,
         "dst|wrong_vl": 8,
         "dst|corrupt_prefix": 6,
         "size|1001|min": 5,
@@ -2098,13 +2202,13 @@
       "point_classes_of_detecting_inputs": {}
     },
     "skip_constant_field": {
-      "detecting_inputs": 286,
+      "detecting_inputs": 290,
       "detecting_inputs_without_point_class": 0,
       "point_classes_of_detecting_inputs": {
-        "dst|corrupt_prefix": 139,
-        "src|broadcast": 53,
-        "src|spoof_dst": 48,
-        "dst|zero": 46,
+        "dst|corrupt_prefix": 140,
+        "src|broadcast": 54,
+        "src|spoof_dst": 49,
+        "dst|zero": 47,
         "size|1001|min": 6,
         "seq|255": 3,
         "size|3002|min": 2,
@@ -2118,10 +2222,10 @@
       }
     },
     "skip_sequence_check": {
-      "detecting_inputs": 180,
-      "detecting_inputs_without_point_class": 66,
+      "detecting_inputs": 199,
+      "detecting_inputs_without_point_class": 83,
       "point_classes_of_detecting_inputs": {
-        "seq|0": 53,
+        "seq|0": 54,
         "size|eth|1519": 19,
         "size|3001|max": 11,
         "size|3002|max": 8,
@@ -2134,19 +2238,19 @@
         "size|1002|min": 2,
         "size|1003|max": 2,
         "dst|wrong_vl": 2,
+        "seq|254": 2,
         "size|2001|min": 1,
         "size|1003|min": 1,
         "size|3001|min": 1,
         "size|2003|max": 1,
         "src|spoof_src": 1,
         "src|zero_mac": 1,
-        "src|broadcast": 1,
-        "seq|254": 1
+        "src|broadcast": 1
       }
     },
     "accept_oversized": {
-      "detecting_inputs": 603,
-      "detecting_inputs_without_point_class": 277,
+      "detecting_inputs": 640,
+      "detecting_inputs_without_point_class": 314,
       "point_classes_of_detecting_inputs": {
         "size|eth|1519": 128,
         "size|2001|max+1": 74,
@@ -2186,8 +2290,8 @@
       }
     },
     "loose_bag_tolerance": {
-      "detecting_inputs": 411,
-      "detecting_inputs_without_point_class": 175,
+      "detecting_inputs": 452,
+      "detecting_inputs_without_point_class": 214,
       "point_classes_of_detecting_inputs": {
         "size|3001|max": 51,
         "size|3002|max": 46,
@@ -2213,15 +2317,15 @@
         "size|1003|min": 2,
         "src|zero_mac": 2,
         "src|broadcast": 2,
+        "timing|1003|bag-1": 2,
+        "timing|1003|bag+1": 2,
         "seq|0": 1,
         "size|1002|max": 1,
         "src|spoof_src": 1,
         "timing|1001|bag-1": 1,
-        "timing|1003|bag-1": 1,
         "timing|2003|bag-1": 1,
         "timing|3001|bag-1": 1,
         "timing|3002|bag-1": 1,
-        "timing|1003|bag+1": 1,
         "size|1002|min": 1
       }
     }

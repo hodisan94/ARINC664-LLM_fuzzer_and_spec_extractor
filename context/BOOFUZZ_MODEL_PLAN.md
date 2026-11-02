@@ -1,6 +1,7 @@
 # Plan: a model-based BOOFUZZ baseline
 
-**Status:** plan only, nothing implemented. Written 2026-11-02.
+**Status:** implemented and run on 2026-11-02 (`boofuzz_model_baseline/`, commits `415d132`,
+`904af3e` and the commit that adds section 7). Results in section 7. Written 2026-11-02.
 **Branch:** `fix/revision-bugs`. Related documents: `REVISION_FINDINGS.md` (Bugs 24, 26–37),
 `FIX_PLAN.md` ("Open after Stage 7"), `PAPER_CHANGES.md` (4.8, boundary-value coverage).
 
@@ -264,6 +265,66 @@ per-rule table checked by an author (REVISION_FINDINGS Bug 38), and would apply 
 - `FIX_PLAN.md`: status.
 
 ---
+
+## 6a. What was found while implementing
+
+- **Step 1:** the library gives each field's values directly (`mutations()`), without a
+  target. boofuzz 0.4.2 is installed in a separate environment (`~/boofuzz_venv` in WSL), not
+  in the ns-3 tree's environment; `export_boofuzz_values.py` writes the values to
+  `boofuzz_values.json`, which the baseline reads.
+- **`fuzz_values` is accepted but ignored** by integer fields in boofuzz 0.4.2 (checked: values
+  passed through it do not appear in the mutations). The AFDX values are added by `model.py`.
+- **Signed fields:** `mutations()` yields 0–255 also for a signed 8-bit field; the sign is
+  applied when the value is rendered. The export renders each value and reads it back, so the
+  JSON holds −128…127.
+- **Windows:** boofuzz's windows that overlap are one run of consecutive values (for an 8-bit
+  field, 0–41 is one window). Q1 was settled as planned: fields in rotation, one value per
+  window in turn, ascending inside a window.
+- **Identical inputs (Q2):** with the AFDX values, 442 candidate tests, 76 skipped (75 identical
+  inputs, 1 that changes nothing), 366 kept; without them, 375 candidates, 73 skipped, 302 kept.
+- **Option `--no-afdx-values`** runs boofuzz's own values only, to measure how much of the
+  result comes from the AFDX values (decided 2026-11-02).
+- **`.gitignore`** ignores every path not listed; the new folder had to be added to it.
+
+## 7. Results (2026-11-02)
+
+Both runs: 200 tests on the fixed simulator, no simulator failure, 200 distinct inputs, no
+test without a mutation. Histories `runs/stage7/boofuzz_model.jsonl` (with AFDX values) and
+`runs/stage7/boofuzz_model_pure.jsonl` (without); bug replay `bdr_replay_boofuzz_model*.json`;
+boundary classes in `boundary_coverage_stage7.json`. The other fuzzers are the Stage 7 runs
+(their baseline numbers are still before the Bug 24 / sequence-0 fixes).
+
+| Fuzzer | Bugs found (of 8 reachable) | Boundary points (of 79) | Boundary ranges (of 51) | Tests without mutation |
+|---|---|---|---|---|
+| LLM (5 runs) | 8, 8, 8, 8, 8 | 31–34 | 45–47 | 2–4 |
+| Random (5 runs) | 7 in each | 23–25 | 35–40 | 55–69 |
+| BOOFUZZ-style test-case sweep | 7 | 14 | 33 | 68 |
+| **Model-based BOOFUZZ, with AFDX values** | **8** | **71** | **50** | 0 |
+| **Model-based BOOFUZZ, boofuzz values only** | **7** | **14** | **39** | 0 |
+
+Where the boundary points come from:
+
+| Boundary classes | With AFDX values | Boofuzz values only |
+|---|---|---|
+| Frame size around MinFrame (24) | 21 | 0 |
+| Frame size around MaxFrame (24) | 20 | 0 |
+| Ethernet maximum 1,517–1,519 (3) | 2 | 0 |
+| Timing BAG±1 (16) | 16 | 2 |
+| Sequence number 0, 1, 254, 255 (4) | 4 | 4 |
+| Source / destination MAC types (8) | 8 | 8 |
+
+- **58 of the 71 points of the AFDX run come from the AFDX values** (a recount by value
+  source). boofuzz's own values reach 13 classes there, and 14 in the run without them. Its
+  frame sizes come from the field width (0–9, around 2,048, 4,096, … 65,535), and none of them is
+  a VL's MinFrame or MaxFrame ±1.
+- **`max_frame_off_by_one`** is found only with the AFDX values (4 detecting inputs, all
+  MaxFrame+1). Without them boofuzz finds the same 7 bugs as random and the sweep.
+- **Reading:** a boofuzz tester who enters the VL limits gets the best boundary coverage, by
+  construction: the values entered are the points the metric checks (the metric and the AFDX
+  values both come from `virtual_links.csv`). That run shows what systematic testing of known
+  limits achieves, not what boofuzz's method finds by itself. The run with boofuzz's values only
+  shows the method; on boundary points it equals the sweep (14) and is below the LLM (31–34).
+  Report both, and say so.
 
 ## 6. Effort, cost and risks
 

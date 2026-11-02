@@ -134,6 +134,18 @@ class TestList(unittest.TestCase):
                 cfg = to_sim_config({"field": "timing_offset_ms", "value": offset}, vl, VLS)
                 self.assertIn(config_key(cfg), kept, (vl, offset))
 
+    def test_without_afdx_values(self):
+        pure, pure_skipped = build_test_list(VLS, VALUES, afdx=False)
+        self.assertTrue(all(t["source"] == "boofuzz" for t in pure + pure_skipped))
+        # every boofuzz value is still used or skipped, and each test mutates one field
+        for field, values in VALUES.items():
+            seen = [c["value"] for c in pure + pure_skipped if c["field"] == field]
+            self.assertEqual(sorted(seen, key=str), sorted(values, key=str), field)
+        for t in pure:
+            base = unmutated(t["vl"])
+            self.assertEqual(sum(t["sim_config"][k] != base[k] for k in MUTABLE), 1, t)
+        self.assertEqual(build_test_list(VLS, VALUES, afdx=False), (pure, pure_skipped))
+
     def test_no_rule_labels_or_test_cases(self):
         source = (Path(__file__).resolve().parent / "generator.py").read_text() + \
                  (Path(__file__).resolve().parent / "model.py").read_text()

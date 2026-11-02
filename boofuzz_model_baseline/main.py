@@ -35,7 +35,7 @@ COUNTERS = ("frames_received", "frames_forwarded", "frames_dropped_policing",
 MAX_CONSECUTIVE_FAILURES = 5  # as in the other baselines
 
 
-def run(max_iterations, history_path, work_dir, resume, force):
+def run(max_iterations, history_path, work_dir, resume, force, afdx=True):
     history_path = Path(history_path)
     if history_path.exists() and history_path.stat().st_size > 0:
         if force:
@@ -46,9 +46,10 @@ def run(max_iterations, history_path, work_dir, resume, force):
     history_path.parent.mkdir(parents=True, exist_ok=True)
 
     version, values = load_boofuzz_values()
-    tests, skipped = build_test_list(load_vls(), values)
-    print(f"boofuzz {version}: {len(tests)} tests in the list ({len(skipped)} skipped as "
-          f"identical inputs); running {min(max_iterations, len(tests)) - done} from #{done}")
+    tests, skipped = build_test_list(load_vls(), values, afdx)
+    print(f"boofuzz {version}, AFDX values {'on' if afdx else 'off'}: {len(tests)} tests in the list "
+          f"({len(skipped)} skipped as identical inputs); running "
+          f"{min(max_iterations, len(tests)) - done} from #{done}")
     runner = SimulatorRunner(work_dir=work_dir)
     failures = 0
     for i in range(done, min(max_iterations, len(tests))):
@@ -62,6 +63,7 @@ def run(max_iterations, history_path, work_dir, resume, force):
             "duration": (datetime.now() - start).total_seconds(),
             "fuzzer_type": "BOOFUZZ_MODEL",
             "boofuzz_version": version,
+            "afdx_values": afdx,
             "target_vl": t["vl"],
             "protocol_rule": None,
             "boofuzz_field": t["field"],
@@ -95,8 +97,11 @@ def main():
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--resume", action="store_true", help="continue an existing history")
     mode.add_argument("--force", action="store_true", help="delete an existing history first")
+    parser.add_argument("--no-afdx-values", action="store_true",
+                        help="use boofuzz's own values only, without the tester-defined AFDX limits")
     args = parser.parse_args()
-    run(args.max_iterations, args.history_path, args.work_dir, args.resume, args.force)
+    run(args.max_iterations, args.history_path, args.work_dir, args.resume, args.force,
+        afdx=not args.no_afdx_values)
 
 
 if __name__ == "__main__":

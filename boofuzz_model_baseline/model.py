@@ -66,24 +66,29 @@ def case(field, value, source, group, vl=None):
     return {"field": field, "value": value, "source": source, "group": group, "vl": vl}
 
 
-def field_groups(boofuzz_values, vls):
-    """Field -> list of value groups (each a list of cases), boofuzz's first, then the AFDX ones."""
+def field_groups(boofuzz_values, vls, afdx=True):
+    """Field -> list of value groups (each a list of cases), boofuzz's first, then the AFDX ones.
+
+    afdx=False leaves out the tester's AFDX values: boofuzz's own values only.
+    """
     groups = {}
     frame = [[case("frame_size", v, "boofuzz", f"boofuzz {w[0]}..{w[-1]}") for v in w]
              for w in windows(boofuzz_values["frame_size"])]
-    for vl, v in sorted(vls.items()):
-        for name in ("min", "max"):
-            b = v[name]
-            frame.append([case("frame_size", b + d, "afdx", f"VL {vl} {name.capitalize()}Frame", vl)
-                          for d in (-1, 0, 1)])
-    frame.append([case("frame_size", ETHERNET_MAX + d, "afdx", "Ethernet maximum")
-                  for d in (-1, 0, 1)])
+    if afdx:
+        for vl, v in sorted(vls.items()):
+            for name in ("min", "max"):
+                b = v[name]
+                frame.append([case("frame_size", b + d, "afdx", f"VL {vl} {name.capitalize()}Frame", vl)
+                              for d in (-1, 0, 1)])
+        frame.append([case("frame_size", ETHERNET_MAX + d, "afdx", "Ethernet maximum")
+                      for d in (-1, 0, 1)])
     groups["frame_size"] = frame
 
     timing = [[case("timing_offset_ms", v, "boofuzz", f"boofuzz {w[0]}..{w[-1]}") for v in w]
               for w in windows(boofuzz_values["timing_offset_ms"], modulus=256)]
-    for vl, v in sorted(vls.items()):
-        timing.append([case("timing_offset_ms", d, "afdx", f"VL {vl} BAG", vl) for d in (-1, 1)])
+    if afdx:
+        for vl, v in sorted(vls.items()):
+            timing.append([case("timing_offset_ms", d, "afdx", f"VL {vl} BAG", vl) for d in (-1, 1)])
     groups["timing_offset_ms"] = timing
 
     groups["sequence_number"] = [

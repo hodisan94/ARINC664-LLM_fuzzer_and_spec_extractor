@@ -27,12 +27,15 @@ def config_key(cfg):
     return json.dumps({k: v for k, v in cfg.items() if k != "inject_bug"}, sort_keys=True)
 
 
-def build_test_list(vls=None, boofuzz_values=None):
-    """All tests in order, and the skipped ones with the reason."""
+def build_test_list(vls=None, boofuzz_values=None, afdx=True):
+    """All tests in order, and the skipped ones with the reason.
+
+    afdx=False builds the list from boofuzz's own values only (no tester-defined AFDX limits).
+    """
     vls = vls or load_vls()
     if boofuzz_values is None:
         _, boofuzz_values = load_boofuzz_values()
-    groups = field_groups(boofuzz_values, vls)
+    groups = field_groups(boofuzz_values, vls, afdx)
     queues = {f: field_sequence(groups[f]) for f in FIELDS}
     vl_order = sorted(vls)
     next_vl = 0
