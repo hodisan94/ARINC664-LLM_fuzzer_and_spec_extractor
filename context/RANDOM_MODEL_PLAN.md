@@ -1,6 +1,8 @@
 # Plan: a model-based random baseline
 
-**Status:** plan only, nothing implemented. Written 2026-11-04.
+**Status:** plan only, nothing implemented. Written 2026-11-04. Proposals accepted the same day,
+including 16-bit timing for both baselines (3.2) and several fields per test for the random
+baseline (3.4).
 **Branch:** `fix/revision-bugs`. Related documents: `BOOFUZZ_MODEL_PLAN.md` (the model this plan
 reuses; principles P1–P2 in its section 8.3), `REVISION_FINDINGS.md` (Bugs 24, 31, 32, 33),
 `PAPER_CHANGES.md` (4.6a, 4.8, 4.9).
@@ -56,9 +58,9 @@ the literature means it (random values over an input's range).
 
 ## 3. Design
 
-**The three fuzzers then differ only in how they choose values:** the LLM-guided fuzzer plans
-them, boofuzz walks its systematic values, the random fuzzer draws from the full range.
-Everything else is shared: the same fields, the same adapter to the simulator, the same
+**The three fuzzers then differ only in how they choose tests:** the LLM-guided fuzzer plans
+them, boofuzz walks its systematic values one field at a time, the random fuzzer draws a random
+set of fields and random values from their full ranges (3.4). Everything else is shared: the same fields, the same adapter to the simulator, the same
 simulator, the same history format, the same metrics.
 
 **Reused from `boofuzz_model_baseline/`:** the field list, the adapter (`adapter.py`: one
@@ -116,23 +118,53 @@ repository as the 8-bit version.
 
 Each test, with a seeded random generator:
 1. a VL, uniformly among the 8;
-2. a field, uniformly among the 6;
-3. a value, uniformly from that field's range (3.1);
-4. the adapter turns it into the simulator input.
-
-One field per test, as in boofuzz, so the two baselines differ only in how the value is chosen.
+2. the set of fields to mutate: each of the 6 fields independently with probability ½, redrawn
+   if empty (3.4);
+3. for each chosen field, a value uniformly from its range (3.1);
+4. the adapter turns them into the simulator input (it must accept several fields at once; the
+   boofuzz baseline's adapter takes one).
 
 **Expected properties, to state in the paper (not reasons to change the design):** with a
 uniform draw, most frame sizes are above 9,000 and arrive as 9,000-byte frames; half of the
 timing draws are below −BAG and all send at the 100 µs floor; most of the rest are very slow
 offsets. Exact boundary values (e.g. MaxFrame+1) are rare. That is how random fuzzing behaves.
 
+### 3.4 Several fields per test (raised 2026-11-04)
+
+**Question:** should the random fuzzer mutate several fields in a test, for fairness?
+
+**Fields mutated per test in Stage 7** (logged simulator inputs):
+
+| Fuzzer | 0 fields | 1 | 2 | 3 or more |
+|---|---|---|---|---|
+| LLM (5 runs) | 1% | 34% | 62% | 2% |
+| Random, student's (5 runs) | 30% | 29% | 30% | 11% |
+| BOOFUZZ-style sweep | 34% | 39% | 18% | 9% |
+| Model-based BOOFUZZ | 0% | 100% | 0% | 0% |
+
+**Decision: several fields for the random baseline; one for the boofuzz baseline.**
+- **Random:** random fuzzers usually stack several random changes on one input; one field at a
+  time is a systematic method, characteristic of boofuzz. The LLM fuzzer combines fields in most
+  tests (62% mutate two), so a one-field random fuzzer would be confined to a narrower space of
+  tests than the LLM. The student's random baseline also combined fields.
+- **The rule:** each field independently with probability ½, redrawn if none. Fixed now, before
+  any run. It deliberately does not copy the LLM's distribution (mostly two fields), which would
+  copy the strategy of the method under comparison (P1).
+- **boofuzz stays at one field per test:** that is boofuzz's default (one element mutated, the
+  others at their defaults); changing it would move away from "boofuzz as is" (D6). A deeper
+  boofuzz mode that combines elements was mentioned in a summary of `session.py` but was not
+  confirmed from the code, so it is not used.
+- **To state in the paper:** more fields per test is not better by construction. A test with an
+  oversized frame and a spoofed source MAC is dropped at the switch's size check and never
+  reaches the MAC check. The rule is meant to make the baseline a typical random fuzzer, not to
+  make it win (P2).
+
 ## 4. Open questions
 
 | # | Question | Recommendation |
 |---|---|---|
 | R1 | Skip a draw whose simulator input equals an earlier one, as the boofuzz baseline does? | **No.** Repeats are part of random fuzzing; report the number of distinct inputs |
-| R2 | One field per test, or a random number of fields? | **One**, as boofuzz, so that only value selection differs |
+| R2 | One field per test, or a random number of fields? | **Revised 2026-11-04: several fields.** Each field is mutated independently with probability ½; a draw with no field is redrawn (every non-empty set of fields is equally likely; about 3 fields per test on average). See 3.4 |
 | R3 | Number of runs | **5 seeds** (1–5), as the other random runs and the LLM runs |
 | R4 | Budget | **200 tests per run**, as every other fuzzer |
 
@@ -151,7 +183,8 @@ offsets. Exact boundary values (e.g. MaxFrame+1) are rare. That is how random fu
    `.gitignore` must list the new folder (it ignores every path not listed).
 3. **Tests:**
    - the same seed gives the same test list; different seeds differ;
-   - each test mutates exactly one field;
+   - each test mutates at least one field, and only the fields drawn for it;
+   - over many draws, each field is chosen in about half of the tests;
    - every value lies in its field's range;
    - over many draws, each field and VL is chosen in about equal shares;
    - no test-case or rule file is read.
