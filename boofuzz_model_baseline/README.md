@@ -15,7 +15,7 @@ list.
   | Field | boofuzz primitive | Default |
   |---|---|---|
   | Frame size (bytes) | `Word` (16-bit unsigned) | the VL's normal size |
-  | Timing offset (ms) | `BitField(width=8, signed=True)` | 0 |
+  | Timing offset (ms) | `BitField(width=16, signed=True)` (8 bits in the runs of 2026-11-02) | 0 |
   | Sequence number | `Byte` (8-bit unsigned) | no change |
   | Source MAC change | `Group` of `spoof_src`, `spoof_dst`, `broadcast`, `invalid_src`, `zero_mac` | none |
   | Destination MAC change | `Group` of `corrupt_prefix`, `wrong_vl`, `zero` | none |

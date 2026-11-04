@@ -52,7 +52,8 @@ class TestValues(unittest.TestCase):
     def test_values_follow_boofuzz_rule(self):
         self.assertEqual(VALUES["frame_size"], independent_bitfield_values(16))
         self.assertEqual(VALUES["sequence_number"], independent_bitfield_values(8))
-        signed = [v - 256 if v >= 128 else v for v in independent_bitfield_values(8)]
+        # timing: a signed 16-bit field since 2026-11-04 (RANDOM_MODEL_PLAN 3.2)
+        signed = [v - 65536 if v >= 32768 else v for v in independent_bitfield_values(16)]
         self.assertEqual(VALUES["timing_offset_ms"], signed)
 
     def test_values_equal_the_library(self):
@@ -62,8 +63,8 @@ class TestValues(unittest.TestCase):
             self.skipTest("boofuzz not installed in this interpreter")
         self.assertEqual(VALUES["frame_size"], list(Word(name="f", default_value=0).mutations(0)))
         self.assertEqual(VALUES["sequence_number"], list(Byte(name="s", default_value=0).mutations(0)))
-        raw = list(BitField(name="t", default_value=0, width=8, signed=True).mutations(0))
-        self.assertEqual(VALUES["timing_offset_ms"], [v - 256 if v >= 128 else v for v in raw])
+        raw = list(BitField(name="t", default_value=0, width=16, signed=True).mutations(0))
+        self.assertEqual(VALUES["timing_offset_ms"], [v - 65536 if v >= 32768 else v for v in raw])
         for m, values in CONFIG.items():
             self.assertEqual(values, list(Word(name="f", default_value=0, max_num=m + 1).mutations(0)))
 

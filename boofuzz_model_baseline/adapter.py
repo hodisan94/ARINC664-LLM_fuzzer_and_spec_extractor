@@ -26,23 +26,32 @@ def unmutated(vl):
 
 
 def to_sim_config(case, vl, vls):
-    """Simulator input of one test case on VL vl."""
+    """Simulator input of one test case (one mutated field) on VL vl."""
+    return fields_to_sim_config({case["field"]: case["value"]}, vl, vls)
+
+
+def fields_to_sim_config(values, vl, vls):
+    """Simulator input with several fields mutated at once ({field: value}) on VL vl.
+
+    Used by the model-based random baseline (random_model_baseline/), which mutates a random set
+    of fields per test; each field is translated exactly as for a single mutation.
+    """
     v = vls[vl]
     cfg = unmutated(vl)
-    field, value = case["field"], case["value"]
-    if field == "frame_size":
-        sent = min(max(int(value), SMALLEST_FRAME), LARGEST_FRAME)
-        cfg["payload_delta_bytes"] = sent - (v["min"] + v["max"]) // 2
-    elif field == "timing_offset_ms":
-        cfg["timing_jitter_ms"] = max(int(value), -v["bag"])
-    elif field == "sequence_number":
-        cfg["sequence_number_override"] = 256 if int(value) == 0 else int(value)
-    elif field == "src_mac":
-        cfg["mac_mutation"] = value
-    elif field == "dst_mac":
-        cfg["dest_mac_mutation"] = value
-    elif field == "drop_probability":
-        cfg["prob"] = float(value)
-    else:
-        raise ValueError(f"unknown field {field}")
+    for field, value in values.items():
+        if field == "frame_size":
+            sent = min(max(int(value), SMALLEST_FRAME), LARGEST_FRAME)
+            cfg["payload_delta_bytes"] = sent - (v["min"] + v["max"]) // 2
+        elif field == "timing_offset_ms":
+            cfg["timing_jitter_ms"] = max(int(value), -v["bag"])
+        elif field == "sequence_number":
+            cfg["sequence_number_override"] = 256 if int(value) == 0 else int(value)
+        elif field == "src_mac":
+            cfg["mac_mutation"] = value
+        elif field == "dst_mac":
+            cfg["dest_mac_mutation"] = value
+        elif field == "drop_probability":
+            cfg["prob"] = float(value)
+        else:
+            raise ValueError(f"unknown field {field}")
     return cfg

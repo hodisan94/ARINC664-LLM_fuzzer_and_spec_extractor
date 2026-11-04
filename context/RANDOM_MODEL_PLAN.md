@@ -118,8 +118,8 @@ repository as the 8-bit version.
 
 Each test, with a seeded random generator:
 1. a VL, uniformly among the 8;
-2. the set of fields to mutate: each of the 6 fields independently with probability ½, redrawn
-   if empty (3.4);
+2. the set of fields to mutate, by Peach's rule (3.5): a number k uniformly from 1…6, then k
+   fields uniformly without replacement;
 3. for each chosen field, a value uniformly from its range (3.1);
 4. the adapter turns them into the simulator input (it must accept several fields at once; the
    boofuzz baseline's adapter takes one).
@@ -147,8 +147,8 @@ offsets. Exact boundary values (e.g. MaxFrame+1) are rare. That is how random fu
   time is a systematic method, characteristic of boofuzz. The LLM fuzzer combines fields in most
   tests (62% mutate two), so a one-field random fuzzer would be confined to a narrower space of
   tests than the LLM. The student's random baseline also combined fields.
-- **The rule:** each field independently with probability ½, redrawn if none. Fixed now, before
-  any run. It deliberately does not copy the LLM's distribution (mostly two fields), which would
+- **The rule:** first proposed as each field independently with probability ½; replaced by
+  Peach's published rule (3.5, decided 2026-11-04). Fixed before any run. It deliberately does not copy the LLM's distribution (mostly two fields), which would
   copy the strategy of the method under comparison (P1).
 - **boofuzz stays at one field per test within the budget.** Checked in boofuzz 0.4.2's own code
   (`sessions/session.py`, `fuzz(max_depth=None)` and `_generate_mutations_indefinitely`):
@@ -217,7 +217,7 @@ each (3.1).
 | Peach `RandomMutationStrategy` (default `maxFieldsToMutate = 7`) | uniform count 1…min(7, 6), then a uniform set of that size | 1–6, average 3.5 |
 | ThreadFuzzer / CovFuzz Random fuzzer | each field independently with probability k / 6 (k = 2 per a summary, not yet checked) | average 2, can be 0 (redrawn) |
 
-**Recommendation: Peach's rule.** Peach is a well-known, long-established fuzzer whose random
+**Decided 2026-11-04: Peach's rule.** Peach is a well-known, long-established fuzzer whose random
 strategy is exactly "a random number of randomly chosen fields of a message model, each given a
 random value", which is what this baseline is; its default needs no tuning for our model
 (6 fields ≤ 7). The ThreadFuzzer rule is a reasonable alternative, but its k still has to be
@@ -228,7 +228,7 @@ checked and it is a recent arXiv paper.
 | # | Question | Recommendation |
 |---|---|---|
 | R1 | Skip a draw whose simulator input equals an earlier one, as the boofuzz baseline does? | **No.** Repeats are part of random fuzzing; report the number of distinct inputs |
-| R2 | One field per test, or a random number of fields? | **Revised 2026-11-04: several fields.** First proposed: ½ per field; then the ThreadFuzzer / CovFuzz rule; **now recommended: Peach's `RandomMutationStrategy` rule** (a uniform number 1…6 of fields, then a uniform set of that size; 3.5). **Open: Peach's rule or ThreadFuzzer's** |
+| R2 | One field per test, or a random number of fields? | **Revised 2026-11-04: several fields.** First proposed: ½ per field; then the ThreadFuzzer / CovFuzz rule; **now recommended: Peach's `RandomMutationStrategy` rule** (a uniform number 1…6 of fields, then a uniform set of that size; 3.5). **Decided 2026-11-04: Peach's rule** |
 | R3 | Number of runs | **5 seeds** (1–5), as the other random runs and the LLM runs |
 | R4 | Budget | **200 tests per run**, as every other fuzzer |
 
@@ -248,7 +248,8 @@ checked and it is a recent arXiv paper.
 3. **Tests:**
    - the same seed gives the same test list; different seeds differ;
    - each test mutates at least one field, and only the fields drawn for it;
-   - over many draws, each field is chosen in about half of the tests;
+   - over many draws, the number of fields is uniform over 1…6 and each field is chosen in
+     about 7/12 of the tests (the average share for a uniform count with a uniform subset);
    - every value lies in its field's range;
    - over many draws, each field and VL is chosen in about equal shares;
    - no test-case or rule file is read.

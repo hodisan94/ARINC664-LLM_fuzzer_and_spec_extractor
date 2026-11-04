@@ -25,6 +25,9 @@ from boofuzz import BitField, Byte, Group, Word
 from importlib.metadata import version
 
 OUT = Path(__file__).resolve().parent / "boofuzz_values.json"
+# Timing offset field width. 16 bits since 2026-11-04 (RANDOM_MODEL_PLAN 3.2): an 8-bit field
+# (-128..127 ms, used in the runs of 2026-11-02) cannot hold offsets the LLM fuzzer sent (+746 ms).
+TIMING_WIDTH = 16
 VL_CONFIG = Path(__file__).resolve().parents[1] / "examples/AFDX_V3/config/virtual_links.csv"
 
 
@@ -45,7 +48,8 @@ def signed_values(field):
         rendered = field.encode(raw, None)
         signed = int.from_bytes(rendered, byteorder="little" if field.endian == "<" else "big",
                                 signed=True)
-        assert signed == (raw - 256 if raw >= 128 else raw), (raw, rendered)
+        half = 2 ** (8 * len(rendered) - 1)
+        assert signed == (raw - 2 * half if raw >= half else raw), (raw, rendered)
         values.append(signed)
     return values
 
@@ -53,7 +57,7 @@ def signed_values(field):
 def main():
     frame = Word(name="frame_size", default_value=0)
     seq = Byte(name="sequence_number", default_value=0)
-    timing = BitField(name="timing_offset_ms", default_value=0, width=8, signed=True)
+    timing = BitField(name="timing_offset_ms", default_value=0, width=TIMING_WIDTH, signed=True)
     src = Group(name="src_mac", default_value="none",
                 values=["none", "spoof_src", "spoof_dst", "broadcast", "invalid_src", "zero_mac"])
     dst = Group(name="dst_mac", default_value="none",
@@ -68,7 +72,8 @@ def main():
         "fields": {
             "frame_size": {"primitive": "Word (16-bit unsigned)",
                            "values": list(frame.mutations(frame.original_value()))},
-            "timing_offset_ms": {"primitive": "BitField(width=8, signed=True)",
+            "timing_offset_ms": {"primitive": f"BitField(width={TIMING_WIDTH}, signed=True)",
+                                 "width": TIMING_WIDTH,
                                  "values": signed_values(timing)},
             "sequence_number": {"primitive": "Byte (8-bit unsigned)",
                                 "values": list(seq.mutations(seq.original_value()))},

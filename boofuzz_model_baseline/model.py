@@ -50,6 +50,11 @@ def load_boofuzz_values(path=VALUES):
     return data["boofuzz_version"], {f: v["values"] for f, v in data["fields"].items()}
 
 
+def timing_width(path=VALUES):
+    """Width in bits of the timing field the values were exported for (8 before 2026-11-04)."""
+    return json.loads(Path(path).read_text())["fields"]["timing_offset_ms"].get("width", 8)
+
+
 def load_config_frame_values(path=VALUES):
     """MaxFrame -> boofuzz's frame-size values for a field declared with that maximum."""
     data = json.loads(Path(path).read_text())
@@ -108,7 +113,7 @@ def field_groups(boofuzz_values, vls, mode="expert", config_frame_values=None):
     groups["frame_size"] = frame
 
     timing = [[case("timing_offset_ms", v, "boofuzz", f"boofuzz {w[0]}..{w[-1]}") for v in w]
-              for w in windows(boofuzz_values["timing_offset_ms"], modulus=256)]
+              for w in windows(boofuzz_values["timing_offset_ms"], modulus=2 ** timing_width())]
     if afdx:
         for vl, v in sorted(vls.items()):
             timing.append([case("timing_offset_ms", d, "afdx", f"VL {vl} BAG", vl) for d in (-1, 1)])
