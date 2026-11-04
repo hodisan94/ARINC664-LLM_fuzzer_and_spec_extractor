@@ -443,10 +443,15 @@ boofuzz does better.
 
 ## 10. D5 reopened: what `max_num` means (2026-11-02)
 
-**What `max_num` is in boofuzz.** It is the upper limit of a field's value range: boofuzz
-generates values below it and never above it (BitField builds its boundaries 0, max/2 … max and
-keeps only values `< max_num`). It describes what the field can hold. boofuzz has no notion of a
-protocol's *legal* limit.
+**What `max_num` is in boofuzz.** It is an official parameter of every boofuzz integer field
+(`BitField`, and `Byte`, `Word`, `DWord`, `QWord` built on it). The library's own docstring
+(boofuzz 0.4.2 from PyPI, `boofuzz/primitives/bit_field.py`, checked 2026-11-04) describes it as
+`max_num: Maximum number to iterate up to, defaults to None`. It is the upper limit of a field's
+value range: boofuzz generates values below it and never above it (BitField builds its
+boundaries 0, max/2 … max and keeps only values `< max_num`). It describes what the field can
+hold. boofuzz has no notion of a protocol's *legal* limit. So the parameter is official, but
+using it to stand for a VL's legal limit was our modeling choice, and it does not fit: boofuzz
+treats it as a ceiling, not as a test target.
 
 **What `--mode config` therefore does.** It sets `max_num = MaxFrame + 1` from the
 configuration, i.e. it tells boofuzz that the field cannot hold more than MaxFrame. boofuzz then
