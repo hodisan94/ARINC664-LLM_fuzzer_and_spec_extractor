@@ -150,21 +150,49 @@ offsets. Exact boundary values (e.g. MaxFrame+1) are rare. That is how random fu
 - **The rule:** each field independently with probability ½, redrawn if none. Fixed now, before
   any run. It deliberately does not copy the LLM's distribution (mostly two fields), which would
   copy the strategy of the method under comparison (P1).
-- **boofuzz stays at one field per test:** that is boofuzz's default (one element mutated, the
-  others at their defaults); changing it would move away from "boofuzz as is" (D6). A deeper
-  boofuzz mode that combines elements was mentioned in a summary of `session.py` but was not
-  confirmed from the code, so it is not used.
+- **boofuzz stays at one field per test within the budget.** Checked in boofuzz 0.4.2's own code
+  (`sessions/session.py`, `fuzz(max_depth=None)` and `_generate_mutations_indefinitely`):
+  boofuzz first yields every one-field mutation (depth 1), and only after all of them moves on to
+  pairs of fields (depth 2), then triples, and so on; `max_depth=1` is "simple" fuzzing. With our
+  model there are 302 one-field tests, more than the 200-test budget, so boofuzz as is never
+  reaches the pairs. One field per test within 200 tests is therefore what boofuzz itself does.
 - **To state in the paper:** more fields per test is not better by construction. A test with an
   oversized frame and a spoofed source MAC is dropped at the switch's size check and never
   reaches the MAC check. The rule is meant to make the baseline a typical random fuzzer, not to
   make it win (P2).
+
+### 3.5 A published random fuzzer to base the design on (looked up 2026-11-04)
+
+**ThreadFuzzer** (I. Siroš, J. Heirwegh, D. Singelée, B. Preneel, KU Leuven; "ThreadFuzzer:
+Fuzzing Framework for Thread Protocol", arXiv:2511.17283, 2025, revised 2026; read on arXiv,
+venue not confirmed) uses a **Random fuzzer introduced in CovFuzz**, by the same group. Its
+definition (Section IV-C2, quoted from the arXiv HTML): it "alters the values of specific fields
+within the intercepted packet"; every field gets a mutation probability `p_f = k / |F_P|`, where
+"k is a hyperparameter representing the average number of mutated fields per packet". The
+paper's coverage-guided fuzzer "extends Random fuzzer". According to a summary of the same page
+(not yet checked word for word), the evaluation fixes `k = 2`.
+
+This is the rule of 3.4 in a published, citable form: each field independently, with probability
+`k / (number of fields)`. Our "probability ½ per field" is `k = 3` for 6 fields. **Recommendation:
+adopt the ThreadFuzzer / CovFuzz Random fuzzer, with the k its authors chose, and cite it** —
+after checking `k = 2` in the paper's text (then each of our 6 fields is mutated with probability
+1/3). Choosing k from the published design, not from our results, keeps P2.
+
+**Mutating every field in every test** (k = 6) was considered and is not recommended: every test
+would carry an oversized or undersized frame size in most draws and be dropped at the switch's
+first check, so the other changes (MAC, sequence number) would almost never reach their checks.
+It is also not what the published random fuzzers do.
+
+**Not confirmed:** Peach Fuzzer 2.x reportedly has a random strategy that mutates N randomly
+chosen fields per test (`maxFieldsToMutate`, default 7, per a search summary of its source); the
+source itself could not be read (the mirror returned HTTP 429). Do not cite it until checked.
 
 ## 4. Open questions
 
 | # | Question | Recommendation |
 |---|---|---|
 | R1 | Skip a draw whose simulator input equals an earlier one, as the boofuzz baseline does? | **No.** Repeats are part of random fuzzing; report the number of distinct inputs |
-| R2 | One field per test, or a random number of fields? | **Revised 2026-11-04: several fields.** Each field is mutated independently with probability ½; a draw with no field is redrawn (every non-empty set of fields is equally likely; about 3 fields per test on average). See 3.4 |
+| R2 | One field per test, or a random number of fields? | **Revised 2026-11-04: several fields,** each independently. Probability: ½ per field (k = 3) was proposed first; the recommendation is now the ThreadFuzzer / CovFuzz rule `p = k / 6` with their `k = 2` once checked (3.5). A draw with no field is redrawn. **Open: the value of k** |
 | R3 | Number of runs | **5 seeds** (1–5), as the other random runs and the LLM runs |
 | R4 | Budget | **200 tests per run**, as every other fuzzer |
 

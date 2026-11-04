@@ -56,8 +56,13 @@ Sources: https://github.com/jtpereyda/boofuzz (README), https://boofuzz.readthed
    - The documentation describes a `fuzz_values` option to add the tester's own values to a
      field. In the source we read (`bit_field.py`) we did not find it implemented for integer
      fields; this is checked in step 1.
-3. **One field at a time.** Each test case mutates one field; the other fields keep their
-   defaults. The order is fixed and repeatable; nothing is learned from results.
+3. **One field at a time first.** Each test case mutates one field; the other fields keep their
+   defaults. The order is fixed and repeatable; nothing is learned from results. Checked in the
+   library's code on 2026-11-04 (`sessions/session.py`, `fuzz(max_depth=None)`,
+   `_generate_mutations_indefinitely`): after every one-field mutation has been sent, boofuzz
+   continues with two fields at a time, then three, and so on (`max_depth` limits this;
+   `max_depth=1` is "simple" fuzzing). With our model's 302 one-field tests and a 200-test
+   budget, the two-field stage is never reached.
 4. **Delivery and failure detection.** Each test case is rendered to bytes and sent to a target
    through a connection (TCP, UDP, raw socket, serial). Monitors detect crashes and restart the
    target.
