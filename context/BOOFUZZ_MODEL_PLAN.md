@@ -73,7 +73,8 @@ such as MaxFrame = 512, unless the tester adds them.
 | D2 | Replace the current baseline, or add a new one? | **Add.** Keep the current one under an accurate name ("BOOFUZZ-style test-case sweep") | The current one is the only label-based baseline besides random, so it keeps the Rule Coverage comparison that the paper needs; the new one answers how a real tool performs |
 | D3 | Use the test-case list? | **No** | Real boofuzz does not read rule lists; extracting the rules is part of our contribution |
 | D4 | Change the simulator so that sequence number 0 can be sent? | **No** (see step 2) | Not needed: an override of 256 already sends 0 |
-| D5 | Which variant is the BOOFUZZ result of the paper? (2026-11-02) | ~~`--mode config`~~ **Reopened the same day, see section 10.** | Original reason: it gives boofuzz the VL table and no human test rule. Problem found: `max_num` is the largest value boofuzz may generate, so declaring it as MaxFrame forbids every oversized frame (section 10) |
+| D5 | Which variant is the BOOFUZZ result of the paper? (2026-11-02) | ~~`--mode config`~~ **Reopened the same day, see section 10; replaced by D6.** | Original reason: it gives boofuzz the VL table and no human test rule. Problem found: `max_num` is the largest value boofuzz may generate, so declaring it as MaxFrame forbids every oversized frame (section 10) |
+| D6 | The paper's BOOFUZZ result (2026-11-04) | **`--mode boofuzz`**: boofuzz as is (7/8 reachable bugs, 14/79 boundary points) | boofuzz has no native way to use the VL limits as test targets (section 10); the tool is compared as it is |
 
 ## 4. Open questions (to settle before or during implementation)
 
@@ -475,7 +476,10 @@ Bugs: 7 versus 6 (`--mode config` cannot find `accept_oversized`). Neither hits 
 boundary point, and their other points (sequence number, MAC types) are the same, hence the same
 total.
 
-**Open decision (for the authors):**
+**Decided 2026-11-04 (D6): the paper uses `--mode boofuzz` (boofuzz as is) as its BOOFUZZ
+result** (option A below). `--mode config` and `--mode expert` are not the comparison.
+
+**The options that were considered:**
 
 | Option | Meaning |
 |---|---|
