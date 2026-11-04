@@ -32,8 +32,8 @@ list.
 
 | Mode | Frame-size values | Status |
 |---|---|---|
-| `config` | Each VL's field is declared with that VL's MaxFrame (boofuzz's `max_num`); boofuzz generates the values (never above MaxFrame) | **The paper's BOOFUZZ result** (decision D5): the same information as the LLM fuzzer, no human test rule |
-| `boofuzz` | A plain 16-bit field (0–9, around 2,048, 4,096, … 65,535) | boofuzz used as is, without the configuration |
+| `boofuzz` | A plain 16-bit field (0–9, around 2,048, 4,096, … 65,535) | boofuzz used as is, without the configuration. Candidate for the paper (open decision, BOOFUZZ_MODEL_PLAN §10) |
+| `config` | Each VL's field is declared with that VL's MaxFrame (boofuzz's official `max_num`, "Maximum number to iterate up to"); boofuzz generates the values, never above MaxFrame | Candidate for the paper (open decision, §10). Uses the VL table only as a cap, so it never sends an oversized frame |
 | `expert` | The 16-bit values plus hand-written MinFrame/MaxFrame ±1, BAG ±1 ms and 1,517–1,519 | Reference only. These are the boundary metric's own points, so it reaches them by construction; not a fair comparison (BOOFUZZ_MODEL_PLAN §8) |
 
 ## What is adapted, and why

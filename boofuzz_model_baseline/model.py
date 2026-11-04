@@ -13,7 +13,9 @@ Three modes, which differ only in the frame-size and timing values:
   * "expert": the 16-bit values plus hand-written boundary values for each VL
     (MinFrame and MaxFrame +-1, BAG +-1 ms, 1517-1519). Reference only: decision D1 was
     reversed, because these are the boundary metric's own points and a human test rule
-    (context/BOOFUZZ_MODEL_PLAN.md, section 8). The paper's variant is "config" (D5).
+    (context/BOOFUZZ_MODEL_PLAN.md, section 8). Which of "boofuzz" and "config" the paper
+    reports is an open decision (section 10): max_num caps the values, so "config" never sends
+    a frame larger than MaxFrame.
 
 No test-case list and no rule list is used.
 """
