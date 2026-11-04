@@ -183,16 +183,52 @@ would carry an oversized or undersized frame size in most draws and be dropped a
 first check, so the other changes (MAC, sequence number) would almost never reach their checks.
 It is also not what the published random fuzzers do.
 
-**Not confirmed:** Peach Fuzzer 2.x reportedly has a random strategy that mutates N randomly
-chosen fields per test (`maxFieldsToMutate`, default 7, per a search summary of its source); the
-source itself could not be read (the mirror returned HTTP 429). Do not cite it until checked.
+**Peach Fuzzer's random strategy (source read 2026-11-04).** Peach is a widely used
+structure-aware ("generation") fuzzer: the tester writes a data model of the message, as in
+boofuzz. Its Python 2.x code, `Peach/MutateStrategies/rand.py`, read from a copy kept in the UMass
+LASER "CausalTesting_ICSE20" repository
+(https://holmes.cs.umass.edu/LASER-UMASS/CausalTesting_ICSE20/blob/58a8a7a3956201a6f3318cd771e1a7d23bedd5a5/Holmes/fuzzers/Peach/MutateStrategies/rand.py;
+not the official repository, so cite the Peach version, and check against an official copy if
+possible):
+- Class `RandomMutationStrategy`, docstring: "This mutation strategy will randomly select N
+  fields from a data model to fuzz on each test case."
+- `self._n = 7`, overridden by the XML attribute `maxFieldsToMutate`.
+- Candidate fields: every mutable element of the data model
+  (`dataModel.getAllChildDataElements()`, non-mutable ones removed).
+- **Number of fields per test is random, not exactly N:** with more fields than N,
+  `fields = self._random.sample(nodes, self._random.randint(1, self._n))`, i.e. a uniform number
+  1…N, then a uniform sample of that many fields. With N or fewer fields (our case: 6 ≤ 7), all
+  fields are candidates and `self._random.sample(fields, self._random.randint(1, len(fields)))`
+  picks a uniform number 1…6 of them (one round, since `maxN = 7 − 6 = 1`).
+- Value: for each chosen field, one mutator is drawn from those that support the field
+  (weighted by `m.weight ** 4`) and applied with `mutator.randomMutation(node, self._random)`.
+  The mutators' own code was not read.
+- Seeded: the generator is reseeded every test from the seed and the test number
+  (`hashlib.sha512(SEED + iterationCount)`), so a run is reproducible.
+
+**Applied to our 6 fields, Peach's rule is:** draw a number k uniformly from 1…6, then k fields
+uniformly without replacement (about 3.5 fields per test on average); a uniform random value for
+each (3.1).
+
+**Two published rules, compared:**
+
+| Source | Rule | Fields per test, our 6 fields |
+|---|---|---|
+| Peach `RandomMutationStrategy` (default `maxFieldsToMutate = 7`) | uniform count 1…min(7, 6), then a uniform set of that size | 1–6, average 3.5 |
+| ThreadFuzzer / CovFuzz Random fuzzer | each field independently with probability k / 6 (k = 2 per a summary, not yet checked) | average 2, can be 0 (redrawn) |
+
+**Recommendation: Peach's rule.** Peach is a well-known, long-established fuzzer whose random
+strategy is exactly "a random number of randomly chosen fields of a message model, each given a
+random value", which is what this baseline is; its default needs no tuning for our model
+(6 fields ≤ 7). The ThreadFuzzer rule is a reasonable alternative, but its k still has to be
+checked and it is a recent arXiv paper.
 
 ## 4. Open questions
 
 | # | Question | Recommendation |
 |---|---|---|
 | R1 | Skip a draw whose simulator input equals an earlier one, as the boofuzz baseline does? | **No.** Repeats are part of random fuzzing; report the number of distinct inputs |
-| R2 | One field per test, or a random number of fields? | **Revised 2026-11-04: several fields,** each independently. Probability: ½ per field (k = 3) was proposed first; the recommendation is now the ThreadFuzzer / CovFuzz rule `p = k / 6` with their `k = 2` once checked (3.5). A draw with no field is redrawn. **Open: the value of k** |
+| R2 | One field per test, or a random number of fields? | **Revised 2026-11-04: several fields.** First proposed: ½ per field; then the ThreadFuzzer / CovFuzz rule; **now recommended: Peach's `RandomMutationStrategy` rule** (a uniform number 1…6 of fields, then a uniform set of that size; 3.5). **Open: Peach's rule or ThreadFuzzer's** |
 | R3 | Number of runs | **5 seeds** (1–5), as the other random runs and the LLM runs |
 | R4 | Budget | **200 tests per run**, as every other fuzzer |
 
