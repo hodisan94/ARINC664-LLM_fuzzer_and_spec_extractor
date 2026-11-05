@@ -272,3 +272,25 @@ checked and it is a recent arXiv paper.
 | The new random baseline is weaker than the student's on some metric | Report it (P2); the student's baseline was not random fuzzing |
 | Changing boofuzz's timing field after its run | The change follows a stated rule (the field must hold every value any fuzzer sends) and only requested values were inspected; the 8-bit run is kept and both are documented |
 | The old random runs are already in the paper's draft numbers | Replace them; keep the old runs in the repository |
+
+## 7. Results (2026-11-05)
+
+5 seeds × 200 tests (model-based random) and boofuzz as is re-run with the 16-bit timing field,
+200 tests; fixed simulator; no simulator failure; histories `runs/stage7/random_model_s1..5.jsonl`
+and `runs/stage7/boofuzz_as_is.jsonl`; bug replay `bdr_replay_model_baselines.json`; boundary
+classes `boundary_coverage_stage7.json`; code coverage `code_coverage_stage7.json`.
+
+| Fuzzer | Bugs found (of 8 reachable) | Boundary points (of 79) | Boundary ranges (of 51) | Lines covered (of 2,213) | Tests without mutation |
+|---|---|---|---|---|---|
+| LLM (5 runs) | 8, 8, 8, 8, 8 | 31–34 | 45–47 | 1,467–1,473 | 2–4 |
+| **Model-based random (5 seeds)** | **7, 7, 7, 7, 7** | **9–12** | **34–37** | 1,469–1,473 | 0 |
+| **boofuzz as is (16-bit timing)** | **7** | **13** | **39** | 1,468 | 0 |
+
+- Both new baselines find the same 7 reachable bugs; neither finds `max_frame_off_by_one` (a frame
+  of exactly MaxFrame+1 bytes).
+- LLM vs model-based random (Mann–Whitney, 5 vs 5): boundary points p = 0.008, ranges p = 0.008;
+  bugs 8 vs 7 in every run. Code coverage: p = 0.21 (no difference).
+- The model-based random baseline reaches fewer boundary points than the student's random (9–12
+  vs 23–25, p = 0.008): uniform draws over the full ranges rarely land on an exact boundary,
+  while the student's fixed lists contained 63 and 65 (MinFrame ±1 on every VL). As expected for
+  random fuzzing (3.3); reported as is (P2).
