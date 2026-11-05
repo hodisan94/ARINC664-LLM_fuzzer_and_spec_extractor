@@ -218,6 +218,32 @@ same, per file as well; counters of the instrumented and the fixed simulator ide
 1,768 of 7,758 branches. (The branch total is large because ns-3's logging and assertion macros
 expand into many branches; report lines as the main coverage number and branches alongside.)
 
+### 3.6a Results (2026-11-05)
+
+`evaluation/results/revision/code_coverage_stage7.json`. AFDX code: 2,213 lines, 7,758 branches.
+No input failed.
+
+| Run(s) | Lines covered | Branches covered | Distinct inputs |
+|---|---|---|---|
+| Unmutated input (normal traffic) | 1,322 (59.7%) | 1,768 (22.8%) | 1 |
+| LLM (5 runs) | 1,467–1,473 | 1,932–1,941 | 150–164 |
+| Model-based random (5 seeds) | 1,469–1,473 | 1,935–1,938 | 195–199 |
+| boofuzz as is | 1,468 | 1,932 | 200 |
+| A0 / A1 / A2 | 1,440 / 1,462 / 1,473 | 1,890 / 1,928 / 1,941 | 83 / 104 / 165 |
+| Student's random (5 runs) | 1,464–1,474 | 1,931–1,944 | 121–140 |
+| Student's BOOFUZZ-style sweep | 1,421 | 1,877 | 62 |
+
+Mann–Whitney (5 vs 5): LLM vs model-based random p = 0.21 (lines), 0.13 (branches); LLM vs the
+student's random p = 0.71, 0.63.
+
+**Reading.** Every fuzzer adds about 145–150 lines to what normal traffic already runs, and all of
+them reach about 66.5% of the lines; the differences are a few lines and not significant. As
+expected for a small simulator (3.7), code coverage does not separate the fuzzers: the code
+paths of the checks are reached by any fuzzer that sends some malformed traffic. Only the
+fuzzers with few distinct inputs (A0, the BOOFUZZ-style sweep) cover less. Report it as is
+(P2): it shows that the differences between the fuzzers lie in which values reach the checks,
+which bug detection and boundary-value coverage measure, not in which code runs.
+
 ### 3.7 Limitations, to state in the paper
 
 - **The simulator is small** and normal traffic already runs much of it, so coverage may differ
