@@ -176,7 +176,8 @@ run and for bug detection) is made at `/tmp/ns3_cov` and built with the compiler
 `--coverage` (`CXXFLAGS="--coverage" LDFLAGS="--coverage"`, same modules and profile as the
 fixed build). ns-3's own `--enable-gcov` option was not used because it requires the `lcov`
 package, which is not installed. The source is identical to the fixed simulator; only the
-compiler flag differs, so the simulator behaves the same.
+compiler flag differs, so the simulator behaves the same. Script:
+`evaluation/revision/build_coverage_simulator.sh`.
 
 ### 3.5 How it is computed (`evaluation/revision/code_coverage.py`)
 
@@ -209,6 +210,13 @@ the student's random and BOOFUZZ-style baselines.
 - **Same behavior:** for a sample of inputs, the drop and rejection counters of the instrumented
   simulator must equal those of the fixed simulator.
 - **Reproducibility:** measuring the same run twice gives the same numbers.
+
+Script: `evaluation/revision/check_code_coverage.py`. **Result (2026-11-05),** 24 distinct inputs
+of `llm_full_r1`: parallel 1,459 lines and 1,916 branches, one at a time the same, a repeat the
+same, per file as well; counters of the instrumented and the fixed simulator identical for 8 of
+8 inputs. All three checks pass. The unmutated input alone covers 1,322 of 2,213 lines (60%) and
+1,768 of 7,758 branches. (The branch total is large because ns-3's logging and assertion macros
+expand into many branches; report lines as the main coverage number and branches alongside.)
 
 ### 3.7 Limitations, to state in the paper
 
