@@ -1,0 +1,137 @@
+{
+  "check_A": {
+    "file": "examples/AFDX_V3/model/afdx-switch.cc",
+    "line": 443,
+    "vl": 1001,
+    "max_frame": 512,
+    "inputs": {
+      "normal": {
+        "reject_line_count": 0,
+        "frames_dropped_frame_error": 0,
+        "frames_forwarded": 3380,
+        "success": true,
+        "payload_delta_bytes": 0
+      },
+      "MaxFrame": {
+        "reject_line_count": 0,
+        "frames_dropped_frame_error": 0,
+        "frames_forwarded": 3380,
+        "success": true,
+        "payload_delta_bytes": 224
+      },
+      "MaxFrame+1": {
+        "reject_line_count": 900,
+        "frames_dropped_frame_error": 900,
+        "frames_forwarded": 2480,
+        "success": true,
+        "payload_delta_bytes": 225
+      }
+    },
+    "passed": true
+  },
+  "check_B": {
+    "inputs": 24,
+    "gcovr": [
+      1459,
+      2213
+    ],
+    "gcov": [
+      1459,
+      2213
+    ],
+    "per_file": {
+      "examples/AFDX_V3/model/afdx-end-system.cc": {
+        "gcovr": [
+          150,
+          418
+        ],
+        "gcov": [
+          150,
+          418
+        ]
+      },
+      "examples/AFDX_V3/model/afdx-end-system.h": {
+        "gcovr": [
+          5,
+          5
+        ],
+        "gcov": [
+          5,
+          5
+        ]
+      },
+      "examples/AFDX_V3/model/afdx-frame.cc": {
+        "gcovr": [
+          115,
+          142
+        ],
+        "gcov": [
+          115,
+          142
+        ]
+      },
+      "examples/AFDX_V3/model/afdx-switch.cc": {
+        "gcovr": [
+          365,
+          558
+        ],
+        "gcov": [
+          365,
+          558
+        ]
+      },
+      "examples/AFDX_V3/model/afdx-switch.h": {
+        "gcovr": [
+          15,
+          15
+        ],
+        "gcov": [
+          15,
+          15
+        ]
+      },
+      "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+        "gcovr": [
+          265,
+          488
+        ],
+        "gcov": [
+          265,
+          488
+        ]
+      },
+      "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+        "gcovr": [
+          0,
+          1
+        ],
+        "gcov": [
+          0,
+          1
+        ]
+      },
+      "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+        "gcovr": [
+          56,
+          77
+        ],
+        "gcov": [
+          56,
+          77
+        ]
+      },
+      "examples/AFDX_V3/simulations/afdx-demo.cc": {
+        "gcovr": [
+          488,
+          509
+        ],
+        "gcov": [
+          488,
+          509
+        ]
+      }
+    },
+    "lines_covered_by_one_tool_only": {},
+    "passed": true
+  }
+}

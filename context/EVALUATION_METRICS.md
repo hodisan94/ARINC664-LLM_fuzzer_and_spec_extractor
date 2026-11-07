@@ -218,6 +218,28 @@ same, per file as well; counters of the instrumented and the fixed simulator ide
 1,768 of 7,758 branches. (The branch total is large because ns-3's logging and assertion macros
 expand into many branches; report lines as the main coverage number and branches alongside.)
 
+### 3.6b Two further checks (2026-11-07)
+
+Script: `evaluation/revision/verify_code_coverage.py`; output
+`evaluation/results/revision/code_coverage_checks.json`. Both pass.
+
+- **Known answer.** The line that rejects a frame outside the VL's size range
+  (`afdx-switch.cc:443`, `return false;`) is measured on VL 1001 (MaxFrame 512), one input at a
+  time:
+
+  | Input | Reject line ran | Simulator's frame-error drops | Frames forwarded |
+  |---|---|---|---|
+  | Normal traffic | 0 | 0 | 3,380 |
+  | Frame of exactly MaxFrame (allowed) | 0 | 0 | 3,380 |
+  | Frame of MaxFrame + 1 (one byte over) | 900 | 900 | 2,480 |
+
+  The line runs only when it should, and its execution count equals the simulator's own drop
+  counter (900 = 3,380 − 2,480). The counters count what really ran.
+- **A second tool.** The counters of the 24-input run of 3.6 are read by gcovr and, separately,
+  by GCC's own `gcov` (13.3, `--json-format`), merged over object files. Both give 1,459 of 2,213
+  lines, the same numbers in each of the 9 files, and no line counted as covered by only one of
+  them.
+
 ### 3.6a Results (2026-11-05)
 
 `evaluation/results/revision/code_coverage_stage7.json`. AFDX code: 2,213 lines, 7,758 branches.

@@ -13,8 +13,8 @@ executed. Every run of every fuzzer goes through the same steps:
      each worker in its own working directory; gcov adds up the counters of all runs;
   4. gcovr reports line and branch coverage restricted to examples/AFDX_V3/.
 
-The simulator must be a copy built with './ns3 configure --enable-gcov' (here /tmp/ns3_cov), set
-with AFDX_NS3_PATH. --baseline adds the unmutated input alone, i.e. the code that normal traffic
+The simulator must be a copy built with the compiler's --coverage flag (build_coverage_simulator.sh; here
+/tmp/ns3_cov), set with AFDX_NS3_PATH. --baseline adds the unmutated input alone, i.e. the code that normal traffic
 already runs. No LLM API is used.
 
 Usage:
@@ -106,7 +106,7 @@ def main():
     args = parser.parse_args()
     ns3 = os.environ.get("AFDX_NS3_PATH")
     if not ns3 or not list(Path(ns3).rglob("*.gcno")):
-        raise SystemExit("AFDX_NS3_PATH must point to a build configured with --enable-gcov")
+        raise SystemExit("AFDX_NS3_PATH must point to a build built with --coverage (build_coverage_simulator.sh)")
 
     report = {"filter": FILTER, "per_run": {}, "per_fuzzer": {}}
     if args.baseline:
