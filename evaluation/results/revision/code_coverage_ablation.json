@@ -1,0 +1,1469 @@
+{
+  "filter": ".*examples/AFDX_V3/.*",
+  "per_run": {
+    "LLM": {
+      "evaluation/results/revision/runs/stage7/llm_full_r1.jsonl": {
+        "line_covered": 1473,
+        "line_total": 2213,
+        "line_percent": 66.6,
+        "branch_covered": 1941,
+        "branch_total": 7758,
+        "branch_percent": 25.0,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 150,
+            "line_total": 418,
+            "branch_covered": 123,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 116,
+            "line_total": 142,
+            "branch_covered": 56,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 275,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 278,
+            "line_total": 488,
+            "branch_covered": 277,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 164,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_full_r2.jsonl": {
+        "line_covered": 1473,
+        "line_total": 2213,
+        "line_percent": 66.6,
+        "branch_covered": 1941,
+        "branch_total": 7758,
+        "branch_percent": 25.0,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 150,
+            "line_total": 418,
+            "branch_covered": 123,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 116,
+            "line_total": 142,
+            "branch_covered": 56,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 275,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 278,
+            "line_total": 488,
+            "branch_covered": 277,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 161,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_full_r3.jsonl": {
+        "line_covered": 1467,
+        "line_total": 2213,
+        "line_percent": 66.3,
+        "branch_covered": 1932,
+        "branch_total": 7758,
+        "branch_percent": 24.9,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 150,
+            "line_total": 418,
+            "branch_covered": 123,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 114,
+            "line_total": 142,
+            "branch_covered": 51,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 276,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 274,
+            "line_total": 488,
+            "branch_covered": 272,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 150,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_full_r4.jsonl": {
+        "line_covered": 1473,
+        "line_total": 2213,
+        "line_percent": 66.6,
+        "branch_covered": 1939,
+        "branch_total": 7758,
+        "branch_percent": 25.0,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 150,
+            "line_total": 418,
+            "branch_covered": 123,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 116,
+            "line_total": 142,
+            "branch_covered": 56,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 275,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 278,
+            "line_total": 488,
+            "branch_covered": 275,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 153,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_full_r5.jsonl": {
+        "line_covered": 1473,
+        "line_total": 2213,
+        "line_percent": 66.6,
+        "branch_covered": 1940,
+        "branch_total": 7758,
+        "branch_percent": 25.0,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 150,
+            "line_total": 418,
+            "branch_covered": 123,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 116,
+            "line_total": 142,
+            "branch_covered": 56,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 276,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 278,
+            "line_total": 488,
+            "branch_covered": 275,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 163,
+        "failed_inputs": []
+      }
+    },
+    "A0": {
+      "evaluation/results/revision/runs/stage7/llm_A0.jsonl": {
+        "line_covered": 1440,
+        "line_total": 2213,
+        "line_percent": 65.1,
+        "branch_covered": 1890,
+        "branch_total": 7758,
+        "branch_percent": 24.4,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 141,
+            "line_total": 418,
+            "branch_covered": 110,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 114,
+            "line_total": 142,
+            "branch_covered": 50,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 274,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 256,
+            "line_total": 488,
+            "branch_covered": 246,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 83,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_A0_r2.jsonl": {
+        "line_covered": 1430,
+        "line_total": 2213,
+        "line_percent": 64.6,
+        "branch_covered": 1879,
+        "branch_total": 7758,
+        "branch_percent": 24.2,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 141,
+            "line_total": 418,
+            "branch_covered": 110,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 114,
+            "line_total": 142,
+            "branch_covered": 50,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 358,
+            "line_total": 558,
+            "branch_covered": 267,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 253,
+            "line_total": 488,
+            "branch_covered": 242,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 75,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_A0_r3.jsonl": {
+        "line_covered": 1439,
+        "line_total": 2213,
+        "line_percent": 65.0,
+        "branch_covered": 1889,
+        "branch_total": 7758,
+        "branch_percent": 24.3,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 147,
+            "line_total": 418,
+            "branch_covered": 118,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 113,
+            "line_total": 142,
+            "branch_covered": 48,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 358,
+            "line_total": 558,
+            "branch_covered": 266,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 257,
+            "line_total": 488,
+            "branch_covered": 247,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 79,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_A0_r4.jsonl": {
+        "line_covered": 1440,
+        "line_total": 2213,
+        "line_percent": 65.1,
+        "branch_covered": 1892,
+        "branch_total": 7758,
+        "branch_percent": 24.4,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 147,
+            "line_total": 418,
+            "branch_covered": 118,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 114,
+            "line_total": 142,
+            "branch_covered": 50,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 358,
+            "line_total": 558,
+            "branch_covered": 267,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 257,
+            "line_total": 488,
+            "branch_covered": 247,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 72,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_A0_r5.jsonl": {
+        "line_covered": 1437,
+        "line_total": 2213,
+        "line_percent": 64.9,
+        "branch_covered": 1886,
+        "branch_total": 7758,
+        "branch_percent": 24.3,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 148,
+            "line_total": 418,
+            "branch_covered": 120,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 111,
+            "line_total": 142,
+            "branch_covered": 44,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 358,
+            "line_total": 558,
+            "branch_covered": 266,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 256,
+            "line_total": 488,
+            "branch_covered": 246,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 70,
+        "failed_inputs": []
+      }
+    },
+    "A1": {
+      "evaluation/results/revision/runs/stage7/llm_A1.jsonl": {
+        "line_covered": 1462,
+        "line_total": 2213,
+        "line_percent": 66.1,
+        "branch_covered": 1928,
+        "branch_total": 7758,
+        "branch_percent": 24.9,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 148,
+            "line_total": 418,
+            "branch_covered": 120,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 116,
+            "line_total": 142,
+            "branch_covered": 55,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 275,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 269,
+            "line_total": 488,
+            "branch_covered": 268,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 104,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_A1_r2.jsonl": {
+        "line_covered": 1455,
+        "line_total": 2213,
+        "line_percent": 65.7,
+        "branch_covered": 1918,
+        "branch_total": 7758,
+        "branch_percent": 24.7,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 148,
+            "line_total": 418,
+            "branch_covered": 120,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 114,
+            "line_total": 142,
+            "branch_covered": 50,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 275,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 264,
+            "line_total": 488,
+            "branch_covered": 263,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 106,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_A1_r3.jsonl": {
+        "line_covered": 1464,
+        "line_total": 2213,
+        "line_percent": 66.2,
+        "branch_covered": 1931,
+        "branch_total": 7758,
+        "branch_percent": 24.9,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 148,
+            "line_total": 418,
+            "branch_covered": 120,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 116,
+            "line_total": 142,
+            "branch_covered": 55,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 275,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 269,
+            "line_total": 488,
+            "branch_covered": 269,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 490,
+            "line_total": 509,
+            "branch_covered": 1193,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 102,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_A1_r4.jsonl": {
+        "line_covered": 1464,
+        "line_total": 2213,
+        "line_percent": 66.2,
+        "branch_covered": 1931,
+        "branch_total": 7758,
+        "branch_percent": 24.9,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 148,
+            "line_total": 418,
+            "branch_covered": 120,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 116,
+            "line_total": 142,
+            "branch_covered": 55,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 275,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 269,
+            "line_total": 488,
+            "branch_covered": 269,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 490,
+            "line_total": 509,
+            "branch_covered": 1193,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 100,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_A1_r5.jsonl": {
+        "line_covered": 1464,
+        "line_total": 2213,
+        "line_percent": 66.2,
+        "branch_covered": 1931,
+        "branch_total": 7758,
+        "branch_percent": 24.9,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 150,
+            "line_total": 418,
+            "branch_covered": 122,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 116,
+            "line_total": 142,
+            "branch_covered": 55,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 275,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 269,
+            "line_total": 488,
+            "branch_covered": 269,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 105,
+        "failed_inputs": []
+      }
+    },
+    "A2": {
+      "evaluation/results/revision/runs/stage7/llm_A2.jsonl": {
+        "line_covered": 1473,
+        "line_total": 2213,
+        "line_percent": 66.6,
+        "branch_covered": 1941,
+        "branch_total": 7758,
+        "branch_percent": 25.0,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 150,
+            "line_total": 418,
+            "branch_covered": 123,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 116,
+            "line_total": 142,
+            "branch_covered": 56,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 275,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 278,
+            "line_total": 488,
+            "branch_covered": 277,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 165,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_A2_r2.jsonl": {
+        "line_covered": 1473,
+        "line_total": 2213,
+        "line_percent": 66.6,
+        "branch_covered": 1940,
+        "branch_total": 7758,
+        "branch_percent": 25.0,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 150,
+            "line_total": 418,
+            "branch_covered": 123,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 116,
+            "line_total": 142,
+            "branch_covered": 56,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 275,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 278,
+            "line_total": 488,
+            "branch_covered": 276,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 144,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_A2_r3.jsonl": {
+        "line_covered": 1472,
+        "line_total": 2213,
+        "line_percent": 66.5,
+        "branch_covered": 1938,
+        "branch_total": 7758,
+        "branch_percent": 25.0,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 150,
+            "line_total": 418,
+            "branch_covered": 123,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 116,
+            "line_total": 142,
+            "branch_covered": 56,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 275,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 277,
+            "line_total": 488,
+            "branch_covered": 274,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 148,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_A2_r4.jsonl": {
+        "line_covered": 1465,
+        "line_total": 2213,
+        "line_percent": 66.2,
+        "branch_covered": 1927,
+        "branch_total": 7758,
+        "branch_percent": 24.8,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 150,
+            "line_total": 418,
+            "branch_covered": 123,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 114,
+            "line_total": 142,
+            "branch_covered": 51,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 275,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 272,
+            "line_total": 488,
+            "branch_covered": 268,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 156,
+        "failed_inputs": []
+      },
+      "evaluation/results/revision/runs/stage7/llm_A2_r5.jsonl": {
+        "line_covered": 1462,
+        "line_total": 2213,
+        "line_percent": 66.1,
+        "branch_covered": 1920,
+        "branch_total": 7758,
+        "branch_percent": 24.7,
+        "files": {
+          "examples/AFDX_V3/model/afdx-end-system.cc": {
+            "line_covered": 150,
+            "line_total": 418,
+            "branch_covered": 123,
+            "branch_total": 1432
+          },
+          "examples/AFDX_V3/model/afdx-end-system.h": {
+            "line_covered": 5,
+            "line_total": 5,
+            "branch_covered": 13,
+            "branch_total": 13
+          },
+          "examples/AFDX_V3/model/afdx-frame.cc": {
+            "line_covered": 114,
+            "line_total": 142,
+            "branch_covered": 51,
+            "branch_total": 423
+          },
+          "examples/AFDX_V3/model/afdx-switch.cc": {
+            "line_covered": 365,
+            "line_total": 558,
+            "branch_covered": 274,
+            "branch_total": 1511
+          },
+          "examples/AFDX_V3/model/afdx-switch.h": {
+            "line_covered": 15,
+            "line_total": 15,
+            "branch_covered": 2,
+            "branch_total": 2
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.cc": {
+            "line_covered": 269,
+            "line_total": 488,
+            "branch_covered": 262,
+            "branch_total": 2005
+          },
+          "examples/AFDX_V3/model/afdx-traffic-generator.h": {
+            "line_covered": 0,
+            "line_total": 1,
+            "branch_covered": 0,
+            "branch_total": 1
+          },
+          "examples/AFDX_V3/model/afdx-virtual-link.cc": {
+            "line_covered": 56,
+            "line_total": 77,
+            "branch_covered": 4,
+            "branch_total": 42
+          },
+          "examples/AFDX_V3/simulations/afdx-demo.cc": {
+            "line_covered": 488,
+            "line_total": 509,
+            "branch_covered": 1191,
+            "branch_total": 2329
+          }
+        },
+        "distinct_inputs": 143,
+        "failed_inputs": []
+      }
+    }
+  },
+  "per_fuzzer": {
+    "LLM": {
+      "line_covered": {
+        "n": 5,
+        "mean": 1471.8,
+        "sd": 2.6832815729997477,
+        "min": 1467,
+        "max": 1473,
+        "values": [
+          1473,
+          1473,
+          1467,
+          1473,
+          1473
+        ]
+      },
+      "branch_covered": {
+        "n": 5,
+        "mean": 1938.6,
+        "sd": 3.7815340802378072,
+        "min": 1932,
+        "max": 1941,
+        "values": [
+          1941,
+          1941,
+          1932,
+          1939,
+          1940
+        ]
+      }
+    },
+    "A0": {
+      "line_covered": {
+        "n": 5,
+        "mean": 1437.2,
+        "sd": 4.207136793592526,
+        "min": 1430,
+        "max": 1440,
+        "values": [
+          1440,
+          1430,
+          1439,
+          1440,
+          1437
+        ]
+      },
+      "branch_covered": {
+        "n": 5,
+        "mean": 1887.2,
+        "sd": 5.06951674225463,
+        "min": 1879,
+        "max": 1892,
+        "values": [
+          1890,
+          1879,
+          1889,
+          1892,
+          1886
+        ]
+      }
+    },
+    "A1": {
+      "line_covered": {
+        "n": 5,
+        "mean": 1461.8,
+        "sd": 3.898717737923586,
+        "min": 1455,
+        "max": 1464,
+        "values": [
+          1462,
+          1455,
+          1464,
+          1464,
+          1464
+        ]
+      },
+      "branch_covered": {
+        "n": 5,
+        "mean": 1927.8,
+        "sd": 5.630275304103699,
+        "min": 1918,
+        "max": 1931,
+        "values": [
+          1928,
+          1918,
+          1931,
+          1931,
+          1931
+        ]
+      }
+    },
+    "A2": {
+      "line_covered": {
+        "n": 5,
+        "mean": 1469,
+        "sd": 5.1478150704935,
+        "min": 1462,
+        "max": 1473,
+        "values": [
+          1473,
+          1473,
+          1472,
+          1465,
+          1462
+        ]
+      },
+      "branch_covered": {
+        "n": 5,
+        "mean": 1933.2,
+        "sd": 9.257429448826494,
+        "min": 1920,
+        "max": 1941,
+        "values": [
+          1941,
+          1940,
+          1938,
+          1927,
+          1920
+        ]
+      }
+    }
+  },
+  "mann_whitney_p": {
+    "LLM vs A0: line_covered": 0.007936507936507936,
+    "LLM vs A0: branch_covered": 0.007936507936507936,
+    "LLM vs A1: line_covered": 0.007936507936507936,
+    "LLM vs A1: branch_covered": 0.007936507936507936,
+    "LLM vs A2: line_covered": 0.2857142857142857,
+    "LLM vs A2: branch_covered": 0.3253968253968254,
+    "A0 vs A1: line_covered": 0.007936507936507936,
+    "A0 vs A1: branch_covered": 0.007936507936507936,
+    "A0 vs A2: line_covered": 0.007936507936507936,
+    "A0 vs A2: branch_covered": 0.007936507936507936,
+    "A1 vs A2: line_covered": 0.06349206349206349,
+    "A1 vs A2: branch_covered": 0.42063492063492064
+  }
+}

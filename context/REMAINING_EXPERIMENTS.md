@@ -11,7 +11,7 @@ the order of the table. No paid run starts without explicit approval.
 
 | # | Experiment | Answers | Needed? | Cost | Time | Status |
 |---|---|---|---|---|---|---|
-| 1 | Ablation repeats (A0, A1, A2 × 4 more runs) | R1-3, R2-6 | **Required** | ≈ $102 | 3–4 h runs, 1 h scoring | Needs approval |
+| 1 | Ablation repeats (A0, A1, A2 × 4 more runs) | R1-3, R2-6 | **Required** | ≈ $102 | 3–4 h runs, 1 h scoring | **Done 2026-11-08** |
 | 2 | Expert check of the judge AI (108 rules) | R2-2 | **Required** | free | ≈ 3.5 h of an expert, then minutes | Worksheet ready; needs a name |
 | 3 | Reward-weight sensitivity | R1-4a | Recommended ("ideally" in the review) | ≈ $96 | 0.5 day of code, 2–3 h runs | Needs approval |
 | 4 | Boundary combinations | R2-4 | Recommended | free | 0.5 day | Ready to start |
@@ -67,6 +67,18 @@ AFDX_NS3_PATH=/tmp/ns3_cov $PY -B evaluation/revision/code_coverage.py --gcovr ~
 ---
 
 ## 1. Ablation repeats (required)
+
+**Results (2026-11-08, 5 runs per variant, mean ± SD).** Files: `bdr_replay_ablation.json`, `boundary_coverage_ablation.json`, `code_coverage_ablation.json`; histories `runs/stage7/llm_A?_r?.jsonl`. One A1 run has 199 executed tests (one simulation did not complete).
+
+| Variant | Bugs (of 8) | Points (of 79) | Ranges (of 51) | Lines | Branches |
+|---|---|---|---|---|---|
+| Full | 8.0 ± 0 | 32.2 ± 1.3 | 46.2 ± 0.8 | 1,471.8 ± 2.7 | 1,938.6 ± 3.8 |
+| A2 feedback only | 7.8 ± 0.4 | 26.8 ± 2.9 | 47.6 ± 1.8 | 1,469.0 ± 5.1 | 1,933.2 ± 9.3 |
+| A1 steering only | 8.0 ± 0 | 23.4 ± 1.8 | 28.2 ± 1.3 | 1,461.8 ± 3.9 | 1,927.8 ± 5.6 |
+| A0 neither | 6.8 ± 0.4 | 15.0 ± 1.9 | 21.4 ± 1.5 | 1,437.2 ± 4.2 | 1,887.2 ± 5.1 |
+
+Full vs. A2: points p = 0.008; ranges, lines, branches not significant. Full vs. A1: points, ranges, lines, branches p = 0.008. Full vs. A0: all p = 0.008.
+
 
 **Why.** Reviewer 1: "Please repeat the main comparison and the ablation several times per
 configuration, report mean and dispersion". Reviewer 2 asks for feedback removed with the
