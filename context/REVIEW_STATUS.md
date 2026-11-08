@@ -133,7 +133,7 @@ fuzzers is `max_frame_off_by_one` (needs a frame of exactly MaxFrame + 1).
 
 | # | Original text | Status | Response |
 |---|---|---|---|
-| m1 | "Frame length numbers specified in page 6 is not consistent with Figure 2" | **To check** (30 min) | Not checked yet against the draft. |
+| m1 | "Frame length numbers specified in page 6 is not consistent with Figure 2" | Done in draft (checked 2026-11-08) | In the draft, the Fig. 2 caption gives 6 + 6 + 2 + 20 + 8 + 1471 + 1 + 4 = 1518, and the text gives IPv4 Total Length up to 1499 = 20 + 8 + 1471 and frames of 64–1518 bytes: consistent. Not checked: the drawing inside Fig. 1 and Fig. 2 (the text extraction does not include it); look at it once in the PDF. |
 | m2 | "Table III reports completeness as 93.9% (77/82), but Section VII-B describes the ground-truth checklist as enumerating all normative "shall"/"must" statements cross-referenced with 122 criteria. Please explain the 82-item denominator." | Partly | The draft replaces the 82 items with the 142 statements found mechanically in the standard (68.3% fully captured). Remove "122 criteria" (see R1-2). Ask the student how the 82 items were built. |
 | m3 | "Rule correctness is 73.3% on a 236-rule sample, with 10.6% explicitly rejected by the judge. Please specify whether the rejected rules also populate the coverage denominator?" | Done by removal | They did. Since Rule Coverage is removed, this no longer affects any result; say so. The audit numbers themselves are in the draft (615/643). |
 | m4 | "The median first detection iteration is 0.0 for two of three fuzzers (Table V), which conveys little information; consider reporting the per-bug distribution instead." | Done | Iteration 0 came from the simulator's second sender (Bug 1): normal traffic was being dropped. On the corrected simulator no bug is detected without a mutation. Report per bug: how many inputs detect it, per fuzzer. |
@@ -194,13 +194,23 @@ fuzzers is `max_frame_off_by_one` (needs a frame of exactly MaxFrame + 1).
 **Status: To do. Needs human expert time, no money.**
 - The draft's answer is a second LLM judge (GPT-5) on 108 rules: 91.7% agreement, κ = 0.28.
   The reviewer explicitly asks for **domain experts**, so this is not enough.
-- **Plan:**
-  1. I prepare a file of about 50 rules, sampled with a fixed seed across the agreement strata,
-     each with its specification passage and the judge's verdict hidden.
-  2. One or two authors mark each rule correct, incorrect or unverifiable against the standard.
-     This takes about 3–4 hours per person.
-  3. I compute the judge's accuracy, its error types and κ against the experts.
-- **Decision:** who reviews the rules, and by when (by 2026-11-10 at the latest).
+- **Worksheet ready (2026-11-08):** `evaluation/results/revision/judge_expert_worksheet.xlsx`.
+  - It holds the same 108 rules (stratified sample) that GPT-5 already judged, so we can compare
+    three ways: expert, audit judge, GPT-5.
+  - The judges' verdicts are hidden.
+  - It has drop-down lists for the verdict and the error type (e.g. wrong value, missing
+    condition, should turned into must, not in the standard), and an Instructions sheet.
+  - The expert uses the full standard; the retrieved passages are only an aid.
+  - About 2 minutes per rule, so about 3.5 hours for 108.
+  - With two experts: both label rows 1–30 (agreement between experts), and one labels rows
+    31–108.
+- **After labeling:** run `expert_worksheet.py merge --filled <file>` and then
+  `audit_final_rules.py score --reference expert`. These give accuracy, κ, the confusion table
+  and the error types (free, minutes).
+- **Not committed:** the worksheet. The sample CSV it is built from is already in the public
+  repository, and it contains passages of the ARINC 664 standard. Check whether quoting the
+  standard's text there is allowed.
+- **Decision:** who labels, and by when (by 2026-11-10 at the latest).
 
 ### R2-3. Single small topology (also Question 4)
 
@@ -336,13 +346,13 @@ fuzzers is `max_frame_off_by_one` (needs a frame of exactly MaxFrame + 1).
 |---|---|---|---|---|---|
 | 1 | Ask the editor for an extension (2–3 weeks), citing the corrected simulator and the new experiments | Advisor or Noa | — | today | **Urgent** |
 | 2 | Ablation repeats, 4 × A0/A1/A2 | Claude, after approval | ≈ $100 | 1–2 | Waiting for approval |
-| 3 | Expert validation of the judge: sample file → authors mark it → analysis | Claude + 1–2 authors | free | 2 (3–4 h of expert time) | Waiting for reviewer names |
-| 4 | Curves over the 200 tests (bugs, boundary classes) | Claude | free | 0.5 | Ready to start |
+| 3 | Expert validation of the judge: sample file → authors mark it → analysis | Claude + 1–2 authors | free | 2 (≈ 3.5 h of expert time) | Worksheet ready; waiting for names |
+| 4 | Curves over the 200 tests (bugs, boundary classes) | Claude | free | 0.5 | **Done** (§6) |
 | 5 | Recompute the redundancy ratio on the new test cases | Claude | check whether it needs LLM calls | 0.5 | To do |
 | 6 | Mutation testing (optional, R2-1) | Claude | free | 1–2 | Decision |
 | 7 | Second topology (R2-3) | Claude | ≈ $50–100 | 2–3 | Decision; likely only with extension |
 | 8 | Questions to the student: "122 criteria", the 82-item checklist, the second sender, GitHub release and Zenodo DOI | Noa | — | — | To send |
-| 9 | Check the page 6 frame lengths against Fig. 2 (R1 m1) | Claude | free | 0.1 | To do |
+| 9 | Check the page 6 frame lengths against Fig. 2 (R1 m1) | Claude | free | 0.1 | **Done**: text consistent; look at the drawing once |
 | 10 | Rewrite the paper: Sections IV (corrections), V-B, VII (metrics, Exp. 2, ablation, Exp. 3), VIII, abstract, conclusion; highlighted version | Noa + Claude | — | 3 | Not started |
 | 11 | Response letter, point by point (this file is its skeleton) | Noa + Claude | — | 1 | Not started |
 | 12 | Final checks: every number in the paper traced to a result file | Claude | free | 0.5 | Not started |
@@ -359,3 +369,52 @@ Without an extension, the minimum to submit by 13 Nov is tasks 2, 3, 4, 8 (DOI),
 5. Mutation testing: yes or no.
 6. NAV case study: shorten or remove.
 7. Confirm dropping Rule Coverage completely (not even as a secondary metric).
+
+## 6. Results by test budget (replaces Fig. 5; computed 2026-11-08)
+
+Script: `evaluation/revision/budget_curves.py`; output `evaluation/results/revision/budget_curves.json`.
+It uses only the existing bug replay and the executed inputs, with no simulator run and no LLM.
+Each cell shows the value reached within the first n tests, as a range over runs. The values at
+200 match §0.
+
+Bugs found (of 8 reachable):
+
+| Fuzzer | 25 | 50 | 75 | 100 | 125 | 150 | 175 | 200 |
+|---|---|---|---|---|---|---|---|---|
+| LLM (5 runs) | 7–8 | 7–8 | 7–8 | 7–8 | 8 | 8 | 8 | 8 |
+| Random, Peach rule (5) | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 |
+| boofuzz as is | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 |
+| A2 feedback only | 7 | 8 | 8 | 8 | 8 | 8 | 8 | 8 |
+| A1 steering only | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 |
+| A0 neither | 5 | 6 | 7 | 7 | 7 | 7 | 7 | 7 |
+
+Boundary points (of 79):
+
+| Fuzzer | 25 | 50 | 75 | 100 | 125 | 150 | 175 | 200 |
+|---|---|---|---|---|---|---|---|---|
+| LLM (5 runs) | 8–12 | 11–19 | 15–24 | 19–26 | 22–27 | 27–30 | 29–32 | 31–34 |
+| Random, Peach rule (5) | 7–8 | 8–11 | 8–11 | 8–11 | 9–11 | 9–11 | 9–11 | 9–12 |
+| boofuzz as is | 9 | 11 | 11 | 11 | 11 | 13 | 13 | 13 |
+| A2 feedback only | 13 | 19 | 24 | 25 | 26 | 28 | 30 | 30 |
+| A1 steering only | 12 | 15 | 17 | 19 | 20 | 21 | 21 | 22 |
+| A0 neither | 7 | 11 | 12 | 13 | 13 | 14 | 15 | 17 |
+
+Boundary ranges (of 51):
+
+| Fuzzer | 25 | 50 | 75 | 100 | 125 | 150 | 175 | 200 |
+|---|---|---|---|---|---|---|---|---|
+| LLM (5 runs) | 24–26 | 33–36 | 36–39 | 37–43 | 40–45 | 44–45 | 44–47 | 45–47 |
+| Random, Peach rule (5) | 24–28 | 30–34 | 32–36 | 33–37 | 34–37 | 34–37 | 34–37 | 34–37 |
+| boofuzz as is | 18 | 28 | 32 | 35 | 35 | 37 | 39 | 39 |
+| A2 feedback only | 27 | 36 | 37 | 43 | 44 | 45 | 45 | 47 |
+| A1 steering only | 16 | 22 | 23 | 23 | 24 | 24 | 24 | 27 |
+| A0 neither | 12 | 16 | 18 | 19 | 19 | 20 | 21 | 23 |
+
+**Reading:**
+- The baselines reach their 7 bugs within the first 25 tests and gain nothing after that.
+- The LLM runs still gain boundary points up to the last test: the budget is not saturated.
+- Random stops gaining points after about 50 tests.
+- With a budget of 100 tests, not every LLM run has found the 8th bug yet. All of them have it by
+  125 tests.
+- In the ablation, feedback adds depth (A2 30 points vs. A1 22). Steering alone finds the bugs
+  early but adds little depth. All of this is from single runs until the repeats are done.
