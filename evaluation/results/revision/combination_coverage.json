@@ -1,0 +1,137 @@
+{
+  "universe": 696,
+  "per_run": {
+    "LLM": {
+      "evaluation/results/revision/runs/stage7/llm_full_r1.jsonl": 66,
+      "evaluation/results/revision/runs/stage7/llm_full_r2.jsonl": 57,
+      "evaluation/results/revision/runs/stage7/llm_full_r3.jsonl": 55,
+      "evaluation/results/revision/runs/stage7/llm_full_r4.jsonl": 67,
+      "evaluation/results/revision/runs/stage7/llm_full_r5.jsonl": 64
+    },
+    "Random": {
+      "evaluation/results/revision/runs/stage7/random_model_s1.jsonl": 291,
+      "evaluation/results/revision/runs/stage7/random_model_s2.jsonl": 296,
+      "evaluation/results/revision/runs/stage7/random_model_s3.jsonl": 305,
+      "evaluation/results/revision/runs/stage7/random_model_s4.jsonl": 306,
+      "evaluation/results/revision/runs/stage7/random_model_s5.jsonl": 291
+    },
+    "boofuzz": {
+      "evaluation/results/revision/runs/stage7/boofuzz_as_is.jsonl": 0
+    },
+    "A2": {
+      "evaluation/results/revision/runs/stage7/llm_A2.jsonl": 57,
+      "evaluation/results/revision/runs/stage7/llm_A2_r2.jsonl": 61,
+      "evaluation/results/revision/runs/stage7/llm_A2_r3.jsonl": 66,
+      "evaluation/results/revision/runs/stage7/llm_A2_r4.jsonl": 54,
+      "evaluation/results/revision/runs/stage7/llm_A2_r5.jsonl": 54
+    },
+    "A1": {
+      "evaluation/results/revision/runs/stage7/llm_A1.jsonl": 50,
+      "evaluation/results/revision/runs/stage7/llm_A1_r2.jsonl": 49,
+      "evaluation/results/revision/runs/stage7/llm_A1_r3.jsonl": 54,
+      "evaluation/results/revision/runs/stage7/llm_A1_r4.jsonl": 68,
+      "evaluation/results/revision/runs/stage7/llm_A1_r5.jsonl": 51
+    },
+    "A0": {
+      "evaluation/results/revision/runs/stage7/llm_A0.jsonl": 64,
+      "evaluation/results/revision/runs/stage7/llm_A0_r2.jsonl": 51,
+      "evaluation/results/revision/runs/stage7/llm_A0_r3.jsonl": 42,
+      "evaluation/results/revision/runs/stage7/llm_A0_r4.jsonl": 56,
+      "evaluation/results/revision/runs/stage7/llm_A0_r5.jsonl": 45
+    }
+  },
+  "per_fuzzer": {
+    "LLM": {
+      "n": 5,
+      "mean": 61.8,
+      "sd": 5.449770637375485,
+      "min": 55,
+      "max": 67,
+      "values": [
+        66,
+        57,
+        55,
+        67,
+        64
+      ]
+    },
+    "Random": {
+      "n": 5,
+      "mean": 297.8,
+      "sd": 7.328028384224504,
+      "min": 291,
+      "max": 306,
+      "values": [
+        291,
+        296,
+        305,
+        306,
+        291
+      ]
+    },
+    "boofuzz": {
+      "n": 1,
+      "mean": 0,
+      "sd": 0.0,
+      "min": 0,
+      "max": 0,
+      "values": [
+        0
+      ]
+    },
+    "A2": {
+      "n": 5,
+      "mean": 58.4,
+      "sd": 5.128352561983234,
+      "min": 54,
+      "max": 66,
+      "values": [
+        57,
+        61,
+        66,
+        54,
+        54
+      ]
+    },
+    "A1": {
+      "n": 5,
+      "mean": 54.4,
+      "sd": 7.829431652425353,
+      "min": 49,
+      "max": 68,
+      "values": [
+        50,
+        49,
+        54,
+        68,
+        51
+      ]
+    },
+    "A0": {
+      "n": 5,
+      "mean": 51.6,
+      "sd": 8.792041856133306,
+      "min": 42,
+      "max": 64,
+      "values": [
+        64,
+        51,
+        42,
+        56,
+        45
+      ]
+    }
+  },
+  "mann_whitney_p": {
+    "LLM vs Random": 0.007936507936507936,
+    "LLM vs A2": 0.31746031746031744,
+    "LLM vs A1": 0.15079365079365079,
+    "LLM vs A0": 0.06349206349206349,
+    "Random vs A2": 0.007936507936507936,
+    "Random vs A1": 0.007936507936507936,
+    "Random vs A0": 0.007936507936507936,
+    "A2 vs A1": 0.2222222222222222,
+    "A2 vs A0": 0.20634920634920634,
+    "A1 vs A0": 0.7301587301587301
+  }
+}

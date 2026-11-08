@@ -105,5 +105,36 @@ class TestClassify(unittest.TestCase):
         self.assertEqual(ranges, {"size|3001|above_max", "timing|3001|faster", "seq|1-255"})
 
 
+class TestCombinations(unittest.TestCase):
+    def test_universe_size(self):
+        # Per VL: size 3, timing 2, sequence 2, source MAC 5, destination MAC 3 classes.
+        # Pairs: 3*2 + 3*2 + 3*5 + 3*3 + 2*2 + 2*5 + 2*3 + 2*5 + 2*3 + 5*3 = 87; 8 VLs.
+        self.assertEqual(len(bc.combination_universe(VLS)), 87 * 8)
+
+    def test_one_field_gives_no_combination(self):
+        self.assertEqual(bc.combination_classes(cfg(payload_delta_bytes=481), VLS), set())
+        self.assertEqual(bc.combination_classes(cfg(), VLS), set())
+
+    def test_two_fields(self):
+        self.assertEqual(bc.combination_classes(cfg(timing_jitter_ms=-1, mac_mutation="zero_mac"), VLS),
+                         {"3001:src|zero_mac+timing|3001|faster"})
+
+    def test_three_fields_give_three_pairs(self):
+        pairs = bc.combination_classes(cfg(payload_delta_bytes=481, timing_jitter_ms=-1,
+                                           sequence_number_override=1), VLS)
+        self.assertEqual(pairs, {"3001:seq|1-255+size|3001|above_max", "3001:seq|1-255+timing|3001|faster",
+                                 "3001:size|3001|above_max+timing|3001|faster"})
+
+    def test_ethernet_class_is_not_a_second_size_class(self):
+        pairs = bc.combination_classes(cfg(payload_delta_bytes=2000, timing_jitter_ms=-1), VLS)
+        self.assertEqual(pairs, {"3001:size|3001|above_max+timing|3001|faster"})
+
+    def test_all_reached_pairs_are_in_the_universe(self):
+        pairs = bc.combination_classes(cfg(payload_delta_bytes=-481, timing_jitter_ms=2, mac_mutation="broadcast",
+                                           dest_mac_mutation="zero", sequence_number_override=256), VLS)
+        self.assertEqual(len(pairs), 10)
+        self.assertLessEqual(pairs, bc.combination_universe(VLS))
+
+
 if __name__ == "__main__":
     unittest.main()

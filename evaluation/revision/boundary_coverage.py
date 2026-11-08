@@ -145,6 +145,28 @@ def run_metrics(inputs, vls, all_points, all_ranges):
             "first_iteration_per_point": first_point}
 
 
+def _field(range_class):
+    return range_class.split("|")[0]
+
+
+def combination_classes(cfg, vls):
+    """Pairs of range classes of different input fields in one test, on its virtual link."""
+    _, ranges = classify(cfg, vls)
+    usable = sorted(r for r in ranges if r != "size|eth|above")  # overlaps the per-VL size class
+    return {f"{cfg.get('vlId')}:{a}+{b}" for a, b in combinations(usable, 2) if _field(a) != _field(b)}
+
+
+def combination_universe(vls):
+    """Every pair of range classes of different fields, per virtual link."""
+    _, ranges = universe(vls)
+    pairs = set()
+    for vl in vls:
+        own = sorted(r for r in ranges if r != "size|eth|above"
+                     and (r.split("|")[0] not in ("size", "timing") or r.split("|")[1] == str(vl)))
+        pairs |= {f"{vl}:{a}+{b}" for a, b in combinations(own, 2) if _field(a) != _field(b)}
+    return pairs
+
+
 def per_bug_classes(inputs_by_run, vls, cache):
     """For each bug: how many detecting inputs hit each point class (all runs pooled)."""
     report = {}

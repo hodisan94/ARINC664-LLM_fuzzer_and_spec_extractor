@@ -7,17 +7,23 @@ The evaluation now uses three metrics for the fuzzers: bug detection, boundary t
 coverage (lines and branches). Rule Coverage is removed. Run the experiments one at a time, in
 the order of the table. No paid run starts without explicit approval.
 
+## Agreed plan (2026-11-08)
+
+This is the one plan. Order: send the extension request (authors); finish the ablation (done); boundary combinations; mutation testing; expert labels of the 108 rules by Nov 10; reward-weight check, if its cost is approved; update the paper, changes in red, Nov 10–12; finish the letter and check every number against the result files, Nov 12–13. One larger topology only if the extension is granted; otherwise the letter states it as a limitation. Not done: a 3-LLM correctness check, completeness statements in the worksheet, a NAV re-run.
+
+Metrics in the paper. Rule extraction: Rule Correctness, Rule Completeness, inter-model agreement, Redundancy. Fuzzers: bug detection (primary), boundary tests, code coverage (lines and branches), mutation score if the pilot works.
+
 ## Overview
 
 | # | Experiment | Answers | Needed? | Cost | Time | Status |
 |---|---|---|---|---|---|---|
 | 1 | Ablation repeats (A0, A1, A2 × 4 more runs) | R1-3, R2-6 | **Required** | ≈ $102 | 3–4 h runs, 1 h scoring | **Done 2026-11-08** |
 | 2 | Expert check of the judge AI (108 rules) | R2-2 | **Required** | free | ≈ 3.5 h of an expert, then minutes | Worksheet ready; needs a name |
-| 3 | Reward-weight sensitivity | R1-4a | Recommended ("ideally" in the review) | ≈ $96 | 0.5 day of code, 2–3 h runs | Needs approval |
-| 4 | Boundary combinations | R2-4 | Recommended | free | 0.5 day | Ready to start |
-| 5 | Mutation testing | R2-1 | Optional | free | 1–2 days | Needs a decision |
+| 3 | Reward-weight sensitivity | R1-4a | Recommended ("ideally" in the review) | ≈ $96 | 0.5 day of code, 2–3 h runs | In the plan; **needs explicit approval of the cost** |
+| 4 | Boundary combinations | R2-4 | In the plan | free | 0.5 day | In progress |
+| 5 | Mutation testing | R2-1 | **Approved** | free | 1–2 days | Pilot next |
 | 6 | Larger topologies | R2-3 | Reviewer asks; hardest | ≈ $48 per topology | 1.5 days of code plus ≈ 3 h per topology | Needs a decision |
-| 7 | NAV case study | none | Only if we keep effectiveness claims | ≈ $16 | 0.5 day | Needs a decision |
+| 7 | NAV case study | none | **Not run**: the section is shortened | — | — | Decided |
 
 Already done, no run needed:
 - Main comparison: LLM 5 runs, Random 5 seeds, boofuzz 1 run, with all three metrics.
@@ -174,10 +180,7 @@ Without this experiment the letter can only say that no sensitivity check was do
 each rule category, and assess how testing depth affects bug detection." Boundary values are
 done. Combinations are not.
 
-**Definition, fixed before computing.** Each test is reduced to its classes on four independent
-fields: frame size, timing, sequence number, MAC address (`boundary_coverage.classify`, range
-level). A combination is a pair of classes from two different fields, on the same VL, in the same
-test. The universe is every such pair, the same list for all fuzzers.
+**Definition, fixed before computing.** Each test is reduced to its range classes on the five input fields that have classes: frame size, timing, sequence number, source MAC, destination MAC (`boundary_coverage.classify`; the "above 1,518" class is left out because it overlaps the per-VL size class). A combination is a pair of classes from two different fields, on the same VL, in the same test. The universe is every such pair, 87 per VL, 696 in total, the same list for all fuzzers.
 
 **Steps.**
 1. Add `combination_coverage()` to `boundary_coverage.py`, with hand-checked unit tests.
