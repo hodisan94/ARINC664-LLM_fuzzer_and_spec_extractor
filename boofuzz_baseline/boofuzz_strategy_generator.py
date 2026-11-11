@@ -26,6 +26,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from boofuzz_baseline.afdx_protocol import AFDXTestCaseGenerator
+from llm_fuzzer.utils.test_case_mapping import test_case_to_params
 
 
 class BoofuzzStrategyGenerator:
@@ -43,8 +44,12 @@ class BoofuzzStrategyGenerator:
     def __init__(
         self,
         test_cases_path: str = "configs/test_cases.json",
-        spec_rules_path: str = "configs/spec_rules_filtered.json"
+        spec_rules_path: str = "configs/spec_rules_filtered.json",
+        order: str = "category",
     ):
+        if order not in ("category", "file"):
+            raise ValueError(f"unknown order {order!r}")
+        self.order = order
         self.afdx_generator = AFDXTestCaseGenerator(test_cases_path, spec_rules_path)
         self.spec_rules_path = spec_rules_path
         
@@ -120,6 +125,9 @@ class BoofuzzStrategyGenerator:
                 unmapped_rule_ids.append(rule_id)
 
         ordered_rule_ids: List[str] = []
+        if self.order == "file":
+            # Rules in test-case file order, without the category map.
+            mapped_rules, unmapped_rule_ids = {}, list(by_rule)
         cat_queues = {c: list(rids) for c, rids in sorted(mapped_rules.items())}
         while cat_queues:
             empty = []
@@ -173,39 +181,8 @@ class BoofuzzStrategyGenerator:
         rule_id = violation['rule_id']
         value = violation['value']
 
-        mutation_type = self._classify_mutation(rule_id)
-
-        bag_value = None
-        frame_size = None
-        sequence_number = None
-        sequence_number_override = None
-        dest_mac_mutation = None
-        mac_mutation_type = None
-        prob = None
-
-        if mutation_type == 'bag':
-            bag_value = int(value) if isinstance(value, (int, float)) else 1
-        elif mutation_type == 'frame_size':
-            frame_size = value if isinstance(value, int) else 63
-        elif mutation_type == 'sequence_number':
-            if isinstance(value, int):
-                sequence_number = value
-                sequence_number_override = value
-            else:
-                sequence_number_override = 0
-        elif mutation_type == 'mac_address':
-            mac_mutation_type = 'spoof_src'
-            dest_mac_variants = ['corrupt_prefix', 'wrong_vl', 'zero']
-            dest_mac_mutation = dest_mac_variants[iteration % len(dest_mac_variants)]
-        elif mutation_type == 'ip_header':
-            pass
-        elif mutation_type == 'vl_id':
-            pass
-        elif mutation_type == 'priority':
-            pass
-        else:
-            bag_value, frame_size, sequence_number_override, dest_mac_mutation = \
-                self._generic_fallback(iteration, value)
+        params = test_case_to_params(rule_id, value, target_vl, index=iteration)
+        sequence_number = params["sequence_number_override"]
 
         tc_idx = violation['id'].split('_TC')[-1] if '_TC' in violation['id'] else '0'
         strategy = {
@@ -216,14 +193,8 @@ class BoofuzzStrategyGenerator:
             "test_cases": [f"TC{tc_idx}"],
             "custom_mutation": None,
             "strategy": "edge-case",
-            "bag_value": bag_value,
-            "frame_size": frame_size,
+            **params,
             "sequence_number": sequence_number,
-            "sequence_number_override": sequence_number_override,
-            "dest_mac_mutation": dest_mac_mutation,
-            "mac_mutation_type": mac_mutation_type,
-            "prob": prob,
-            "timing_jitter_ms": None,
             "payload_pattern": None,
             "reasoning": (
                 f"boofuzz baseline: iteration {iteration}. "
@@ -238,68 +209,6 @@ class BoofuzzStrategyGenerator:
 
         return strategy
 
-    # ------------------------------------------------------------------
-    @staticmethod
-    def _classify_mutation(rule_id: str) -> str:
-        """Map rule_id to a mutation category via keyword matching."""
-        r = rule_id.lower()
-        if 'bag' in r or 'bandwidth' in r or 'traffic_shaping' in r:
-            return 'bag'
-        if any(k in r for k in ('sequence', 'ordinal', 'integrity_check', 'duplicate',
-                                'redundancy')):
-            return 'sequence_number'
-        if any(k in r for k in ('frame', 'ethernet', 'fragment', 'reassembly',
-                                'payload', 'data_size', 'mtu', 'overhead')):
-            return 'frame_size'
-        if any(k in r for k in ('ip', 'ttl', 'routing', 'datagram', 'header')):
-            return 'ip_header'
-        if any(k in r for k in ('virtual_link', 'vl_', 'switching', 'switch',
-                                'forwarding')):
-            return 'vl_id'
-        if 'priority' in r or 'qos' in r or 'quality' in r:
-            return 'priority'
-        if any(k in r for k in ('mac', 'address', 'destination', 'source_addr')):
-            return 'mac_address'
-        if any(k in r for k in ('latency', 'jitter', 'delay', 'timing')):
-            return 'bag'
-        if any(k in r for k in ('filter', 'policing', 'discard', 'reject')):
-            return 'frame_size'
-        return 'generic'
-
-    @staticmethod
-    def _generic_fallback(iteration: int, value):
-        """Produce concrete mutation params for rules that don't match any keyword.
-
-        Deterministically cycles through four mutation styles so that
-        successive generic rules exercise different simulator paths.
-        """
-        cycle = iteration % 4
-        bag_value = None
-        frame_size = None
-        seq_override = None
-        dest_mac = None
-
-        if isinstance(value, (int, float)):
-            iv = int(value)
-        else:
-            iv = None
-
-        if cycle == 0:
-            bag_value = iv if iv is not None else 1
-            frame_size = 63
-        elif cycle == 1:
-            frame_size = iv if iv is not None else 1519
-            seq_override = 0
-        elif cycle == 2:
-            bag_value = iv if iv is not None else 0
-            dest_mac = 'corrupt_prefix'
-        else:
-            frame_size = iv if iv is not None else 17
-            dest_mac = 'wrong_vl'
-            seq_override = 255
-
-        return bag_value, frame_size, seq_override, dest_mac
-    
     def get_progress(self) -> Dict[str, Any]:
         """
         Get testing progress.

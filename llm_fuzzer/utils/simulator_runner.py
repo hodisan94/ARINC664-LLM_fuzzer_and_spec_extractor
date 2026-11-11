@@ -187,20 +187,32 @@ class SimulatorRunner:
             vl_cfg = {'base_size': 288, 'bag_ms': 8, 'min_size': 64, 'max_size': 512}
         
         # payload_delta_bytes: C++ applies base + delta, where base = (min+max)/2
+        # Bounds keep the values inside the C++ int parser. The simulator caps the
+        # frame size at 9000 bytes, and an offset beyond the 2 s run sends no
+        # further frames, so values past these bounds behave the same.
+        def bounded(value, lo, hi):
+            try:
+                v = float(value)
+            except (TypeError, ValueError):
+                return None
+            if v != v:
+                return None
+            return int(max(lo, min(hi, v)))
+
         payload_delta = 0
-        frame_size = metadata.get('frame_size')
-        if frame_size:
-            payload_delta = int(frame_size) - vl_cfg['base_size']
+        frame_size = bounded(metadata.get('frame_size'), 0, 9000)
+        if frame_size is not None:
+            payload_delta = frame_size - vl_cfg['base_size']
         
-        timing_jitter = metadata.get('timing_jitter_ms') or 0
+        timing_jitter = bounded(metadata.get('timing_jitter_ms') or 0, -100000, 100000) or 0
         
         # BAG violation: if a non-standard bag_value is specified, express it as
         # negative jitter so the C++ traffic generator sends frames faster than BAG
-        bag_value = metadata.get('bag_value')
+        bag_value = bounded(metadata.get('bag_value'), -100000, 100000)
         if bag_value is not None and timing_jitter == 0:
             normal_bag = vl_cfg['bag_ms']
-            if int(bag_value) != normal_bag:
-                timing_jitter = int(bag_value) - normal_bag
+            if bag_value != normal_bag:
+                timing_jitter = bag_value - normal_bag
         
         mutation_type = metadata.get('mutation_type', '')
         mac_mutation = "none"
@@ -215,7 +227,9 @@ class SimulatorRunner:
         strategy_type = metadata.get('strategy_type', '')
         is_extreme = True  # always enable fuzz mode so switch can validate
         
-        seq_override = int(metadata.get('sequence_number_override') or 0)
+        seq = metadata.get('sequence_number_override')
+        seq_override = int(seq) if seq is not None and 0 <= int(seq) <= 255 else -1
+        vl_id_override = int(metadata.get('vl_id_override') or 0)
         dest_mac_mut = metadata.get('dest_mac_mutation') or 'none'
         
         inject_bug = metadata.get('inject_bug', 'none')
@@ -230,6 +244,7 @@ class SimulatorRunner:
             "sequence_number_override": seq_override,
             "dest_mac_mutation": dest_mac_mut,
             "inject_bug": inject_bug,
+            "vl_id_override": vl_id_override,
         }
     
     def _write_mutations_file(self, test_inputs: Dict[str, Any]):

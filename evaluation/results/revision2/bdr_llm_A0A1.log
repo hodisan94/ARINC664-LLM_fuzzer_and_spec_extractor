@@ -1,0 +1,10 @@
+918 distinct runs, 252 not cached, 6 workers
+  50/252
+  100/252
+  150/252
+  200/252
+  250/252
+  252/252
+A0                           6/8  inputs= 25  skip_bag_policing(2), skip_frame_validation(152), skip_mac_validation(4), skip_vl_check(41), skip_constant_field(1), accept_oversized(152)
+A1                           7/8  inputs= 89  skip_bag_policing(42), skip_frame_validation(102), skip_mac_validation(11), skip_vl_check(15), skip_constant_field(4), skip_sequence_check(24), accept_oversized(102)
+-> evaluation/results/revision2/bdr_llm_A0A1.json

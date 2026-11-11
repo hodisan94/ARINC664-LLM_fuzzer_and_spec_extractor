@@ -1,0 +1,5693 @@
+Initializing components...
+All components initialized successfully!
+
+======================================================================
+LLM-GUIDED AFDX FUZZER
+======================================================================
+
+Configuration:
+  Max Iterations: 200
+  Available VLs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+  History File: evaluation/results/revision2/runs/llm_A1.jsonl
+  Output Directory: /tmp/afdx_campaigns_v2/out_llm_A1
+  Run Mode: fresh
+
+
+======================================================================
+ITERATION 0
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 638 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send from ES1 on VL 1001 but override to VL 2001 (ES2) to test unauthorized VL/por...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_000_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.23s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: High reward, but ensure you are not repeating the same mutation....
+
+Iteration 0 completed successfully!
+
+======================================================================
+ITERATION 1
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 586 chars
+  Target VL: 1001
+  Mutation Type: Traffic Shaping.bag_frame_rate_limiting
+  Custom Values: BAG=2, Size=None, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Exercise BAG policing on VL 1001 (BAG=4ms) by setting bag_value=2, which converts to a -2ms send jit...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_001_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.26s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.966
+  Policing Rate: 21.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 1 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 1 completed successfully!
+
+======================================================================
+ITERATION 2
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 641 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation from ES1: override VL ID to 2001 (owned by ES2). Should be dropped by switch due to...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_002_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.45s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 2 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 2 completed successfully!
+
+======================================================================
+ITERATION 3
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 536 chars
+[OpenAI] gpt-5 -> 467 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'Communication Mode.static_addressing_for_intra_afdx'
+  Target VL: 2001
+  Mutation Type: Communication Mode.static_addressing_for_intra_afdx
+  Custom Values: BAG=8, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for Communication Mode.static_addressing_for_intra_afdx] Set the destination MAC to that...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_003_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.62s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 3 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 3 completed successfully!
+
+======================================================================
+ITERATION 4
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 572 chars
+  Target VL: 1001
+  Mutation Type: mac_source_address_format
+  Strategy Type: adversarial
+  Reasoning: Exercise switch validation of source MAC formatting by spoofing the source MAC. Expect drop due to v...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_004_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.73s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.146
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 4 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 4 completed successfully!
+
+======================================================================
+ITERATION 5
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 522 chars
+[OpenAI] gpt-5 -> 428 chars
+  [REDIRECT] none of ['ttl_default_value_in_afdx', 'broadcast_address_recognition', 'output_buffer_size_for_low_priority_vls', 'sampling_message_size_constraint', 'switch_position_based_configuration_access'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1's VL 1001 while overriding to ES2's VL 2001 to trigger switch VL/port ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_005_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.59s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.170
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 5 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 5 completed successfully!
+
+======================================================================
+ITERATION 6
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 614 chars
+[OpenAI] gpt-5 -> 439 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'signed_32_bit_integer_range'
+  Target VL: 1001
+  Mutation Type: signed_32_bit_integer_range
+  Strategy Type: edge-case
+  Reasoning: [re-planned for signed_32_bit_integer_range] Use a timing_jitter_ms value one above the 32-bit signe...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_006_test.json
+
+[3/4] Running Simulator...
+  Simulation failed: ns-3 exited with code 250: mulation Time: 2 seconds
+VL Config: examples/AFDX_V3/config/virtual_links.csv
+PCAP Output: examples/AFDX_V3/output/pcap/
+CSV Output: examples/AFDX_V3/output/csv/AFDX-LOG-OUTPUT.csv
+Loaded 8 virtual link configurations
+terminate called after throwing an instance of 'std::out_of_range'
+  what():  stoi
+
+[4/4] Analyzing Feedback...
+  Reward: 0.000
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: No recommendation...
+
+Iteration 6 completed successfully!
+
+======================================================================
+ITERATION 7
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 576 chars
+[OpenAI] gpt-5 -> 400 chars
+  [REDIRECT] none of ['default_configuration_table', 'data_element_alignment', 'variable_length_opaque_data_length_field', 'Data Handling', 'boolean_representation_in_32_bit_field'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1’s VL 1001 while overriding to ES2’s VL 2001 to trigger switch VL/port ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_007_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.28s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.236
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 6 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 7 completed successfully!
+
+======================================================================
+ITERATION 8
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 562 chars
+[OpenAI] gpt-5 -> 442 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'end_system_wire_speed_throughput_capability'
+  Target VL: 1001
+  Mutation Type: end_system_wire_speed_throughput_capability
+  Custom Values: BAG=1, Size=64, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for end_system_wire_speed_throughput_capability] Force back-to-back minimum-size frames ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_008_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.19s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.922
+  Policing Rate: 16.3%
+  Bugs Found: False
+  Recommendation: Coverage so far: 6 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 8 completed successfully!
+
+======================================================================
+ITERATION 9
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 659 chars
+[OpenAI] gpt-5 -> 401 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'ethernet_frame_compliance'
+  Target VL: 1001
+  Mutation Type: ethernet_frame_compliance
+  Custom Values: BAG=4, Size=60, Seq=None
+  Strategy Type: conformance
+  Reasoning: [re-planned for ethernet_frame_compliance] Send a 60-byte frame to violate the IEEE 802.3 minimum si...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_009_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.57s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.096
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 7 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 9 completed successfully!
+
+======================================================================
+ITERATION 10
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 586 chars
+[OpenAI] gpt-5 -> 470 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'Error Handling.buffer_overflow_handling_in_transmission'
+  Target VL: 1001
+  Mutation Type: Error Handling.buffer_overflow_handling_in_transmission
+  Custom Values: BAG=1, Size=512, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for Error Handling.buffer_overflow_handling_in_transmission] Send maximum-sized frames f...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_010_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.74s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.922
+  Policing Rate: 16.3%
+  Bugs Found: False
+  Recommendation: Coverage so far: 8 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 10 completed successfully!
+
+======================================================================
+ITERATION 11
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 569 chars
+[OpenAI] gpt-5 -> 416 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'sap_port_transmission_uniqueness'
+  Target VL: 1001
+  Mutation Type: sap_port_transmission_uniqueness
+  Custom Values: BAG=4, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for sap_port_transmission_uniqueness] Impersonating a different VL on the same sending p...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_011_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.08s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.099
+  Policing Rate: 26.6%
+  Bugs Found: False
+  Recommendation: Coverage so far: 9 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 11 completed successfully!
+
+======================================================================
+ITERATION 12
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 609 chars
+  Target VL: 2001
+  Mutation Type: vl_id
+  Custom Values: BAG=None, Size=200, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 1001 (ES1) while transmitting on VL 2001 (ES2) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_012_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.46s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.043
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 10 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 12 completed successfully!
+
+======================================================================
+ITERATION 13
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 605 chars
+[OpenAI] gpt-5 -> 414 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'transmission_flow_control_mechanism'
+  Target VL: 1001
+  Mutation Type: transmission_flow_control_mechanism
+  Custom Values: BAG=1, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for transmission_flow_control_mechanism] Set bag_value below the VL’s BAG to violate the...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_013_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.43s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 44.4%
+  Bugs Found: False
+  Recommendation: Coverage so far: 10 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 13 completed successfully!
+
+======================================================================
+ITERATION 14
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 586 chars
+[OpenAI] gpt-5 -> 415 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'End System Configuration'
+  Target VL: 3001
+  Mutation Type: End System Configuration
+  Custom Values: BAG=4, Size=None, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for End System Configuration] Setting bag_value below the VL’s BAG directly violates the...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_014_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.39s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.162
+  Policing Rate: 18.9%
+  Bugs Found: False
+  Recommendation: Coverage so far: 11 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 14 completed successfully!
+
+======================================================================
+ITERATION 15
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 553 chars
+[OpenAI] gpt-5 -> 434 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'virtual_link_frame_size_range'
+  Target VL: 1001
+  Mutation Type: virtual_link_frame_size_range
+  Custom Values: BAG=None, Size=83, Seq=None
+  Strategy Type: edge-case
+  Reasoning: [re-planned for virtual_link_frame_size_range] Send an 83-byte frame to violate the AFDX minimum (84...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_015_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.84s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 12 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 15 completed successfully!
+
+======================================================================
+ITERATION 16
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 661 chars
+  Target VL: 2002
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES2-owned VL 2002 but override to ES1-owned VL 1001 to trigger switch VL/p...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_016_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.77s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.477
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 3 times already. Switch to a DIFFERENT rule ...
+
+Iteration 16 completed successfully!
+
+======================================================================
+ITERATION 17
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 573 chars
+  Target VL: 2001
+  Mutation Type: mac_source_address_format
+  Strategy Type: adversarial
+  Reasoning: Exploring untested source MAC spoofing to trigger switch MAC validation on VL 2001 (ES2). Targets ad...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_017_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.12s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.013
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 13 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 17 completed successfully!
+
+======================================================================
+ITERATION 18
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 569 chars
+[OpenAI] gpt-5 -> 473 chars
+  [REDIRECT] none of ['functional_status_set_structure', 'frame_discard_on_link_failure', 'Fault Tolerance.independent_end_to_end_links', 'minimum_reassembly_buffer_size', 'Frame Construction.no_unused_bytes_between_data_primitives'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2 VL 2001 while transmitting on ES1 VL 1001 to trigger switch rejection due to unautho...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_018_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.71s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.176
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 13 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 18 completed successfully!
+
+======================================================================
+ITERATION 19
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 554 chars
+  Target VL: 2001
+  Mutation Type: ttl_default_value_in_afdx
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Cover an untested category by verifying the AFDX-required default TTL=1 on an ES2 VL (2001). Baselin...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_019_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.31s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.300
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 13 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 19 completed successfully!
+
+======================================================================
+ITERATION 20
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 595 chars
+[OpenAI] gpt-5 -> 424 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'maximum_afdx_frame_length'
+  Target VL: 2001
+  Mutation Type: maximum_afdx_frame_length
+  Custom Values: BAG=None, Size=257, Seq=None
+  Strategy Type: edge-case
+  Reasoning: [re-planned for maximum_afdx_frame_length] Set frame_size one byte above VL 2001’s max to directly v...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_020_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.44s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 14 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 20 completed successfully!
+
+======================================================================
+ITERATION 21
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 551 chars
+[OpenAI] gpt-5 -> 423 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'maximum_frame_size_range'
+  Target VL: 1001
+  Mutation Type: maximum_frame_size_range
+  Custom Values: BAG=None, Size=83, Seq=None
+  Strategy Type: edge-case
+  Reasoning: [re-planned for maximum_frame_size_range] Setting frame_size to 83 bytes violates the 84-byte minimu...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_021_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.69s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 15 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 21 completed successfully!
+
+======================================================================
+ITERATION 22
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 607 chars
+[OpenAI] gpt-5 -> 423 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'latency_for_first_frame'
+  Target VL: 3001
+  Mutation Type: latency_for_first_frame
+  Custom Values: BAG=32, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for latency_for_first_frame] Adding +1000 ms send jitter forces the first-frame latency ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_022_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.42s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.749
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 16 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 22 completed successfully!
+
+======================================================================
+ITERATION 23
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 602 chars
+[OpenAI] gpt-5 -> 436 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'transmission_of_entire_static_structure'
+  Target VL: 3001
+  Mutation Type: transmission_of_entire_static_structure
+  Custom Values: BAG=None, Size=1023, Seq=None
+  Strategy Type: edge-case
+  Reasoning: [re-planned for transmission_of_entire_static_structure] Set frame_size to one byte below the VL’s s...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_023_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.21s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 17 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 23 completed successfully!
+
+======================================================================
+ITERATION 24
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 574 chars
+[OpenAI] gpt-5 -> 465 chars/home/hodisan1994/ns-3-reset/ns-3/llm_fuzzer/main.py:528: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  history = pd.concat([history, new_row], ignore_index=True)
+
+  [REDIRECT] none of ['frame_check_sequence_validity', 'fixed_length_arinc_429_label_encapsulation', 'Frame Identification.unique_message_identification', 'sequence_number_location_in_frame', 'IP Addressing.support_local_ip_multicasting'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Custom Values: BAG=None, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (sourced by ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port a...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_024_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.65s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.676
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 3 times already. Switch to a...
+
+Iteration 24 completed successfully!
+
+======================================================================
+ITERATION 25
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 605 chars
+[OpenAI] gpt-5 -> 492 chars
+  [REDIRECT] none of ['ttl_decrement_on_forwarding', 'support_subnet_addressing', 'IP Layer - Configuration', 'support_ip_reassembly', 'IP Layer - Header Validation'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_impersonation
+  Custom Values: BAG=None, Size=500, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Transmit from ES1 (VL 1001) while overriding VL ID to 2001 (owned by ES2) to exercise switch VL/port...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_025_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.09s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 18 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 25 completed successfully!
+
+======================================================================
+ITERATION 26
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 572 chars
+  [MECH-STANDALONE] iter 26: setting dest_mac_mutation=corrupt_prefix
+  Target VL: 1001
+  Mutation Type: mac_address
+  Strategy Type: conformance
+  Reasoning: Scheduled standalone mechanism coverage for dest_mac_mutation:corrupt_prefix. Original LLM-selected ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_026_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.40s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.946
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 19 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 26 completed successfully!
+
+======================================================================
+ITERATION 27
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 555 chars
+[OpenAI] gpt-5 -> 510 chars
+  [REDIRECT] none of ['source_route_option_support', 'IP Layer - TTL Handling', 'IP Layer - Type of Service', 'IP Protocol Validation', 'ipv4_total_length_field_range'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_impersonation
+  Custom Values: BAG=None, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Transmit from ES1's VL 1001 while overriding the VL ID to ES2's 2001 to test switch VL/port authoriz...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_027_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.10s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.110
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 20 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 27 completed successfully!
+
+======================================================================
+ITERATION 28
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 533 chars
+[OpenAI] gpt-5 -> 421 chars
+  [REDIRECT] none of ['ipv4_packet_structure_compliance', 'integrity_checking_disablement_per_vl', 'afdx_lru_interoperability', 'Jitter.jitter_time_calculation', 'total_end_to_end_latency_formula'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1 VL 1001 but override to ES2 VL 2001 to trigger switch port authorizati...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_028_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.04s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.176
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 4 times already. Switch to a DIFFERENT rule ...
+
+Iteration 28 completed successfully!
+
+======================================================================
+ITERATION 29
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 603 chars
+[OpenAI] gpt-5 -> 398 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'maximum_frame_rate_calculation'
+  Target VL: 1001
+  Mutation Type: maximum_frame_rate_calculation
+  Custom Values: BAG=0, Size=64, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for maximum_frame_rate_calculation] Set 64-byte frames and a 0 ms send interval to drive...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_029_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.38s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 90.9%
+  Bugs Found: False
+  Recommendation: Coverage so far: 20 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 29 completed successfully!
+
+======================================================================
+ITERATION 30
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 614 chars
+[OpenAI] gpt-5 -> 433 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'afdx_network_deterministic_behavior_requirement'
+  Target VL: 1001
+  Mutation Type: afdx_network_deterministic_behavior_requirement
+  Custom Values: BAG=4, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for afdx_network_deterministic_behavior_requirement] Increase sender drop probability to...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_030_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.38s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.892
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 21 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 30 completed successfully!
+
+======================================================================
+ITERATION 31
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 606 chars
+  [MECH-STANDALONE] iter 31: setting frame_size=2000
+  Target VL: 2001
+  Mutation Type: frame_structure.ethernet
+  Custom Values: BAG=None, Size=2000, Seq=None
+  Strategy Type: edge-case
+  Reasoning: Scheduled standalone mechanism coverage for frame_size>1518. Original LLM-selected rule was frame_si...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_031_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.34s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 22 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 31 completed successfully!
+
+======================================================================
+ITERATION 32
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 600 chars
+[OpenAI] gpt-5 -> 415 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'message_padding_for_bandwidth_allocation'
+  Target VL: 1001
+  Mutation Type: message_padding_for_bandwidth_allocation
+  Custom Values: BAG=4, Size=60, Seq=None
+  Strategy Type: conformance
+  Reasoning: [re-planned for message_padding_for_bandwidth_allocation] Set frame_size below the VL minimum to omi...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_032_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.04s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.096
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 23 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 32 completed successfully!
+
+======================================================================
+ITERATION 33
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 641 chars
+[OpenAI] gpt-5 -> 510 chars
+  [REDIRECT] none of ['Latency Determinism.constant_end_to_end_latency_in_point_to_point_system', 'transmission_continuity_on_link_failure', 'implicit_message_format_enforcement', 'Network Behavior', 'monitoring_function_required'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: Traffic Shaping.bag_frame_rate_limiting
+  Custom Values: BAG=None, Size=512, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Exercise BAG policing with fast timing on VL 1001 (BAG=4ms) using large but valid frame (L=512=Lmax)...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_033_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.29s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.380
+  Policing Rate: 44.4%
+  Bugs Found: False
+  Recommendation: Coverage so far: 24 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 33 completed successfully!
+
+======================================================================
+ITERATION 34
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 592 chars
+[OpenAI] gpt-5 -> 466 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'Performance.maximum_allowed_jitter_in_transmission_(formula_1)'
+  Target VL: 3001
+  Mutation Type: Performance.maximum_allowed_jitter_in_transmission_(formula_1)
+  Custom Values: BAG=None, Size=1024, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for Performance.maximum_allowed_jitter_in_transmission_(formula_1)] Use VL 3001 with max...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_034_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.08s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.704
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 24 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 34 completed successfully!
+
+======================================================================
+ITERATION 35
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 589 chars
+[OpenAI] gpt-5 -> 464 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'bounded_delay_jitter_for_flow'
+  Target VL: 2002
+  Mutation Type: bounded_delay_jitter_for_flow
+  Custom Values: BAG=30, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for bounded_delay_jitter_for_flow] Set a negative timing_jitter_ms to directly violate t...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_035_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.50s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.090
+  Policing Rate: 10.7%
+  Bugs Found: False
+  Recommendation: Coverage so far: 25 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 35 completed successfully!
+
+======================================================================
+ITERATION 36
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 597 chars
+[OpenAI] gpt-5 -> 481 chars
+  [REDIRECT] none of ['ip_version_compliance', 'log_discarded_datagrams', 'default_physical_port_speed_configuration', 'physical_layer_compatibility', 'Physical_Layer.physical_layer_compliance'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) on ES1’s VL 1001 to trigger switch VL/port authorization and destination-t...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_036_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.10s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.384
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 5 times already. Switch to a DIFFERENT rule ...
+
+Iteration 36 completed successfully!
+
+======================================================================
+ITERATION 37
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 556 chars
+[OpenAI] gpt-5 -> 452 chars
+  [REDIRECT] none of ['Policing.traffic_policing_time_resolution_tolerance', 'sap_port_range_for_bi_directional_communication', 'afdx_communication_port_unidirectional_access', 'allowed_port_number_range', 'udp_port_usage_for_afdx_communication_ports'] is expressible; keeping the LLM's strategy
+  Target VL: 2001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation to exercise switch VL/port authorization: transmit on ES2 VL 2001 while overriding ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_037_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.11s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.957
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 6 times already. Switch to a DIFFERENT rule ...
+
+Iteration 37 completed successfully!
+
+======================================================================
+ITERATION 38
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 590 chars
+[OpenAI] gpt-5 -> 433 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'Protocol_Stack.ieee_802_3_integration'
+  Target VL: 1001
+  Mutation Type: Protocol_Stack.ieee_802_3_integration
+  Custom Values: BAG=4, Size=64, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for Protocol_Stack.ieee_802_3_integration] Set the source MAC to all zeros to directly v...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_038_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.26s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.146
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 26 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 38 completed successfully!
+
+======================================================================
+ITERATION 39
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 582 chars
+[OpenAI] gpt-5 -> 498 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'Quality of Service.continued_delivery_in_fault_conditions'
+  Target VL: 1001
+  Mutation Type: Quality of Service.continued_delivery_in_fault_conditions
+  Strategy Type: adversarial
+  Reasoning: [re-planned for Quality of Service.continued_delivery_in_fault_conditions] Dropping all frames at th...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_039_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.04s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.099
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 27 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 39 completed successfully!
+
+======================================================================
+ITERATION 40
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 542 chars
+[OpenAI] gpt-5 -> 532 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'complete_message_reassembly_before_delivery'
+  Target VL: 1001
+  Mutation Type: complete_message_reassembly_before_delivery
+  Strategy Type: adversarial
+  Reasoning: [re-planned for complete_message_reassembly_before_delivery] Force the invalid AFDX sequence number ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_040_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.88s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.833
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 28 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 40 completed successfully!
+
+======================================================================
+ITERATION 41
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 671 chars
+  Target VL: 3001
+  Mutation Type: Traffic Policing.byte_based_traffic_policing
+  Custom Values: BAG=None, Size=1024, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Token-bucket stress: send max-size VALID frames (<= VL MaxFrame) at default BAG to exercise byte-bas...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_041_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.68s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 29 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 41 completed successfully!
+
+======================================================================
+ITERATION 42
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 562 chars
+[OpenAI] gpt-5 -> 511 chars
+  [REDIRECT] none of ['tcp_push_flag_data_aggregation_prohibition', 'Protocol Usage', 'reassemble_incoming_datagrams', 'redundancy_per_virtual_link_configurability', 'redundant_frame_transmission_on_dual_networks'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_impersonation
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2's VL 2001 from ES1's VL 1001 to trigger switch VL/port authorization checks. This un...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_042_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.08s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 30 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 42 completed successfully!
+
+======================================================================
+ITERATION 43
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 584 chars
+[OpenAI] gpt-5 -> 428 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'Reliability.real_time_communication_links'
+  Target VL: 1001
+  Mutation Type: Reliability.real_time_communication_links
+  Strategy Type: adversarial
+  Reasoning: [re-planned for Reliability.real_time_communication_links] Set a 10% sender-side drop probability to...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_043_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.13s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.916
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 30 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 43 completed successfully!
+
+======================================================================
+ITERATION 44
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 674 chars
+  Target VL: 1002
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1/VL1002 while overriding to VL2001 (owned by ES2). This should trigger ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_044_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.56s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 4 times already. Switch to a...
+
+Iteration 44 completed successfully!
+
+======================================================================
+ITERATION 45
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 619 chars
+  Target VL: 3001
+  Mutation Type: frame_size_compliance_with_vl_maximum
+  Custom Values: BAG=None, Size=1025, Seq=None
+  Strategy Type: edge-case
+  Reasoning: Boundary check of per-VL Lmax: VL 3001 has MaxFrame=1024, so frame_size=1025 should trigger switch f...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_045_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.23s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 31 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 45 completed successfully!
+
+======================================================================
+ITERATION 46
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 653 chars
+  [MECH-STANDALONE] iter 46: token bucket stress (frame_size=1500, default BAG)
+  Target VL: 1001
+  Mutation Type: token_bucket_stress
+  Custom Values: BAG=None, Size=1500, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Scheduled standalone mechanism coverage for token_bucket_stress. Original LLM-selected rule was vl_i...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_046_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.10s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 32 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 46 completed successfully!
+
+======================================================================
+ITERATION 47
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 596 chars
+[OpenAI] gpt-5 -> 504 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 2001) -> re-planned for 'Scheduling.maximum_jitter_constraint'
+  Target VL: 1001
+  Mutation Type: Scheduling.maximum_jitter_constraint
+  Custom Values: BAG=4, Size=64, Seq=None
+  Strategy Type: conformance
+  Reasoning: [re-planned for Scheduling.maximum_jitter_constraint] Use a negative timing_jitter_ms to directly vi...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_047_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.13s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.722
+  Policing Rate: 16.3%
+  Bugs Found: False
+  Recommendation: Coverage so far: 33 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 47 completed successfully!
+
+======================================================================
+ITERATION 48
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 581 chars
+[OpenAI] gpt-5 -> 466 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'constant_bandwidth_guarantee'
+  Target VL: 3001
+  Mutation Type: constant_bandwidth_guarantee
+  Custom Values: BAG=1, Size=64, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for constant_bandwidth_guarantee] Set bag_value well below the VL’s BAG to send faster t...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_048_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.31s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 50.8%
+  Bugs Found: False
+  Recommendation: Coverage so far: 34 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 48 completed successfully!
+
+======================================================================
+ITERATION 49
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 619 chars
+  Target VL: 1002
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Exploration of untested mechanism: VL impersonation. Send on VL 1002 (ES1) but override to VL 2001 (...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_049_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.44s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.704
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 7 times already. Switch to a DIFFERENT rule ...
+
+Iteration 49 completed successfully!
+
+======================================================================
+ITERATION 50
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 594 chars
+[OpenAI] gpt-5 -> 484 chars
+  [REDIRECT] none of ['sequence_number_length', 'service_class_requirement', 'gateway_status_indication', 'sub_vl_fifo_queue_exclusivity', 'Sub-VL Fragmentation.fragment_aware_round_robin_scheduling'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1's VL 1001 while overriding to VL 2001 (ES2). Switch should drop for un...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_050_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.11s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.944
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 8 times already. Switch to a DIFFERENT rule ...
+
+Iteration 50 completed successfully!
+
+======================================================================
+ITERATION 51
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 591 chars
+[OpenAI] gpt-5 -> 489 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'Switch.switch_filtering_and_policing_function_existence'
+  Target VL: 1001
+  Mutation Type: Switch.switch_filtering_and_policing_function_existence
+  Custom Values: BAG=4, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for Switch.switch_filtering_and_policing_function_existence] Force an invalid AFDX seque...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_051_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.20s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.833
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 35 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 51 completed successfully!
+
+======================================================================
+ITERATION 52
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 695 chars
+  Target VL: 2001
+  Mutation Type: Traffic Shaping.bag_frame_rate_limiting
+  Custom Values: BAG=2, Size=250, Seq=None
+  Strategy Type: adversarial
+  Reasoning: BAG violation: VL 2001 has BAG=8ms; setting bag_value=2 yields jitter=-6ms relative to BAG to overru...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_052_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.26s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.380
+  Policing Rate: 28.5%
+  Bugs Found: False
+  Recommendation: Coverage so far: 36 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 52 completed successfully!
+
+======================================================================
+ITERATION 53
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 558 chars
+[OpenAI] gpt-5 -> 407 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'sub_vl_round_robin_scheduling'
+  Target VL: 1001
+  Mutation Type: sub_vl_round_robin_scheduling
+  Custom Values: BAG=1, Size=64, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for sub_vl_round_robin_scheduling] Set bag_value below the VL’s BAG so a single Sub-VL e...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_053_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.53s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 44.4%
+  Bugs Found: False
+  Recommendation: Coverage so far: 36 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 53 completed successfully!
+
+======================================================================
+ITERATION 54
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 646 chars
+[OpenAI] gpt-5 -> 439 chars
+  [REDIRECT] none of ['sub_vl_layering', 'sub_vl_fifo_queue_limit_per_vl', 'switch_operating_mode_transitions', 'maximum_field_loadable_software_components', 'pin_programming_parity_check'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1 VL 1001 while overriding to VL 2001 (ES2). Exercises switch VL/port au...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_054_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.32s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.384
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 5 times already. Switch to a...
+
+Iteration 54 completed successfully!
+
+======================================================================
+ITERATION 55
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 622 chars
+[OpenAI] gpt-5 -> 443 chars
+  [REDIRECT] none of ['Switch Modes.switch_enters_dl_mode_from_init', 'mib_variable_update_frequency', 'init_mode_entry', 'ops_mode_activation_conditions', 'maximum_virtual_links_capacity'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2's VL 2001 while transmitting on ES1's VL 1001 to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_055_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.66s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 9 times already. Switch to a DIFFERENT rule ...
+
+Iteration 55 completed successfully!
+
+======================================================================
+ITERATION 56
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 651 chars
+[OpenAI] gpt-5 -> 468 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'ordinal_integrity_within_virtual_link'
+  Target VL: 1001
+  Mutation Type: ordinal_integrity_within_virtual_link
+  Custom Values: BAG=4, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for ordinal_integrity_within_virtual_link] Overriding every frame’s sequence number to a...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_056_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.49s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.279
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 37 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 56 completed successfully!
+
+======================================================================
+ITERATION 57
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 627 chars
+[OpenAI] gpt-5 -> 435 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'traffic_policing_requirement'
+  Target VL: 3001
+  Mutation Type: traffic_policing_requirement
+  Custom Values: BAG=1, Size=1024, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for traffic_policing_requirement] Transmit max-size frames on VL 3001 every 1 ms (>> BAG...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_057_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.64s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 50.8%
+  Bugs Found: False
+  Recommendation: Coverage so far: 38 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 57 completed successfully!
+
+======================================================================
+ITERATION 58
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 622 chars
+  Target VL: 2001
+  Mutation Type: mac_source_address_constant_field
+  Strategy Type: adversarial
+  Reasoning: Exercise switch MAC source validation by spoofing the source MAC on VL 2001 (ES2). This targets enfo...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_058_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.08s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.013
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 39 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 58 completed successfully!
+
+======================================================================
+ITERATION 59
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 630 chars
+[OpenAI] gpt-5 -> 460 chars
+  [REDIRECT] 'mac_source_address_format' (rule tested on VL 2001) -> re-planned for 'maximum_bandwidth_allocation_for_virtual_link'
+  Target VL: 3001
+  Mutation Type: maximum_bandwidth_allocation_for_virtual_link
+  Custom Values: BAG=0, Size=1024, Seq=None
+  Strategy Type: edge-case
+  Reasoning: [re-planned for maximum_bandwidth_allocation_for_virtual_link] Setting bag_value to 0 forces T_GAP=0...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_059_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.59s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 91.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 40 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 59 completed successfully!
+
+======================================================================
+ITERATION 60
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 570 chars
+[OpenAI] gpt-5 -> 493 chars
+  [REDIRECT] none of ['policing_algorithm_choice', 'maximum_frame_delay_enforcement', 'high_priority_frame_transmission_precedence', 'Transport Layer Addressing', 'UDP Checksum Handling'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_id
+  Custom Values: BAG=None, Size=100, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2's VL (2001) while transmitting on ES1's VL (1001) to trigger switch VL/port authoriz...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_060_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.08s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.890
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 10 times already. Switch to a DIFFERENT rule...
+
+Iteration 60 completed successfully!
+
+======================================================================
+ITERATION 61
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 582 chars
+  Target VL: 3001
+  Mutation Type: vl_id
+  Custom Values: BAG=None, Size=256, Seq=None
+  Strategy Type: adversarial
+  Reasoning: VL impersonation to test switch VL/port authorization: send from ES3 (VL 3001) while overriding to a...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_061_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.12s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.056
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 11 times already. Switch to a DIFFERENT rule...
+
+Iteration 61 completed successfully!
+
+======================================================================
+ITERATION 62
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 630 chars
+[OpenAI] gpt-5 -> 446 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'Virtual Link Data Integrity'
+  Target VL: 1001
+  Mutation Type: Virtual Link Data Integrity
+  Custom Values: BAG=4, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for Virtual Link Data Integrity] Force a constant non-incrementing AFDX sequence number ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_062_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.29s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.279
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 41 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 62 completed successfully!
+
+======================================================================
+ITERATION 63
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 589 chars
+[OpenAI] gpt-5 -> 458 chars
+  [REDIRECT] 'mac_source_address_format' (rule tested on VL 2001) -> re-planned for 'Virtual Link Bandwidth'
+  Target VL: 1001
+  Mutation Type: Virtual Link Bandwidth
+  Custom Values: BAG=1, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for Virtual Link Bandwidth] Setting a send interval below the VL’s 4 ms BAG overdrives i...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_063_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.32s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 44.4%
+  Bugs Found: False
+  Recommendation: Coverage so far: 42 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 63 completed successfully!
+
+======================================================================
+ITERATION 64
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 539 chars
+[OpenAI] gpt-5 -> 554 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'virtual_link_as_unidirectional_logical_communication_path'
+  Target VL: 1001
+  Mutation Type: virtual_link_as_unidirectional_logical_communication_path
+  Custom Values: BAG=8, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for virtual_link_as_unidirectional_logical_communication_path] Impersonating VL 2001 on ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_064_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.11s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.243
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 43 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 64 completed successfully!
+
+======================================================================
+ITERATION 65
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 615 chars
+[OpenAI] gpt-5 -> 461 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'jitter_definition_for_virtual_link'
+  Target VL: 1001
+  Mutation Type: jitter_definition_for_virtual_link
+  Custom Values: BAG=5, Size=128, Seq=None
+  Strategy Type: conformance
+  Reasoning: [re-planned for jitter_definition_for_virtual_link] Using a negative timing_jitter_ms explicitly vio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_065_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.11s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.722
+  Policing Rate: 16.3%
+  Bugs Found: False
+  Recommendation: Coverage so far: 44 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 65 completed successfully!
+
+======================================================================
+ITERATION 66
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 564 chars
+[OpenAI] gpt-5 -> 422 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'Virtual Link Source Uniqueness'
+  Target VL: 1001
+  Mutation Type: Virtual Link Source Uniqueness
+  Custom Values: BAG=4, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for Virtual Link Source Uniqueness] Impersonate VL 1002 on the port for VL 1001 to simul...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_066_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.06s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.099
+  Policing Rate: 26.6%
+  Bugs Found: False
+  Recommendation: Coverage so far: 45 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 66 completed successfully!
+
+======================================================================
+ITERATION 67
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 593 chars
+[OpenAI] gpt-5 -> 439 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'source_partition_exclusivity'
+  Target VL: 1001
+  Mutation Type: source_partition_exclusivity
+  Custom Values: BAG=4, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for source_partition_exclusivity] Impersonate VL 1002 from a port assigned to VL 1001 to...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_067_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.31s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.099
+  Policing Rate: 26.6%
+  Bugs Found: False
+  Recommendation: Coverage so far: 46 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 67 completed successfully!
+
+======================================================================
+ITERATION 68
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 545 chars
+[OpenAI] gpt-5 -> 455 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'logical_bandwidth_isolation_between_virtual_links'
+  Target VL: 3001
+  Mutation Type: logical_bandwidth_isolation_between_virtual_links
+  Custom Values: BAG=1, Size=1024, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for logical_bandwidth_isolation_between_virtual_links] Transmit maximum-size frames on V...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_068_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.68s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 50.8%
+  Bugs Found: False
+  Recommendation: Coverage so far: 47 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 68 completed successfully!
+
+======================================================================
+ITERATION 69
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 531 chars
+  Target VL: 3001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 1002 (ES1) while transmitting on ES3 VL 3001 to trigger switch VL/port authorization ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_069_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.32s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.936
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 6 times already. Switch to a...
+
+Iteration 69 completed successfully!
+
+======================================================================
+ITERATION 70
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 636 chars
+[OpenAI] gpt-5 -> 454 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'Virtual Link Latency'
+  Target VL: 1001
+  Mutation Type: Virtual Link Latency
+  Custom Values: BAG=1, Size=512, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for Virtual Link Latency] Underruns the VL BAG and applies negative jitter to burst maxi...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_070_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.76s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 44.4%
+  Bugs Found: False
+  Recommendation: Coverage so far: 48 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 70 completed successfully!
+
+======================================================================
+ITERATION 71
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 584 chars
+[OpenAI] gpt-5 -> 530 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'buffer_management.rx_buffer_overflow_handling'
+  Target VL: 3002
+  Mutation Type: buffer_management.rx_buffer_overflow_handling
+  Custom Values: BAG=1, Size=1024, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for buffer_management.rx_buffer_overflow_handling] Transmit maximum-size frames much fas...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_071_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.78s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.725
+  Policing Rate: 1.7%
+  Bugs Found: False
+  Recommendation: Coverage so far: 49 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 71 completed successfully!
+
+======================================================================
+ITERATION 72
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 629 chars
+[OpenAI] gpt-5 -> 516 chars
+  [REDIRECT] none of ['udp_port_unreachable_message_prohibition', 'default_reception_vl_identifier_format', 'address_validation.reject_invalid_ip_address_on_open', 'broadcast_addressing', 'communication_ports.afdx_communication_port_reception_uniqueness'] is expressible; keeping the LLM's strategy
+  Target VL: 1002
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (owned by ES2) while transmitting on VL 1002’s path (ES1) to trigger switch VL/p...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_072_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.99s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.764
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 12 times already. Switch to a DIFFERENT rule...
+
+Iteration 72 completed successfully!
+
+======================================================================
+ITERATION 73
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 587 chars
+[OpenAI] gpt-5 -> 311 chars
+  [REDIRECT] none of ['communication_services.afdx_port_service_types', 'configuration.integrity_checking_disable_capability', 'network_wide_configuration_file_uniformity', 'data_alignment.double_precision_float_address_alignment', 'parameter_removal_replacement_rule'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: frame_validation.ethernet_frame_size_upper_limit
+  Custom Values: BAG=None, Size=2000, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Send an oversized Ethernet frame (>1518 bytes) on VL 1001 to trigger switch frame-size validation an...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_073_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 50 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 73 completed successfully!
+
+======================================================================
+ITERATION 74
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 632 chars
+[OpenAI] gpt-5 -> 485 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'data_integrity.frame_ordering_preservation'
+  Target VL: 1001
+  Mutation Type: data_integrity.frame_ordering_preservation
+  Strategy Type: adversarial
+  Reasoning: [re-planned for data_integrity.frame_ordering_preservation] Override every frame’s sequence number t...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_074_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.75s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.279
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 51 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 74 completed successfully!
+
+======================================================================
+ITERATION 75
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 573 chars
+[OpenAI] gpt-5 -> 481 chars
+  [REDIRECT] none of ['data_formatting.big_endian_byte_order_requirement', 'data_link_layer.ieee_802.3_ethernet_compliance', 'data_segmentation.multiple_ds_for_partial_failure_scenarios', 'data_size', 'status_priority_enforcement'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2’s VL (2001) while transmitting on ES1’s VL (1001) to trigger switch VL/port authoriz...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_075_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.24s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.004
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 13 times already. Switch to a DIFFERENT rule...
+
+Iteration 75 completed successfully!
+
+======================================================================
+ITERATION 76
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 595 chars
+[OpenAI] gpt-5 -> 413 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'Frame Filtering'
+  Target VL: 1001
+  Mutation Type: Frame Filtering
+  Custom Values: BAG=4, Size=128, Seq=None
+  Strategy Type: conformance
+  Reasoning: [re-planned for Frame Filtering] Using a wrong destination MAC directly checks that frames with inva...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_076_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.22s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 52 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 76 completed successfully!
+
+======================================================================
+ITERATION 77
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 591 chars
+[OpenAI] gpt-5 -> 500 chars
+  [REDIRECT] 'mac_source_address_format' (rule tested on VL 2001) -> re-planned for 'integrity_checking.invalid_frame_discard_rule'
+  Target VL: 1001
+  Mutation Type: integrity_checking.invalid_frame_discard_rule
+  Custom Values: BAG=None, Size=128, Seq=None
+  Strategy Type: edge-case
+  Reasoning: [re-planned for integrity_checking.invalid_frame_discard_rule] Forcing sequence_number_override to 0...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_077_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.68s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.833
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 53 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 77 completed successfully!
+
+======================================================================
+ITERATION 78
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 557 chars
+[OpenAI] gpt-5 -> 528 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'frame_routing.receiver_demultiplexing_based_on_destination_addresses'
+  Target VL: 1001
+  Mutation Type: frame_routing.receiver_demultiplexing_based_on_destination_addresses
+  Custom Values: BAG=4, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for frame_routing.receiver_demultiplexing_based_on_destination_addresses] Mutate only th...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_078_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.16s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.146
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 54 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 78 completed successfully!
+
+======================================================================
+ITERATION 79
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 593 chars
+[OpenAI] gpt-5 -> 460 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 3001) -> re-planned for 'fragmentation.fragment_transmission_order'
+  Target VL: 1001
+  Mutation Type: fragmentation.fragment_transmission_order
+  Custom Values: BAG=4, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for fragmentation.fragment_transmission_order] Force a constant non-zero AFDX sequence n...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_079_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.32s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.279
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 55 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 79 completed successfully!
+
+======================================================================
+ITERATION 80
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 552 chars
+  Target VL: 2001
+  Mutation Type: frame_size_compliance_with_vl_maximum
+  Custom Values: BAG=None, Size=600, Seq=None
+  Strategy Type: edge-case
+  Reasoning: VL 2001 has Lmax=256. Sending a 600-byte frame to exercise per-VL maximum frame length enforcement a...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_080_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 56 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 80 completed successfully!
+
+======================================================================
+ITERATION 81
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 583 chars
+[OpenAI] gpt-5 -> 441 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'maximum_datagram_size_to_off_network_destinations'
+  Target VL: 3001
+  Mutation Type: maximum_datagram_size_to_off_network_destinations
+  Custom Values: BAG=None, Size=1000, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for maximum_datagram_size_to_off_network_destinations] Using a large frame on a VL that ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_081_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.61s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 56 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 81 completed successfully!
+
+======================================================================
+ITERATION 82
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 617 chars
+[OpenAI] gpt-5 -> 293 chars
+  [REDIRECT] none of ['crc_regeneration_prohibition', 'ip_multicast_address_class_d_format', 'ip_datagram_processing.ttl_minimum_acceptance_rule', 'ip_header.default_time_to_live', 'ip_protocol.valid_ip_source_address_requirement_for_transmission'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on VL 1001 (ES1) but override to VL 2001 (ES2). This targets switch authoriza...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_082_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.53s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.944
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 7 times already. Switch to a...
+
+Iteration 82 completed successfully!
+
+======================================================================
+ITERATION 83
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 554 chars
+[OpenAI] gpt-5 -> 456 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'message_transmission'
+  Target VL: 3001
+  Mutation Type: message_transmission
+  Custom Values: BAG=32, Size=512, Seq=None
+  Strategy Type: conformance
+  Reasoning: [re-planned for message_transmission] Send a frame at 50% of the VL 3001 maximum to simulate transmi...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_083_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.26s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 57 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 83 completed successfully!
+
+======================================================================
+ITERATION 84
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 575 chars
+[OpenAI] gpt-5 -> 462 chars
+  [REDIRECT] none of ['data_element_alignment_by_size', 'message_ordering', 'maximum_data_sets_per_fss', 'init_operating_mode_required', 'physical_configuration.default_physical_port_number'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2's VL 2001 while transmitting on ES1's VL 1001 to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_084_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.21s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 8 times already. Switch to a...
+
+Iteration 84 completed successfully!
+
+======================================================================
+ITERATION 85
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 573 chars
+  Target VL: 2001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation to exercise switch VL/port authorization: transmit on ES2’s VL 2001 but override to...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_085_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.71s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.957
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 9 times already. Switch to a...
+
+Iteration 85 completed successfully!
+
+======================================================================
+ITERATION 86
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 625 chars
+[OpenAI] gpt-5 -> 441 chars
+  [REDIRECT] none of ['continuous_transmission_on_link_failure', 'port_configuration.port_operational_state', 'protocol_encapsulation.udp_datagram_encapsulation_in_ip', 'protocol_profile', 'Redundancy'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting from VL 1001 (ES1). This should be rejected by the swit...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_086_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.24s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 10 times already. Switch to ...
+
+Iteration 86 completed successfully!
+
+======================================================================
+ITERATION 87
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 607 chars
+[OpenAI] gpt-5 -> 408 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'switch_filtering.frame_filtering_stages'
+  Target VL: 2001
+  Mutation Type: switch_filtering.frame_filtering_stages
+  Custom Values: BAG=8, Size=257, Seq=None
+  Strategy Type: edge-case
+  Reasoning: [re-planned for switch_filtering.frame_filtering_stages] Send a frame one byte over the VL’s maximum...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_087_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.64s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 58 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 87 completed successfully!
+
+======================================================================
+ITERATION 88
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 636 chars
+[OpenAI] gpt-5 -> 453 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 1001) -> re-planned for 'switch_operations.traffic_policing_function_requirement'
+  Target VL: 3002
+  Mutation Type: switch_operations.traffic_policing_function_requirement
+  Custom Values: BAG=1, Size=64, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for switch_operations.traffic_policing_function_requirement] Transmit on VL 3002 at 1 ms...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_088_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.11s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 50.7%
+  Bugs Found: False
+  Recommendation: Coverage so far: 59 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 88 completed successfully!
+
+======================================================================
+ITERATION 89
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 564 chars
+[OpenAI] gpt-5 -> 478 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 2001) -> re-planned for 'safety_critical_communication.complete_and_up_to_date_data_delivery_requirement'
+  Target VL: 1001
+  Mutation Type: safety_critical_communication.complete_and_up_to_date_data_delivery_requirement
+  Custom Values: BAG=4, Size=128, Seq=None
+  Strategy Type: conformance
+  Reasoning: [re-planned for safety_critical_communication.complete_and_up_to_date_data_delivery_requirement] Inj...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_089_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.31s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.899
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 60 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 89 completed successfully!
+
+======================================================================
+ITERATION 90
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 558 chars
+[OpenAI] gpt-5 -> 440 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'switch_processing.filter_wire_speed_capability'
+  Target VL: 1001
+  Mutation Type: switch_processing.filter_wire_speed_capability
+  Strategy Type: edge-case
+  Reasoning: [re-planned for switch_processing.filter_wire_speed_capability] Use 0-byte frames to trigger the bel...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_090_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.22s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 61 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 90 completed successfully!
+
+======================================================================
+ITERATION 91
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 584 chars
+[OpenAI] gpt-5 -> 482 chars
+  [REDIRECT] none of ['switch_behavior.simultaneous_frame_sequencing', 'minimum_output_port_buffer_capacity', 'passive_mode_entry_conditions', 'maximum_vl_processing_capacity', 'switch_timing.jitter_time_formula'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_091_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.26s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 11 times already. Switch to ...
+
+Iteration 91 completed successfully!
+
+======================================================================
+ITERATION 92
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 585 chars
+[OpenAI] gpt-5 -> 505 chars
+  [REDIRECT] 'vl_port_authorization' (rule tested on VL 3001) -> re-planned for 'virtual_link_management.single_source_per_vl_constraint'
+  Target VL: 3001
+  Mutation Type: virtual_link_management.single_source_per_vl_constraint
+  Custom Values: BAG=32, Size=64, Seq=None
+  Strategy Type: adversarial
+  Reasoning: [re-planned for virtual_link_management.single_source_per_vl_constraint] Impersonating VL 1001 from ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_092_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.944
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 62 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 92 completed successfully!
+
+======================================================================
+ITERATION 93
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 569 chars
+[OpenAI] gpt-5 -> 405 chars
+  [REDIRECT] 'vl_id' (rule tested on VL 1001) -> re-planned for 'maximum_allowed_total_ethernet_line_size_per_vl'
+  Target VL: 2001
+  Mutation Type: maximum_allowed_total_ethernet_line_size_per_vl
+  Custom Values: BAG=None, Size=257, Seq=None
+  Strategy Type: edge-case
+  Reasoning: [re-planned for maximum_allowed_total_ethernet_line_size_per_vl] Set frame_size to 257 on VL 2001 (m...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_093_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.34s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 63 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 93 completed successfully!
+
+======================================================================
+ITERATION 94
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 542 chars
+[OpenAI] gpt-5 -> 463 chars
+  [REDIRECT] none of ['transport_layer_addressing.dynamic/private_port_number_range'] is expressible; keeping the LLM's strategy
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_094_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.29s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 12 times already. Switch to ...
+
+Iteration 94 completed successfully!
+
+======================================================================
+ITERATION 95
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 645 chars
+  Target VL: 1001
+  Mutation Type: mac_destination_address_32_bit_constant_field_validation
+  Strategy Type: adversarial
+  Reasoning: Exercise the ES constant-field check using destination MAC prefix corruption, an untested mutation p...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_095_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.49s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.279
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 64 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 95 completed successfully!
+
+======================================================================
+ITERATION 96
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 564 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1's VL 1001 but override to VL 2001 (ES2) to trigger switch authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_096_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.27s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.004
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 14 times already. Switch to a DIFFERENT rule...
+
+Iteration 96 completed successfully!
+
+======================================================================
+ITERATION 97
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 565 chars
+  Target VL: 2001
+  Mutation Type: ethernet_frame_size
+  Custom Values: BAG=None, Size=2000, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Oversized frame (2000 bytes) exceeds Ethernet max (1518) and VL 2001 Lmax (256), exercising switch f...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_097_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.52s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 65 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 97 completed successfully!
+
+======================================================================
+ITERATION 98
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 646 chars
+  Target VL: 1001
+  Mutation Type: vl_impersonation
+  Strategy Type: adversarial
+  Reasoning: Transmit on VL 1001 (ES1 source) while overriding to VL 2001 (ES2 source) to exercise switch VL/port...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_098_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.20s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.736
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_impersonation' used 3 times already. Switch to a DIFF...
+
+Iteration 98 completed successfully!
+
+======================================================================
+ITERATION 99
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 557 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation to exercise switch VL/port authorization: send from ES1 (VL 1001) while overriding ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_099_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.23s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 15 times already. Switch to a DIFFERENT rule...
+
+Iteration 99 completed successfully!
+
+======================================================================
+ITERATION 100
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 621 chars
+  Target VL: 3001
+  Mutation Type: frame_validation.ethernet_frame_size_upper_limit
+  Custom Values: BAG=None, Size=2000, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Exercise the untested oversized-frame path by sending a 2000-byte frame on VL 3001 (Lmax 1024), viol...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_100_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.61s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 66 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 100 completed successfully!
+
+======================================================================
+ITERATION 101
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 617 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Exercise untested VL impersonation path: send on VL 1001 (ES1) but override to VL 2001 (ES2). This s...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_101_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.26s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.004
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 13 times already. Switch to ...
+
+Iteration 101 completed successfully!
+
+======================================================================
+ITERATION 102
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 572 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1's VL 1001 but override to VL 2001 (ES2) to trigger switch VL/port auth...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_102_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.44s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 16 times already. Switch to a DIFFERENT rule...
+
+Iteration 102 completed successfully!
+
+======================================================================
+ITERATION 103
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 713 chars
+  Target VL: 2001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES1’s VL 1001 while transmitting from ES2 (VL 2001) to trigger switch VL authorization c...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_103_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.29s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.017
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 14 times already. Switch to ...
+
+Iteration 103 completed successfully!
+
+======================================================================
+ITERATION 104
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 554 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: transmit on ES1’s VL 1001 path but override to VL 2001 (ES2). Should be dropped by...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_104_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.30s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 15 times already. Switch to ...
+
+Iteration 104 completed successfully!
+
+======================================================================
+ITERATION 105
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 575 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting from VL 1001 (ES1) to trigger switch authorization chec...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_105_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.67s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 16 times already. Switch to ...
+
+Iteration 105 completed successfully!
+
+======================================================================
+ITERATION 106
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 593 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_106_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.53s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 17 times already. Switch to ...
+
+Iteration 106 completed successfully!
+
+======================================================================
+ITERATION 107
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 620 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Custom Values: BAG=None, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting from ES1 on VL 1001 to trigger switch check 'VL ID must...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_107_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.24s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.890
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 17 times already. Switch to a DIFFERENT rule...
+
+Iteration 107 completed successfully!
+
+======================================================================
+ITERATION 108
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 577 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_108_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.19s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 18 times already. Switch to ...
+
+Iteration 108 completed successfully!
+
+======================================================================
+ITERATION 109
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 605 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2’s VL 2001 while transmitting on ES1’s VL 1001 to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_109_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.14s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 18 times already. Switch to a DIFFERENT rule...
+
+Iteration 109 completed successfully!
+
+======================================================================
+ITERATION 110
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 591 chars
+  Target VL: 2001
+  Mutation Type: frame_size_compliance_with_vl_maximum
+  Custom Values: BAG=None, Size=257, Seq=None
+  Strategy Type: edge-case
+  Reasoning: Boundary test for per-VL Lmax enforcement: VL 2001 has MaxFrame=256; sending 257 bytes should trigge...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_110_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.40s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 66 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 110 completed successfully!
+
+======================================================================
+ITERATION 111
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 578 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send from ES1 (VL 1001) but override to VL 2001 (ES2). Tests switch VL/port author...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_111_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.23s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 19 times already. Switch to a DIFFERENT rule...
+
+Iteration 111 completed successfully!
+
+======================================================================
+ITERATION 112
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 558 chars
+  Target VL: 1001
+  Mutation Type: ttl_default_value_in_afdx
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: First iteration focusing on new-rule coverage. Execute TTL default=1 conformance test case without a...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_112_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.22s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.300
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 66 unique rules tested. Try edge-case testing to find boundary ...
+
+Iteration 112 completed successfully!
+
+======================================================================
+ITERATION 113
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 593 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting from VL 1001 (ES1) to trigger switch VL/port authorizat...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_113_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.15s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 19 times already. Switch to ...
+
+Iteration 113 completed successfully!
+
+======================================================================
+ITERATION 114
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 643 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: transmit on ES1/VL1001 but override VL ID to ES2/VL2001. This should trigger switc...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_114_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.51s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 20 times already. Switch to a DIFFERENT rule...
+
+Iteration 114 completed successfully!
+
+======================================================================
+ITERATION 115
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 561 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation to trigger port authorization: transmit on VL 1001 (ES1) while overriding VL ID to ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_115_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.12s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 21 times already. Switch to a DIFFERENT rule...
+
+Iteration 115 completed successfully!
+
+======================================================================
+ITERATION 116
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 621 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on ES1's VL 1001 path to trigger switch VL/port authori...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_116_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.61s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 20 times already. Switch to ...
+
+Iteration 116 completed successfully!
+
+======================================================================
+ITERATION 117
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 610 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1’s VL 1001 while overriding to VL 2001 (owned by ES2). This should trig...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_117_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.10s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 21 times already. Switch to ...
+
+Iteration 117 completed successfully!
+
+======================================================================
+ITERATION 118
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 641 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Exercise VL impersonation by transmitting on ES1's VL 1001 while overriding the VL ID to ES2's VL 20...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_118_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.13s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 22 times already. Switch to a DIFFERENT rule...
+
+Iteration 118 completed successfully!
+
+======================================================================
+ITERATION 119
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 564 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to exercise switch VL/port authorizati...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_119_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.40s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 23 times already. Switch to a DIFFERENT rule...
+
+Iteration 119 completed successfully!
+
+======================================================================
+ITERATION 120
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 618 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1 VL (1001) while overriding to ES2 VL (2002). Should trigger switch dro...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_120_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.70s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 22 times already. Switch to ...
+
+Iteration 120 completed successfully!
+
+======================================================================
+ITERATION 121
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 591 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2’s VL 2001 while transmitting on ES1’s VL 1001 to trigger switch authorization checks...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_121_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.65s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 23 times already. Switch to ...
+
+Iteration 121 completed successfully!
+
+======================================================================
+ITERATION 122
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 579 chars
+  Target VL: 2001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES2's VL 2001 but override to ES1's VL 1001 to trigger switch authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_122_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.21s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.017
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 24 times already. Switch to a DIFFERENT rule...
+
+Iteration 122 completed successfully!
+
+======================================================================
+ITERATION 123
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 592 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Transmit from ES1 on VL 1001 but override to VL 2001 (owned by ES2) to test switch VL/port authoriza...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_123_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.94s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 24 times already. Switch to ...
+
+Iteration 123 completed successfully!
+
+======================================================================
+ITERATION 124
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 569 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1’s VL 1001 while overriding to VL ID 2001 (owned by ES2) to exercise sw...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_124_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.19s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 25 times already. Switch to a DIFFERENT rule...
+
+Iteration 124 completed successfully!
+
+======================================================================
+ITERATION 125
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 650 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: transmit on ES1’s VL 1001 while overriding the VL ID to 2001 (owned by ES2). This ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_125_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.97s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 26 times already. Switch to a DIFFERENT rule...
+
+Iteration 125 completed successfully!
+
+======================================================================
+ITERATION 126
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 558 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1 VL 1001 while overriding to VL 2001 (ES2) to exercise switch VL/port a...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_126_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.16s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 25 times already. Switch to ...
+
+Iteration 126 completed successfully!
+
+======================================================================
+ITERATION 127
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 571 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_127_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.12s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 27 times already. Switch to a DIFFERENT rule...
+
+Iteration 127 completed successfully!
+
+======================================================================
+ITERATION 128
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 583 chars
+  Target VL: 2001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 1001 (ES1) while transmitting on VL 2001 (ES2) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_128_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.16s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.077
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 26 times already. Switch to ...
+
+Iteration 128 completed successfully!
+
+======================================================================
+ITERATION 129
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 618 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (owned by ES2) while transmitting from ES1 on VL 1001 to trigger switch VL/port ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_129_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.47s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 27 times already. Switch to ...
+
+Iteration 129 completed successfully!
+
+======================================================================
+ITERATION 130
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 611 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (owned by ES2) while transmitting from ES1 on VL 1001. Switch should drop due to...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_130_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.22s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 28 times already. Switch to ...
+
+Iteration 130 completed successfully!
+
+======================================================================
+ITERATION 131
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 555 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1’s VL 1001 but override to VL 2001 (ES2) to test switch authorization (...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_131_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.54s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 28 times already. Switch to a DIFFERENT rule...
+
+Iteration 131 completed successfully!
+
+======================================================================
+ITERATION 132
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 614 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2’s VL (2001) while transmitting on ES1’s VL (1001) to trigger switch authorization ch...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_132_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.52s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 29 times already. Switch to ...
+
+Iteration 132 completed successfully!
+
+======================================================================
+ITERATION 133
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 611 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_133_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.77s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 30 times already. Switch to ...
+
+Iteration 133 completed successfully!
+
+======================================================================
+ITERATION 134
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 547 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2 VL 2001 while transmitting from ES1 (VL 1001) to exercise switch VL/port authorizati...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_134_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.23s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 29 times already. Switch to a DIFFERENT rule...
+
+Iteration 134 completed successfully!
+
+======================================================================
+ITERATION 135
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 590 chars
+  Target VL: 2001
+  Mutation Type: vl_port_authorization
+  Custom Values: BAG=None, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 1001 while transmitting on VL 2001 to exercise switch VL/port authorization (unauthor...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_135_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.55s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.957
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 31 times already. Switch to ...
+
+Iteration 135 completed successfully!
+
+======================================================================
+ITERATION 136
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 607 chars
+  Target VL: 2001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES2/VL 2001 while overriding to VL 1001 (ES1). This should trigger switch ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_136_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.40s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.077
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 30 times already. Switch to a DIFFERENT rule...
+
+Iteration 136 completed successfully!
+
+======================================================================
+ITERATION 137
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 635 chars
+  Target VL: 3001
+  Mutation Type: ethernet_frame_size
+  Custom Values: BAG=None, Size=2000, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Exercise untested oversized-frame path by sending a 2000-byte frame on VL 3001. This exceeds Etherne...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_137_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.56s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 66 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 137 completed successfully!
+
+======================================================================
+ITERATION 138
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 667 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2’s VL 2001 while transmitting on ES1’s VL 1001 to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_138_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.73s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 32 times already. Switch to ...
+
+Iteration 138 completed successfully!
+
+======================================================================
+ITERATION 139
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 651 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: transmit on ES1's VL 1001 but override to VL 2001 (owned by ES2). This should be r...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_139_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.87s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 31 times already. Switch to a DIFFERENT rule...
+
+Iteration 139 completed successfully!
+
+======================================================================
+ITERATION 140
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 589 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send from ES1’s VL 1001 but override to ES2’s VL 2001 to exercise switch VL/port a...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_140_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.71s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 33 times already. Switch to ...
+
+Iteration 140 completed successfully!
+
+======================================================================
+ITERATION 141
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 623 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1's VL 1001 but override to VL 2001 (ES2) to trigger switch VL/port auth...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_141_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.34s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 34 times already. Switch to ...
+
+Iteration 141 completed successfully!
+
+======================================================================
+ITERATION 142
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 557 chars
+  Target VL: 3001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 1001 (ES1) while transmitting on VL 3001 (ES3) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_142_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.39s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.996
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 35 times already. Switch to ...
+
+Iteration 142 completed successfully!
+
+======================================================================
+ITERATION 143
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 583 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation from ES1 (VL 1001) to ES2's VL (2001) to trigger switch port authorization per rule...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_143_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.21s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 32 times already. Switch to a DIFFERENT rule...
+
+Iteration 143 completed successfully!
+
+======================================================================
+ITERATION 144
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 584 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1's VL 1001 but override to ES2's VL 2001 to test switch authorization (...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_144_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.43s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 33 times already. Switch to a DIFFERENT rule...
+
+Iteration 144 completed successfully!
+
+======================================================================
+ITERATION 145
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 549 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_145_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.35s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 36 times already. Switch to ...
+
+Iteration 145 completed successfully!
+
+======================================================================
+ITERATION 146
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 596 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2's VL 2001 while transmitting from ES1 on VL 1001 to trigger switch VL/port authoriza...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_146_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.71s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 37 times already. Switch to ...
+
+Iteration 146 completed successfully!
+
+======================================================================
+ITERATION 147
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 569 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch authorization checks...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_147_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.26s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 38 times already. Switch to ...
+
+Iteration 147 completed successfully!
+
+======================================================================
+ITERATION 148
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 553 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2's VL 2001 while transmitting on ES1's VL 1001 to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_148_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.65s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 39 times already. Switch to ...
+
+Iteration 148 completed successfully!
+
+======================================================================
+ITERATION 149
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 561 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (owned by ES2) while sending from ES1 on VL 1001 to trigger switch VL/port autho...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_149_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.16s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 34 times already. Switch to a DIFFERENT rule...
+
+Iteration 149 completed successfully!
+
+======================================================================
+ITERATION 150
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 537 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Test VL authorization by impersonating VL 2001 (ES2) while sending from ES1 path (VL 1001). Exercise...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_150_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.17s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 35 times already. Switch to a DIFFERENT rule...
+
+Iteration 150 completed successfully!
+
+======================================================================
+ITERATION 151
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 688 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1's VL 1001 while overriding VL ID to 2001 (ES2). Should be dropped for ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_151_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.41s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 40 times already. Switch to ...
+
+Iteration 151 completed successfully!
+
+======================================================================
+ITERATION 152
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 591 chars
+  Target VL: 1002
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Exercise switch VL/port authorization by sending on ES1 VL 1002 while impersonating ES2 VL 2001. Exp...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_152_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.14s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.764
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 41 times already. Switch to ...
+
+Iteration 152 completed successfully!
+
+======================================================================
+ITERATION 153
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 615 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on ES1’s path (VL 1001) to validate switch enforcement ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_153_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.40s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 42 times already. Switch to ...
+
+Iteration 153 completed successfully!
+
+======================================================================
+ITERATION 154
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 614 chars
+  Target VL: 2001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES2 VL 2001 while overriding VL ID to ES1 VL 1001 to trigger switch VL/por...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_154_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.35s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 43 times already. Switch to ...
+
+Iteration 154 completed successfully!
+
+======================================================================
+ITERATION 155
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 571 chars
+  Target VL: 1002
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Transmit on ES1's VL 1002 while overriding the VL ID to 2001 (ES2) to trigger switch VL/port authori...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_155_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.13s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.890
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 44 times already. Switch to ...
+
+Iteration 155 completed successfully!
+
+======================================================================
+ITERATION 156
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 611 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to test switch enforcement of 'VL ID m...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_156_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.16s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.004
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 36 times already. Switch to a DIFFERENT rule...
+
+Iteration 156 completed successfully!
+
+======================================================================
+ITERATION 157
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 620 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting from ES1 path (VL 1001) to trigger switch VL/port autho...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_157_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.12s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 45 times already. Switch to ...
+
+Iteration 157 completed successfully!
+
+======================================================================
+ITERATION 158
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 575 chars
+  Target VL: 2001
+  Mutation Type: frame_size_compliance_with_vl_maximum
+  Custom Values: BAG=None, Size=300, Seq=None
+  Strategy Type: edge-case
+  Reasoning: Sending a 300B frame on VL 2001 exceeds its per-VL MaxFrame (256B) while remaining below Ethernet 15...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_158_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.19s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.663
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'frame_size_compliance_with_vl_maximum' used 3 times alre...
+
+Iteration 158 completed successfully!
+
+======================================================================
+ITERATION 159
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 609 chars
+  Target VL: 2001
+  Mutation Type: vl_id
+  Custom Values: BAG=None, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: VL impersonation from ES2 on VL 2001 while overriding to VL 1001 (ES1) to exercise switch authorizat...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_159_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.20s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.957
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 37 times already. Switch to a DIFFERENT rule...
+
+Iteration 159 completed successfully!
+
+======================================================================
+ITERATION 160
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 672 chars
+  Target VL: 3001
+  Mutation Type: mac_destination_address_constant_field
+  Strategy Type: adversarial
+  Reasoning: Exploration of an untested path: corrupt the ARINC 664 32-bit constant field in the destination MAC ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_160_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.20s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.931
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 66 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 160 completed successfully!
+
+======================================================================
+ITERATION 161
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 680 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Custom Values: BAG=None, Size=100, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2's VL 2001 while transmitting on VL 1001 (ES1 path) to trigger switch VL/port authori...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_161_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.36s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.950
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 38 times already. Switch to a DIFFERENT rule...
+
+Iteration 161 completed successfully!
+
+======================================================================
+ITERATION 162
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 530 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation from ES1 (VL 1001) to ES2's VL 2001 to trigger switch VL/port authorization (vl_id ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_162_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.74s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 39 times already. Switch to a DIFFERENT rule...
+
+Iteration 162 completed successfully!
+
+======================================================================
+ITERATION 163
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 585 chars
+  Target VL: 1001
+  Mutation Type: mac_destination_address_32_bit_constant_field_validation
+  Strategy Type: adversarial
+  Reasoning: Exercise untested dest MAC corruption path to trigger ES constant-field validation per ARINC 664 whi...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_163_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.19s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.219
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 67 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 163 completed successfully!
+
+======================================================================
+ITERATION 164
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 609 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Custom Values: BAG=None, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on ES1/VL 1001 to trigger switch VL/port authorization ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_164_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.16s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.017
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 40 times already. Switch to a DIFFERENT rule...
+
+Iteration 164 completed successfully!
+
+======================================================================
+ITERATION 165
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 517 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Test Cases: ['TC0']
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) on ES1’s path (VL 1001) to exercise switch VL/port authorization (vl_id mu...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_165_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.27s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 41 times already. Switch to a DIFFERENT rule...
+
+Iteration 165 completed successfully!
+
+======================================================================
+ITERATION 166
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 674 chars
+  Target VL: 2001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES2 VL 2001 while overriding to ES1 VL 1001 to trigger switch VL/port auth...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_166_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.55s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 42 times already. Switch to a DIFFERENT rule...
+
+Iteration 166 completed successfully!
+
+======================================================================
+ITERATION 167
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 629 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation to test switch VL/port authorization: transmit on ES1's VL 1001 while overriding to...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_167_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.18s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.004
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 46 times already. Switch to ...
+
+Iteration 167 completed successfully!
+
+======================================================================
+ITERATION 168
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 645 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1's VL 1001 while overriding to ES2's VL 2001 to trigger switch VL/port ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_168_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.12s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 47 times already. Switch to ...
+
+Iteration 168 completed successfully!
+
+======================================================================
+ITERATION 169
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 584 chars
+  Target VL: 1001
+  Mutation Type: mac_source_address_format
+  Strategy Type: adversarial
+  Reasoning: Exploring untested source MAC spoofing to trigger switch MAC validation per mac_source_address_forma...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_169_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.15s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.086
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 67 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 169 completed successfully!
+
+======================================================================
+ITERATION 170
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 569 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2's VL (2001) while transmitting on ES1's VL (1001) to exercise switch VL/port authori...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_170_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.38s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 43 times already. Switch to a DIFFERENT rule...
+
+Iteration 170 completed successfully!
+
+======================================================================
+ITERATION 171
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 556 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_171_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.72s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 48 times already. Switch to ...
+
+Iteration 171 completed successfully!
+
+======================================================================
+ITERATION 172
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 593 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1's VL 1001 but override to VL 2001 (ES2) to trigger switch VL/port auth...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_172_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.46s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 49 times already. Switch to ...
+
+Iteration 172 completed successfully!
+
+======================================================================
+ITERATION 173
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 574 chars
+  Target VL: 3001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation from ES3 VL 3001 using VL ID 2001 (ES2). Should be dropped by the switch due to una...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_173_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.45s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.056
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 50 times already. Switch to ...
+
+Iteration 173 completed successfully!
+
+======================================================================
+ITERATION 174
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 576 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1). This should trigger switch VL/port au...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_174_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.24s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.137
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 51 times already. Switch to ...
+
+Iteration 174 completed successfully!
+
+======================================================================
+ITERATION 175
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 594 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: transmit on VL 1001 (ES1) but override to VL 2001 (ES2). Should be dropped for una...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_175_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.53s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 52 times already. Switch to ...
+
+Iteration 175 completed successfully!
+
+======================================================================
+ITERATION 176
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 598 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (owned by ES2) while sending on ES1/VL 1001 to trigger switch VL-to-port authori...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_176_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.14s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 53 times already. Switch to ...
+
+Iteration 176 completed successfully!
+
+======================================================================
+ITERATION 177
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 598 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: transmit on ES1's VL 1001 but override to VL 2001 (ES2). The switch should drop du...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_177_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.19s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 54 times already. Switch to ...
+
+Iteration 177 completed successfully!
+
+======================================================================
+ITERATION 178
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 627 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (owned by ES2) while transmitting from ES1 (VL 1001). This should trigger switch...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_178_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.05s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 55 times already. Switch to ...
+
+Iteration 178 completed successfully!
+
+======================================================================
+ITERATION 179
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 617 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_179_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.30s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 56 times already. Switch to ...
+
+Iteration 179 completed successfully!
+
+======================================================================
+ITERATION 180
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 618 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Custom Values: BAG=None, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: VL impersonation from ES1 to ES2's VL: send on VL 1001 but override to VL 2001 to test switch author...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_180_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.15s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.084
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 57 times already. Switch to ...
+
+Iteration 180 completed successfully!
+
+======================================================================
+ITERATION 181
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 623 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Exercise VL impersonation: send on ES1’s VL 1001 but override to VL 2001 (owned by ES2). Should trig...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_181_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.19s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 58 times already. Switch to ...
+
+Iteration 181 completed successfully!
+
+======================================================================
+ITERATION 182
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 601 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_182_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.73s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 59 times already. Switch to ...
+
+Iteration 182 completed successfully!
+
+======================================================================
+ITERATION 183
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 560 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send from ES1 on VL 1001 but override to VL 2001 (owned by ES2) to trigger switch ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_183_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.19s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.004
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 44 times already. Switch to a DIFFERENT rule...
+
+Iteration 183 completed successfully!
+
+======================================================================
+ITERATION 184
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 620 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (owned by ES2) while transmitting from ES1 on VL 1001 to trigger switch VL/port ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_184_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.11s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 60 times already. Switch to ...
+
+Iteration 184 completed successfully!
+
+======================================================================
+ITERATION 185
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 609 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1’s VL 1001 but override to VL 2001 (owned by ES2). This should be rejec...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_185_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.40s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 61 times already. Switch to ...
+
+Iteration 185 completed successfully!
+
+======================================================================
+ITERATION 186
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 544 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send frames on ES1’s VL 1001 while overriding to VL 2001 (owned by ES2) to exercis...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_186_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.13s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 62 times already. Switch to ...
+
+Iteration 186 completed successfully!
+
+======================================================================
+ITERATION 187
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 598 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2's VL 2001 from ES1 by setting vl_id_override to 2001. This exercises switch VL/port ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_187_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.16s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 63 times already. Switch to ...
+
+Iteration 187 completed successfully!
+
+======================================================================
+ITERATION 188
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 567 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to verify switch VL/port authorization...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_188_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.16s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 45 times already. Switch to a DIFFERENT rule...
+
+Iteration 188 completed successfully!
+
+======================================================================
+ITERATION 189
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 589 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_189_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.12s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 46 times already. Switch to a DIFFERENT rule...
+
+Iteration 189 completed successfully!
+
+======================================================================
+ITERATION 190
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 646 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2 VL 2001 while transmitting from ES1 VL 1001 to trigger switch VL/port authorization ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_190_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.12s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 64 times already. Switch to ...
+
+Iteration 190 completed successfully!
+
+======================================================================
+ITERATION 191
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 669 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Custom Values: BAG=None, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_191_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.17s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.144
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 65 times already. Switch to ...
+
+Iteration 191 completed successfully!
+
+======================================================================
+ITERATION 192
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 578 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2's VL 2001 while transmitting on ES1's VL 1001 to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_192_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.17s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 66 times already. Switch to ...
+
+Iteration 192 completed successfully!
+
+======================================================================
+ITERATION 193
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 608 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2’s VL (2001) while transmitting on ES1’s VL (1001) to trigger switch VL/port authoriz...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_193_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.16s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 67 times already. Switch to ...
+
+Iteration 193 completed successfully!
+
+======================================================================
+ITERATION 194
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 586 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1’s VL1001 while overriding to VL2001 (ES2). This should trigger switch ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_194_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.12s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.070
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_id' used 47 times already. Switch to a DIFFERENT rule...
+
+Iteration 194 completed successfully!
+
+======================================================================
+ITERATION 195
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 672 chars
+  Target VL: 1001
+  Mutation Type: vl_impersonation
+  Strategy Type: adversarial
+  Reasoning: Impersonate ES2’s VL 2001 while transmitting on ES1’s VL 1001 to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_195_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.12s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.176
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_impersonation' used 4 times already. Switch to a DIFF...
+
+Iteration 195 completed successfully!
+
+======================================================================
+ITERATION 196
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 586 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting from ES1 on VL 1001 to trigger switch VL/port authoriza...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_196_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.13s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 68 times already. Switch to ...
+
+Iteration 196 completed successfully!
+
+======================================================================
+ITERATION 197
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 530 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to verify switch drops frames due to u...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_197_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.19s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 69 times already. Switch to ...
+
+Iteration 197 completed successfully!
+
+======================================================================
+ITERATION 198
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 624 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: VL impersonation: send on ES1 VL 1001 but override to VL 2001 (ES2). This should be dropped by the s...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_198_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.15s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 70 times already. Switch to ...
+
+Iteration 198 completed successfully!
+
+======================================================================
+ITERATION 199
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 571 chars
+  Target VL: 1001
+  Mutation Type: vl_port_authorization
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch VL/port authorizatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A1/iteration_199_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.10s
+
+[4/4] Analyzing Feedback...
+  Reward: -1.204
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'vl_port_authorization' used 71 times already. Switch to ...
+
+Iteration 199 completed successfully!
+
+Stopping: Reached max iterations (200)
+
+
+Generating final report...
+
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 200
+Successful: 199
+Failed: 1
+
+Reward Statistics:
+  Mean: 0.191
+  Max: 2.380
+  Min: -1.204
+
+Bugs Found: 0
+
+VLs Tested: 6 / 8
+  VL IDs: [np.int64(1001), np.int64(1002), np.int64(2001), np.int64(2002), np.int64(3001), np.int64(3002)]
+
+Protocol Rules Tested: 66
+  Rules: ['Communication Mode.static_addressing_for_intra_afdx', 'End System Configuration', 'Error Handling.buffer_overflow_handling_in_transmission', 'Frame Filtering', 'Performance.maximum_allowed_jitter_in_transmission_(formula_1)', 'Protocol_Stack.ieee_802_3_integration', 'Quality of Service.continued_delivery_in_fault_conditions', 'Reliability.real_time_communication_links', 'Scheduling.maximum_jitter_constraint', 'Switch.switch_filtering_and_policing_function_existence', 'Traffic Policing.byte_based_traffic_policing', 'Traffic Shaping.bag_frame_rate_limiting', 'Virtual Link Bandwidth', 'Virtual Link Data Integrity', 'Virtual Link Latency', 'Virtual Link Source Uniqueness', 'afdx_network_deterministic_behavior_requirement', 'bounded_delay_jitter_for_flow', 'buffer_management.rx_buffer_overflow_handling', 'complete_message_reassembly_before_delivery', 'constant_bandwidth_guarantee', 'data_integrity.frame_ordering_preservation', 'end_system_wire_speed_throughput_capability', 'ethernet_frame_compliance', 'ethernet_frame_size', 'fragmentation.fragment_transmission_order', 'frame_routing.receiver_demultiplexing_based_on_destination_addresses', 'frame_size_compliance_with_vl_maximum', 'frame_structure.ethernet', 'frame_validation.ethernet_frame_size_upper_limit', 'integrity_checking.invalid_frame_discard_rule', 'jitter_definition_for_virtual_link', 'latency_for_first_frame', 'logical_bandwidth_isolation_between_virtual_links', 'mac_address', 'mac_destination_address_32_bit_constant_field_validation', 'mac_destination_address_constant_field', 'mac_source_address_constant_field', 'mac_source_address_format', 'maximum_afdx_frame_length', 'maximum_allowed_total_ethernet_line_size_per_vl', 'maximum_bandwidth_allocation_for_virtual_link', 'maximum_datagram_size_to_off_network_destinations', 'maximum_frame_rate_calculation', 'maximum_frame_size_range', 'message_padding_for_bandwidth_allocation', 'message_transmission', 'ordinal_integrity_within_virtual_link', 'safety_critical_communication.complete_and_up_to_date_data_delivery_requirement', 'sap_port_transmission_uniqueness', 'source_partition_exclusivity', 'sub_vl_round_robin_scheduling', 'switch_filtering.frame_filtering_stages', 'switch_operations.traffic_policing_function_requirement', 'switch_processing.filter_wire_speed_capability', 'token_bucket_stress', 'traffic_policing_requirement', 'transmission_flow_control_mechanism', 'transmission_of_entire_static_structure', 'ttl_default_value_in_afdx', 'virtual_link_as_unidirectional_logical_communication_path', 'virtual_link_frame_size_range', 'virtual_link_management.single_source_per_vl_constraint', 'vl_id', 'vl_impersonation', 'vl_port_authorization']
+
+Strategy Distribution:
+  adversarial: 175
+  edge-case: 14
+  conformance: 10
+
+Top 5 Iterations (by reward):
+  Iter 13: VL=1001, rule=transmission_flow_control_mechanism, reward=2.380
+  Iter 29: VL=1001, rule=maximum_frame_rate_calculation, reward=2.380
+  Iter 48: VL=3001, rule=constant_bandwidth_guarantee, reward=2.380
+  Iter 53: VL=1001, rule=sub_vl_round_robin_scheduling, reward=2.380
+  Iter 57: VL=3001, rule=traffic_policing_requirement, reward=2.380
+
+======================================================================
+
+Report saved to: /tmp/afdx_campaigns_v2/out_llm_A1/fuzzing_report_20261109_144217.txt
+Full history saved to: /tmp/afdx_campaigns_v2/out_llm_A1/history_20261109_144217.csv
+
+Fuzzing completed!

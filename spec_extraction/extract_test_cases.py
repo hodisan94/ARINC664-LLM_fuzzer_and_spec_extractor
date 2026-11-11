@@ -24,7 +24,6 @@ from test_case_prompts import (
     SYSTEM_PROMPT_TEST_CASE_EXTRACTION,
     get_test_case_extraction_prompt
 )
-from validate_test_cases import TestCaseValidator
 
 
 def load_spec_rules(spec_file: str) -> Dict[str, Any]:
@@ -354,6 +353,7 @@ def main():
         print("VALIDATION")
         print("="*60)
         
+        from validate_test_cases import TestCaseValidator
         validator = TestCaseValidator(spec_rules)
         validation_results = validator.validate_all(merged_test_cases)
         validator.print_summary()

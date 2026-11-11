@@ -56,6 +56,7 @@ class BoofuzzFuzzer:
         max_iterations: int = 50,
         available_vls: Optional[List[int]] = None,
         work_dir: Optional[str] = None,
+        order: str = "category",
     ):
         self.max_iterations = max_iterations
         self.available_vls = available_vls or [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
@@ -69,6 +70,7 @@ class BoofuzzFuzzer:
         self.strategy_generator = BoofuzzStrategyGenerator(
             test_cases_path=test_cases_path,
             spec_rules_path=spec_rules_path,
+            order=order,
         )
         self.test_generator = TestGenerator(
             seed_frames_path=seed_frames_path,
@@ -212,6 +214,8 @@ class BoofuzzFuzzer:
                 'sim_config': sim_result.get('sim_config'),
                 'mac_mutation_type': strategy.get('mac_mutation_type'),
                 'dest_mac_mutation': strategy.get('dest_mac_mutation'),
+                'vl_id_override': strategy.get('vl_id_override'),
+                'test_case_params': strategy.get('test_case_params'),
                 'sequence_number_override': strategy.get('sequence_number_override'),
                 'timing_jitter_ms': strategy.get('timing_jitter_ms'),
                 'prob': strategy.get('prob'),
@@ -226,10 +230,12 @@ class BoofuzzFuzzer:
                 'forward_rate': forward_rate,
                 'frames_dropped_frame_error': feedback['metrics'].get('frames_dropped_frame_error', 0),
                 'frames_dropped_mac_error': feedback['metrics'].get('frames_dropped_mac_error', 0),
+                'frames_dropped_invalid_vl': feedback['metrics'].get('frames_dropped_invalid_vl', 0),
                 'es_frames_rejected': feedback['metrics'].get('es_frames_rejected', 0),
                 'es_duplicates_discarded': feedback['metrics'].get('es_duplicates_discarded', 0),
                 'es_rejection_rate': feedback['metrics'].get('es_rejection_rate', 0.0),
                 'bugs_found': bugs_found,
+                'violation_detected': feedback.get('analysis', {}).get('violation_detected', False),
             }
 
             self.iteration_history.append(iteration_record)
@@ -426,6 +432,10 @@ Examples:
         '--work-dir', type=str, default=None,
         help='Isolated simulator working directory, for parallel campaigns',
     )
+    parser.add_argument(
+        '--order', choices=('category', 'file'), default='category',
+        help='category: one rule per spec category first (default); file: test-case file order',
+    )
 
     args = parser.parse_args()
 
@@ -435,6 +445,7 @@ Examples:
         output_dir=args.output_dir,
         history_path=args.history_path,
         work_dir=args.work_dir,
+        order=args.order,
     )
     try:
         fuzzer.run()

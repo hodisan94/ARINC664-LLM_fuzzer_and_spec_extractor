@@ -415,8 +415,8 @@ class TestStrategyPlanner(unittest.TestCase):
         self.assertEqual(strategy["test_cases"], ["TC0"])
 
     @patch.dict('os.environ', {'OPENAI_API_KEY': 'test-key'})
-    def test_dedup_allows_same_rule_on_different_vl(self):
-        """Testing a rule on one VL should not redirect the same rule on another VL."""
+    def test_dedup_redirects_category_covered_on_another_vl(self):
+        """A rule whose category is covered on one VL is redirected on another VL."""
         planner = LLMStrategyPlanner(api_key="test-key")
         planner._query_llm = Mock(return_value=json.dumps({
             "target_vl": 3001,
@@ -449,10 +449,9 @@ class TestStrategyPlanner(unittest.TestCase):
             system_config={"available_vls": [1001, 3001]}
         )
 
-        self.assertEqual(strategy["target_vl"], 3001)
-        self.assertEqual(strategy["protocol_rule"], expected_rule)
-        self.assertNotIn("redirected_from_rule", strategy)
-        self.assertEqual(strategy["planner_actions"], [])
+        self.assertNotEqual(strategy["protocol_rule"], expected_rule)
+        self.assertEqual(strategy["redirected_from_rule"], expected_rule)
+        self.assertEqual(strategy["planner_actions"][-1]["type"], "redirect")
 
 
 def run_tests():

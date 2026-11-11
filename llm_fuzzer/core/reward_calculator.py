@@ -18,11 +18,26 @@ import pandas as pd
 from typing import Dict, Any, Optional
 
 
-BASELINE_RECEIVED = 3559
-BASELINE_FORWARDED = 1757
-BASELINE_POLICING = 1802
-BASELINE_ES_REJECTED = 130
-BASELINE_ES_DUPLICATES = 1644
+# Counters of the un-mutated reference run (both switches summed).
+BASELINE_RECEIVED = 3380
+BASELINE_FORWARDED = 3380
+BASELINE_POLICING = 0
+BASELINE_ES_REJECTED = 0
+BASELINE_ES_DUPLICATES = 3380
+
+
+def _normalized_delta(value: float, baseline: float) -> float:
+    """|value - baseline| relative to the baseline, or to the received count when the baseline is 0."""
+    return abs(value - baseline) / (baseline if baseline > 0 else BASELINE_RECEIVED)
+
+
+def _same(a, b) -> bool:
+    """Equality that treats None and NaN (missing values in the history) as equal."""
+    a_missing = a is None or (isinstance(a, float) and a != a)
+    b_missing = b is None or (isinstance(b, float) and b != b)
+    if a_missing or b_missing:
+        return a_missing and b_missing
+    return a == b
 
 
 class RewardCalculator:
@@ -108,11 +123,11 @@ class RewardCalculator:
         if recv == 0:
             return 0.0
 
-        delta_recv = abs(recv - BASELINE_RECEIVED) / max(BASELINE_RECEIVED, 1)
-        delta_fwd = abs(fwd - BASELINE_FORWARDED) / max(BASELINE_FORWARDED, 1)
-        delta_pol = abs(pol - BASELINE_POLICING) / max(BASELINE_POLICING, 1)
-        delta_es_rej = abs(es_rej - BASELINE_ES_REJECTED) / max(BASELINE_ES_REJECTED, 1)
-        delta_es_dup = abs(es_dup - BASELINE_ES_DUPLICATES) / max(BASELINE_ES_DUPLICATES, 1)
+        delta_recv = _normalized_delta(recv, BASELINE_RECEIVED)
+        delta_fwd = _normalized_delta(fwd, BASELINE_FORWARDED)
+        delta_pol = _normalized_delta(pol, BASELINE_POLICING)
+        delta_es_rej = _normalized_delta(es_rej, BASELINE_ES_REJECTED)
+        delta_es_dup = _normalized_delta(es_dup, BASELINE_ES_DUPLICATES)
 
         all_deltas = [delta_recv, delta_fwd, delta_pol, delta_es_rej, delta_es_dup]
         return min(1.0, sum(all_deltas) / len(all_deltas) * 5.0)
@@ -158,7 +173,7 @@ class RewardCalculator:
                 row.get("bag_value"),
                 row.get("frame_size"),
             )
-            if row_key == key:
+            if all(_same(a, b) for a, b in zip(row_key, key)):
                 match_count += 1
 
         return max(0.0, 1.0 - match_count / 5.0)
@@ -200,13 +215,19 @@ class RewardCalculator:
         """Reward when the mutation was actually applied (not clamped/ignored)."""
         clamp = metrics.get("mutation_clamp_count", 0)
         payload_applied = abs(metrics.get("mutation_payload_applied", 0))
-        mac_spoof = metrics.get("mutation_mac_spoof_count", 0)
-        tx_drops = metrics.get("mutation_tx_prob_drops", 0)
+        applied_counts = [
+            abs(metrics.get("mutation_jitter_applied", 0) or 0),
+            metrics.get("mutation_mac_spoof_count", 0),
+            metrics.get("mutation_tx_prob_drops", 0),
+            metrics.get("mutation_seq_count", 0),
+            metrics.get("mutation_dest_mac_count", 0),
+            metrics.get("mutation_vl_override_count", 0),
+        ]
 
         if clamp > 0:
             return -0.1
 
-        if payload_applied > 0 or mac_spoof > 0 or tx_drops > 0:
+        if payload_applied > 0 or any(c and c > 0 for c in applied_counts):
             return self.bonus_mutation_applied
 
         return 0.0

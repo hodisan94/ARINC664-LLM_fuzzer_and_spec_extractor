@@ -28,6 +28,7 @@ No LLM API is used.
 
 import argparse
 import json
+import os
 import queue
 import sys
 import tempfile
@@ -44,7 +45,7 @@ from compute_bdr import BUGS, bug_detected, parse_metrics  # noqa: E402
 from llm_fuzzer.utils.simulator_runner import SimulatorRunner  # noqa: E402
 import executed_settings as es  # noqa: E402
 
-RESULTS = ROOT / "evaluation/results/revision"
+RESULTS = ROOT / os.environ.get("AFDX_RESULTS", "evaluation/results/revision")
 # Cache marker of a simulator run that exited with an error; such an iteration detects nothing.
 FAILED = "_failed"
 

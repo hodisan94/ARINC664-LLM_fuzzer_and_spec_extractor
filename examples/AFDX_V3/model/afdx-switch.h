@@ -68,6 +68,11 @@ public:
   void ConfigureVirtualLink(const AfdxVirtualLink& vl, const std::vector<uint32_t>& outputPorts);
 
   /**
+   * \brief Restrict a VL to the port of its source end system
+   */
+  void SetVlIngressPort(uint16_t vlId, uint32_t port);
+
+  /**
    * \brief Get total frames received on this switch
    */
   uint64_t GetFramesReceived() const;
@@ -235,7 +240,7 @@ private:
   /**
    * \brief Check if VL is authorized on this switch
    */
-  bool IsVLAuthorized(uint16_t vlId) const;
+  bool IsVLAuthorized(uint16_t vlId, uint32_t inPort) const;
 
   /**
    * \brief Perform BAG policing check
@@ -295,6 +300,7 @@ private:
 
   // Forwarding table: VL ID -> output port indices
   std::map<uint16_t, std::vector<uint32_t>> m_forwardingTable;
+  std::map<uint16_t, uint32_t> m_vlIngressPort;  // VLs without an entry are accepted on any port
 
   // BAG policing: VL ID -> last frame arrival time
   std::map<uint16_t, Time> m_lastFrameTime;

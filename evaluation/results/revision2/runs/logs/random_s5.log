@@ -1,0 +1,5270 @@
+/home/hodisan1994/ns-3-reset/ns-3/random_baseline/main.py:415: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  history = pd.concat([history, new_row], ignore_index=True)
+Initializing components...
+All components initialized successfully!
+Random seed: 5
+
+======================================================================
+RANDOM BASELINE AFDX FUZZER
+======================================================================
+
+Configuration:
+  Max Iterations: 200
+  Available VLs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+  History File: evaluation/results/revision2/runs/random_s5.jsonl
+  Output Directory: /tmp/afdx_campaigns_v2/out_random_s5
+  Random Seed: 5
+
+No previous history found. Starting fresh.
+
+======================================================================
+ITERATION 0
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: allowed_port_number_range
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_000_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.07s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.980
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 0 completed successfully!
+
+======================================================================
+ITERATION 1
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: physical_layer.full_duplex_requirement
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_001_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.50s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.096
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 1 completed successfully!
+
+======================================================================
+ITERATION 2
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: switch_processing.relay_wire_speed_capability
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_002_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.55s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 2 completed successfully!
+
+======================================================================
+ITERATION 3
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: pin_programming_value_encoding
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_003_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.57s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.963
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 3 completed successfully!
+
+======================================================================
+ITERATION 4
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: transfer_syntax_translation
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_004_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.87s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.329
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 4 completed successfully!
+
+======================================================================
+ITERATION 5
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: Traffic_Policing.support_one_to_one_or_one_to_many_mac_destination_to_account_mapping
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_005_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.13s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.080
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 5 completed successfully!
+
+======================================================================
+ITERATION 6
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: maximum_allowed_total_ethernet_line_size_per_vl
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_006_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.40s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 6 completed successfully!
+
+======================================================================
+ITERATION 7
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: ops_mode_activation_conditions
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_007_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.32s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.129
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 7 completed successfully!
+
+======================================================================
+ITERATION 8
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: Switch_Operational_Modes_dl_mode_exit_condition
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_008_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.79s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 8 completed successfully!
+
+======================================================================
+ITERATION 9
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: afdx_protocol_stack_layer_requirements
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_009_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.68s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.900
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 9 completed successfully!
+
+======================================================================
+ITERATION 10
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: frame_validation.ethernet_frame_size_upper_limit
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_010_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.98s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.864
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 10 completed successfully!
+
+======================================================================
+ITERATION 11
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: data_format.string_length_field_size
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_011_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.96s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 75.8%
+  Bugs Found: False
+
+Iteration 11 completed successfully!
+
+======================================================================
+ITERATION 12
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: communication_ports.port_number_uniqueness_within_virtual_link
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_012_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.86s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 12 completed successfully!
+
+======================================================================
+ITERATION 13
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: Latency Determinism.constant_end_to_end_latency_in_point_to_point_system
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_013_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.17s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 13 completed successfully!
+
+======================================================================
+ITERATION 14
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: total_end_to_end_latency_formula
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_014_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.14s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.229
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 14 completed successfully!
+
+======================================================================
+ITERATION 15
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: input_port_fairness
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_015_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.33s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.429
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 15 completed successfully!
+
+======================================================================
+ITERATION 16
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: Transmission.ip_datagram_fragmentation
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_016_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.50s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 16 completed successfully!
+
+======================================================================
+ITERATION 17
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: unused_status_fields
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_017_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.98s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 17 completed successfully!
+
+======================================================================
+ITERATION 18
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: output_buffer_size_for_high_priority_vls
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_018_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.50s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.300
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 18 completed successfully!
+
+======================================================================
+ITERATION 19
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: traffic_priority
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_019_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.99s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 19 completed successfully!
+
+======================================================================
+ITERATION 20
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: Data Format.bit_wise_packed_boolean_structure_size
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_020_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.06s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 20 completed successfully!
+
+======================================================================
+ITERATION 21
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: afdx_communication_port_transmission_uniqueness
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_021_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 9.00s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.710
+  Policing Rate: 0.3%
+  Bugs Found: False
+
+Iteration 21 completed successfully!
+
+======================================================================
+ITERATION 22
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: afdx_lru_interoperability
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_022_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.20s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.024
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 22 completed successfully!
+
+======================================================================
+ITERATION 23
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: mac_destination_address_lsb
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_023_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.25s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.947
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 23 completed successfully!
+
+======================================================================
+ITERATION 24
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: bounded_delay_jitter_for_flow
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_024_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.80s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 24 completed successfully!
+
+======================================================================
+ITERATION 25
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: virtual_link_as_unidirectional_logical_communication_path
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_025_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.81s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 25 completed successfully!
+
+======================================================================
+ITERATION 26
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: Error Handling.buffer_overflow_handling_in_transmission
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_026_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.22s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.327
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 26 completed successfully!
+
+======================================================================
+ITERATION 27
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: status_priority_enforcement
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_027_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.78s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 27 completed successfully!
+
+======================================================================
+ITERATION 28
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: UDP_destination_port
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_028_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.98s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.146
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 28 completed successfully!
+
+======================================================================
+ITERATION 29
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: sampling_port_multi_partition_read
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_029_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.42s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 29 completed successfully!
+
+======================================================================
+ITERATION 30
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: default_physical_port_speed_configuration
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_030_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.55s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.224
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 30 completed successfully!
+
+======================================================================
+ITERATION 31
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: Switch Monitoring.fault/healthy_indicator_condition
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_031_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.71s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 31 completed successfully!
+
+======================================================================
+ITERATION 32
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: Data Format.string_length_field_size
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_032_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 8.46s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 90.9%
+  Bugs Found: False
+
+Iteration 32 completed successfully!
+
+======================================================================
+ITERATION 33
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: 64_bit_signed_integer
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_033_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.96s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 33 completed successfully!
+
+======================================================================
+ITERATION 34
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: Integrity_Checking.first_frame_after_reset_acceptance
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_034_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.00s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.918
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 34 completed successfully!
+
+======================================================================
+ITERATION 35
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: Switch Operating Modes.quiet_mode_catastrophic_failure_activation
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_035_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.93s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.899
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 35 completed successfully!
+
+======================================================================
+ITERATION 36
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: ICMP_Message_Passing
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_036_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.42s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.236
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 36 completed successfully!
+
+======================================================================
+ITERATION 37
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: Jitter.jitter_time_calculation
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_037_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.74s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 37 completed successfully!
+
+======================================================================
+ITERATION 38
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: redundant_vl_frame_delivery
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_038_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.42s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.963
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 38 completed successfully!
+
+======================================================================
+ITERATION 39
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: switch_operational_modes.ops_mode_switch_functions
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_039_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.28s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 39 completed successfully!
+
+======================================================================
+ITERATION 40
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: mac_destination_address_constant_field
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_040_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.04s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.947
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 40 completed successfully!
+
+======================================================================
+ITERATION 41
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: physical_layer.full_duplex_requirement
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_041_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.00s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.308
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 41 completed successfully!
+
+======================================================================
+ITERATION 42
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: mac_destination_address_lsb
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_042_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.97s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.747
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 42 completed successfully!
+
+======================================================================
+ITERATION 43
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: Policing.default_vl_policing_activation
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_043_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.53s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 43 completed successfully!
+
+======================================================================
+ITERATION 44
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: queuing_service_fifo_discipline
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_044_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 17.14s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.710
+  Policing Rate: 0.2%
+  Bugs Found: False
+
+Iteration 44 completed successfully!
+
+======================================================================
+ITERATION 45
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: udp/tcp_port_number
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_045_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.29s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.363
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 45 completed successfully!
+
+======================================================================
+ITERATION 46
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: Switching.virtual_link_frame_order_preservation
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_046_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.85s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 46 completed successfully!
+
+======================================================================
+ITERATION 47
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: ops_configuration_file_operational_mode_usage
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_047_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.01s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.363
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 47 completed successfully!
+
+======================================================================
+ITERATION 48
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: ethernet_frame_ieee_802_3_compliance
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_048_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.70s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.897
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 48 completed successfully!
+
+======================================================================
+ITERATION 49
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: interframe_gap_minimum
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_049_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.76s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 49 completed successfully!
+
+======================================================================
+ITERATION 50
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: data_element_address
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_050_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.59s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.714
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 50 completed successfully!
+
+======================================================================
+ITERATION 51
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: pin_programming_value_encoding
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_051_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.62s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.224
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 51 completed successfully!
+
+======================================================================
+ITERATION 52
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: switch_performance.mac_layer_wire_speed_transmission_requirement
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_052_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.65s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 52 completed successfully!
+
+======================================================================
+ITERATION 53
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: passive_mode_entry_conditions
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_053_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 53 completed successfully!
+
+======================================================================
+ITERATION 54
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: Data Format.bit_wise_packed_boolean_structure_size
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_054_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.56s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.429
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 54 completed successfully!
+
+======================================================================
+ITERATION 55
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: minimum_output_port_buffer_capacity
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_055_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.60s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.096
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 55 completed successfully!
+
+======================================================================
+ITERATION 56
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: default_reception_vl_subscription
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_056_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.24s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.777
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 56 completed successfully!
+
+======================================================================
+ITERATION 57
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: reset_sequence_number_value
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_057_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.29s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 57 completed successfully!
+
+======================================================================
+ITERATION 58
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: data_encoding.boolean_32_bit_field_requirement
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_058_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.98s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 58 completed successfully!
+
+======================================================================
+ITERATION 59
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: minimum_datagram_size_for_reassembly
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_059_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.02s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 59 completed successfully!
+
+======================================================================
+ITERATION 60
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: status_field_size
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_060_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.89s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 60 completed successfully!
+
+======================================================================
+ITERATION 61
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: padding_of_unused_opaque_structure_bytes
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_061_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.26s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 61 completed successfully!
+
+======================================================================
+ITERATION 62
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: Switching.virtual_link_frame_order_preservation
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_062_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.72s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 62 completed successfully!
+
+======================================================================
+ITERATION 63
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: fault_indicator_condition
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_063_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.22s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.274
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 63 completed successfully!
+
+======================================================================
+ITERATION 64
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: Switch_Operational_Modes_dl_mode_exit_condition
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_064_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.98s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.041
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 64 completed successfully!
+
+======================================================================
+ITERATION 65
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: end_system_wire_speed_throughput_capability
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_065_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 13.46s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 65 completed successfully!
+
+======================================================================
+ITERATION 66
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: maximum_frame_rate_calculation
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_066_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.83s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.066
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 66 completed successfully!
+
+======================================================================
+ITERATION 67
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: Transmission.ip_datagram_structure
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_067_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.82s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 67 completed successfully!
+
+======================================================================
+ITERATION 68
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: Policing.traffic_policing_time_resolution_tolerance
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_068_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.87s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.963
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 68 completed successfully!
+
+======================================================================
+ITERATION 69
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: physical_layer.auto_negotiation
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_069_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.98s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.229
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 69 completed successfully!
+
+======================================================================
+ITERATION 70
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: end_system_wire_speed_throughput_capability
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_070_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.74s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.864
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 70 completed successfully!
+
+======================================================================
+ITERATION 71
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: data_format.boolean_data_primitive_bit_ordering
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_071_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.81s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 71 completed successfully!
+
+======================================================================
+ITERATION 72
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: udp_datagram_fragmentation_constraint
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_072_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.95s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 72 completed successfully!
+
+======================================================================
+ITERATION 73
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: mac_destination_address_second_lsb
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_073_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.61s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.146
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 73 completed successfully!
+
+======================================================================
+ITERATION 74
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: Traffic_Policing.shared_vl_bag_and_frame_size_consistency
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_074_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.37s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.180
+  Policing Rate: 48.2%
+  Bugs Found: False
+
+Iteration 74 completed successfully!
+
+======================================================================
+ITERATION 75
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: Switching.delayed_frame_latency_through_switch
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_075_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.46s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.900
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 75 completed successfully!
+
+======================================================================
+ITERATION 76
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: performance_measurement_burst_duration
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_076_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.05s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 76 completed successfully!
+
+======================================================================
+ITERATION 77
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: ip_version_field
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_077_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.19s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 77 completed successfully!
+
+======================================================================
+ITERATION 78
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: mac_destination_address_32_bit_constant_field_validation
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_078_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.60s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.946
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 78 completed successfully!
+
+======================================================================
+ITERATION 79
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: source_route_option_support
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_079_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.74s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 79 completed successfully!
+
+======================================================================
+ITERATION 80
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: opaque_data_usage_constraint
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_080_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.31s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.899
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 80 completed successfully!
+
+======================================================================
+ITERATION 81
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: tcp_sender_buffering_prohibition
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_081_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.83s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.341
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 81 completed successfully!
+
+======================================================================
+ITERATION 82
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: IP_destination
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_082_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.27s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 82 completed successfully!
+
+======================================================================
+ITERATION 83
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: port_allocation
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_083_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.81s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.900
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 83 completed successfully!
+
+======================================================================
+ITERATION 84
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: traffic_profile
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_084_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.92s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.043
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 84 completed successfully!
+
+======================================================================
+ITERATION 85
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: broadcast_addressing
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_085_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.08s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.096
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 85 completed successfully!
+
+======================================================================
+ITERATION 86
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: Virtual Link Definition.unidirectional_connection
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_086_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.39s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.113
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 86 completed successfully!
+
+======================================================================
+ITERATION 87
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: default_physical_port_speed_configuration
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_087_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.41s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 87 completed successfully!
+
+======================================================================
+ITERATION 88
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: maximum_frame_rate_calculation
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_088_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.19s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.963
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 88 completed successfully!
+
+======================================================================
+ITERATION 89
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: message_structure.functional_status_set_field_size
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_089_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.52s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.241
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 89 completed successfully!
+
+======================================================================
+ITERATION 90
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: data_encoding.32_bit_floating_point_range_constraint
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_090_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.51s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.313
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 90 completed successfully!
+
+======================================================================
+ITERATION 91
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: Data Representation.32_bit_floating_point_representation
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_091_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 12.25s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.180
+  Policing Rate: 90.9%
+  Bugs Found: False
+
+Iteration 91 completed successfully!
+
+======================================================================
+ITERATION 92
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: Traffic Policing.frame_discard_for_non_compliance
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_092_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.30s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 92 completed successfully!
+
+======================================================================
+ITERATION 93
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: afdx_frame_encapsulation_order
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_093_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.56s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.971
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 93 completed successfully!
+
+======================================================================
+ITERATION 94
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: udp/tcp_port_number
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_094_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.90s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.024
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 94 completed successfully!
+
+======================================================================
+ITERATION 95
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: complete_message_reassembly_before_delivery
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_095_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 12.25s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.710
+  Policing Rate: 0.1%
+  Bugs Found: False
+
+Iteration 95 completed successfully!
+
+======================================================================
+ITERATION 96
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: service_class_requirement
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_096_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.21s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 96 completed successfully!
+
+======================================================================
+ITERATION 97
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: Switch.switch_monitoring_function_events_and_statistics
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_097_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.36s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 97 completed successfully!
+
+======================================================================
+ITERATION 98
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: minimum_datagram_size_for_reassembly
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_098_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.05s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.274
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 98 completed successfully!
+
+======================================================================
+ITERATION 99
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: frame_rate
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_099_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.61s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.096
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 99 completed successfully!
+
+======================================================================
+ITERATION 100
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: udp_checksum
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_100_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 13.00s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 90.9%
+  Bugs Found: False
+
+Iteration 100 completed successfully!
+
+======================================================================
+ITERATION 101
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: maximum_usable_bandwidth
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_101_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.17s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 49.9%
+  Bugs Found: False
+
+Iteration 101 completed successfully!
+
+======================================================================
+ITERATION 102
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: Data Encoding.float_32_bit_range
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_102_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.82s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 102 completed successfully!
+
+======================================================================
+ITERATION 103
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: traffic_priority
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_103_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 11.31s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.510
+  Policing Rate: 0.1%
+  Bugs Found: False
+
+Iteration 103 completed successfully!
+
+======================================================================
+ITERATION 104
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: SAP Port.udp_service_access_point_payload_size_limit
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_104_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.74s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 104 completed successfully!
+
+======================================================================
+ITERATION 105
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: Communication Ports.queuing_buffer_overflow_handling
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_105_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.55s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.864
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 105 completed successfully!
+
+======================================================================
+ITERATION 106
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: total_end_to_end_latency_formula
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_106_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.81s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.113
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 106 completed successfully!
+
+======================================================================
+ITERATION 107
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: integrity_checking.invalid_frame_discard_rule
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_107_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.55s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 107 completed successfully!
+
+======================================================================
+ITERATION 108
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: abnormal_frame_handling
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_108_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.49s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 108 completed successfully!
+
+======================================================================
+ITERATION 109
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: data_element_alignment_by_size
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_109_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.47s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 109 completed successfully!
+
+======================================================================
+ITERATION 110
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: Data Representation.boolean_packing_direction
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_110_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.86s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 110 completed successfully!
+
+======================================================================
+ITERATION 111
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: mac_destination_address_second_lsb
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_111_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.25s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.279
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 111 completed successfully!
+
+======================================================================
+ITERATION 112
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: communication_ports.standard_communication_port_range
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_112_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 11.49s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 112 completed successfully!
+
+======================================================================
+ITERATION 113
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: ttl_default_value_in_afdx
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_113_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.36s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 113 completed successfully!
+
+======================================================================
+ITERATION 114
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: default_physical_port_speed_configuration
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_114_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.49s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 114 completed successfully!
+
+======================================================================
+ITERATION 115
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: switch_operational_modes.ops_mode_switch_functions
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_115_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.45s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 115 completed successfully!
+
+======================================================================
+ITERATION 116
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: vl_id
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_116_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.45s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 116 completed successfully!
+
+======================================================================
+ITERATION 117
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: Reliability.real_time_communication_links
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_117_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.79s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 117 completed successfully!
+
+======================================================================
+ITERATION 118
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: addressing.ip_unicast_spare_field_usage
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_118_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.53s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.880
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 118 completed successfully!
+
+======================================================================
+ITERATION 119
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: bandwidth_allocation_gap
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_119_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.06s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 87.9%
+  Bugs Found: False
+
+Iteration 119 completed successfully!
+
+======================================================================
+ITERATION 120
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: Switch.switch_filtering_rules_enforcement
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_120_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.72s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.043
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 120 completed successfully!
+
+======================================================================
+ITERATION 121
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: data_formatting.data_element_definition
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_121_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.86s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 121 completed successfully!
+
+======================================================================
+ITERATION 122
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: number_of_VLs
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_122_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 11.18s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 122 completed successfully!
+
+======================================================================
+ITERATION 123
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: unused/spare_fields
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_123_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.61s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 123 completed successfully!
+
+======================================================================
+ITERATION 124
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: Traffic Control.flexible_bandwidth_usage_for_virtual_link
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_124_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.66s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 124 completed successfully!
+
+======================================================================
+ITERATION 125
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: UDP_destination_port
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_125_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.82s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.714
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 125 completed successfully!
+
+======================================================================
+ITERATION 126
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: technological_latency_limit
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_126_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.33s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 126 completed successfully!
+
+======================================================================
+ITERATION 127
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: configuration_file_content
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_127_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.91s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.141
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 127 completed successfully!
+
+======================================================================
+ITERATION 128
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: data_formatting.big_endian_byte_order_requirement
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_128_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 9.62s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.510
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 128 completed successfully!
+
+======================================================================
+ITERATION 129
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: data_encoding
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_129_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.88s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.329
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 129 completed successfully!
+
+======================================================================
+ITERATION 130
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: operating_modes
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_130_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.20s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.363
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 130 completed successfully!
+
+======================================================================
+ITERATION 131
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: communication_ports.afdx_communication_port_reception_uniqueness
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_131_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.45s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 131 completed successfully!
+
+======================================================================
+ITERATION 132
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: Switching.frame_discard_on_buffer_congestion
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_132_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.32s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.309
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 132 completed successfully!
+
+======================================================================
+ITERATION 133
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: continue_transmitting_on_physical_failure
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_133_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.89s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 133 completed successfully!
+
+======================================================================
+ITERATION 134
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: Redundancy Management.in_sequence_frame_forwarding_only
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_134_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.79s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.930
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 134 completed successfully!
+
+======================================================================
+ITERATION 135
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: data_format.boolean_data_primitive_bit_ordering
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_135_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.20s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.241
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 135 completed successfully!
+
+======================================================================
+ITERATION 136
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: port_speed_configuration
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_136_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 8.07s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.510
+  Policing Rate: 0.1%
+  Bugs Found: False
+
+Iteration 136 completed successfully!
+
+======================================================================
+ITERATION 137
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: IP Addressing.support_local_ip_multicasting
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_137_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.39s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.300
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 137 completed successfully!
+
+======================================================================
+ITERATION 138
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: buffer_management.rx_buffer_overflow_handling
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_138_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.89s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.710
+  Policing Rate: 0.1%
+  Bugs Found: False
+
+Iteration 138 completed successfully!
+
+======================================================================
+ITERATION 139
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: dynamic_message_length_constraint
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_139_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.55s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.864
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 139 completed successfully!
+
+======================================================================
+ITERATION 140
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: data_format.variable_opaque_data_length_field_size
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_140_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 9.93s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 140 completed successfully!
+
+======================================================================
+ITERATION 141
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: interframe_gap_minimum
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_141_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.57s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.897
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 141 completed successfully!
+
+======================================================================
+ITERATION 142
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: maximum_allowed_jitter
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_142_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.83s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.180
+  Policing Rate: 49.9%
+  Bugs Found: False
+
+Iteration 142 completed successfully!
+
+======================================================================
+ITERATION 143
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: Communication Mode.bi_directional_communication_ports
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_143_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 11.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 91.3%
+  Bugs Found: False
+
+Iteration 143 completed successfully!
+
+======================================================================
+ITERATION 144
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: sap_port_range
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_144_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.71s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.931
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 144 completed successfully!
+
+======================================================================
+ITERATION 145
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: side_id
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_145_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 13.78s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 145 completed successfully!
+
+======================================================================
+ITERATION 146
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: data_element_alignment_by_size
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_146_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.11s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 146 completed successfully!
+
+======================================================================
+ITERATION 147
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: wire_speed_frame_processing
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_147_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.63s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 147 completed successfully!
+
+======================================================================
+ITERATION 148
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: default_reception_vl_non_volatile_configuration
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_148_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.31s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 148 completed successfully!
+
+======================================================================
+ITERATION 149
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: parameter_insertion_in_spare/pad_fields
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_149_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.00s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 149 completed successfully!
+
+======================================================================
+ITERATION 150
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: fragmentation.packet_size_limited_by_mtu
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_150_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.85s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 150 completed successfully!
+
+======================================================================
+ITERATION 151
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: virtual_link_configuration.switch_subscribes_to_unique_default_reception_vl
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_151_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.59s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.176
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 151 completed successfully!
+
+======================================================================
+ITERATION 152
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: maximum_field_loadable_software_components
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_152_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.92s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.751
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 152 completed successfully!
+
+======================================================================
+ITERATION 153
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: message_padding_for_bandwidth_allocation
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_153_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.17s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.180
+  Policing Rate: 48.2%
+  Bugs Found: False
+
+Iteration 153 completed successfully!
+
+======================================================================
+ITERATION 154
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: Traffic_Policing.support_one_to_one_or_one_to_many_mac_destination_to_account_mapping
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_154_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.47s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.714
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 154 completed successfully!
+
+======================================================================
+ITERATION 155
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: virtual_link_frame_size_range
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_155_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.31s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 155 completed successfully!
+
+======================================================================
+ITERATION 156
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: data_format.global_spare_initialization
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_156_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 11.03s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 91.2%
+  Bugs Found: False
+
+Iteration 156 completed successfully!
+
+======================================================================
+ITERATION 157
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: switch_performance.mac_layer_wire_speed_transmission_requirement
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_157_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.03s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.777
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 157 completed successfully!
+
+======================================================================
+ITERATION 158
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: network_wide_configuration_file_uniformity
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_158_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.32s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 158 completed successfully!
+
+======================================================================
+ITERATION 159
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: message_structure.functional_status_set_field_size
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_159_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.69s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.141
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 159 completed successfully!
+
+======================================================================
+ITERATION 160
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: Physical_Layer.physical_layer_compliance
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_160_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.90s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.897
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 160 completed successfully!
+
+======================================================================
+ITERATION 161
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: unused/spare_fields
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_161_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.89s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.410
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 161 completed successfully!
+
+======================================================================
+ITERATION 162
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: data_format.data_primitive_bit_order_rule
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_162_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.45s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.341
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 162 completed successfully!
+
+======================================================================
+ITERATION 163
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: gateway_status_indication
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_163_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.77s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.363
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 163 completed successfully!
+
+======================================================================
+ITERATION 164
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: Message Formatting
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 40 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_164_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.51s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.096
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 164 completed successfully!
+
+======================================================================
+ITERATION 165
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: vl_configuration.vl_priority_classification
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_165_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.61s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 165 completed successfully!
+
+======================================================================
+ITERATION 166
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: fragmentation.complete_reassembly_requirement
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_166_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.68s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 166 completed successfully!
+
+======================================================================
+ITERATION 167
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2002
+  Protocol Rule: continue_transmitting_on_physical_failure
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_167_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.60s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.122
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 167 completed successfully!
+
+======================================================================
+ITERATION 168
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: IP Addressing.pass_ip_options_to_transport_layer
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_168_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.56s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.079
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 168 completed successfully!
+
+======================================================================
+ITERATION 169
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: redundant_network_identification_via_interface_id
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_169_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.60s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.224
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 169 completed successfully!
+
+======================================================================
+ITERATION 170
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: Data Format.variable_length_opaque_data_length_field_value
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_170_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.71s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.363
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 170 completed successfully!
+
+======================================================================
+ITERATION 171
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: traffic_policing.ethernet_frame_size_must_meet_virtual_link_minimum_for_byte_based_policing
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_171_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.63s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.864
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 171 completed successfully!
+
+======================================================================
+ITERATION 172
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: configuration_management.configuration_file_selection_exclusivity
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_172_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.04s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.779
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 172 completed successfully!
+
+======================================================================
+ITERATION 173
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: arinc_615a_session_continuity
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_173_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 8.94s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 173 completed successfully!
+
+======================================================================
+ITERATION 174
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: traffic_class
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_174_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 174 completed successfully!
+
+======================================================================
+ITERATION 175
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: Switching.first_frame_latency_through_switch
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_175_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.77s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 175 completed successfully!
+
+======================================================================
+ITERATION 176
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: size_of_IP_multicast_group_per_VL
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_176_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.56s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 176 completed successfully!
+
+======================================================================
+ITERATION 177
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: reset_sequence_number_value
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_177_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.41s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.733
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 177 completed successfully!
+
+======================================================================
+ITERATION 178
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: udp_datagram_fragmentation_constraint
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_178_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.19s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.363
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 178 completed successfully!
+
+======================================================================
+ITERATION 179
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: passive_mode_entry_conditions
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_179_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.60s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.321
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 179 completed successfully!
+
+======================================================================
+ITERATION 180
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: frame_validation.ethernet_frame_size_upper_limit
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_180_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.54s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 180 completed successfully!
+
+======================================================================
+ITERATION 181
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: virtual_link_management.single_source_per_vl_constraint
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_181_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.24s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.043
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 181 completed successfully!
+
+======================================================================
+ITERATION 182
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: length_field_accuracy_in_variable_length_messages
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_182_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 9.95s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 182 completed successfully!
+
+======================================================================
+ITERATION 183
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: switch_operations.traffic_policing_function_requirement
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_183_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.48s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.274
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 183 completed successfully!
+
+======================================================================
+ITERATION 184
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: packet_size_limit_by_mtu
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_184_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.53s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.429
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 184 completed successfully!
+
+======================================================================
+ITERATION 185
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: status_priority_enforcement
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_185_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.51s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 185 completed successfully!
+
+======================================================================
+ITERATION 186
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: sub_vl_fifo_queue_limit_per_vl
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_186_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.67s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 186 completed successfully!
+
+======================================================================
+ITERATION 187
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: functional_status_priority
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_187_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.39s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.282
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 187 completed successfully!
+
+======================================================================
+ITERATION 188
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: reset_resilience_requirement
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_188_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.27s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.110
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 188 completed successfully!
+
+======================================================================
+ITERATION 189
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2003
+  Protocol Rule: Fragmentation
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 40 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_189_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.16s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 189 completed successfully!
+
+======================================================================
+ITERATION 190
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: fragmentation.fragment_transmission_order
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_190_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.58s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 190 completed successfully!
+
+======================================================================
+ITERATION 191
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1002
+  Protocol Rule: addressing.unique_data_flow_identification
+  Test Mode: custom
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_191_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.93s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.946
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 191 completed successfully!
+
+======================================================================
+ITERATION 192
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: broadcast_address_recognition
+  Test Mode: predefined
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_192_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.55s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.915
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 192 completed successfully!
+
+======================================================================
+ITERATION 193
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: virtual_link_management.single_source_per_vl_constraint
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_193_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.40s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 193 completed successfully!
+
+======================================================================
+ITERATION 194
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1001
+  Protocol Rule: reserved_field
+  Test Mode: custom
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_194_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.96s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 194 completed successfully!
+
+======================================================================
+ITERATION 195
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: ethernet_frame_compliance
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_195_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.50s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 195 completed successfully!
+
+======================================================================
+ITERATION 196
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 1003
+  Protocol Rule: status_priority_enforcement
+  Test Mode: predefined
+  Strategy Type: conformance
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_196_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.40s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.300
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 196 completed successfully!
+
+======================================================================
+ITERATION 197
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3002
+  Protocol Rule: Data Format.variable_length_opaque_data_pad_field_value
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_197_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.13s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 197 completed successfully!
+
+======================================================================
+ITERATION 198
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 2001
+  Protocol Rule: non_redundant_vl_frame_delivery
+  Test Mode: predefined
+  Strategy Type: edge-case
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_198_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.13s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 198 completed successfully!
+
+======================================================================
+ITERATION 199
+======================================================================
+
+[1/4] Generating Random Strategy...
+  Target VL: 3001
+  Protocol Rule: default_reception_vl_identifier_format
+  Test Mode: custom
+  Strategy Type: adversarial
+  Reasoning: Random selection (no learning)
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_random_s5/iteration_199_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.72s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 199 completed successfully!
+
+Stopping: Reached max iterations (200)
+
+
+Generating final report...
+
+======================================================================
+RANDOM BASELINE FUZZER - FINAL REPORT
+======================================================================
+
+Total Iterations: 200
+Successful: 200
+Failed: 0
+
+Reward Statistics:
+  Mean: 2.008
+  Max: 2.710
+  Min: 0.300
+  Std: 0.482
+
+Bugs Found: 0
+
+VLs Tested: 8 / 8
+  VL IDs: [np.int64(1001), np.int64(1002), np.int64(1003), np.int64(2001), np.int64(2002), np.int64(2003), np.int64(3001), np.int64(3002)]
+
+Protocol Rules Tested: 168
+  Rules: ['64_bit_signed_integer', 'Communication Mode.bi_directional_communication_ports', 'Communication Ports.queuing_buffer_overflow_handling', 'Data Encoding.float_32_bit_range', 'Data Format.bit_wise_packed_boolean_structure_size', 'Data Format.string_length_field_size', 'Data Format.variable_length_opaque_data_length_field_value', 'Data Format.variable_length_opaque_data_pad_field_value', 'Data Representation.32_bit_floating_point_representation', 'Data Representation.boolean_packing_direction', 'Error Handling.buffer_overflow_handling_in_transmission', 'Fragmentation', 'ICMP_Message_Passing', 'IP Addressing.pass_ip_options_to_transport_layer', 'IP Addressing.support_local_ip_multicasting', 'IP_destination', 'Integrity_Checking.first_frame_after_reset_acceptance', 'Jitter.jitter_time_calculation', 'Latency Determinism.constant_end_to_end_latency_in_point_to_point_system', 'Message Formatting', 'Physical_Layer.physical_layer_compliance', 'Policing.default_vl_policing_activation', 'Policing.traffic_policing_time_resolution_tolerance', 'Redundancy Management.in_sequence_frame_forwarding_only', 'Reliability.real_time_communication_links', 'SAP Port.udp_service_access_point_payload_size_limit', 'Switch Monitoring.fault/healthy_indicator_condition', 'Switch Operating Modes.quiet_mode_catastrophic_failure_activation', 'Switch.switch_filtering_rules_enforcement', 'Switch.switch_monitoring_function_events_and_statistics', 'Switch_Operational_Modes_dl_mode_exit_condition', 'Switching.delayed_frame_latency_through_switch', 'Switching.first_frame_latency_through_switch', 'Switching.frame_discard_on_buffer_congestion', 'Switching.virtual_link_frame_order_preservation', 'Traffic Control.flexible_bandwidth_usage_for_virtual_link', 'Traffic Policing.frame_discard_for_non_compliance', 'Traffic_Policing.shared_vl_bag_and_frame_size_consistency', 'Traffic_Policing.support_one_to_one_or_one_to_many_mac_destination_to_account_mapping', 'Transmission.ip_datagram_fragmentation', 'Transmission.ip_datagram_structure', 'UDP_destination_port', 'Virtual Link Definition.unidirectional_connection', 'abnormal_frame_handling', 'addressing.ip_unicast_spare_field_usage', 'addressing.unique_data_flow_identification', 'afdx_communication_port_transmission_uniqueness', 'afdx_frame_encapsulation_order', 'afdx_lru_interoperability', 'afdx_protocol_stack_layer_requirements', 'allowed_port_number_range', 'arinc_615a_session_continuity', 'bandwidth_allocation_gap', 'bounded_delay_jitter_for_flow', 'broadcast_address_recognition', 'broadcast_addressing', 'buffer_management.rx_buffer_overflow_handling', 'communication_ports.afdx_communication_port_reception_uniqueness', 'communication_ports.port_number_uniqueness_within_virtual_link', 'communication_ports.standard_communication_port_range', 'complete_message_reassembly_before_delivery', 'configuration_file_content', 'configuration_management.configuration_file_selection_exclusivity', 'continue_transmitting_on_physical_failure', 'data_element_address', 'data_element_alignment_by_size', 'data_encoding', 'data_encoding.32_bit_floating_point_range_constraint', 'data_encoding.boolean_32_bit_field_requirement', 'data_format.boolean_data_primitive_bit_ordering', 'data_format.data_primitive_bit_order_rule', 'data_format.global_spare_initialization', 'data_format.string_length_field_size', 'data_format.variable_opaque_data_length_field_size', 'data_formatting.big_endian_byte_order_requirement', 'data_formatting.data_element_definition', 'default_physical_port_speed_configuration', 'default_reception_vl_identifier_format', 'default_reception_vl_non_volatile_configuration', 'default_reception_vl_subscription', 'dynamic_message_length_constraint', 'end_system_wire_speed_throughput_capability', 'ethernet_frame_compliance', 'ethernet_frame_ieee_802_3_compliance', 'fault_indicator_condition', 'fragmentation.complete_reassembly_requirement', 'fragmentation.fragment_transmission_order', 'fragmentation.packet_size_limited_by_mtu', 'frame_rate', 'frame_validation.ethernet_frame_size_upper_limit', 'functional_status_priority', 'gateway_status_indication', 'input_port_fairness', 'integrity_checking.invalid_frame_discard_rule', 'interframe_gap_minimum', 'ip_version_field', 'length_field_accuracy_in_variable_length_messages', 'mac_destination_address_32_bit_constant_field_validation', 'mac_destination_address_constant_field', 'mac_destination_address_lsb', 'mac_destination_address_second_lsb', 'maximum_allowed_jitter', 'maximum_allowed_total_ethernet_line_size_per_vl', 'maximum_field_loadable_software_components', 'maximum_frame_rate_calculation', 'maximum_usable_bandwidth', 'message_padding_for_bandwidth_allocation', 'message_structure.functional_status_set_field_size', 'minimum_datagram_size_for_reassembly', 'minimum_output_port_buffer_capacity', 'network_wide_configuration_file_uniformity', 'non_redundant_vl_frame_delivery', 'number_of_VLs', 'opaque_data_usage_constraint', 'operating_modes', 'ops_configuration_file_operational_mode_usage', 'ops_mode_activation_conditions', 'output_buffer_size_for_high_priority_vls', 'packet_size_limit_by_mtu', 'padding_of_unused_opaque_structure_bytes', 'parameter_insertion_in_spare/pad_fields', 'passive_mode_entry_conditions', 'performance_measurement_burst_duration', 'physical_layer.auto_negotiation', 'physical_layer.full_duplex_requirement', 'pin_programming_value_encoding', 'port_allocation', 'port_speed_configuration', 'queuing_service_fifo_discipline', 'redundant_network_identification_via_interface_id', 'redundant_vl_frame_delivery', 'reserved_field', 'reset_resilience_requirement', 'reset_sequence_number_value', 'sampling_port_multi_partition_read', 'sap_port_range', 'service_class_requirement', 'side_id', 'size_of_IP_multicast_group_per_VL', 'source_route_option_support', 'status_field_size', 'status_priority_enforcement', 'sub_vl_fifo_queue_limit_per_vl', 'switch_operational_modes.ops_mode_switch_functions', 'switch_operations.traffic_policing_function_requirement', 'switch_performance.mac_layer_wire_speed_transmission_requirement', 'switch_processing.relay_wire_speed_capability', 'tcp_sender_buffering_prohibition', 'technological_latency_limit', 'total_end_to_end_latency_formula', 'traffic_class', 'traffic_policing.ethernet_frame_size_must_meet_virtual_link_minimum_for_byte_based_policing', 'traffic_priority', 'traffic_profile', 'transfer_syntax_translation', 'ttl_default_value_in_afdx', 'udp/tcp_port_number', 'udp_checksum', 'udp_datagram_fragmentation_constraint', 'unused/spare_fields', 'unused_status_fields', 'virtual_link_as_unidirectional_logical_communication_path', 'virtual_link_configuration.switch_subscribes_to_unique_default_reception_vl', 'virtual_link_frame_size_range', 'virtual_link_management.single_source_per_vl_constraint', 'vl_configuration.vl_priority_classification', 'vl_id', 'wire_speed_frame_processing']
+
+Strategy Distribution:
+  adversarial: 72
+  edge-case: 66
+  conformance: 62
+
+Test Mode Distribution:
+  custom: 101
+  predefined: 99
+
+Top 5 Iterations (by reward):
+  Iter 21: VL=2003, rule=afdx_communication_port_transmission_uniqueness, reward=2.710
+  Iter 44: VL=2001, rule=queuing_service_fifo_discipline, reward=2.710
+  Iter 95: VL=1002, rule=complete_message_reassembly_before_delivery, reward=2.710
+  Iter 138: VL=1002, rule=buffer_management.rx_buffer_overflow_handling, reward=2.710
+  Iter 8: VL=2003, rule=Switch_Operational_Modes_dl_mode_exit_condition, reward=2.530
+
+======================================================================
+NOTE: This is a RANDOM baseline - no learning or adaptation
+======================================================================
+
+Report saved to: /tmp/afdx_campaigns_v2/out_random_s5/random_fuzzing_report_20261109_181430.txt
+Full history saved to: /tmp/afdx_campaigns_v2/out_random_s5/random_history_20261109_181430.csv
+
+Random baseline fuzzing completed!

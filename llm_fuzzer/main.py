@@ -267,6 +267,8 @@ class LLMFuzzer:
                 'prob': strategy.get('prob'),
                 'sequence_number_override': strategy.get('sequence_number_override'),
                 'dest_mac_mutation': strategy.get('dest_mac_mutation'),
+                'vl_id_override': strategy.get('vl_id_override'),
+                'test_case_params': strategy.get('test_case_params'),
                 'strategy': strategy['strategy'],
                 'reasoning': strategy['reasoning'],
                 'num_frames': test_inputs['metadata']['num_frames'],
@@ -279,10 +281,12 @@ class LLMFuzzer:
                 'forward_rate': feedback['metrics'].get('forward_rate', 0.0),
                 'frames_dropped_frame_error': feedback['metrics'].get('frames_dropped_frame_error', 0),
                 'frames_dropped_mac_error': feedback['metrics'].get('frames_dropped_mac_error', 0),
+                'frames_dropped_invalid_vl': feedback['metrics'].get('frames_dropped_invalid_vl', 0),
                 'es_frames_rejected': feedback['metrics'].get('es_frames_rejected', 0),
                 'es_duplicates_discarded': feedback['metrics'].get('es_duplicates_discarded', 0),
                 'es_rejection_rate': feedback['metrics'].get('es_rejection_rate', 0.0),
                 'bugs_found': feedback.get('analysis', {}).get('bugs_found', False),
+                'violation_detected': feedback.get('analysis', {}).get('violation_detected', False),
                 'recommendation': feedback.get('analysis', {}).get('recommendation', 'No recommendation')
             }
             

@@ -1,0 +1,9 @@
+864 distinct runs, 270 not cached, 4 workers
+  50/270
+  100/270
+  150/270
+  200/270
+  250/270
+  270/270
+Boofuzz_file                 6/8  inputs= 96  skip_bag_policing(5), skip_frame_validation(143), skip_mac_validation(25), skip_vl_check(9), skip_sequence_check(9), accept_oversized(143)
+-> evaluation/results/revision2/bdr_boofuzz_file.json

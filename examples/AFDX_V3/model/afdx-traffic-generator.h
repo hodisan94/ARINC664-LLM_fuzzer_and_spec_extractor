@@ -77,6 +77,11 @@ public:
   void AddVirtualLink(const AfdxVirtualLink& vl, uint32_t payloadSize);
 
   /**
+   * \brief Send the frames of the mutation target VL with the identity of another VL
+   */
+  void SetImpersonatedVl(uint16_t vlId, Mac48Address srcMac, Mac48Address dstMac);
+
+  /**
    * \brief Subscribe to a Virtual Link for receiving (Subscriber)
    * \param vlId Virtual Link ID to subscribe to
    * 
@@ -248,6 +253,11 @@ private:
   };
   std::map<uint16_t, VLTrafficConfig> m_vlConfigs;
 
+  /**
+   * \brief Interval to the next frame of a VL: its BAG plus the timing offset of an active mutation
+   */
+  Time NextSendInterval(const VLTrafficConfig& config) const;
+
   // ====================================================================
   // RECEIVE SIDE - Subscription and Validation
   // ====================================================================
@@ -289,6 +299,9 @@ private:
   // FUZZING / ROBUSTNESS TEST STATE
   // ====================================================================
   bool   m_fuzzMode = false;        // If true, generator can emit malformed traffic
+  uint16_t m_impersonatedVlId = 0;  // 0 = frames carry their own VL identity
+  Mac48Address m_impersonatedSrcMac;
+  Mac48Address m_impersonatedDstMac;
   double m_fuzzProbability = 1.0;   // How often to fuzz [0..1]
 
   // Mutation polling / AI controller integration

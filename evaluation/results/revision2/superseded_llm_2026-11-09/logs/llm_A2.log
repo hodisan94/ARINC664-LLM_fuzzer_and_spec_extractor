@@ -1,0 +1,5657 @@
+Initializing components...
+All components initialized successfully!
+
+======================================================================
+LLM-GUIDED AFDX FUZZER
+======================================================================
+
+Configuration:
+  Max Iterations: 200
+  Available VLs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+  History File: evaluation/results/revision2/runs/llm_A2.jsonl
+  Output Directory: /tmp/afdx_campaigns_v2/out_llm_A2
+  Run Mode: fresh
+
+
+======================================================================
+ITERATION 0
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 582 chars
+  Target VL: 1001
+  Mutation Type: ttl_default_value_in_afdx
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered AFDX-Specific category by validating TTL default value equals 1 using a predefined...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_000_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.61s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.300
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Good reward. Try a different protocol rule next....
+
+Iteration 0 completed successfully!
+
+======================================================================
+ITERATION 1
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 520 chars
+  Target VL: 2001
+  Mutation Type: udp_checksum
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered category UDP Checksum Handling by testing invalid non-zero checksum discard behavio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_001_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.39s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 1 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 1 completed successfully!
+
+======================================================================
+ITERATION 2
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 569 chars
+  Target VL: 3002
+  Mutation Type: broadcast_address_recognition
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting an uncovered category (Broadcast Handling) using predefined test case to maximize spec cov...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_002_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.01s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.914
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 2 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 2 completed successfully!
+
+======================================================================
+ITERATION 3
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 630 chars
+  Target VL: 3001
+  Mutation Type: ip_header_checksum
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category IP Layer - Header Validation. Execute TC0 to validate mandatory checksum ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_003_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.53s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 3 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 3 completed successfully!
+
+======================================================================
+ITERATION 4
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 561 chars
+  Target VL: 2002
+  Mutation Type: frame_validation.ethernet_frame_size_upper_limit
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Cover new category Frame Validation by sending an oversized Ethernet frame (TC0 >1518 bytes) to trig...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_004_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.80s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 4 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 4 completed successfully!
+
+======================================================================
+ITERATION 5
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 684 chars
+  Target VL: 2003
+  Mutation Type: integrity_checking.invalid_frame_discard_rule
+  Strategy Type: edge-case
+  Reasoning: Cover the uncovered Integrity Checking category by forcing a repeated max sequence number (255) to v...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_005_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.98s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.979
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 5 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 5 completed successfully!
+
+======================================================================
+ITERATION 6
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 582 chars
+  Target VL: 1002
+  Mutation Type: Traffic Shaping.bag_frame_rate_limiting
+  Custom Values: BAG=None, Size=500, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Exercise untested BAG policing by sending faster than BAG (4ms) with timing_jitter_ms=-5ms while kee...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_006_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 14.10s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 91.1%
+  Bugs Found: False
+  Recommendation: Coverage so far: 6 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 6 completed successfully!
+
+======================================================================
+ITERATION 7
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 514 chars
+  Target VL: 1003
+  Mutation Type: ip_version_field
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Cover new category IP Protocol Validation by testing IP version field handling; use untested VL 1003...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_007_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.89s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 7 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 7 completed successfully!
+
+======================================================================
+ITERATION 8
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 613 chars
+  Target VL: 3001
+  Mutation Type: Traffic Policing.byte_based_traffic_policing
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Increase category coverage by targeting the uncovered Traffic Policing category using predefined TC0...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_008_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.07s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.864
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 8 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 8 completed successfully!
+
+======================================================================
+ITERATION 9
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 646 chars
+  Target VL: 2003
+  Mutation Type: Switching.virtual_link_based_switching
+  Strategy Type: adversarial
+  Reasoning: Exercise untested VL impersonation path: send on VL 2003 (ES2) while overriding VL ID to 1001 (ES1)....
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_009_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.79s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 9 unique rules tested. Coverage is LOW. Prioritize untested rul...
+
+Iteration 9 completed successfully!
+
+======================================================================
+ITERATION 10
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 687 chars
+  Target VL: 3002
+  Mutation Type: mac_destination_address_lsb
+  Strategy Type: adversarial
+  Reasoning: Targeting uncovered category 'addressing' via MAC destination LSB rule. Corrupting the multicast/gro...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_010_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.84s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.931
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 10 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 10 completed successfully!
+
+======================================================================
+ITERATION 11
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 593 chars
+  Target VL: 3002
+  Mutation Type: mac_destination_address_format
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers new spec category MAC Addressing and exploits prior MAC LSB violation observed on VL 3002. Us...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_011_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.87s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.914
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 11 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 11 completed successfully!
+
+======================================================================
+ITERATION 12
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 584 chars
+  Target VL: 1001
+  Mutation Type: udp_checksum
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Cover new category UDP Checksum Handling by sending a datagram with a non-zero invalid checksum on a...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_012_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.66s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 12 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 12 completed successfully!
+
+======================================================================
+ITERATION 13
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 559 chars
+  Target VL: 1003
+  Mutation Type: TTL
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers new category IP Layer - TTL Handling by testing TTL=0 prohibition using predefined TTL TC0 on...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_013_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.66s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 12 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 13 completed successfully!
+
+======================================================================
+ITERATION 14
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 586 chars
+  Target VL: 2002
+  Mutation Type: ipv4_total_length_field_range
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category 'IPv4 Packet Length' using a boundary-violation test (Total Length below ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_014_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.95s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 13 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 14 completed successfully!
+
+======================================================================
+ITERATION 15
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 649 chars
+  Target VL: 1003
+  Mutation Type: ip_header_checksum
+  Test Cases: ['TC0']
+  Strategy Type: adversarial
+  Reasoning: Increase coverage by targeting the uncovered category 'IP Layer - Header Validation' using predefine...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_015_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.68s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 14 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 15 completed successfully!
+
+======================================================================
+ITERATION 16
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 548 chars
+  Target VL: 2001
+  Mutation Type: ipv4_packet_structure_compliance
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category 'IPv4 Packet Structure' using TC0 (edge-case compliance) on under-tested ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_016_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.83s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 14 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 16 completed successfully!
+
+======================================================================
+ITERATION 17
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 602 chars
+  Target VL: 2002
+  Mutation Type: data_formatting.big_endian_byte_order_requirement
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Increase category coverage by targeting the uncovered Data Formatting requirement for big-endian byt...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_017_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.44s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 15 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 17 completed successfully!
+
+======================================================================
+ITERATION 18
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 637 chars
+  Target VL: 1002
+  Mutation Type: data_alignment.double_precision_float_address_alignment
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Expand coverage into the uncovered Data Alignment category by testing 64-bit double alignment (must ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_018_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.86s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.146
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 16 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 18 completed successfully!
+
+======================================================================
+ITERATION 19
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 614 chars
+  Target VL: 3001
+  Mutation Type: functional_status
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Expand coverage into the uncovered Data Handling category by validating functional_status values usi...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_019_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.15s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 17 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 19 completed successfully!
+
+======================================================================
+ITERATION 20
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 617 chars
+  Target VL: 2003
+  Mutation Type: output_buffer_size_for_high_priority_vls
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Cover uncovered Buffer Management category by testing the minimum buffer constraint for high-priorit...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_020_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.20s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 18 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 20 completed successfully!
+
+======================================================================
+ITERATION 21
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 525 chars
+  Target VL: 1003
+  Mutation Type: Frame Configuration.ethernet_frame_size_range
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Cover new category Frame Configuration using boundary frame-size validation on under-explored VL 100...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_021_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.65s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 19 unique rules tested. Coverage is LOW. Prioritize untested ru...
+
+Iteration 21 completed successfully!
+
+======================================================================
+ITERATION 22
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 644 chars
+  [NORM] 'ip_header_checksum_verification' -> 'IP Header Checksum Verification'
+  Target VL: 3002
+  Mutation Type: ip_header_checksum_verification
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered category 'IP Protocol Validation' by testing mandatory checksum verification with a...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_022_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.27s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 20 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 22 completed successfully!
+
+======================================================================
+ITERATION 23
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 534 chars
+  Target VL: 2001
+  Mutation Type: udp_checksum
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category UDP Checksum Handling using TC0 (invalid non-zero checksum) to validate...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_023_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.45s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.470
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 21 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 23 completed successfully!
+
+======================================================================
+ITERATION 24
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 547 chars
+  Target VL: 2002
+  Mutation Type: TTL
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Cover uncovered IP Layer - TTL Handling by testing TTL=0 (must not send). Pure test case execution t...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_024_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.27s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 21 unique rules tested. Moderate reward. Consider edge-case or ...
+
+Iteration 24 completed successfully!
+
+======================================================================
+ITERATION 25
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 550 chars
+  Target VL: 1001
+  Mutation Type: source_address
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Increase coverage by targeting the uncovered 'IP Layer - Addressing' category. TC0 probes rejection ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_025_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.22s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.146
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 21 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 25 completed successfully!
+
+======================================================================
+ITERATION 26
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 564 chars
+  Target VL: 3001
+  Mutation Type: Communication Mode.bi_directional_communication_ports
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Increase category coverage by targeting uncovered 'Communication Mode' with predefined TC0 for the b...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_026_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.42s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 22 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 26 completed successfully!
+
+======================================================================
+ITERATION 27
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 726 chars
+  Target VL: 1002
+  Mutation Type: Byte_ACi
+  Custom Values: BAG=None, Size=512, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Cover uncovered Switch Traffic Policing by stressing the token-bucket path (Byte_ACi). Using VL 1002...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_027_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.81s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 23 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 27 completed successfully!
+
+======================================================================
+ITERATION 28
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 577 chars
+  Target VL: 2002
+  Mutation Type: Data Representation.bit_order_on_ethernet_medium
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Covers the uncovered Data Representation category by validating MSB-first bit order using a predefin...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_028_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.95s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.897
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 24 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 28 completed successfully!
+
+======================================================================
+ITERATION 29
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 646 chars
+  Target VL: 2003
+  Mutation Type: sampling_service_connectionless
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Cover the uncovered Communication Ports category by validating that sampling service is connectionle...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_029_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.96s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 25 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 29 completed successfully!
+
+======================================================================
+ITERATION 30
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 690 chars
+  Target VL: 3002
+  Mutation Type: sap_port_reception_uniqueness
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets the uncovered End System Communication category by validating that a SAP reception port maps...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_030_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.75s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 26 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 30 completed successfully!
+
+======================================================================
+ITERATION 31
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 540 chars
+  Target VL: 3001
+  Mutation Type: ACi_initialization
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Cover uncovered Switch Traffic Policing category by testing token-bucket initialization; use TC0 (AC...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_031_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.90s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 27 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 31 completed successfully!
+
+======================================================================
+ITERATION 32
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 583 chars
+  Target VL: 2001
+  Mutation Type: Data Format.boolean_packing_right_justified
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Increase coverage by targeting the uncovered 'Data Format' category. Tests right-justified boolean p...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_032_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.22s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 28 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 32 completed successfully!
+
+======================================================================
+ITERATION 33
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 678 chars
+  Target VL: 3001
+  Mutation Type: Traffic Policing.byte_based_traffic_policing
+  Custom Values: BAG=None, Size=1024, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Token-bucket stress focused on byte-based policing: send max-allowed frames (1024 bytes == VL MaxFra...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_033_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.28s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 29 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 33 completed successfully!
+
+======================================================================
+ITERATION 34
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 646 chars
+  Target VL: 1003
+  Mutation Type: IP Options
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Exploration for new category coverage: exercises IP Layer - IP Options (transport-layer options spec...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_034_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.09s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 29 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 34 completed successfully!
+
+======================================================================
+ITERATION 35
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 621 chars
+  Target VL: 1001
+  Mutation Type: destination_address_validity
+  Custom Values: BAG=None, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2) while transmitting on VL 1001 (ES1) to trigger switch-side Frame Filtering...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_035_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 7.42s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.176
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 30 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 35 completed successfully!
+
+======================================================================
+ITERATION 36
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 618 chars
+  Target VL: 1002
+  Mutation Type: signed_64_bit_integer_range
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Increase coverage by targeting the uncovered Data Encoding category using a boundary test (64-bit si...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_036_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 14.77s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 31 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 36 completed successfully!
+
+======================================================================
+ITERATION 37
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 546 chars
+  Target VL: 1001
+  Mutation Type: TTL
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covering uncovered category 'IP Layer - TTL Handling' using predefined test case (TTL=0 must not be ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_037_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.00s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 32 unique rules tested. Moderate reward. Consider edge-case or ...
+
+Iteration 37 completed successfully!
+
+======================================================================
+ITERATION 38
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 559 chars
+  Target VL: 2003
+  Mutation Type: ip_header_checksum
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category IP Layer - Header Validation via ip_header_checksum TC0 (invalid checksum...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_038_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 8.38s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 32 unique rules tested. Moderate reward. Consider edge-case or ...
+
+Iteration 38 completed successfully!
+
+======================================================================
+ITERATION 39
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 596 chars
+  Target VL: 2002
+  Mutation Type: Switch Configuration.ops_configuration_file_uniformity
+  Test Cases: ['TC0']
+  Strategy Type: adversarial
+  Reasoning: Covers uncovered Switch Configuration category by attempting a non-identical OPS configuration acros...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_039_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 7.70s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 32 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 39 completed successfully!
+
+======================================================================
+ITERATION 40
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 638 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Strategy Type: adversarial
+  Reasoning: Targets uncovered category Frame Validation by impersonating VL 2001 (ES2) from ES1 on VL 1001 to ve...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_040_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.74s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 33 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 40 completed successfully!
+
+======================================================================
+ITERATION 41
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 633 chars
+  Target VL: 1003
+  Mutation Type: source_address
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category IP Layer - Addressing with a new rule (source_address). Using predefine...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_041_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.73s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.013
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 34 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 41 completed successfully!
+
+======================================================================
+ITERATION 42
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 630 chars
+  Target VL: 3002
+  Mutation Type: switch_position_based_configuration_access
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered Configuration category by verifying the switch only accesses its position-specific ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_042_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.05s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 34 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 42 completed successfully!
+
+======================================================================
+ITERATION 43
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 654 chars
+  Target VL: 1001
+  Mutation Type: vl_must_be_valid_for_reception_on_destination_port
+  Strategy Type: adversarial
+  Reasoning: Covers uncovered Frame Validation rule by impersonating a VL from a different End System (ES2) while...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_043_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.71s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 35 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 43 completed successfully!
+
+======================================================================
+ITERATION 44
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 624 chars
+  Target VL: 3002
+  Mutation Type: configuration_management.configuration_file_selection_exclusivity
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered Configuration Management category; prior configuration-related tests revealed is...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_044_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 7.04s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 36 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 44 completed successfully!
+
+======================================================================
+ITERATION 45
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 590 chars
+  Target VL: 2001
+  Mutation Type: reserved_word_alignment
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered Data Alignment category by testing 32-bit boundary alignment of the reserved wor...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_045_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.13s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 37 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 45 completed successfully!
+
+======================================================================
+ITERATION 46
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 591 chars
+  Target VL: 3001
+  Mutation Type: Data Format.string_length_field_size
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Data Format category by validating 16-bit string length field using predefined TC0...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_046_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.66s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 38 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 46 completed successfully!
+
+======================================================================
+ITERATION 47
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 625 chars
+  Target VL: 2003
+  Mutation Type: Integrity_Checking.first_frame_after_reset_acceptance
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Covers the uncovered Integrity Checking category by verifying first frame acceptance after reset. Us...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_047_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.87s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.779
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 39 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 47 completed successfully!
+
+======================================================================
+ITERATION 48
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 566 chars
+  Target VL: 2002
+  Mutation Type: sequence_number_length
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers the previously untested Sequence Numbering category using predefined TC0 for sequence_number_...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_048_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.55s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.733
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 40 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 48 completed successfully!
+
+======================================================================
+ITERATION 49
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 716 chars
+  Target VL: 3001
+  Mutation Type: Traffic Policing.byte_based_traffic_policing
+  Custom Values: BAG=None, Size=1024, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Covering previously untested Traffic Policing category while exercising the untested token-bucket pa...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_049_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.88s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.640
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 41 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 49 completed successfully!
+
+======================================================================
+ITERATION 50
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 722 chars
+  Target VL: 3002
+  Mutation Type: traffic_policing_requirement
+  Custom Values: BAG=None, Size=1024, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Covering uncovered Switch Specification.traffic_policing_requirement while exercising the untested t...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_050_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 7.37s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 41 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 50 completed successfully!
+
+======================================================================
+ITERATION 51
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 597 chars
+  Target VL: 1002
+  Mutation Type: Data Format.boolean_packing_right_justified
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered Data Format category with right-justified boolean packing. Using predefined TC0 ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_051_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.57s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 42 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 51 completed successfully!
+
+======================================================================
+ITERATION 52
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 590 chars
+  Target VL: 1003
+  Mutation Type: IP Layer - IP Options.stream_identifier_option_handling
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered category 'IP Layer - IP Options' by testing Stream Identifier option handling; no o...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_052_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.66s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 42 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 52 completed successfully!
+
+======================================================================
+ITERATION 53
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 700 chars
+  Target VL: 3001
+  Mutation Type: Traffic Policing.frame_discard_for_non_compliance
+  Custom Values: BAG=None, Size=1024, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Exercise untested token-bucket enforcement by sending near-Lmax frames (1024) at faster-than-BAG int...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_053_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.69s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.985
+  Policing Rate: 5.6%
+  Bugs Found: False
+  Recommendation: Coverage so far: 43 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 53 completed successfully!
+
+======================================================================
+ITERATION 54
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 617 chars
+  Target VL: 3002
+  Mutation Type: ethernet_frame_compliance
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Target an uncovered category (Ethernet Frame Compliance) using predefined TC0 to probe IEEE 802.3 co...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_054_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 7.16s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 44 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 54 completed successfully!
+
+======================================================================
+ITERATION 55
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 617 chars
+  Target VL: 2001
+  Mutation Type: maximum_afdx_frame_length
+  Custom Values: BAG=None, Size=300, Seq=None
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category Frame Length by sending a frame slightly above VL 2001 Lmax (256 bytes). ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_055_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.60s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 45 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 55 completed successfully!
+
+======================================================================
+ITERATION 56
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 657 chars
+  Target VL: 3001
+  Mutation Type: traffic_policing.ac_account_crediting_rate_limit
+  Custom Values: BAG=None, Size=1000, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Untested token-bucket stress: use near-Lmax frames (1000 B) at default BAG to exercise policing with...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_056_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.41s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 46 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 56 completed successfully!
+
+======================================================================
+ITERATION 57
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 564 chars
+  Target VL: 3001
+  Mutation Type: end_system_wire_speed_throughput_capability
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered End System Performance category by verifying back-to-back wire-speed handling; a...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_057_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.68s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 47 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 57 completed successfully!
+
+======================================================================
+ITERATION 58
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 630 chars
+  Target VL: 2003
+  Mutation Type: Data Format.variable_length_opaque_data_length_field_value
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Data Format category by validating that the variable-length opaque data length fie...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_058_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.51s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.117
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 48 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 58 completed successfully!
+
+======================================================================
+ITERATION 59
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 619 chars
+  Target VL: 1002
+  Mutation Type: length_field_accuracy_in_variable_length_messages
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category Frame Structure with a length-field accuracy check. Builds on prior viola...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_059_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 12.12s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 49 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 59 completed successfully!
+
+======================================================================
+ITERATION 60
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 629 chars
+  Target VL: 2001
+  Mutation Type: Data Format.string_length_field_size
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covering uncovered Data Format category: string_length_field_size (16-bit). Using predefined TC0 to ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_060_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 17.60s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 50 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 60 completed successfully!
+
+======================================================================
+ITERATION 61
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 645 chars
+  Target VL: 3001
+  Mutation Type: Byte_ACi
+  Custom Values: BAG=None, Size=1024, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Token bucket stress: transmit max-allowed frames (1024 bytes) at normal BAG on VL 3001 to exercise b...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_061_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 50 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 61 completed successfully!
+
+======================================================================
+ITERATION 62
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 589 chars
+  Target VL: 2002
+  Mutation Type: Data Format.boolean_packing_right_justified
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Data Format category by verifying right-justified boolean packing. Avoids overused...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_062_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.60s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 50 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 62 completed successfully!
+
+======================================================================
+ITERATION 63
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 621 chars
+  Target VL: 1003
+  Mutation Type: Frame Identification.unique_message_identification
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Frame Identification category by validating unique quintuplet identification. Usin...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_063_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.99s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 50 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 63 completed successfully!
+
+======================================================================
+ITERATION 64
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 568 chars
+  Target VL: 1001
+  Mutation Type: IP Addressing.join_all_hosts_group
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered IP Addressing category by verifying all-hosts multicast group join at startup; avo...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_064_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.56s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.300
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 51 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 64 completed successfully!
+
+======================================================================
+ITERATION 65
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 573 chars
+  Target VL: 2003
+  Mutation Type: frame_discard_on_link_failure
+  Test Cases: ['TC0']
+  Strategy Type: adversarial
+  Reasoning: Targets uncovered Fault Handling category by simulating a link failure; verifies buffered frames are...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_065_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.63s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 52 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 65 completed successfully!
+
+======================================================================
+ITERATION 66
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 628 chars
+  Target VL: 1002
+  Mutation Type: udp_port_unreachable_message_prohibition
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category UDP Protocol by ensuring no UDP Port Unreachable messages are generated o...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_066_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.91s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 53 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 66 completed successfully!
+
+======================================================================
+ITERATION 67
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 652 chars
+  Target VL: 3002
+  Mutation Type: reserved_word_alignment
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category Data Structure.reserved_word_alignment using TC0 (misaligned reserved w...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_067_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.38s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 54 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 67 completed successfully!
+
+======================================================================
+ITERATION 68
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 685 chars
+  Target VL: 3002
+  Mutation Type: Traffic Policing.frame_discard_for_non_compliance
+  Custom Values: BAG=None, Size=1024, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Token-bucket stress without altering BAG: send max-allowed frames (1024 == VL MaxFrame) at default t...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_068_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.50s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 54 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 68 completed successfully!
+
+======================================================================
+ITERATION 69
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 661 chars
+  Target VL: 2001
+  Mutation Type: Network Layer.data_flow_identification_and_frame_filtering
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covering the uncovered Network Layer category by validating frame filtering based on destination add...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_069_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.46s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 54 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 69 completed successfully!
+
+======================================================================
+ITERATION 70
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 612 chars
+  Target VL: 1001
+  Mutation Type: vl_id
+  Test Cases: ['TC0']
+  Custom Values: BAG=None, Size=128, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Cover uncovered Frame Validation rule 'vl_id_must_be_allowed_on_incoming_port' by impersonating ES2’...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_070_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.65s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.176
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 55 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 70 completed successfully!
+
+======================================================================
+ITERATION 71
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 587 chars
+  Target VL: 1003
+  Mutation Type: ip_protocol.valid_ip_source_address_requirement_for_transmission
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category (IP Layer - Addressing) by verifying source IP must be host-owned; avoids...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_071_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.71s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 55 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 71 completed successfully!
+
+======================================================================
+ITERATION 72
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 617 chars
+  Target VL: 2002
+  Mutation Type: continuous_transmission_on_link_failure
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered Data-Link Layer category with a predefined test. Complements prior link-failure fi...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_072_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.05s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 56 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 72 completed successfully!
+
+======================================================================
+ITERATION 73
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 711 chars
+  [NORM] 'Traffic Control.bounded_arrival_distribution_requirement' -> 'Traffic Control'
+  Target VL: 3001
+  Mutation Type: Traffic Control.bounded_arrival_distribution_requirement
+  Custom Values: BAG=16, Size=None, Seq=None
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered Traffic Control category by violating bounded arrival distribution via early sen...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_073_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.94s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.733
+  Policing Rate: 3.2%
+  Bugs Found: False
+  Recommendation: Coverage so far: 57 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 73 completed successfully!
+
+======================================================================
+ITERATION 74
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 603 chars
+  Target VL: 2003
+  Mutation Type: Data Format.string_length_field_size
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets an UNCOVERED category (Data Format.string_length_field_size = 16-bit unsigned). Runs TC0 wit...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_074_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 12.00s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 58 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 74 completed successfully!
+
+======================================================================
+ITERATION 75
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 588 chars
+  Target VL: 2001
+  Mutation Type: fixed_length_arinc_429_label_encapsulation
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Frame Formatting category by validating fixed 32-bit ARINC 429 label encapsulation...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_075_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.75s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 58 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 75 completed successfully!
+
+======================================================================
+ITERATION 76
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 596 chars
+  Target VL: 2001
+  Mutation Type: data_link_layer_per_vl_maximum_frame_length
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category Data-Link Layer (per_vl_maximum_frame_length). Using VL 2001 (smaller Lma...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_076_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.36s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 59 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 76 completed successfully!
+
+======================================================================
+ITERATION 77
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 626 chars
+  Target VL: 2002
+  Mutation Type: Network Monitoring.record_discarded_datagrams_in_counter
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered Network Monitoring category by verifying that discarded datagrams are recorded in ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_077_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.24s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.300
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 60 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 77 completed successfully!
+
+======================================================================
+ITERATION 78
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 554 chars
+  Target VL: 1002
+  Mutation Type: ip_version
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category IP Layer - Header Validation by testing non-IPv4 discard. Rotates to VL 1...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_078_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.82s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 61 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 78 completed successfully!
+
+======================================================================
+ITERATION 79
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 719 chars
+  Target VL: 1001
+  Mutation Type: maximum_bandwidth_allocation_for_virtual_link
+  Custom Values: BAG=None, Size=512, Seq=None
+  Strategy Type: edge-case
+  Reasoning: Exercise untested token-bucket stress by sending max-size valid frames (512 bytes) at default BAG on...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_079_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.65s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 62 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 79 completed successfully!
+
+======================================================================
+ITERATION 80
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 567 chars
+  Target VL: 2003
+  Mutation Type: functional_status
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category Data Handling.functional_status_valid_values via predefined test case; av...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_080_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.21s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 63 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 80 completed successfully!
+
+======================================================================
+ITERATION 81
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 571 chars
+  Target VL: 2003
+  Mutation Type: functional_status_set_structure
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Data Structure category with FSS layout; VL 2003 recently showed related violation...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_081_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.94s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 63 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 81 completed successfully!
+
+======================================================================
+ITERATION 82
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 599 chars
+  Target VL: 1002
+  Mutation Type: unused_boolean_bits
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Data Format rule: unused_boolean_bits_must_be_zero. Prior Data Format checks found...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_082_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.54s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 64 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 82 completed successfully!
+
+======================================================================
+ITERATION 83
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 573 chars
+  Target VL: 3001
+  Mutation Type: ACi_initialization
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Cover uncovered category Switch Traffic Policing by testing initial token bucket credit (ACi) below ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_083_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 8.67s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.470
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 65 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 83 completed successfully!
+
+======================================================================
+ITERATION 84
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 738 chars
+  [NORM] 'Traffic Policing.byte_based_frame_acceptance_condition' -> 'Traffic Policing'
+  Target VL: 3002
+  Mutation Type: Traffic Policing.byte_based_frame_acceptance_condition
+  Custom Values: BAG=None, Size=1000, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Exercise the untested token-bucket path by sending large, valid frames at default BAG to trigger byt...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_084_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.67s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 65 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 84 completed successfully!
+
+======================================================================
+ITERATION 85
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 632 chars
+  Target VL: 1003
+  Mutation Type: high_priority_frame_transmission_precedence
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered Traffic Prioritization category by verifying high-priority-before-low transmission...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_085_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.04s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.963
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 66 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 85 completed successfully!
+
+======================================================================
+ITERATION 86
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 601 chars
+  Target VL: 2002
+  Mutation Type: complete_message_reassembly_before_delivery
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Reception category: ensure no data is delivered until full reassembly. Uses predef...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_086_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.14s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 67 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 86 completed successfully!
+
+======================================================================
+ITERATION 87
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 616 chars
+  Target VL: 2001
+  Mutation Type: ttl_decrement_on_forwarding
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category IP Forwarding - TTL Management by verifying TTL decrement behavior during...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_087_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.60s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 68 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 87 completed successfully!
+
+======================================================================
+ITERATION 88
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 553 chars
+  Target VL: 2002
+  Mutation Type: support_ip_reassembly
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Covers uncovered category 'IP Layer - Fragmentation and Reassembly' by verifying support for IP reas...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_088_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.05s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.897
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 69 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 88 completed successfully!
+
+======================================================================
+ITERATION 89
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 598 chars
+  Target VL: 2001
+  Mutation Type: ip_version
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category IP Layer - Header Validation (silently_discard_non_ipv4_datagrams). TC0 e...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_089_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.98s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 70 unique rules tested. Moderate reward. Consider edge-case or ...
+
+Iteration 89 completed successfully!
+
+======================================================================
+ITERATION 90
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 624 chars
+  Target VL: 1002
+  Mutation Type: reserved_field
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Frame Construction rule 'reserved_field_must_be_zero_filled' via predefined test; ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_090_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 13.20s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 70 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 90 completed successfully!
+
+======================================================================
+ITERATION 91
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 609 chars
+  Target VL: 2002
+  Mutation Type: reassemble_incoming_datagrams
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category 'Reassembly and Fragmentation'. Prior related tests on VL 2002 revealed i...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_091_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.81s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 71 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 91 completed successfully!
+
+======================================================================
+ITERATION 92
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 646 chars
+  Target VL: 2002
+  Mutation Type: minimum_reassembly_buffer_size
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered Fragmentation category (minimum reassembly buffer >=576B) using predefined TC0. Cho...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_092_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.56s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 72 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 92 completed successfully!
+
+======================================================================
+ITERATION 93
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 705 chars
+  Target VL: 3001
+  Mutation Type: Traffic Policing.one_bag,_jitter,_and_maximum_size_value_per_vl
+  Custom Values: BAG=None, Size=1024, Seq=None
+  Strategy Type: edge-case
+  Reasoning: Targeting an uncovered Traffic Policing rule while stressing the (untested) token-bucket path by sen...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_093_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.97s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 73 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 93 completed successfully!
+
+======================================================================
+ITERATION 94
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 596 chars
+  Target VL: 3002
+  Mutation Type: ACi_initialization
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered Switch Traffic Policing token-bucket initialization by testing ACi below S_i_max (T...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_094_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.14s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 74 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 94 completed successfully!
+
+======================================================================
+ITERATION 95
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 674 chars
+  Target VL: 2001
+  Mutation Type: virtual_link_source_uniqueness
+  Strategy Type: adversarial
+  Reasoning: Targeting uncovered category 'Virtual Link Source Uniqueness'. Impersonate VL 1001 (ES1) while trans...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_095_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.66s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.043
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 74 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 95 completed successfully!
+
+======================================================================
+ITERATION 96
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 537 chars
+  Target VL: 1003
+  Mutation Type: valid_functional_status_values
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category Data Handling (functional_status_valid_values). Avoids overused mutation ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_096_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.14s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 75 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 96 completed successfully!
+
+======================================================================
+ITERATION 97
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 623 chars
+  Target VL: 1001
+  Mutation Type: Byte_ACi
+  Custom Values: BAG=None, Size=512, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Token-bucket stress (untested path): send max-size valid frames (512 bytes equals VL 1001 Lmax) at d...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_097_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.43s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 76 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 97 completed successfully!
+
+======================================================================
+ITERATION 98
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 594 chars
+  Target VL: 3001
+  Mutation Type: Error Handling.buffer_overflow_handling_in_transmission
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Cover uncovered category Error Handling by validating Tx buffer overflow behavior using predefined T...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_098_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 7.59s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 76 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 98 completed successfully!
+
+======================================================================
+ITERATION 99
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 593 chars
+  Target VL: 2003
+  Mutation Type: Frame Construction.no_unused_bytes_between_data_primitives
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Frame Construction category by verifying no gaps between data primitives; uses a n...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_099_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.58s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 77 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 99 completed successfully!
+
+======================================================================
+ITERATION 100
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 621 chars
+  Target VL: 1002
+  Mutation Type: monitoring_function_required
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered 'Network Functions' category by validating that switch monitoring is implemented. ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_100_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.20s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 78 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 100 completed successfully!
+
+======================================================================
+ITERATION 101
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 531 chars
+  Target VL: 3002
+  Mutation Type: ip_version
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered category IP Layer - Header Validation by sending a non-IPv4 version (TC0). Avoids o...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_101_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.06s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 79 unique rules tested. Moderate reward. Consider edge-case or ...
+
+Iteration 101 completed successfully!
+
+======================================================================
+ITERATION 102
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 567 chars
+  Target VL: 1002
+  Mutation Type: IP Addressing.join_all_hosts_group
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered IP Addressing category by verifying host joins 224.0.0.1 at startup. Avoids overus...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_102_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.85s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.300
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 79 unique rules tested. Try edge-case testing to find boundary ...
+
+Iteration 102 completed successfully!
+
+======================================================================
+ITERATION 103
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 604 chars
+  Target VL: 2002
+  Mutation Type: source_address
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category 'IP Layer - Addressing' by validating that the source IP must be the ho...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_103_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.68s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.947
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 79 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 103 completed successfully!
+
+======================================================================
+ITERATION 104
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 624 chars
+  Target VL: 1003
+  Mutation Type: transmission_of_entire_static_structure
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered Frame Transmission category by validating that the entire statically configured ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_104_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.03s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 79 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 104 completed successfully!
+
+======================================================================
+ITERATION 105
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 587 chars
+  [NORM] 'IP Layer - Type of Service (5 TCs)' -> 'IP Layer - Type of Service'
+  Target VL: 1001
+  Mutation Type: IP Layer - Type of Service (5 TCs)
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category 'IP Layer - Type of Service' to verify no RFC-795 TOS mappings; uses pred...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_105_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.93s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.300
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 80 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 105 completed successfully!
+
+======================================================================
+ITERATION 106
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 564 chars
+  Target VL: 3001
+  Mutation Type: data_link_layer_per_vl_maximum_frame_length
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Cover uncovered Data-Link Layer category by validating per-VL maximum frame length using structured ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_106_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.49s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 81 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 106 completed successfully!
+
+======================================================================
+ITERATION 107
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 709 chars
+  Target VL: 2001
+  Mutation Type: Port Configuration.port_unidirectional_configuration
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting an UNCOVERED category (Port Configuration) to increase spec coverage. Using predefined TC0...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_107_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.16s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 81 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 107 completed successfully!
+
+======================================================================
+ITERATION 108
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 634 chars
+  Target VL: 2002
+  Mutation Type: source_partition_exclusivity
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category 'Virtual Link Partition Segregation' by validating that a VL is not share...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_108_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 7.01s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 82 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 108 completed successfully!
+
+======================================================================
+ITERATION 109
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 593 chars
+  Target VL: 2003
+  Mutation Type: virtual_link_as_unidirectional_logical_communication_path
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Covers uncovered category 'Virtual Link Definition' with a new rule. Avoids overused mutations and f...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_109_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.94s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.777
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 83 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 109 completed successfully!
+
+======================================================================
+ITERATION 110
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 594 chars
+  Target VL: 3002
+  Mutation Type: transport_layer_port_number
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered category Transport Layer Addressing by validating port range boundary (likely port=...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_110_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 13.12s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 84 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 110 completed successfully!
+
+======================================================================
+ITERATION 111
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 688 chars
+  Target VL: 1001
+  Mutation Type: virtual_link_management.single_source_per_vl_constraint
+  Strategy Type: adversarial
+  Reasoning: Impersonate VL 2001 (ES2 source) while transmitting from VL 1001 (ES1) to violate the single-source-...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_111_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.50s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 85 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 111 completed successfully!
+
+======================================================================
+ITERATION 112
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 578 chars
+  Target VL: 3001
+  Mutation Type: virtual_link_bandwidth
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category Virtual Link Bandwidth (dedicated maximum bandwidth allocation). Using ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_112_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 11.89s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 91.4%
+  Bugs Found: False
+  Recommendation: Coverage so far: 86 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 112 completed successfully!
+
+======================================================================
+ITERATION 113
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 639 chars
+  Target VL: 3002
+  Mutation Type: Traffic Policing.frame_discard_for_non_compliance
+  Custom Values: BAG=None, Size=1500, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Token-bucket stress: send near-MTU frames at default BAG to trigger byte-based policing and validate...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_113_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.36s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 87 unique rules tested. TIP: Try using predefined test_cases fo...
+
+Iteration 113 completed successfully!
+
+======================================================================
+ITERATION 114
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 566 chars
+  Target VL: 3002
+  Mutation Type: IP Addressing.support_local_ip_multicasting
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered IP Addressing category (support_local_ip_multicasting) with a predefined TC to exp...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_114_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.24s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.300
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 87 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 114 completed successfully!
+
+======================================================================
+ITERATION 115
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 563 chars
+  Target VL: 1003
+  Mutation Type: Switch Initialization.pin_programming_read_condition
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Cover uncovered Switch Initialization category using predefined TC; rotate to a lightly tested VL (1...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_115_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.39s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.963
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 88 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 115 completed successfully!
+
+======================================================================
+ITERATION 116
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 559 chars
+  Target VL: 1002
+  Mutation Type: support_subnet_addressing
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category 'IP Layer - Addressing' by validating subnet addressing support; avoids o...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_116_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.13s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.946
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 89 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 116 completed successfully!
+
+======================================================================
+ITERATION 117
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 584 chars
+  Target VL: 2003
+  Mutation Type: ip_version
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category IP Layer - Header Validation by testing silent discard of non-IPv4 datagr...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_117_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.23s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.000
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'ip_version' used 3 times already. Switch to a DIFFERENT ...
+
+Iteration 117 completed successfully!
+
+======================================================================
+ITERATION 118
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 616 chars
+  Target VL: 1001
+  Mutation Type: logical_bandwidth_isolation_between_virtual_links
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category Virtual Link Bandwidth Isolation by verifying logical bandwidth isolati...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_118_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.34s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 44.4%
+  Bugs Found: False
+  Recommendation: Coverage so far: 90 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 118 completed successfully!
+
+======================================================================
+ITERATION 119
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 657 chars
+  Target VL: 1003
+  Mutation Type: Integrity_Checking.first_frame_after_reset_acceptance
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered Integrity Checking category with a new rule. Uses predefined test to verify accept...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_119_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.28s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.879
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 91 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 119 completed successfully!
+
+======================================================================
+ITERATION 120
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 598 chars
+  Target VL: 2002
+  Mutation Type: Switch Initialization.pin_programming_non_volatile_storage
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category Switch Initialization with a non-volatile storage check; builds on prior ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_120_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.27s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.777
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 91 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 120 completed successfully!
+
+======================================================================
+ITERATION 121
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 539 chars
+  Target VL: 2001
+  Mutation Type: port_allocation
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets the uncovered Port Allocation category with predefined TC0 boundary test; rotates to ES2 (VL...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_121_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.63s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 92 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 121 completed successfully!
+
+======================================================================
+ITERATION 122
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 560 chars
+  Target VL: 2001
+  Mutation Type: mac_destination_address_lsb
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered addressing category mac_destination_address_lsb_(group_address). New rule, avoids ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_122_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.54s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.013
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 93 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 122 completed successfully!
+
+======================================================================
+ITERATION 123
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 556 chars
+  Target VL: 2003
+  Mutation Type: valid_functional_status_values
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered Data Handling category via functional_status_valid_values using an invalid enume...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_123_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.09s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 93 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 123 completed successfully!
+
+======================================================================
+ITERATION 124
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 536 chars
+  Target VL: 1001
+  Mutation Type: Jitter.jitter_time_calculation
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered Jitter category via formula Tj = (8*M)/Nbw + Tmin_gap. Avoids overused rules and...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_124_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.59s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 44.4%
+  Bugs Found: False
+  Recommendation: Coverage so far: 93 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 124 completed successfully!
+
+======================================================================
+ITERATION 125
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 661 chars
+  Target VL: 1002
+  Mutation Type: mac_destination_address_second_lsb
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covering uncovered 'addressing' category by verifying the locally administered bit (second LSB) must...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_125_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.17s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.146
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 94 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 125 completed successfully!
+
+======================================================================
+ITERATION 126
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 541 chars
+  Target VL: 1003
+  Mutation Type: transport_layer_port_number
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers the uncovered category 'Transport Layer Addressing' using predefined TC0 for valid port numbe...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_126_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.91s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 95 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 126 completed successfully!
+
+======================================================================
+ITERATION 127
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 573 chars
+  Target VL: 3002
+  Mutation Type: IP Addressing.support_local_ip_multicasting
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category IP Addressing by verifying local IP multicast support with predefined TC;...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_127_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.44s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.240
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 95 unique rules tested. Try edge-case testing to find boundary ...
+
+Iteration 127 completed successfully!
+
+======================================================================
+ITERATION 128
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 603 chars
+  Target VL: 2002
+  Mutation Type: manual_configuration_method
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targeting uncovered category 'IP Layer - Configuration' by validating the manual configuration requi...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_128_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.38s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 95 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 128 completed successfully!
+
+======================================================================
+ITERATION 129
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 651 chars
+  Target VL: 3001
+  Mutation Type: Virtual_Link_Latency
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category [Virtual Link Latency] using predefined test case to verify MAX_Latency_i...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_129_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.28s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.864
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 96 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 129 completed successfully!
+
+======================================================================
+ITERATION 130
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 665 chars
+  Target VL: 2003
+  Mutation Type: Integrity_Checking.first_frame_after_reset_acceptance
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category Integrity Checking with a first-frame-after-reset acceptance check. Seq...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_130_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.24s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.919
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 97 unique rules tested. Good reward. Try a different protocol r...
+
+Iteration 130 completed successfully!
+
+======================================================================
+ITERATION 131
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 574 chars
+  Target VL: 1003
+  Mutation Type: transmission_flow_control_mechanism
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category Flow Control via predefined test case for transmission_flow_control_mecha...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_131_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.31s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 97 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 131 completed successfully!
+
+======================================================================
+ITERATION 132
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 555 chars
+  Target VL: 2002
+  Mutation Type: allowed_port_number_range
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Port Management category by exercising boundary port-number validation; avoids ove...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_132_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.56s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 98 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 132 completed successfully!
+
+======================================================================
+ITERATION 133
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 599 chars
+  Target VL: 3002
+  Mutation Type: IP Header Checksum Verification
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category 'IP Layer - Header Validation' using a predefined test (invalid header ch...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_133_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.26s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 99 unique rules tested. Moderate reward. Consider edge-case or ...
+
+Iteration 133 completed successfully!
+
+======================================================================
+ITERATION 134
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 577 chars
+  Target VL: 1002
+  Mutation Type: default_reception_vl_identifier_format
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category 'Virtual Links Default Configuration' with a new-rule test case. Avoids...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_134_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.12s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 99 unique rules tested. High reward, but ensure you are not rep...
+
+Iteration 134 completed successfully!
+
+======================================================================
+ITERATION 135
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 537 chars
+  Target VL: 2001
+  Mutation Type: maximum_frame_size_range
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered Frame Size category by exercising boundary validation for the allowed [84,1538] byt...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_135_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.22s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 100 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 135 completed successfully!
+
+======================================================================
+ITERATION 136
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 668 chars
+  Target VL: 2001
+  Mutation Type: data_link_layer_per_vl_maximum_frame_length
+  Custom Values: BAG=None, Size=300, Seq=None
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category Data-Link Layer by violating per-VL maximum frame length. VL 2001 has M...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_136_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.14s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 101 unique rules tested. TIP: Try using predefined test_cases f...
+
+Iteration 136 completed successfully!
+
+======================================================================
+ITERATION 137
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 550 chars
+  Target VL: 3002
+  Mutation Type: mac_destination_address_second_lsb
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered addressing rule: destination MAC second LSB must be 1 (locally administered). Avoid...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_137_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.19s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.914
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 101 unique rules tested. Good reward. Try a different protocol ...
+
+Iteration 137 completed successfully!
+
+======================================================================
+ITERATION 138
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 645 chars
+  Target VL: 3001
+  Mutation Type: latency_for_first_frame
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered Frame Latency category with the first-frame latency formula. Prior run showed a ...
+
+[2/4] Generating Test Inputs...
+  Generated 40 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_138_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.17s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 101 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 138 completed successfully!
+
+======================================================================
+ITERATION 139
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 615 chars
+  Target VL: 3002
+  Mutation Type: valid_functional_status_values
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Data Handling category by validating enforcement of allowed functional_status valu...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_139_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.40s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 102 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 139 completed successfully!
+
+======================================================================
+ITERATION 140
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 561 chars
+  Target VL: 1001
+  Mutation Type: IP Addressing.join_all_hosts_group
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered IP Addressing category by verifying host joins 224.0.0.1 at initialization; avoids...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_140_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.60s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.240
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 102 unique rules tested. Try edge-case testing to find boundary...
+
+Iteration 140 completed successfully!
+
+======================================================================
+ITERATION 141
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 679 chars
+  Target VL: 2003
+  Mutation Type: mac_destination_address_lsb
+  Strategy Type: adversarial
+  Reasoning: Targeting uncovered 'addressing' category via MAC destination LSB group-bit rule. Forcing destinatio...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_141_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.16s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.980
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 102 unique rules tested. TIP: Try using predefined test_cases f...
+
+Iteration 141 completed successfully!
+
+======================================================================
+ITERATION 142
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 601 chars
+  Target VL: 1003
+  Mutation Type: IP Addressing.support_local_ip_multicasting
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category IP Addressing by testing support_local_ip_multicasting with predefined TC...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_142_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.19s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.300
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 102 unique rules tested. Try edge-case testing to find boundary...
+
+Iteration 142 completed successfully!
+
+======================================================================
+ITERATION 143
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 588 chars
+  Target VL: 1002
+  Mutation Type: data_format.string_length_field_size
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Data Format category by validating string length field size handling. Avoids overu...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_143_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.32s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 102 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 143 completed successfully!
+
+======================================================================
+ITERATION 144
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 601 chars
+  Target VL: 1001
+  Mutation Type: transport_layer_port_number
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category 'Transport Layer Addressing' by validating port number range boundaries u...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_144_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.32s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 103 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 144 completed successfully!
+
+======================================================================
+ITERATION 145
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 610 chars
+  Target VL: 2002
+  Mutation Type: manual_configuration_method
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covering uncovered category 'IP Layer - Configuration' by testing the requirement for manual configu...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_145_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.67s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.470
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 103 unique rules tested. Good reward. Try a different protocol ...
+
+Iteration 145 completed successfully!
+
+======================================================================
+ITERATION 146
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 582 chars
+  Target VL: 3001
+  Mutation Type: ip_protocol.valid_ip_source_address_requirement_for_transmission
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered IP Addressing rule (source must be host address). Avoids overused mutations and us...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_146_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.53s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 103 unique rules tested. Moderate reward. Consider edge-case or...
+
+Iteration 146 completed successfully!
+
+======================================================================
+ITERATION 147
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 606 chars
+  Target VL: 1002
+  Mutation Type: udp_port_usage_for_afdx_communication_ports
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Covers previously uncovered SPEC category 'Ports' by verifying that AFDX communication ports are def...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_147_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.41s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 103 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 147 completed successfully!
+
+======================================================================
+ITERATION 148
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 624 chars
+  Target VL: 2001
+  Mutation Type: IP Addressing.pass_ip_options_to_transport_layer
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category IP Addressing with a new rule. Verifies that all IP options are passed to...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_148_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.12s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.300
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 104 unique rules tested. Good reward. Try a different protocol ...
+
+Iteration 148 completed successfully!
+
+======================================================================
+ITERATION 149
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 581 chars
+  Target VL: 2003
+  Mutation Type: address_validation.reject_invalid_ip_address_on_open
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered category 'address_validation' by testing rejection of invalid remote IP on OPEN; av...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_149_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.16s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 105 unique rules tested. Good reward. Try a different protocol ...
+
+Iteration 149 completed successfully!
+
+======================================================================
+ITERATION 150
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 607 chars
+  Target VL: 2001
+  Mutation Type: data_link_layer_per_vl_maximum_frame_length
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Data-Link Layer rule (per-VL maximum frame length). Using TC0 against VL 2001 (Max...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_150_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.11s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.603
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'data_link_layer_per_vl_maximum_frame_length' used 3 time...
+
+Iteration 150 completed successfully!
+
+======================================================================
+ITERATION 151
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 662 chars
+  Target VL: 1003
+  Mutation Type: Data Format.boolean_packing_right_justified
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category Data Format with boolean packing right-justified rule. Using predefined...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_151_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.030
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'Data Format.boolean_packing_right_justified' used 3 time...
+
+Iteration 151 completed successfully!
+
+======================================================================
+ITERATION 152
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 564 chars
+  Target VL: 3002
+  Mutation Type: functional_status
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Data Handling category (functional_status_valid_values). Using TC0 to probe invali...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_152_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.36s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 106 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 152 completed successfully!
+
+======================================================================
+ITERATION 153
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 623 chars
+  Target VL: 2002
+  Mutation Type: IP Header Checksum Verification
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category 'IP Layer - Header Validation' (verify_ip_header_checksum_and_discard_if_...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_153_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.18s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 106 unique rules tested. Moderate reward. Consider edge-case or...
+
+Iteration 153 completed successfully!
+
+======================================================================
+ITERATION 154
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 628 chars
+  Target VL: 3001
+  Mutation Type: ACi_initialization
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category Switch Traffic Policing: token_bucket_initialization_(no_jitter) via ACi_...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_154_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.72s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.910
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'ACi_initialization' used 3 times already. Switch to a DI...
+
+Iteration 154 completed successfully!
+
+======================================================================
+ITERATION 155
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 633 chars
+  Target VL: 3002
+  Mutation Type: Traffic Policing.frame_discard_for_non_compliance
+  Custom Values: BAG=None, Size=1024, Seq=None
+  Strategy Type: adversarial
+  Reasoning: Targeting uncovered Traffic Policing by stressing the token-bucket: send max valid frames (1024 byte...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_155_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.80s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.140
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'Traffic Policing.frame_discard_for_non_compliance' used ...
+
+Iteration 155 completed successfully!
+
+======================================================================
+ITERATION 156
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 553 chars
+  Target VL: 2003
+  Mutation Type: transport_layer_port_number
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered category 'Transport Layer Addressing' using boundary port validation; avoids overus...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_156_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.79s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.030
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'transport_layer_port_number' used 3 times already. Switc...
+
+Iteration 156 completed successfully!
+
+======================================================================
+ITERATION 157
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 590 chars
+  Target VL: 1001
+  Mutation Type: TTL
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category 'IP Layer - TTL Handling' using predefined TTL test (TTL=0 must not be ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_157_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.20s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.060
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'TTL' used 3 times already. Switch to a DIFFERENT rule to...
+
+Iteration 157 completed successfully!
+
+======================================================================
+ITERATION 158
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 589 chars
+  Target VL: 1003
+  Mutation Type: Data Format.string_length_field_size
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category Data Format: string_length_field_size. Uses predefined TC0 to validate 16...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_158_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.47s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.030
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'Data Format.string_length_field_size' used 3 times alrea...
+
+Iteration 158 completed successfully!
+
+======================================================================
+ITERATION 159
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 607 chars
+  Target VL: 2002
+  Mutation Type: manual_configuration_method
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category 'IP Layer - Configuration' by validating the manual configuration require...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_159_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.47s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.210
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 106 unique rules tested. Good reward. Try a different protocol ...
+
+Iteration 159 completed successfully!
+
+======================================================================
+ITERATION 160
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 587 chars
+  Target VL: 1002
+  Mutation Type: IP Addressing.support_local_ip_multicasting
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Covers uncovered IP Addressing category (support_local_ip_multicasting) for new-rule bonus while avo...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_160_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.56s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.200
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'IP Addressing.support_local_ip_multicasting' used 3 time...
+
+Iteration 160 completed successfully!
+
+======================================================================
+ITERATION 161
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 558 chars
+  Target VL: 1001
+  Mutation Type: IP Addressing.join_all_hosts_group
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category IP Addressing by verifying join to 224.0.0.1 at startup. Avoids overused ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_161_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.23s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.320
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'IP Addressing.join_all_hosts_group' used 3 times already...
+
+Iteration 161 completed successfully!
+
+======================================================================
+ITERATION 162
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 623 chars
+  Target VL: 2001
+  Mutation Type: udp_checksum
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covering uncovered category UDP Checksum Handling by injecting a UDP datagram with a non-zero invali...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_162_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.910
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'udp_checksum' used 3 times already. Switch to a DIFFEREN...
+
+Iteration 162 completed successfully!
+
+======================================================================
+ITERATION 163
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 558 chars
+  Target VL: 2003
+  Mutation Type: duplicate_frame_discard_requirement
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered Redundancy Management category by forcing a constant RSN to generate duplicates;...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_163_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.23s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.979
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 106 unique rules tested. TIP: Try using predefined test_cases f...
+
+Iteration 163 completed successfully!
+
+======================================================================
+ITERATION 164
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 557 chars
+  Target VL: 1002
+  Mutation Type: ip_header_checksum
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Cover uncovered category IP Layer - Header Validation by testing invalid IP header checksum discard,...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_164_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.70s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.000
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'ip_header_checksum' used 3 times already. Switch to a DI...
+
+Iteration 164 completed successfully!
+
+======================================================================
+ITERATION 165
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 574 chars
+  Target VL: 2001
+  Mutation Type: source_address
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered IP Addressing rule: source address must be one of host's own IPs. Using predefined...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_165_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.68s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.513
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'source_address' used 3 times already. Switch to a DIFFER...
+
+Iteration 165 completed successfully!
+
+======================================================================
+ITERATION 166
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 590 chars
+  Target VL: 3001
+  Mutation Type: ip_version
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category IP Layer - Header Validation by sending a non-IPv4 version (TC0). Avoid...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_166_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.57s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'ip_version' used 4 times already. Switch to a DIFFERENT ...
+
+Iteration 166 completed successfully!
+
+======================================================================
+ITERATION 167
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 543 chars
+  Target VL: 3002
+  Mutation Type: MAC Performance.full_frame_rate_processing_requirement
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Covers previously uncovered category MAC Performance; avoids overused mutations and rotates to ES3 (...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_167_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.44s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.864
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 107 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 167 completed successfully!
+
+======================================================================
+ITERATION 168
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 617 chars
+  Target VL: 2001
+  Mutation Type: data_link_layer_per_vl_maximum_frame_length
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Data-Link Layer category: per_vl_maximum_frame_length. Using TC0 on low-Lmax VL 20...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_168_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.80s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.043
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'data_link_layer_per_vl_maximum_frame_length' used 4 time...
+
+Iteration 168 completed successfully!
+
+======================================================================
+ITERATION 169
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 612 chars
+  Target VL: 1003
+  Mutation Type: mib_variable_update_frequency
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Covering uncovered Switch Monitoring category by verifying 100 ms MIB update interval using predefin...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_169_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.09s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.024
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 108 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 169 completed successfully!
+
+======================================================================
+ITERATION 170
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 563 chars
+  Target VL: 3001
+  Mutation Type: Integrity_Checking.first_frame_after_reset_acceptance
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covering uncovered Integrity Checking category by validating acceptance of the first frame after res...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_170_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.00s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.430
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'Integrity_Checking.first_frame_after_reset_acceptance' u...
+
+Iteration 170 completed successfully!
+
+======================================================================
+ITERATION 171
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 538 chars
+  Target VL: 2002
+  Mutation Type: manual_configuration_method
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category 'IP Layer - Configuration' via predefined rule. Avoids overused mutations...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_171_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.42s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.650
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'manual_configuration_method' used 3 times already. Switc...
+
+Iteration 171 completed successfully!
+
+======================================================================
+ITERATION 172
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 578 chars
+  Target VL: 1001
+  Mutation Type: IP Addressing.support_local_ip_multicasting
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered IP Addressing category (support_local_ip_multicasting) with a predefined test to i...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_172_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.18s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'IP Addressing.support_local_ip_multicasting' used 4 time...
+
+Iteration 172 completed successfully!
+
+======================================================================
+ITERATION 173
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 632 chars
+  [NORM] 'Switch Traffic Policing.token_bucket_initialization_(no_jitter)' -> 'Switch'
+  Target VL: 2003
+  Mutation Type: Switch Traffic Policing.token_bucket_initialization_(no_jitter)
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered category Switch Traffic Policing by testing ACi initial value (no jitter). Prior ru...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_173_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.18s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 109 unique rules tested. Good reward. Try a different protocol ...
+
+Iteration 173 completed successfully!
+
+======================================================================
+ITERATION 174
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 610 chars
+  Target VL: 1002
+  Mutation Type: transport_layer_port_number
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category Transport Layer Addressing.valid_transport_layer_port_number_range using ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_174_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.81s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'transport_layer_port_number' used 4 times already. Switc...
+
+Iteration 174 completed successfully!
+
+======================================================================
+ITERATION 175
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 609 chars
+  Target VL: 1003
+  Mutation Type: Switch Operating Modes.ops_mode_operational_functions
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category 'Switch Operating Modes' by validating OPS operational functions using pr...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_175_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.49s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.963
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 110 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 175 completed successfully!
+
+======================================================================
+ITERATION 176
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 598 chars
+  Target VL: 2002
+  Mutation Type: Fault Tolerance.independent_end_to_end_links
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Covering uncovered category Fault Tolerance by verifying independent end-to-end links using predefin...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_176_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.53s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 111 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 176 completed successfully!
+
+======================================================================
+ITERATION 177
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 571 chars
+  Target VL: 3002
+  Mutation Type: IP Addressing.join_all_hosts_group
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targeting uncovered IP Addressing category by verifying the host joins 224.0.0.1 at startup. This ad...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_177_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.21s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'IP Addressing.join_all_hosts_group' used 4 times already...
+
+Iteration 177 completed successfully!
+
+======================================================================
+ITERATION 178
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 598 chars
+  Target VL: 1001
+  Mutation Type: IP Header Checksum Verification
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category 'IP Layer - Header Validation' by validating discard behavior on invalid ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_178_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.24s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 112 unique rules tested. Moderate reward. Consider edge-case or...
+
+Iteration 178 completed successfully!
+
+======================================================================
+ITERATION 179
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 564 chars
+  Target VL: 2001
+  Mutation Type: Data Format.boolean_packing_right_justified
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered 'Data Format' category by verifying right-justified boolean packing using a predef...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_179_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.36s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.470
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'Data Format.boolean_packing_right_justified' used 4 time...
+
+Iteration 179 completed successfully!
+
+======================================================================
+ITERATION 180
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 610 chars
+  Target VL: 3002
+  Mutation Type: afdx_lru_interoperability
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets the uncovered Interoperability category using predefined TCs for afdx_lru_interoperability. ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_180_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.33s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 112 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 180 completed successfully!
+
+======================================================================
+ITERATION 181
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 570 chars
+  Target VL: 3001
+  Mutation Type: SAP Port.udp_service_access_point_payload_size_limit
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covering uncovered SAP Port category by testing UDP SAP payload size limit (8192 octets). TC0 exerci...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_181_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.17s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 113 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 181 completed successfully!
+
+======================================================================
+ITERATION 182
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 554 chars
+  Target VL: 2003
+  Mutation Type: manual_configuration_method
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Covers uncovered category IP Layer - Configuration (manual_configuration_method_requirement). Avoids...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_182_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.43s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'manual_configuration_method' used 4 times already. Switc...
+
+Iteration 182 completed successfully!
+
+======================================================================
+ITERATION 183
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 637 chars
+  Target VL: 2002
+  Mutation Type: switch_operating_mode_transitions
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category 'Switch Behavior' via predefined test. Recent violation in OPS mode funct...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_183_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.15s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 114 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 183 completed successfully!
+
+======================================================================
+ITERATION 184
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 602 chars
+  Target VL: 3002
+  Mutation Type: switch_operational_modes.ops_mode_entry_conditions
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category 'Switch Operational Modes' with entry condition checks. Prior ops-mode re...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_184_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.53s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 115 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 184 completed successfully!
+
+======================================================================
+ITERATION 185
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 561 chars
+  Target VL: 1002
+  Mutation Type: Protocol_Stack.ieee_802_3_integration
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Covers uncovered category Protocol_Stack via IEEE 802.3 integration rule using predefined TC0; avoid...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_185_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.30s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 116 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 185 completed successfully!
+
+======================================================================
+ITERATION 186
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 640 chars
+  Target VL: 1003
+  Mutation Type: valid_functional_status_values
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered Data Handling category by validating that only allowed functional_status values [0,...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_186_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.970
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'valid_functional_status_values' used 3 times already. Sw...
+
+Iteration 186 completed successfully!
+
+======================================================================
+ITERATION 187
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 671 chars
+  Target VL: 3002
+  Mutation Type: Switch Initialization.pin_programming_read_condition
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category Switch Initialization by verifying program pins are only read when Swit...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_187_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.12s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 117 unique rules tested. Good reward. Try a different protocol ...
+
+Iteration 187 completed successfully!
+
+======================================================================
+ITERATION 188
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 588 chars
+  Target VL: 3001
+  Mutation Type: Transmission.upper_bound_on_rto
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category 'Transmission' via upper_bound_on_rto; avoids overused rules and rotates ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_188_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.14s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.078
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 117 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 188 completed successfully!
+
+======================================================================
+ITERATION 189
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 604 chars
+  Target VL: 1001
+  Mutation Type: Integrity_Checking.first_frame_after_reset_acceptance
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered Integrity Checking category by verifying acceptance of the first frame after reset...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_189_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.18s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.079
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'Integrity_Checking.first_frame_after_reset_acceptance' u...
+
+Iteration 189 completed successfully!
+
+======================================================================
+ITERATION 190
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 526 chars
+  Target VL: 2003
+  Mutation Type: TTL
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targeting uncovered category 'IP Layer - TTL Handling' by testing the prohibition on sending TTL=0 (...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_190_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.46s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'TTL' used 4 times already. Switch to a DIFFERENT rule to...
+
+Iteration 190 completed successfully!
+
+======================================================================
+ITERATION 191
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 575 chars
+  Target VL: 1002
+  Mutation Type: mac_source_address_constant_field
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered 'addressing' category by validating the MAC source constant field. Chose VL 1002 t...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_191_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.16s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.146
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 118 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 191 completed successfully!
+
+======================================================================
+ITERATION 192
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 590 chars
+  Target VL: 2002
+  Mutation Type: IP Header Checksum Verification
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category IP Layer - Header Validation by sending an invalid IP header checksum (TC...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_192_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.37s
+
+[4/4] Analyzing Feedback...
+  Reward: -0.060
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'IP Header Checksum Verification' used 3 times already. S...
+
+Iteration 192 completed successfully!
+
+======================================================================
+ITERATION 193
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 587 chars
+  Target VL: 1001
+  Mutation Type: Data Format.string_length_field_size
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets UNCOVERED Data Format category by validating string length field size; uses a predefined TC ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_193_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.89s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'Data Format.string_length_field_size' used 4 times alrea...
+
+Iteration 193 completed successfully!
+
+======================================================================
+ITERATION 194
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 565 chars
+  Target VL: 2001
+  Mutation Type: udp_checksum
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered UDP Checksum Handling by sending a datagram with a non-zero invalid checksum that ...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_194_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.79s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.350
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'udp_checksum' used 4 times already. Switch to a DIFFEREN...
+
+Iteration 194 completed successfully!
+
+======================================================================
+ITERATION 195
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 609 chars
+  Target VL: 2003
+  Mutation Type: Port Configuration.port_unidirectional_configuration
+  Test Cases: ['TC0']
+  Strategy Type: conformance
+  Reasoning: Targets uncovered category 'Port Configuration' with predefined TC to verify unidirectional port con...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_195_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.75s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.330
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 119 unique rules tested. Good reward. Try a different protocol ...
+
+Iteration 195 completed successfully!
+
+======================================================================
+ITERATION 196
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 531 chars
+  Target VL: 2003
+  Mutation Type: broadcast_addressing
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category 'broadcast_addressing' (standard formats). Avoids overused rules and expa...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_196_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.18s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.947
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 119 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 196 completed successfully!
+
+======================================================================
+ITERATION 197
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 591 chars
+  [NORM] 'Switch Initialization.pin_programming_parity_check' -> 'switch_initialization.pin_programming_parity_check'
+  Target VL: 3001
+  Mutation Type: Switch Initialization.pin_programming_parity_check
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered category Switch Initialization (pin parity). Related read_condition test previousl...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_197_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.39s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 120 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 197 completed successfully!
+
+======================================================================
+ITERATION 198
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 613 chars
+  Target VL: 1003
+  Mutation Type: valid_functional_status_values
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Covers uncovered category Data Handling.functional_status_valid_values using a new rule. Avoids over...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_198_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.64s
+
+[4/4] Analyzing Feedback...
+  Reward: 0.410
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: WARNING: mutation_type 'valid_functional_status_values' used 4 times already. Sw...
+
+Iteration 198 completed successfully!
+
+======================================================================
+ITERATION 199
+======================================================================
+
+[1/4] LLM Planning Strategy...
+[OpenAI] gpt-5 -> 598 chars
+  Target VL: 2002
+  Mutation Type: transport_layer_addressing.dynamic/private_port_number_range
+  Test Cases: ['TC0']
+  Strategy Type: edge-case
+  Reasoning: Targets uncovered Transport Layer Addressing by exercising boundary conditions of dynamic/private po...
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_llm_A2/iteration_199_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.17s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.947
+  Policing Rate: 0.0%
+  Bugs Found: False
+  Recommendation: Coverage so far: 121 unique rules tested. High reward, but ensure you are not re...
+
+Iteration 199 completed successfully!
+
+Stopping: Reached max iterations (200)
+
+
+Generating final report...
+
+======================================================================
+LLM-GUIDED FUZZING - FINAL REPORT
+======================================================================
+
+Total Iterations: 200
+Successful: 200
+Failed: 0
+
+Reward Statistics:
+  Mean: 1.533
+  Max: 2.530
+  Min: -0.700
+
+Bugs Found: 0
+
+VLs Tested: 8 / 8
+  VL IDs: [np.int64(1001), np.int64(1002), np.int64(1003), np.int64(2001), np.int64(2002), np.int64(2003), np.int64(3001), np.int64(3002)]
+
+Protocol Rules Tested: 122
+  Rules: ['ACi_initialization', 'Byte_ACi', 'Communication Mode.bi_directional_communication_ports', 'Data Format.boolean_packing_right_justified', 'Data Format.string_length_field_size', 'Data Format.variable_length_opaque_data_length_field_value', 'Data Representation.bit_order_on_ethernet_medium', 'Error Handling.buffer_overflow_handling_in_transmission', 'Fault Tolerance.independent_end_to_end_links', 'Frame Configuration.ethernet_frame_size_range', 'Frame Construction.no_unused_bytes_between_data_primitives', 'Frame Identification.unique_message_identification', 'IP Addressing.join_all_hosts_group', 'IP Addressing.pass_ip_options_to_transport_layer', 'IP Addressing.support_local_ip_multicasting', 'IP Header Checksum Verification', 'IP Layer - IP Options.stream_identifier_option_handling', 'IP Layer - Type of Service', 'IP Options', 'Integrity_Checking.first_frame_after_reset_acceptance', 'Jitter.jitter_time_calculation', 'MAC Performance.full_frame_rate_processing_requirement', 'Network Layer.data_flow_identification_and_frame_filtering', 'Network Monitoring.record_discarded_datagrams_in_counter', 'Port Configuration.port_unidirectional_configuration', 'Protocol_Stack.ieee_802_3_integration', 'SAP Port.udp_service_access_point_payload_size_limit', 'Switch', 'Switch Configuration.ops_configuration_file_uniformity', 'Switch Initialization.pin_programming_non_volatile_storage', 'Switch Initialization.pin_programming_read_condition', 'Switch Operating Modes.ops_mode_operational_functions', 'Switching.virtual_link_based_switching', 'TTL', 'Traffic Control', 'Traffic Policing', 'Traffic Policing.byte_based_traffic_policing', 'Traffic Policing.frame_discard_for_non_compliance', 'Traffic Policing.one_bag,_jitter,_and_maximum_size_value_per_vl', 'Traffic Shaping.bag_frame_rate_limiting', 'Transmission.upper_bound_on_rto', 'Virtual_Link_Latency', 'address_validation.reject_invalid_ip_address_on_open', 'afdx_lru_interoperability', 'allowed_port_number_range', 'broadcast_address_recognition', 'broadcast_addressing', 'complete_message_reassembly_before_delivery', 'configuration_management.configuration_file_selection_exclusivity', 'continuous_transmission_on_link_failure', 'data_alignment.double_precision_float_address_alignment', 'data_format.string_length_field_size', 'data_formatting.big_endian_byte_order_requirement', 'data_link_layer_per_vl_maximum_frame_length', 'default_reception_vl_identifier_format', 'destination_address_validity', 'duplicate_frame_discard_requirement', 'end_system_wire_speed_throughput_capability', 'ethernet_frame_compliance', 'fixed_length_arinc_429_label_encapsulation', 'frame_discard_on_link_failure', 'frame_validation.ethernet_frame_size_upper_limit', 'functional_status', 'functional_status_set_structure', 'high_priority_frame_transmission_precedence', 'integrity_checking.invalid_frame_discard_rule', 'ip_header_checksum', 'ip_protocol.valid_ip_source_address_requirement_for_transmission', 'ip_version', 'ip_version_field', 'ipv4_packet_structure_compliance', 'ipv4_total_length_field_range', 'latency_for_first_frame', 'length_field_accuracy_in_variable_length_messages', 'logical_bandwidth_isolation_between_virtual_links', 'mac_destination_address_format', 'mac_destination_address_lsb', 'mac_destination_address_second_lsb', 'mac_source_address_constant_field', 'manual_configuration_method', 'maximum_afdx_frame_length', 'maximum_bandwidth_allocation_for_virtual_link', 'maximum_frame_size_range', 'mib_variable_update_frequency', 'minimum_reassembly_buffer_size', 'monitoring_function_required', 'output_buffer_size_for_high_priority_vls', 'port_allocation', 'reassemble_incoming_datagrams', 'reserved_field', 'reserved_word_alignment', 'sampling_service_connectionless', 'sap_port_reception_uniqueness', 'sequence_number_length', 'signed_64_bit_integer_range', 'source_address', 'source_partition_exclusivity', 'support_ip_reassembly', 'support_subnet_addressing', 'switch_initialization.pin_programming_parity_check', 'switch_operating_mode_transitions', 'switch_operational_modes.ops_mode_entry_conditions', 'switch_position_based_configuration_access', 'traffic_policing.ac_account_crediting_rate_limit', 'traffic_policing_requirement', 'transmission_flow_control_mechanism', 'transmission_of_entire_static_structure', 'transport_layer_addressing.dynamic/private_port_number_range', 'transport_layer_port_number', 'ttl_decrement_on_forwarding', 'ttl_default_value_in_afdx', 'udp_checksum', 'udp_port_unreachable_message_prohibition', 'udp_port_usage_for_afdx_communication_ports', 'unused_boolean_bits', 'valid_functional_status_values', 'virtual_link_as_unidirectional_logical_communication_path', 'virtual_link_bandwidth', 'virtual_link_management.single_source_per_vl_constraint', 'virtual_link_source_uniqueness', 'vl_id', 'vl_must_be_valid_for_reception_on_destination_port']
+
+Strategy Distribution:
+  edge-case: 131
+  conformance: 44
+  adversarial: 25
+
+Top 5 Iterations (by reward):
+  Iter 1: VL=2001, rule=udp_checksum, reward=2.530
+  Iter 17: VL=2002, rule=data_formatting.big_endian_byte_order_requirement, reward=2.530
+  Iter 19: VL=3001, rule=functional_status, reward=2.530
+  Iter 30: VL=3002, rule=sap_port_reception_uniqueness, reward=2.530
+  Iter 31: VL=3001, rule=ACi_initialization, reward=2.530
+
+======================================================================
+
+Report saved to: /tmp/afdx_campaigns_v2/out_llm_A2/fuzzing_report_20261109_200741.txt
+Full history saved to: /tmp/afdx_campaigns_v2/out_llm_A2/history_20261109_200741.csv
+
+Fuzzing completed!

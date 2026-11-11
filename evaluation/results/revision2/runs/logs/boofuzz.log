@@ -1,0 +1,5032 @@
+Initializing components...
+All components initialized successfully!
+
+======================================================================
+BOOFUZZ BASELINE FUZZER
+======================================================================
+
+Configuration:
+  Max iterations: 200
+  Available VLs: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002]
+  Total test cases: 3956
+  Simulator: ns-3 (real)
+  History File: evaluation/results/revision2/runs/boofuzz.jsonl
+  Output Directory: /tmp/afdx_campaigns_v2/out_boofuzz
+======================================================================
+
+No previous history found. Starting fresh.
+
+======================================================================
+ITERATION 0
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: ttl_default_value_in_afdx_TC0
+  Rule: ttl_default_value_in_afdx
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_000_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.14s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 0 completed successfully!
+
+======================================================================
+ITERATION 1
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: broadcast_address_recognition_TC0
+  Rule: broadcast_address_recognition
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_001_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.49s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.146
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 1 completed successfully!
+
+======================================================================
+ITERATION 2
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: output_buffer_size_for_low_priority_vls_TC0
+  Rule: output_buffer_size_for_low_priority_vls
+  Type: negative
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_002_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.57s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 2 completed successfully!
+
+======================================================================
+ITERATION 3
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: Communication Mode.static_addressing_for_intra_afdx_TC0
+  Rule: Communication Mode.static_addressing_for_intra_afdx
+  Type: dynamic_address
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_003_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.50s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.013
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 3 completed successfully!
+
+======================================================================
+ITERATION 4
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: sampling_message_size_constraint_TC0
+  Rule: sampling_message_size_constraint
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_004_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.20s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 4 completed successfully!
+
+======================================================================
+ITERATION 5
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: switch_position_based_configuration_access_TC0
+  Rule: switch_position_based_configuration_access
+  Type: position_mismatch
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_005_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.17s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 5 completed successfully!
+
+======================================================================
+ITERATION 6
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: default_configuration_table_TC0
+  Rule: default_configuration_table
+  Type: null_value
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_006_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 8.93s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 6 completed successfully!
+
+======================================================================
+ITERATION 7
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: reserved_word_alignment_TC0
+  Rule: reserved_word_alignment
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_007_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.23s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 7 completed successfully!
+
+======================================================================
+ITERATION 8
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: Data Encoding.allowed_primitive_data_types_TC0
+  Rule: Data Encoding.allowed_primitive_data_types
+  Type: not_in_list
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_008_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.25s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 8 completed successfully!
+
+======================================================================
+ITERATION 9
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: Data Format.boolean_packing_right_justified_TC0
+  Rule: Data Format.boolean_packing_right_justified
+  Type: left_justified
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_009_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.62s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 9 completed successfully!
+
+======================================================================
+ITERATION 10
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: Data Representation_TC0
+  Rule: Data Representation
+  Type: little_endian
+
+[2/4] Generating Test Inputs...
+  Generated 40 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_010_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 8.92s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 10 completed successfully!
+
+======================================================================
+ITERATION 11
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: functional_status_set_structure_TC0
+  Rule: functional_status_set_structure
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_011_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.28s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 11 completed successfully!
+
+======================================================================
+ITERATION 12
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: data_link_layer.ieee_802.3_ethernet_compliance_TC0
+  Rule: data_link_layer.ieee_802.3_ethernet_compliance
+  Type: not_full_duplex
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_012_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.02s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 12 completed successfully!
+
+======================================================================
+ITERATION 13
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: sap_port_transmission_uniqueness_TC0
+  Rule: sap_port_transmission_uniqueness
+  Type: duplicate_link
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_013_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.42s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 13 completed successfully!
+
+======================================================================
+ITERATION 14
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: end_system_wire_speed_throughput_capability_TC0
+  Rule: end_system_wire_speed_throughput_capability
+  Type: below_required_throughput
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_014_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 8.98s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 14 completed successfully!
+
+======================================================================
+ITERATION 15
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: Error Handling.buffer_overflow_handling_in_transmission_TC0
+  Rule: Error Handling.buffer_overflow_handling_in_transmission
+  Type: no_error_handling
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_015_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.57s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 15 completed successfully!
+
+======================================================================
+ITERATION 16
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: ethernet_frame_compliance_TC0
+  Rule: ethernet_frame_compliance
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_016_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.76s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 16 completed successfully!
+
+======================================================================
+ITERATION 17
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: frame_discard_on_link_failure_TC0
+  Rule: frame_discard_on_link_failure
+  Type: behavioral_violation
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_017_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.90s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 17 completed successfully!
+
+======================================================================
+ITERATION 18
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: Fault Tolerance.independent_end_to_end_links_TC0
+  Rule: Fault Tolerance.independent_end_to_end_links
+  Type: shared_resource
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_018_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 8.80s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 18 completed successfully!
+
+======================================================================
+ITERATION 19
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: transmission_flow_control_mechanism_TC0
+  Rule: transmission_flow_control_mechanism
+  Type: exceeding_rate
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_019_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.29s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 19 completed successfully!
+
+======================================================================
+ITERATION 20
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: Fragmentation.sampling_message_size_limitation_TC0
+  Rule: Fragmentation.sampling_message_size_limitation
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_020_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.72s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 20 completed successfully!
+
+======================================================================
+ITERATION 21
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: virtual_link_frame_size_range_TC0
+  Rule: virtual_link_frame_size_range
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_021_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.74s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 21 completed successfully!
+
+======================================================================
+ITERATION 22
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: Frame Construction_TC0
+  Rule: Frame Construction
+  Type: shift_data_set
+
+[2/4] Generating Test Inputs...
+  Generated 40 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_022_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.77s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 22 completed successfully!
+
+======================================================================
+ITERATION 23
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: frame_check_sequence_validity_TC0
+  Rule: frame_check_sequence_validity
+  Type: incorrect_fcs
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_023_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.32s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.930
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 23 completed successfully!
+
+======================================================================
+ITERATION 24
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: fixed_length_arinc_429_label_encapsulation_TC0
+  Rule: fixed_length_arinc_429_label_encapsulation
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_024_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.38s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 24 completed successfully!
+
+======================================================================
+ITERATION 25
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: Frame Identification.unique_message_identification_TC0
+  Rule: Frame Identification.unique_message_identification
+  Type: duplicate
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_025_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.96s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 25 completed successfully!
+
+======================================================================
+ITERATION 26
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: Frame Latency.latency_for_delayed_frame_TC0
+  Rule: Frame Latency.latency_for_delayed_frame
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_026_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.16s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 26 completed successfully!
+
+======================================================================
+ITERATION 27
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: maximum_afdx_frame_length_TC0
+  Rule: maximum_afdx_frame_length
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_027_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.58s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 27 completed successfully!
+
+======================================================================
+ITERATION 28
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: maximum_frame_size_range_TC0
+  Rule: maximum_frame_size_range
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_028_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.59s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 28 completed successfully!
+
+======================================================================
+ITERATION 29
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: sequence_number_location_in_frame_TC0
+  Rule: sequence_number_location_in_frame
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_029_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.24s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.979
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 29 completed successfully!
+
+======================================================================
+ITERATION 30
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: transmission_of_entire_static_structure_TC0
+  Rule: transmission_of_entire_static_structure
+  Type: incomplete_transmission
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_030_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 9.11s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 30 completed successfully!
+
+======================================================================
+ITERATION 31
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: mac_destination_address_32_bit_constant_field_validation_TC0
+  Rule: mac_destination_address_32_bit_constant_field_validation
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_031_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.23s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.914
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 31 completed successfully!
+
+======================================================================
+ITERATION 32
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: IP Addressing.discard_datagram_with_bad_destination_address_TC0
+  Rule: IP Addressing.discard_datagram_with_bad_destination_address
+  Type: broadcast_address
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_032_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.85s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 32 completed successfully!
+
+======================================================================
+ITERATION 33
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: ttl_decrement_on_forwarding_TC0
+  Rule: ttl_decrement_on_forwarding
+  Type: no_decrement
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_033_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.99s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 33 completed successfully!
+
+======================================================================
+ITERATION 34
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: support_subnet_addressing_TC0
+  Rule: support_subnet_addressing
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_034_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.013
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 34 completed successfully!
+
+======================================================================
+ITERATION 35
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: support_ip_reassembly_TC0
+  Rule: support_ip_reassembly
+  Type: missing_fragment
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_035_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.10s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 35 completed successfully!
+
+======================================================================
+ITERATION 36
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: IP Layer - IP Options.non_redundant_return_route_construction_TC0
+  Rule: IP Layer - IP Options.non_redundant_return_route_construction
+  Type: redundant_route
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_036_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.61s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 36 completed successfully!
+
+======================================================================
+ITERATION 37
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: IP Layer - Type of Service_TC0
+  Rule: IP Layer - Type of Service
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_037_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.96s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 37 completed successfully!
+
+======================================================================
+ITERATION 38
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: IP Header Checksum Verification_TC0
+  Rule: IP Header Checksum Verification
+  Type: corrupted_checksum
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_038_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.05s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 38 completed successfully!
+
+======================================================================
+ITERATION 39
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: ipv4_total_length_field_range_TC0
+  Rule: ipv4_total_length_field_range
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_039_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.79s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 39 completed successfully!
+
+======================================================================
+ITERATION 40
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: ipv4_packet_structure_compliance_TC0
+  Rule: ipv4_packet_structure_compliance
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_040_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.52s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 40 completed successfully!
+
+======================================================================
+ITERATION 41
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: Integrity_Checking.first_frame_after_reset_acceptance_TC0
+  Rule: Integrity_Checking.first_frame_after_reset_acceptance
+  Type: invalid_action
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_041_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.34s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.279
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 41 completed successfully!
+
+======================================================================
+ITERATION 42
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: afdx_lru_interoperability_TC0
+  Rule: afdx_lru_interoperability
+  Type: not_afdx_compliant
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_042_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 17.27s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 42 completed successfully!
+
+======================================================================
+ITERATION 43
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: Jitter_TC0
+  Rule: Jitter
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 40 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_043_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.39s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.896
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 43 completed successfully!
+
+======================================================================
+ITERATION 44
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: total_end_to_end_latency_formula_TC0
+  Rule: total_end_to_end_latency_formula
+  Type: negative
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_044_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.28s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 49.9%
+  Bugs Found: False
+
+Iteration 44 completed successfully!
+
+======================================================================
+ITERATION 45
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: Latency Determinism.constant_end_to_end_latency_in_point_to_point_system_TC0
+  Rule: Latency Determinism.constant_end_to_end_latency_in_point_to_point_system
+  Type: variable_latency
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_045_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.22s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 49.9%
+  Bugs Found: False
+
+Iteration 45 completed successfully!
+
+======================================================================
+ITERATION 46
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: transmission_continuity_on_link_failure_TC0
+  Rule: transmission_continuity_on_link_failure
+  Type: boolean_violation
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_046_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.81s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 46 completed successfully!
+
+======================================================================
+ITERATION 47
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: mac_destination_address_format_TC0
+  Rule: mac_destination_address_format
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_047_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.91s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.914
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 47 completed successfully!
+
+======================================================================
+ITERATION 48
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: MAC Performance.full_frame_rate_processing_requirement_TC0
+  Rule: MAC Performance.full_frame_rate_processing_requirement
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_048_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.23s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 48 completed successfully!
+
+======================================================================
+ITERATION 49
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: message_padding_for_bandwidth_allocation_TC0
+  Rule: message_padding_for_bandwidth_allocation
+  Type: omitted_padding
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_049_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.50s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 44.4%
+  Bugs Found: False
+
+Iteration 49 completed successfully!
+
+======================================================================
+ITERATION 50
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: reserved_field_content_TC0
+  Rule: reserved_field_content
+  Type: all_ones
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_050_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.66s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 50 completed successfully!
+
+======================================================================
+ITERATION 51
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: afdx_network_deterministic_behavior_requirement_TC0
+  Rule: afdx_network_deterministic_behavior_requirement
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_051_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.77s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 51 completed successfully!
+
+======================================================================
+ITERATION 52
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: network_behavior_TC0
+  Rule: network_behavior
+  Type: timing_violation
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_052_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.68s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 52 completed successfully!
+
+======================================================================
+ITERATION 53
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: monitoring_function_required_TC0
+  Rule: monitoring_function_required
+  Type: feature_disabled
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_053_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.29s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 53 completed successfully!
+
+======================================================================
+ITERATION 54
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: Network Layer.data_flow_identification_and_frame_filtering_TC0
+  Rule: Network Layer.data_flow_identification_and_frame_filtering
+  Type: invalid_mac_address
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_054_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.49s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 54 completed successfully!
+
+======================================================================
+ITERATION 55
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: log_discarded_datagrams_TC0
+  Rule: log_discarded_datagrams
+  Type: no_logging
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_055_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.29s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 55 completed successfully!
+
+======================================================================
+ITERATION 56
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: bounded_delay_jitter_for_flow_TC0
+  Rule: bounded_delay_jitter_for_flow
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_056_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.53s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 44.4%
+  Bugs Found: False
+
+Iteration 56 completed successfully!
+
+======================================================================
+ITERATION 57
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: Performance.maximum_allowed_jitter_in_transmission_(formula_1)_TC0
+  Rule: Performance.maximum_allowed_jitter_in_transmission_(formula_1)
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_057_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.60s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 44.4%
+  Bugs Found: False
+
+Iteration 57 completed successfully!
+
+======================================================================
+ITERATION 58
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: default_physical_port_speed_configuration_TC0
+  Rule: default_physical_port_speed_configuration
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_058_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.45s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.176
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 58 completed successfully!
+
+======================================================================
+ITERATION 59
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: physical_layer_compatibility_TC0
+  Rule: physical_layer_compatibility
+  Type: not_in_list
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_059_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.80s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 59 completed successfully!
+
+======================================================================
+ITERATION 60
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: Physical_Layer.physical_layer_compliance_TC0
+  Rule: Physical_Layer.physical_layer_compliance
+  Type: not_in_list
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_060_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 60 completed successfully!
+
+======================================================================
+ITERATION 61
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: Policing.default_vl_policing_activation_TC0
+  Rule: Policing.default_vl_policing_activation
+  Type: explicit_disable
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_061_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.85s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 61 completed successfully!
+
+======================================================================
+ITERATION 62
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: port_allocation_TC0
+  Rule: port_allocation
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_062_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.84s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 62 completed successfully!
+
+======================================================================
+ITERATION 63
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: Port Configuration.no_shared_transmit_ports_TC0
+  Rule: Port Configuration.no_shared_transmit_ports
+  Type: same_physical_port_shared
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_063_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.34s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 63 completed successfully!
+
+======================================================================
+ITERATION 64
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: allowed_port_number_range_TC0
+  Rule: allowed_port_number_range
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_064_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 13.24s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 64 completed successfully!
+
+======================================================================
+ITERATION 65
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: udp_port_usage_for_afdx_communication_ports_TC0
+  Rule: udp_port_usage_for_afdx_communication_ports
+  Type: negative
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_065_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 8.31s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 65 completed successfully!
+
+======================================================================
+ITERATION 66
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: tcp_sender_buffering_prohibition_TC0
+  Rule: tcp_sender_buffering_prohibition
+  Type: indefinite_buffering
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_066_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 13.47s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 66 completed successfully!
+
+======================================================================
+ITERATION 67
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: protocol_usage_TC0
+  Rule: protocol_usage
+  Type: not_in_list
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_067_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.26s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 67 completed successfully!
+
+======================================================================
+ITERATION 68
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: Protocol_Stack.ieee_802_3_integration_TC0
+  Rule: Protocol_Stack.ieee_802_3_integration
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_068_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 68 completed successfully!
+
+======================================================================
+ITERATION 69
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: Quality_of_Service.timely_delivery_requirement_TC0
+  Rule: Quality_of_Service.timely_delivery_requirement
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_069_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.63s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 69 completed successfully!
+
+======================================================================
+ITERATION 70
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: reassemble_incoming_datagrams_TC0
+  Rule: reassemble_incoming_datagrams
+  Type: missing_fragment
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_070_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.82s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 70 completed successfully!
+
+======================================================================
+ITERATION 71
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: complete_message_reassembly_before_delivery_TC0
+  Rule: complete_message_reassembly_before_delivery
+  Type: incomplete_reassembly
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_071_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.01s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 71 completed successfully!
+
+======================================================================
+ITERATION 72
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: redundancy_per_virtual_link_configurability_TC0
+  Rule: redundancy_per_virtual_link_configurability
+  Type: null_value
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_072_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.89s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.279
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 72 completed successfully!
+
+======================================================================
+ITERATION 73
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: redundant_frame_transmission_on_dual_networks_TC0
+  Rule: redundant_frame_transmission_on_dual_networks
+  Type: missing_on_B
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_073_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.24s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 73 completed successfully!
+
+======================================================================
+ITERATION 74
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: Reliability.real_time_communication_links_TC0
+  Rule: Reliability.real_time_communication_links
+  Type: excessive_latency
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_074_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.73s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 74 completed successfully!
+
+======================================================================
+ITERATION 75
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: SAP Port.udp_service_access_point_payload_size_limit_TC0
+  Rule: SAP Port.udp_service_access_point_payload_size_limit
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_075_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.94s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 75 completed successfully!
+
+======================================================================
+ITERATION 76
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: Scheduling.maximum_jitter_constraint_TC0
+  Rule: Scheduling.maximum_jitter_constraint
+  Type: negative
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_076_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 11.64s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 91.3%
+  Bugs Found: False
+
+Iteration 76 completed successfully!
+
+======================================================================
+ITERATION 77
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: sequence_number_length_TC0
+  Rule: sequence_number_length
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 17 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_077_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.45s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.733
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 77 completed successfully!
+
+======================================================================
+ITERATION 78
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: Service Guarantees.end_to_end_delay_upper_bound_guarantee_TC0
+  Rule: Service Guarantees.end_to_end_delay_upper_bound_guarantee
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_078_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.75s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 50.8%
+  Bugs Found: False
+
+Iteration 78 completed successfully!
+
+======================================================================
+ITERATION 79
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: service_class_requirement_TC0
+  Rule: service_class_requirement
+  Type: not_in_list
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_079_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.27s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 79 completed successfully!
+
+======================================================================
+ITERATION 80
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: gateway_status_indication_TC0
+  Rule: gateway_status_indication
+  Type: missing_value
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_080_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.35s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 80 completed successfully!
+
+======================================================================
+ITERATION 81
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: sub_vl_fifo_queue_exclusivity_TC0
+  Rule: sub_vl_fifo_queue_exclusivity
+  Type: multiple_readers
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_081_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.73s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 81 completed successfully!
+
+======================================================================
+ITERATION 82
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: Sub-VL Fragmentation.fragment_aware_round_robin_scheduling_TC0
+  Rule: Sub-VL Fragmentation.fragment_aware_round_robin_scheduling
+  Type: repeated_fragment
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_082_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.86s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 82 completed successfully!
+
+======================================================================
+ITERATION 83
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: sub_vl_layering_TC0
+  Rule: sub_vl_layering
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_083_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.86s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.043
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 83 completed successfully!
+
+======================================================================
+ITERATION 84
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: sub_vl_fifo_queue_limit_per_vl_TC0
+  Rule: sub_vl_fifo_queue_limit_per_vl
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_084_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.22s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 84 completed successfully!
+
+======================================================================
+ITERATION 85
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: sub_vl_round_robin_scheduling_TC0
+  Rule: sub_vl_round_robin_scheduling
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_085_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.57s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 85 completed successfully!
+
+======================================================================
+ITERATION 86
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: Switch.switch_filtering_rules_enforcement_TC0
+  Rule: Switch.switch_filtering_rules_enforcement
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_086_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.65s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 86 completed successfully!
+
+======================================================================
+ITERATION 87
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: fault_indicator_during_initialization_TC0
+  Rule: fault_indicator_during_initialization
+  Type: premature_transition
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_087_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.31s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 87 completed successfully!
+
+======================================================================
+ITERATION 88
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: configuration_management.configuration_file_selection_exclusivity_TC0
+  Rule: configuration_management.configuration_file_selection_exclusivity
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_088_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.31s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 88 completed successfully!
+
+======================================================================
+ITERATION 89
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: Switch Initialization.pin_programming_non_volatile_storage_TC0
+  Rule: Switch Initialization.pin_programming_non_volatile_storage
+  Type: data_loss
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_089_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.83s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.176
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 89 completed successfully!
+
+======================================================================
+ITERATION 90
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: Switch Modes.switch_enters_dl_mode_from_init_TC0
+  Rule: Switch Modes.switch_enters_dl_mode_from_init
+  Type: Switch_Ground_Condition_inactive
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_090_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.32s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 90 completed successfully!
+
+======================================================================
+ITERATION 91
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: mib_variable_update_frequency_TC0
+  Rule: mib_variable_update_frequency
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_091_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.11s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.079
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 91 completed successfully!
+
+======================================================================
+ITERATION 92
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: Switch Operating Modes.ops_mode_operational_functions_TC0
+  Rule: Switch Operating Modes.ops_mode_operational_functions
+  Type: not_in_list
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_092_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.67s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 92 completed successfully!
+
+======================================================================
+ITERATION 93
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: Switch Operational Modes.passive_mode_default_vls_for_management_TC0
+  Rule: Switch Operational Modes.passive_mode_default_vls_for_management
+  Type: not_in_list
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_093_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.92s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 93 completed successfully!
+
+======================================================================
+ITERATION 94
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: wire_speed_frame_relay_TC0
+  Rule: wire_speed_frame_relay
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_094_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.82s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 94 completed successfully!
+
+======================================================================
+ITERATION 95
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: traffic_policing_requirement_TC0
+  Rule: traffic_policing_requirement
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_095_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.49s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 95 completed successfully!
+
+======================================================================
+ITERATION 96
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: Switch Traffic Policing.budget_account_non_consumption_for_invalid_frames_TC0
+  Rule: Switch Traffic Policing.budget_account_non_consumption_for_invalid_frames
+  Type: invalid_error_handling
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_096_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.28s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 96 completed successfully!
+
+======================================================================
+ITERATION 97
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: Switching.frame_discard_on_buffer_congestion_TC0
+  Rule: Switching.frame_discard_on_buffer_congestion
+  Type: ignores_congestion
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_097_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.25s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 97 completed successfully!
+
+======================================================================
+ITERATION 98
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: maximum_frame_delay_enforcement_TC0
+  Rule: maximum_frame_delay_enforcement
+  Type: negative
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_098_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.57s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 98 completed successfully!
+
+======================================================================
+ITERATION 99
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: maximum_bandwidth_allocation_for_virtual_link_TC0
+  Rule: maximum_bandwidth_allocation_for_virtual_link
+  Type: divide_by_zero
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_099_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 5.02s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 48.2%
+  Bugs Found: False
+
+Iteration 99 completed successfully!
+
+======================================================================
+ITERATION 100
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: ordinal_integrity_within_virtual_link_TC0
+  Rule: ordinal_integrity_within_virtual_link
+  Type: out_of_order
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_100_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.13s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.979
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 100 completed successfully!
+
+======================================================================
+ITERATION 101
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: Frame Configuration.ethernet_frame_size_range_TC0
+  Rule: Frame Configuration.ethernet_frame_size_range
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_101_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.84s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 101 completed successfully!
+
+======================================================================
+ITERATION 102
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: high_priority_frame_transmission_precedence_TC0
+  Rule: high_priority_frame_transmission_precedence
+  Type: incorrect_order
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_102_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.72s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 102 completed successfully!
+
+======================================================================
+ITERATION 103
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: Traffic Shaping.bag_frame_rate_limiting_TC0
+  Rule: Traffic Shaping.bag_frame_rate_limiting
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_103_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.93s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 33.3%
+  Bugs Found: False
+
+Iteration 103 completed successfully!
+
+======================================================================
+ITERATION 104
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: Transmission.nagle_algorithm_TC0
+  Rule: Transmission.nagle_algorithm
+  Type: invalid_value
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_104_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.92s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 104 completed successfully!
+
+======================================================================
+ITERATION 105
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: udp_port_unreachable_message_prohibition_TC0
+  Rule: udp_port_unreachable_message_prohibition
+  Type: message_generation
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_105_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.58s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 105 completed successfully!
+
+======================================================================
+ITERATION 106
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: virtual_link_bandwidth_TC0
+  Rule: virtual_link_bandwidth
+  Type: negative
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_106_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 12.20s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 91.2%
+  Bugs Found: False
+
+Iteration 106 completed successfully!
+
+======================================================================
+ITERATION 107
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: logical_bandwidth_isolation_between_virtual_links_TC0
+  Rule: logical_bandwidth_isolation_between_virtual_links
+  Type: bandwidth_sharing
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_107_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.57s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 48.2%
+  Bugs Found: False
+
+Iteration 107 completed successfully!
+
+======================================================================
+ITERATION 108
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: jitter_definition_for_virtual_link_TC0
+  Rule: jitter_definition_for_virtual_link
+  Type: negative
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_108_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.11s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 108 completed successfully!
+
+======================================================================
+ITERATION 109
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: virtual_link_as_unidirectional_logical_communication_path_TC0
+  Rule: virtual_link_as_unidirectional_logical_communication_path
+  Type: multiple_sources
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_109_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.77s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 109 completed successfully!
+
+======================================================================
+ITERATION 110
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: Virtual_Link_Latency_TC0
+  Rule: Virtual_Link_Latency
+  Type: negative
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_110_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.77s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 110 completed successfully!
+
+======================================================================
+ITERATION 111
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: source_partition_exclusivity_TC0
+  Rule: source_partition_exclusivity
+  Type: multiple_sources
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_111_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.04s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 111 completed successfully!
+
+======================================================================
+ITERATION 112
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: virtual_link_source_uniqueness_TC0
+  Rule: virtual_link_source_uniqueness
+  Type: multiple_sources
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_112_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.51s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.176
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 112 completed successfully!
+
+======================================================================
+ITERATION 113
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: default_reception_vl_identifier_format_TC0
+  Rule: default_reception_vl_identifier_format
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_113_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.57s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.176
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 113 completed successfully!
+
+======================================================================
+ITERATION 114
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: address_validation.reject_invalid_ip_address_on_open_TC0
+  Rule: address_validation.reject_invalid_ip_address_on_open
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_114_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.46s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 114 completed successfully!
+
+======================================================================
+ITERATION 115
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: mac_source_address_constant_field_TC0
+  Rule: mac_source_address_constant_field
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_115_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.65s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.013
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 115 completed successfully!
+
+======================================================================
+ITERATION 116
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: broadcast_addressing_TC0
+  Rule: broadcast_addressing
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_116_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.72s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.947
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 116 completed successfully!
+
+======================================================================
+ITERATION 117
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: buffer_management.rx_buffer_overflow_handling_TC0
+  Rule: buffer_management.rx_buffer_overflow_handling
+  Type: behavioral|no_error_message
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_117_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.45s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 117 completed successfully!
+
+======================================================================
+ITERATION 118
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: communication_ports_TC0
+  Rule: communication_ports
+  Type: not_in_list
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_118_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 11.37s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 118 completed successfully!
+
+======================================================================
+ITERATION 119
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: communication_services.sap_port_bidirectional_communication_requirement_TC0
+  Rule: communication_services.sap_port_bidirectional_communication_requirement
+  Type: single_sap_for_both
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_119_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.94s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 119 completed successfully!
+
+======================================================================
+ITERATION 120
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: configuration.integrity_checking_disable_capability_TC0
+  Rule: configuration.integrity_checking_disable_capability
+  Type: explicit_disable
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_120_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.73s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.279
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 120 completed successfully!
+
+======================================================================
+ITERATION 121
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: network_wide_configuration_file_uniformity_TC0
+  Rule: network_wide_configuration_file_uniformity
+  Type: content_mismatch
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_121_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.11s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 121 completed successfully!
+
+======================================================================
+ITERATION 122
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: data_alignment.double_precision_float_address_alignment_TC0
+  Rule: data_alignment.double_precision_float_address_alignment
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_122_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.47s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.013
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 122 completed successfully!
+
+======================================================================
+ITERATION 123
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: data_encoding.boolean_32_bit_field_requirement_TC0
+  Rule: data_encoding.boolean_32_bit_field_requirement
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_123_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.97s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 123 completed successfully!
+
+======================================================================
+ITERATION 124
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: Data Format.string_length_field_size_TC0
+  Rule: Data Format.string_length_field_size
+  Type: negative
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_124_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 11.19s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 124 completed successfully!
+
+======================================================================
+ITERATION 125
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: data_formatting.big_endian_byte_order_requirement_TC0
+  Rule: data_formatting.big_endian_byte_order_requirement
+  Type: little_endian
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_125_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.66s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 125 completed successfully!
+
+======================================================================
+ITERATION 126
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: data_integrity.frame_ordering_preservation_TC0
+  Rule: data_integrity.frame_ordering_preservation
+  Type: out_of_order
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_126_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.64s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 126 completed successfully!
+
+======================================================================
+ITERATION 127
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: ethernet_frame_ieee_802_3_compliance_TC0
+  Rule: ethernet_frame_ieee_802_3_compliance
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_127_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.80s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 127 completed successfully!
+
+======================================================================
+ITERATION 128
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: data_segmentation.multiple_ds_for_partial_failure_scenarios_TC0
+  Rule: data_segmentation.multiple_ds_for_partial_failure_scenarios
+  Type: incorrect_segmentation
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_128_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.47s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 128 completed successfully!
+
+======================================================================
+ITERATION 129
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: data_size_TC0
+  Rule: data_size
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_129_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.48s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 129 completed successfully!
+
+======================================================================
+ITERATION 130
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: status_priority_enforcement_TC0
+  Rule: status_priority_enforcement
+  Type: lower_priority_encoded
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_130_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.63s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 130 completed successfully!
+
+======================================================================
+ITERATION 131
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: Fragmentation_TC0
+  Rule: Fragmentation
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 40 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_131_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.67s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 131 completed successfully!
+
+======================================================================
+ITERATION 132
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: maximum_datagram_size_to_off_network_destinations_TC0
+  Rule: maximum_datagram_size_to_off_network_destinations
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_132_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.86s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 132 completed successfully!
+
+======================================================================
+ITERATION 133
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: frame_filtering_TC0
+  Rule: frame_filtering
+  Type: logical_error
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_133_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.39s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 133 completed successfully!
+
+======================================================================
+ITERATION 134
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: crc_regeneration_prohibition_TC0
+  Rule: crc_regeneration_prohibition
+  Type: invalid_logic
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_134_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.59s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 134 completed successfully!
+
+======================================================================
+ITERATION 135
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: frame_routing.receiver_demultiplexing_based_on_destination_addresses_TC0
+  Rule: frame_routing.receiver_demultiplexing_based_on_destination_addresses
+  Type: use_source_address
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_135_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.54s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 135 completed successfully!
+
+======================================================================
+ITERATION 136
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: frame_size_TC0
+  Rule: frame_size
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_136_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.29s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 136 completed successfully!
+
+======================================================================
+ITERATION 137
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: frame_structure.frame_composition_at_ethernet_level_TC0
+  Rule: frame_structure.frame_composition_at_ethernet_level
+  Type: missing_header
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_137_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.24s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 137 completed successfully!
+
+======================================================================
+ITERATION 138
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: frame_validation.frame_check_sequence_validation_requirement_TC0
+  Rule: frame_validation.frame_check_sequence_validation_requirement
+  Type: bit_flip
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_138_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.46s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.079
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 138 completed successfully!
+
+======================================================================
+ITERATION 139
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: integrity_checking.invalid_frame_discard_rule_TC0
+  Rule: integrity_checking.invalid_frame_discard_rule
+  Type: negative
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_139_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.62s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.079
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 139 completed successfully!
+
+======================================================================
+ITERATION 140
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: ip_multicast_address_class_d_format_TC0
+  Rule: ip_multicast_address_class_d_format
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_140_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.58s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 140 completed successfully!
+
+======================================================================
+ITERATION 141
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: ip_datagram_processing.ttl_minimum_acceptance_rule_TC0
+  Rule: ip_datagram_processing.ttl_minimum_acceptance_rule
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_141_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.49s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 141 completed successfully!
+
+======================================================================
+ITERATION 142
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: ip_header.default_time_to_live_TC0
+  Rule: ip_header.default_time_to_live
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_142_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.81s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 142 completed successfully!
+
+======================================================================
+ITERATION 143
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: ip_protocol.valid_ip_source_address_requirement_for_transmission_TC0
+  Rule: ip_protocol.valid_ip_source_address_requirement_for_transmission
+  Type: foreign_ip
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_143_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.17s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 143 completed successfully!
+
+======================================================================
+ITERATION 144
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: mac_performance.minimum_frame_overhead_calculation_TC0
+  Rule: mac_performance.minimum_frame_overhead_calculation
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_144_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.07s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 144 completed successfully!
+
+======================================================================
+ITERATION 145
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: data_element_alignment_by_size_TC0
+  Rule: data_element_alignment_by_size
+  Type: not_divisible
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_145_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.61s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 145 completed successfully!
+
+======================================================================
+ITERATION 146
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: single_label_message_structure_TC0
+  Rule: single_label_message_structure
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_146_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 11.92s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 146 completed successfully!
+
+======================================================================
+ITERATION 147
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: message_ordering_TC0
+  Rule: message_ordering
+  Type: out_of_order
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_147_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.58s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 147 completed successfully!
+
+======================================================================
+ITERATION 148
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: unused_portion_padding_TC0
+  Rule: unused_portion_padding
+  Type: non_zero_value
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_148_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.66s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 148 completed successfully!
+
+======================================================================
+ITERATION 149
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: message_transmission_TC0
+  Rule: message_transmission
+  Type: partial_transmission
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_149_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.31s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 149 completed successfully!
+
+======================================================================
+ITERATION 150
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: operating_modes.ops_operating_mode_required_TC0
+  Rule: operating_modes.ops_operating_mode_required
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_150_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.91s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 150 completed successfully!
+
+======================================================================
+ITERATION 151
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: frame_order_preservation_within_virtual_link_TC0
+  Rule: frame_order_preservation_within_virtual_link
+  Type: reorder
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_151_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.37s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 151 completed successfully!
+
+======================================================================
+ITERATION 152
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: physical_configuration.default_physical_port_number_TC0
+  Rule: physical_configuration.default_physical_port_number
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_152_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 9.77s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 152 completed successfully!
+
+======================================================================
+ITERATION 153
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: port_speed_configuration_TC0
+  Rule: port_speed_configuration
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_153_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.96s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 153 completed successfully!
+
+======================================================================
+ITERATION 154
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: port_configuration.port_operational_state_TC0
+  Rule: port_configuration.port_operational_state
+  Type: case_sensitivity
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_154_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.51s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 154 completed successfully!
+
+======================================================================
+ITERATION 155
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: protocol_encapsulation.udp_datagram_encapsulation_in_ip_TC0
+  Rule: protocol_encapsulation.udp_datagram_encapsulation_in_ip
+  Type: missing_layer
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_155_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.52s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 155 completed successfully!
+
+======================================================================
+ITERATION 156
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: reception.multiple_partition_access_to_sampling_port_TC0
+  Rule: reception.multiple_partition_access_to_sampling_port
+  Type: multiple_access
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_156_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.57s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 156 completed successfully!
+
+======================================================================
+ITERATION 157
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: safety_critical_communication.complete_and_up_to_date_data_delivery_requirement_TC0
+  Rule: safety_critical_communication.complete_and_up_to_date_data_delivery_requirement
+  Type: fragmented_data
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_157_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.68s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 157 completed successfully!
+
+======================================================================
+ITERATION 158
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: switch_behavior.simultaneous_frame_sequencing_TC0
+  Rule: switch_behavior.simultaneous_frame_sequencing
+  Type: frame_loss
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_158_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.72s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 158 completed successfully!
+
+======================================================================
+ITERATION 159
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: minimum_output_port_buffer_capacity_TC0
+  Rule: minimum_output_port_buffer_capacity
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_159_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.83s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.930
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 159 completed successfully!
+
+======================================================================
+ITERATION 160
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: switch_filtering.frame_filtering_stages_TC0
+  Rule: switch_filtering.frame_filtering_stages
+  Type: invalid_format
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_160_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.36s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 160 completed successfully!
+
+======================================================================
+ITERATION 161
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: pin_programming_parity_check_TC0
+  Rule: pin_programming_parity_check
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_161_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.92s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 161 completed successfully!
+
+======================================================================
+ITERATION 162
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: switch_operational_modes.ops_mode_switch_functions_TC0
+  Rule: switch_operational_modes.ops_mode_switch_functions
+  Type: not_in_list
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_162_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.62s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.043
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 162 completed successfully!
+
+======================================================================
+ITERATION 163
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: switch_operations.traffic_policing_function_requirement_TC0
+  Rule: switch_operations.traffic_policing_function_requirement
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_163_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.71s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.043
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 163 completed successfully!
+
+======================================================================
+ITERATION 164
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: switch_performance.mac_layer_wire_speed_transmission_requirement_TC0
+  Rule: switch_performance.mac_layer_wire_speed_transmission_requirement
+  Type: frame_drop
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_164_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.40s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 164 completed successfully!
+
+======================================================================
+ITERATION 165
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: switch_processing.filter_wire_speed_capability_TC0
+  Rule: switch_processing.filter_wire_speed_capability
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_165_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.56s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.977
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 165 completed successfully!
+
+======================================================================
+ITERATION 166
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: switch_timing.jitter_time_formula_TC0
+  Rule: switch_timing.jitter_time_formula
+  Type: negative
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_166_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.92s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 166 completed successfully!
+
+======================================================================
+ITERATION 167
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: traffic_policing.ethernet_frame_size_must_meet_virtual_link_minimum_for_byte_based_policing_TC0
+  Rule: traffic_policing.ethernet_frame_size_must_meet_virtual_link_minimum_for_byte_based_policing
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_167_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.64s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 167 completed successfully!
+
+======================================================================
+ITERATION 168
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: transport_layer_addressing_TC0
+  Rule: transport_layer_addressing
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_168_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.71s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.146
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 168 completed successfully!
+
+======================================================================
+ITERATION 169
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: virtual_link_bandwidth_and_frame_interval_bounds_TC0
+  Rule: virtual_link_bandwidth_and_frame_interval_bounds
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_169_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.69s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 44.4%
+  Bugs Found: False
+
+Iteration 169 completed successfully!
+
+======================================================================
+ITERATION 170
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: virtual_link_configuration.switch_subscribes_to_unique_default_reception_vl_TC0
+  Rule: virtual_link_configuration.switch_subscribes_to_unique_default_reception_vl
+  Type: no_subscription
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_170_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.38s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 170 completed successfully!
+
+======================================================================
+ITERATION 171
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: virtual_link_management.single_source_per_vl_constraint_TC0
+  Rule: virtual_link_management.single_source_per_vl_constraint
+  Type: multiple_sources
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_171_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.19s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.043
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 171 completed successfully!
+
+======================================================================
+ITERATION 172
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: maximum_allowed_total_ethernet_line_size_per_vl_TC0
+  Rule: maximum_allowed_total_ethernet_line_size_per_vl
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_172_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.34s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 172 completed successfully!
+
+======================================================================
+ITERATION 173
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: output_buffer_size_for_high_priority_vls_TC0
+  Rule: output_buffer_size_for_high_priority_vls
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_173_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.39s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 173 completed successfully!
+
+======================================================================
+ITERATION 174
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: Communication Mode.bi_directional_communication_ports_TC0
+  Rule: Communication Mode.bi_directional_communication_ports
+  Type: single_port_usage
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_174_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 11.37s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 174 completed successfully!
+
+======================================================================
+ITERATION 175
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: sampling_service_communication_type_TC0
+  Rule: sampling_service_communication_type
+  Type: not_in_list
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_175_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.36s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 175 completed successfully!
+
+======================================================================
+ITERATION 176
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: data_element_alignment_TC0
+  Rule: data_element_alignment
+  Type: misaligned_address
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_176_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.46s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.429
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 176 completed successfully!
+
+======================================================================
+ITERATION 177
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: signed_32_bit_integer_range_TC0
+  Rule: signed_32_bit_integer_range
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_177_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 8.28s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 177 completed successfully!
+
+======================================================================
+ITERATION 178
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: variable_length_opaque_data_length_field_TC0
+  Rule: variable_length_opaque_data_length_field
+  Type: negative
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_178_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 12.51s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 178 completed successfully!
+
+======================================================================
+ITERATION 179
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: Data Representation.bit_order_on_ethernet_medium_TC0
+  Rule: Data Representation.bit_order_on_ethernet_medium
+  Type: reversed_order
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_179_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.69s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.163
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 179 completed successfully!
+
+======================================================================
+ITERATION 180
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: functional_status_set_alignment_TC0
+  Rule: functional_status_set_alignment
+  Type: not_aligned
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_180_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.17s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 180 completed successfully!
+
+======================================================================
+ITERATION 181
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: sap_port_reception_uniqueness_TC0
+  Rule: sap_port_reception_uniqueness
+  Type: multiple_linkages
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_181_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.27s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 181 completed successfully!
+
+======================================================================
+ITERATION 182
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: performance_measurement_burst_duration_TC0
+  Rule: performance_measurement_burst_duration
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_182_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 10.29s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 182 completed successfully!
+
+======================================================================
+ITERATION 183
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: minimum_reassembly_buffer_size_TC0
+  Rule: minimum_reassembly_buffer_size
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_183_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.72s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.700
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 183 completed successfully!
+
+======================================================================
+ITERATION 184
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: frame_size_compliance_with_vl_maximum_TC0
+  Rule: frame_size_compliance_with_vl_maximum
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_184_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.86s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 184 completed successfully!
+
+======================================================================
+ITERATION 185
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: Frame Construction.no_unused_bytes_between_data_primitives_TC0
+  Rule: Frame Construction.no_unused_bytes_between_data_primitives
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_185_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.38s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.296
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 185 completed successfully!
+
+======================================================================
+ITERATION 186
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: destination_address_validity_TC0
+  Rule: destination_address_validity
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_186_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.83s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.013
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 186 completed successfully!
+
+======================================================================
+ITERATION 187
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: data_set_(ds)_field_usage_for_multi_label_messages_TC0
+  Rule: data_set_(ds)_field_usage_for_multi_label_messages
+  Type: invalid_configuration
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_187_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 3.59s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 187 completed successfully!
+
+======================================================================
+ITERATION 188
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: latency_for_first_frame_TC0
+  Rule: latency_for_first_frame
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 40 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_188_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.64s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 188 completed successfully!
+
+======================================================================
+ITERATION 189
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: length_field_accuracy_in_variable_length_messages_TC0
+  Rule: length_field_accuracy_in_variable_length_messages
+  Type: below_min
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_189_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 6.04s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 189 completed successfully!
+
+======================================================================
+ITERATION 190
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: vl_must_be_valid_for_reception_on_destination_port_TC0
+  Rule: vl_must_be_valid_for_reception_on_destination_port
+  Type: not_in_list
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_190_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.55s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.064
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 190 completed successfully!
+
+======================================================================
+ITERATION 191
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: IP Addressing.support_local_ip_multicasting_TC0
+  Rule: IP Addressing.support_local_ip_multicasting
+  Type: boolean_violation
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_191_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.65s
+
+[4/4] Analyzing Feedback...
+  Reward: 1.500
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 191 completed successfully!
+
+======================================================================
+ITERATION 192
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1001
+  Violation: source_route_option_support_TC0
+  Rule: source_route_option_support
+  Type: missing_option
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_192_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.84s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 192 completed successfully!
+
+======================================================================
+ITERATION 193
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1002
+  Violation: integrity_checking_disablement_per_vl_TC0
+  Rule: integrity_checking_disablement_per_vl
+  Type: explicit_disable
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_193_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.30s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.279
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 193 completed successfully!
+
+======================================================================
+ITERATION 194
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 1003
+  Violation: Jitter.jitter_time_calculation_TC0
+  Rule: Jitter.jitter_time_calculation
+  Type: negative_frame_size
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 1003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_194_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.78s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.380
+  Policing Rate: 48.2%
+  Bugs Found: False
+
+Iteration 194 completed successfully!
+
+======================================================================
+ITERATION 195
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2001
+  Violation: mac_source_address_format_TC0
+  Rule: mac_source_address_format
+  Type: individual_bit_violation
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_195_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.32s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.013
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 195 completed successfully!
+
+======================================================================
+ITERATION 196
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2002
+  Violation: MAC Performance.back_to_back_frame_transmission_requirement_TC0
+  Rule: MAC Performance.back_to_back_frame_transmission_requirement
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_196_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 2.72s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.097
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 196 completed successfully!
+
+======================================================================
+ITERATION 197
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 2003
+  Violation: dynamic_message_length_constraint_TC0
+  Rule: dynamic_message_length_constraint
+  Type: above_max
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 2003
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_197_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.45s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.107
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 197 completed successfully!
+
+======================================================================
+ITERATION 198
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3001
+  Violation: global_spare_field_content_TC0
+  Rule: global_spare_field_content
+  Type: non_zero
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3001
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_198_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 4.40s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 198 completed successfully!
+
+======================================================================
+ITERATION 199
+======================================================================
+
+[1/4] Generating Boofuzz Strategy...
+  Target VL: 3002
+  Violation: afdx_protocol_stack_layer_requirements_TC0
+  Rule: afdx_protocol_stack_layer_requirements
+  Type: missing_layer
+
+[2/4] Generating Test Inputs...
+  Generated 20 frames
+  VL ID: 3002
+  Saved to: /tmp/afdx_campaigns_v2/out_boofuzz/iteration_199_test.json
+
+[3/4] Running Simulator...
+  Simulation completed in 1.53s
+
+[4/4] Analyzing Feedback...
+  Reward: 2.530
+  Policing Rate: 0.0%
+  Bugs Found: False
+
+Iteration 199 completed successfully!
+
+Stopping: Reached max iterations (200)
+
+======================================================================
+BOOFUZZ BASELINE SUMMARY
+======================================================================
+Total iterations: 200
+Successful: 200
+Duration: 988.1 seconds
+Coverage: 5.1%
+Mean reward: 2.187
+Avg policing rate: 3.4%
+======================================================================
+
+Summary saved to: /tmp/afdx_campaigns_v2/out_boofuzz/boofuzz_summary_20261109_181440.json

@@ -1,0 +1,18 @@
+[
+  {
+    "file": "configs/test_cases.json",
+    "groups": 603,
+    "test_cases": 3956,
+    "duplicates": 36,
+    "redundancy_ratio": 0.0091,
+    "groups_without_simulator_parameter": 48
+  },
+  {
+    "file": "configs/test_cases_v1_2026-04-07.json",
+    "groups": 423,
+    "test_cases": 2703,
+    "duplicates": 8,
+    "redundancy_ratio": 0.003,
+    "groups_without_simulator_parameter": 34
+  }
+]

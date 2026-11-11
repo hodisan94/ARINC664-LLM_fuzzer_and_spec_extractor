@@ -57,7 +57,7 @@ BUGS = [
         "id": "skip_vl_check",
         "description": "Switch skips VL authorization",
         "location": "afdx-switch.cc Step 2",
-        "detection_signal": "forward_increase",
+        "detection_signal": "invalid_vl_drop_decrease",
     },
     {
         "id": "skip_constant_field",
@@ -93,6 +93,7 @@ def run_single_iteration(runner: SimulatorRunner, history_record: dict,
             "timing_jitter_ms": history_record.get("timing_jitter_ms"),
             "sequence_number_override": history_record.get("sequence_number_override"),
             "dest_mac_mutation": history_record.get("dest_mac_mutation"),
+            "vl_id_override": history_record.get("vl_id_override"),
             "mac_mutation_type": history_record.get("mac_mutation_type"),
             "prob": history_record.get("prob", 0.5),
             "strategy_type": history_record.get("strategy", "edge-case"),
@@ -116,6 +117,7 @@ def parse_metrics(sim_result: dict) -> Dict[str, float]:
         "frames_dropped_policing": m.get("frames_dropped_policing", 0),
         "frames_dropped_frame_error": m.get("frames_dropped_frame_error", 0),
         "frames_dropped_mac_error": m.get("frames_dropped_mac_error", 0),
+        "frames_dropped_invalid_vl": m.get("frames_dropped_invalid_vl", 0),
         "forward_rate": m.get("forward_rate", 0),
         "policing_rate": m.get("policing_rate", 0),
         "es_frames_rejected": m.get("es_frames_rejected", 0),
@@ -151,6 +153,11 @@ def bug_detected(baseline_metrics: dict, buggy_metrics: dict, bug: dict) -> bool
     if sig == "mac_error_drop_decrease":
         bl = baseline_metrics.get("frames_dropped_mac_error", 0)
         bg = buggy_metrics.get("frames_dropped_mac_error", 0)
+        return bl - bg > THRESHOLD
+
+    if sig == "invalid_vl_drop_decrease":
+        bl = baseline_metrics.get("frames_dropped_invalid_vl", 0)
+        bg = buggy_metrics.get("frames_dropped_invalid_vl", 0)
         return bl - bg > THRESHOLD
 
     if sig == "forward_increase":

@@ -55,7 +55,7 @@ METADATA_FIELDS = ("mutation_type", "bag_value", "frame_size", "timing_jitter_ms
                    "mac_mutation_type", "prob", "sequence_number_override",
                    "dest_mac_mutation")
 SETTING_KEYS = ("vlId", "payload_delta_bytes", "timing_jitter_ms", "mac_mutation",
-                "dest_mac_mutation", "sequence_number_override", "prob")
+                "dest_mac_mutation", "sequence_number_override", "prob", "vl_id_override")
 
 
 def load(path):
@@ -93,10 +93,13 @@ def mechanisms(cfg):
         used.append("src_mac")
     if cfg["dest_mac_mutation"] not in (None, "none"):
         used.append("dest_mac")
-    if cfg["sequence_number_override"]:
+    # -1 = no override (simulator inputs written by the current runner).
+    if cfg["sequence_number_override"] >= 0:
         used.append("seq_override")
     if cfg["prob"] > 0:
         used.append("tx_drop")
+    if cfg.get("vl_id_override"):
+        used.append("vl_impersonation")
     return used
 
 
@@ -106,7 +109,7 @@ def summarize(configs):
         used = mechanisms(cfg)
         per_mechanism.update(used)
         no_mutation += not used
-    settings = {tuple(cfg[k] for k in SETTING_KEYS) for cfg in configs}
+    settings = {tuple(cfg.get(k) for k in SETTING_KEYS) for cfg in configs}
     return {"iterations": len(configs), "distinct_settings": len(settings),
             "iterations_per_mechanism": dict(per_mechanism),
             "iterations_without_mutation": no_mutation}

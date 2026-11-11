@@ -24,6 +24,13 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from llm_fuzzer.utils.log_parser import SimulatorLogParser
 from llm_fuzzer.core.reward_calculator import RewardCalculator
 
+VIOLATION_COUNTERS = (
+    "frames_dropped_policing",
+    "frames_dropped_frame_error",
+    "frames_dropped_mac_error",
+    "frames_dropped_invalid_vl",
+    "es_frames_rejected",
+)
 
 class FeedbackAnalyzer:
     """
@@ -127,15 +134,19 @@ class FeedbackAnalyzer:
         forward_rate = metrics.get("forward_rate", 0.0)
         malformed_accepted = metrics.get("malformed_accepted", 0)
         
-        if policing_rate >= 0.8:
-            policing_effectiveness = "Excellent - System correctly rejects most invalid frames"
-        elif policing_rate >= 0.5:
-            policing_effectiveness = "Good - System polices moderately well"
-        elif policing_rate >= 0.2:
-            policing_effectiveness = "Fair - System could be stricter"
+        # policing_rate is a percentage of the frames received by the switches.
+        if policing_rate >= 80:
+            policing_effectiveness = "Most frames dropped by BAG policing"
+        elif policing_rate >= 50:
+            policing_effectiveness = "About half of the frames dropped by BAG policing"
+        elif policing_rate >= 20:
+            policing_effectiveness = "Some frames dropped by BAG policing"
         else:
-            policing_effectiveness = "Poor - System is too permissive"
-        
+            policing_effectiveness = "Few or no frames dropped by BAG policing"
+
+        # The un-mutated reference run has no drops and no end-system rejections,
+        # so any of them means the SUT detected the injected violation.
+        violation_detected = any(metrics.get(k, 0) > 0 for k in VIOLATION_COUNTERS)
         bugs_found = malformed_accepted > 0
         strategy_type = strategy.get("strategy", "normal")
         edge_case_tested = strategy_type in ["edge-case", "attack", "adversarial"]
@@ -148,6 +159,7 @@ class FeedbackAnalyzer:
         return {
             "policing_effectiveness": policing_effectiveness,
             "bugs_found": bugs_found,
+            "violation_detected": violation_detected,
             "edge_case_tested": edge_case_tested,
             "recommendation": recommendation
         }

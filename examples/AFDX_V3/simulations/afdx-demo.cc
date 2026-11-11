@@ -353,20 +353,22 @@ struct MutationConfig
     int payloadClampCount;
     int txProbDrops;           // Count of frames dropped by probability
     int macSpoofCount;         // NEW: Count of MAC spoofing mutations applied
-    int sequenceNumberOverride; // 0 = no override, >0 = force this seq num on target VL
+    int sequenceNumberOverride; // -1 = no override, 0..255 = force this seq num on target VL
     int seqMutationCount;       // Count of sequence-number mutations applied
     std::string destMacMutation; // "none", "corrupt_prefix", "wrong_vl", "zero"
     int destMacMutationCount;   // Count of dest-MAC mutations applied
     std::string injectBug;      // "none" or bug ID for BDR evaluation
+    int vlIdOverride;           // 0 = none, else the target VL's frames carry this VL's identity
+    int vlOverrideCount;
     
     MutationConfig() : 
         targetVL(0), probability(0.0), payloadDeltaBytes(0), 
         timingJitterMs(0), macMutation("none"), isExtremeTest(false), isActive(false),
         payloadAppliedBytes(0), jitterAppliedMs(0), payloadClampCount(0), 
         txProbDrops(0), macSpoofCount(0),
-        sequenceNumberOverride(0), seqMutationCount(0),
+        sequenceNumberOverride(-1), seqMutationCount(0),
         destMacMutation("none"), destMacMutationCount(0),
-        injectBug("none") {}
+        injectBug("none"), vlIdOverride(0), vlOverrideCount(0) {}
 };
 
 // Global mutation config (accessible from traffic generator)
@@ -453,7 +455,7 @@ bool LoadMutations(const std::string& mutationsFile, MutationConfig& config)
         }
     }
     
-    // Parse sequence_number_override (0 = disabled)
+    // Parse sequence_number_override (-1 = disabled)
     size_t seqPos = content.find("\"sequence_number_override\"");
     if (seqPos != std::string::npos)
     {
@@ -483,6 +485,16 @@ bool LoadMutations(const std::string& mutationsFile, MutationConfig& config)
         size_t quoteEnd = content.find("\"", quoteStart + 1);
         config.injectBug = content.substr(quoteStart + 1, quoteEnd - quoteStart - 1);
     }
+
+    // Parse vl_id_override (0 = disabled)
+    size_t vlOverridePos = content.find("\"vl_id_override\"");
+    if (vlOverridePos != std::string::npos)
+    {
+        size_t colonPos = content.find(":", vlOverridePos);
+        size_t commaPos = content.find(",", colonPos);
+        if (commaPos == std::string::npos) commaPos = content.find("}", colonPos);
+        config.vlIdOverride = std::stoi(content.substr(colonPos + 1, commaPos - colonPos - 1));
+    }
     
     config.isActive = true;
     NS_LOG_INFO("Loaded mutations: VL=" << config.targetVL 
@@ -493,7 +505,8 @@ bool LoadMutations(const std::string& mutationsFile, MutationConfig& config)
                 << ", seq_override=" << config.sequenceNumberOverride
                 << ", dest_mac_mutation=" << config.destMacMutation
                 << ", extreme_test=" << (config.isExtremeTest ? "YES" : "NO")
-                << ", inject_bug=" << config.injectBug);
+                << ", inject_bug=" << config.injectBug
+                << ", vl_id_override=" << config.vlIdOverride);
     
     return true;
 }
@@ -718,23 +731,20 @@ int main(int argc, char* argv[])
             priority = AFDX_PRIORITY_LOW;
         vl.SetPriority(priority);
 
-        // Add VL to source ES
-        if (vlConfig.sourceES == 1)
-            es1->AddTransmitVL(vl);
-        else if (vlConfig.sourceES == 2)
-            es2->AddTransmitVL(vl);
-        else if (vlConfig.sourceES == 3)
-            es3->AddTransmitVL(vl);
+        // Every VL is transmitted by exactly one sender, the traffic generator
+        // created below, which applies the fuzzer's mutations; the end systems
+        // only receive. A second sender on the same VL would make the switch's
+        // BAG policer drop one of the two frame streams.
 
         // Add VL to subscriber ES (for receiving)
         for (uint32_t subES : vlConfig.subscriberES)
         {
             if (subES == 1)
-                es1->AddReceiveVL(vlConfig.vlId);
+                es1->AddReceiveVL(vl);
             else if (subES == 2)
-                es2->AddReceiveVL(vlConfig.vlId);
+                es2->AddReceiveVL(vl);
             else if (subES == 3)
-                es3->AddReceiveVL(vlConfig.vlId);
+                es3->AddReceiveVL(vl);
         }
         
         // Store VL configuration for CSV logging
@@ -824,7 +834,23 @@ int main(int argc, char* argv[])
                         << ", extreme=" << (g_mutationConfig.isExtremeTest ? "YES" : "NO") << ")");
         }
         
-        gen->AddVirtualLink(vl, frameSize);
+        // frameSize counts the whole frame; the generator adds the AFDX header to the payload.
+        const uint32_t headerSize = 17;
+        gen->AddVirtualLink(vl, frameSize > headerSize ? frameSize - headerSize : 0);
+
+        if (g_mutationConfig.isActive && g_mutationConfig.targetVL == vlConfig.vlId &&
+            g_mutationConfig.vlIdOverride != 0 &&
+            g_mutationConfig.vlIdOverride != static_cast<int>(vlConfig.vlId))
+        {
+            for (const auto& other : vlConfigs)
+            {
+                if (static_cast<int>(other.vlId) == g_mutationConfig.vlIdOverride)
+                {
+                    gen->SetImpersonatedVl(other.vlId, StringToMac(other.sourceMac),
+                                           StringToMac(other.destMac));
+                }
+            }
+        }
         
         // Set dual network devices based on source ES
         if (vlConfig.sourceES == 1)
@@ -907,6 +933,9 @@ int main(int argc, char* argv[])
         // Configure VL on both switches with forwarding table
         switchA->ConfigureVirtualLink(vl, outputPorts);
         switchB->ConfigureVirtualLink(vl, outputPorts);
+        // A VL may only arrive on the port of its source ES
+        switchA->SetVlIngressPort(vlConfig.vlId, vlConfig.sourceES - 1);
+        switchB->SetVlIngressPort(vlConfig.vlId, vlConfig.sourceES - 1);
         
         NS_LOG_INFO("  Configured VL " << vlConfig.vlId << " on switches "
                     << "-> " << outputPorts.size() << " output port(s)");
@@ -1000,6 +1029,7 @@ int main(int argc, char* argv[])
         std::cout << "AfdxMutation.macSpoofCount = " << g_mutationConfig.macSpoofCount << "\n";
         std::cout << "AfdxMutation.seqMutationCount = " << g_mutationConfig.seqMutationCount << "\n";
         std::cout << "AfdxMutation.destMacMutationCount = " << g_mutationConfig.destMacMutationCount << "\n";
+        std::cout << "AfdxMutation.vlOverrideCount = " << g_mutationConfig.vlOverrideCount << "\n";
         NS_LOG_INFO("\n--- Mutation Metrics ---");
         NS_LOG_INFO("Payload Applied (bytes): " << g_mutationConfig.payloadAppliedBytes);
         NS_LOG_INFO("Jitter Applied (ms): " << g_mutationConfig.jitterAppliedMs);

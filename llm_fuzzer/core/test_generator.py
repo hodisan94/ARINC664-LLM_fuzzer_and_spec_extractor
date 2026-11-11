@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from llm_fuzzer.utils.test_case_loader import TestCaseLoader
 from llm_fuzzer.core.mutation_parser import CustomMutationParser
+from llm_fuzzer.utils.test_case_mapping import test_case_to_params
 
 
 class TestGenerator:
@@ -85,6 +86,8 @@ class TestGenerator:
                 - frames: List[Dict] with time, seq, bag_ms, payload_hex
                 - metadata: Dict with test info
         """
+        self._apply_test_case_params(strategy)
+
         # Load base seed frame
         seed_frame = self._load_seed_frame(strategy['target_vl'])
         
@@ -121,6 +124,8 @@ class TestGenerator:
                 'prob': strategy.get('prob'),
                 'sequence_number_override': strategy.get('sequence_number_override'),
                 'dest_mac_mutation': strategy.get('dest_mac_mutation'),
+                'vl_id_override': strategy.get('vl_id_override'),
+                'test_case_params': strategy.get('test_case_params'),
                 'strategy_type': strategy.get('strategy', 'unknown'),
                 'num_frames': len(frames),
                 'fallback': fallback_used
@@ -129,6 +134,25 @@ class TestGenerator:
         
         return output
     
+    def _apply_test_case_params(self, strategy: Dict[str, Any]) -> None:
+        """Fill the simulator parameters that are not set from the first selected test case."""
+        test_case_ids = strategy.get('test_cases') or []
+        if not test_case_ids:
+            return
+        rule = strategy.get('protocol_rule') or strategy.get('mutation_type') or ''
+        try:
+            idx = int(str(test_case_ids[0]).replace('TC', ''))
+        except ValueError:
+            return
+        test_case = self.test_case_loader.get_test_case_by_index(rule, idx)
+        if test_case is None:
+            return
+        params = test_case_to_params(rule, test_case.get('value'), strategy['target_vl'], index=idx)
+        applied = {k: v for k, v in params.items()
+                   if v is not None and strategy.get(k) in (None, 'none')}
+        strategy.update(applied)
+        strategy['test_case_params'] = applied
+
     def _load_seed_frame(self, vl_id: int) -> Dict[str, Any]:
         """
         Load seed frame for a specific VL.
@@ -499,6 +523,11 @@ class TestGenerator:
         Returns:
             Adjusted payload hex string
         """
+        # The frame list is not sent to the simulator; the cap only bounds memory.
+        try:
+            target_size = int(max(0, min(9000, float(target_size))))
+        except (TypeError, ValueError, OverflowError):
+            target_size = len(payload_hex) // 2
         # Each hex pair = 1 byte
         current_bytes = len(payload_hex) // 2
         

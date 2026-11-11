@@ -34,15 +34,17 @@ struct MutationConfig
     std::string destMacMutation;
     int destMacMutationCount;
     std::string injectBug;
+    int vlIdOverride;
+    int vlOverrideCount;
 
     MutationConfig() :
         targetVL(0), probability(0.0), payloadDeltaBytes(0),
         timingJitterMs(0), macMutation("none"), isExtremeTest(false), isActive(false),
         payloadAppliedBytes(0), jitterAppliedMs(0), payloadClampCount(0),
         txProbDrops(0), macSpoofCount(0),
-        sequenceNumberOverride(0), seqMutationCount(0),
+        sequenceNumberOverride(-1), seqMutationCount(0),
         destMacMutation("none"), destMacMutationCount(0),
-        injectBug("none") {}
+        injectBug("none"), vlIdOverride(0), vlOverrideCount(0) {}
 };
 extern MutationConfig g_mutationConfig;
 
@@ -317,7 +319,7 @@ AfdxSwitch::ProcessFrame(Ptr<const Packet> packet, uint32_t inPort)
   // Step 2: VL authorization check
   if (activeBug != "skip_vl_check")
   {
-    if (!IsVLAuthorized(vlId))
+    if (!IsVLAuthorized(vlId, inPort))
     {
       m_framesDropped++;
       m_framesDroppedInvalidVL++;
@@ -330,8 +332,8 @@ AfdxSwitch::ProcessFrame(Ptr<const Packet> packet, uint32_t inPort)
   if (activeBug != "skip_mac_validation")
   {
     Mac48Address frameSrcMac = frame.GetSourceAddress();
-    Mac48Address expectedSrcMac = m_vlConfig[vlId].GetSourceMac();
-    if (frameSrcMac != expectedSrcMac)
+    auto vlIt = m_vlConfig.find(vlId);
+    if (vlIt == m_vlConfig.end() || frameSrcMac != vlIt->second.GetSourceMac())
     {
       m_framesDropped++;
       m_framesDroppedMACError++;
@@ -438,9 +440,20 @@ AfdxSwitch::ValidateFrame(const AfdxFrame& frame) const
 }
 
 bool
-AfdxSwitch::IsVLAuthorized(uint16_t vlId) const
+AfdxSwitch::IsVLAuthorized(uint16_t vlId, uint32_t inPort) const
 {
-  return m_vlConfig.find(vlId) != m_vlConfig.end();
+  if (m_vlConfig.find(vlId) == m_vlConfig.end())
+  {
+    return false;
+  }
+  auto it = m_vlIngressPort.find(vlId);
+  return it == m_vlIngressPort.end() || it->second == inPort;
+}
+
+void
+AfdxSwitch::SetVlIngressPort(uint16_t vlId, uint32_t port)
+{
+  m_vlIngressPort[vlId] = port;
 }
 
 bool
@@ -471,8 +484,8 @@ AfdxSwitch::CheckBagPolicing(uint16_t vlId)
   
   // ARINC 664 Part 7: BAG policing
   // Frames arriving faster than BAG rate should be dropped
-  // Allow small tolerance (1% of BAG) for jitter
-  Time tolerance = MilliSeconds(bag.GetMilliSeconds() * 0.01);
+  // Tolerance: the maximum transmit jitter of 500 us (ARINC 664 P7 §3.2.4.3)
+  Time tolerance = std::min(MicroSeconds(500), bag / 2);
   Time minGap = bag - tolerance;
   
   if (timeSinceLastFrame < minGap)

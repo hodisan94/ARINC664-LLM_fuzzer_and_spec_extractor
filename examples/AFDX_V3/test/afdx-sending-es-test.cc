@@ -46,15 +46,17 @@ struct MutationConfig
     std::string destMacMutation;
     int destMacMutationCount;
     std::string injectBug;
+    int vlIdOverride;
+    int vlOverrideCount;
     
     MutationConfig() : 
         targetVL(0), probability(0.0), payloadDeltaBytes(0), 
         timingJitterMs(0), macMutation("none"), isExtremeTest(false), isActive(false),
         payloadAppliedBytes(0), jitterAppliedMs(0), payloadClampCount(0), 
         txProbDrops(0), macSpoofCount(0),
-        sequenceNumberOverride(0), seqMutationCount(0),
+        sequenceNumberOverride(-1), seqMutationCount(0),
         destMacMutation("none"), destMacMutationCount(0),
-        injectBug("none") {}
+        injectBug("none"), vlIdOverride(0), vlOverrideCount(0) {}
 };
 MutationConfig g_mutationConfig;  // Dummy instance for test linking
 
@@ -2404,7 +2406,7 @@ private:
     {
       for (size_t i = 1; i < pair.second.size(); i++)
       {
-        uint8_t expected = (pair.second[i-1] + 1) % 256;
+        uint8_t expected = (pair.second[i-1] >= 255) ? 1 : pair.second[i-1] + 1;
         NS_TEST_ASSERT_MSG_EQ(pair.second[i], expected,
                              "VL " << pair.first << " sequence error at " << i);
       }

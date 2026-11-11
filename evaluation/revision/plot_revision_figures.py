@@ -21,6 +21,7 @@ No LLM API and no simulator are used.
 import argparse
 import glob
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -35,7 +36,8 @@ sys.path.insert(0, str(ROOT / "evaluation" / "revision"))
 import executed_settings as es  # noqa: E402
 import recompute_coverage_venn as rcv  # noqa: E402
 
-RUNS = ROOT / "evaluation/results/revision/runs"
+RESULTS = ROOT / os.environ.get("AFDX_RESULTS", "evaluation/results/revision")
+RUNS = RESULTS / "runs"
 N_CATEGORIES = 185
 BUDGET = 200
 
@@ -109,7 +111,7 @@ def venn_figure(panels, out):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--out-dir", default=str(ROOT / "evaluation/results/revision/figures"))
+    parser.add_argument("--out-dir", default=str(RESULTS / "figures"))
     parser.add_argument("--bdr", action="append", default=[],
                         help="bdr_replay.py report whose crashed iterations are excluded (repeatable)")
     args = parser.parse_args()

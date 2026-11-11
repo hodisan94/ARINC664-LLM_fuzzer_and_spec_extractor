@@ -1,0 +1,308 @@
+{
+  "LLM_r1": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 124,
+    "bugs_detected": 8,
+    "bugs_total": 8,
+    "bdr": 1.0,
+    "mean_iterations_to_first_detection": 8.25,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 37
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 75
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 7,
+        "detecting_iterations": 10
+      },
+      "skip_token_bucket": {
+        "detected": true,
+        "first_detection_iter": 46,
+        "detecting_iterations": 2
+      },
+      "skip_vl_check": {
+        "detected": true,
+        "first_detection_iter": 0,
+        "detecting_iterations": 9
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 5,
+        "detecting_iterations": 8
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 25
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 75
+      }
+    }
+  },
+  "LLM_r2": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 132,
+    "bugs_detected": 8,
+    "bugs_total": 8,
+    "bdr": 1.0,
+    "mean_iterations_to_first_detection": 12.0,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 2,
+        "detecting_iterations": 41
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 5,
+        "detecting_iterations": 68
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 9,
+        "detecting_iterations": 12
+      },
+      "skip_token_bucket": {
+        "detected": true,
+        "first_detection_iter": 46,
+        "detecting_iterations": 1
+      },
+      "skip_vl_check": {
+        "detected": true,
+        "first_detection_iter": 7,
+        "detecting_iterations": 11
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 10
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 21,
+        "detecting_iterations": 25
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 5,
+        "detecting_iterations": 68
+      }
+    }
+  },
+  "LLM_r3": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 135,
+    "bugs_detected": 8,
+    "bugs_total": 8,
+    "bdr": 1.0,
+    "mean_iterations_to_first_detection": 8.625,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 36
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 5,
+        "detecting_iterations": 79
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 4,
+        "detecting_iterations": 9
+      },
+      "skip_token_bucket": {
+        "detected": true,
+        "first_detection_iter": 46,
+        "detecting_iterations": 1
+      },
+      "skip_vl_check": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 12
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 2,
+        "detecting_iterations": 6
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 26
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 5,
+        "detecting_iterations": 79
+      }
+    }
+  },
+  "LLM_r4": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 130,
+    "bugs_detected": 7,
+    "bugs_total": 8,
+    "bdr": 0.875,
+    "mean_iterations_to_first_detection": 12.285714285714286,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 2,
+        "detecting_iterations": 50
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 68
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 11
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": true,
+        "first_detection_iter": 71,
+        "detecting_iterations": 8
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 4,
+        "detecting_iterations": 8
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 2,
+        "detecting_iterations": 27
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 68
+      }
+    }
+  },
+  "LLM_r5": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 135,
+    "bugs_detected": 7,
+    "bugs_total": 8,
+    "bdr": 0.875,
+    "mean_iterations_to_first_detection": 7.714285714285714,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 4,
+        "detecting_iterations": 41
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 73
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 2,
+        "detecting_iterations": 10
+      },
+      "skip_token_bucket": {
+        "detected": false,
+        "first_detection_iter": null,
+        "detecting_iterations": 0
+      },
+      "skip_vl_check": {
+        "detected": true,
+        "first_detection_iter": 9,
+        "detecting_iterations": 11
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 33,
+        "detecting_iterations": 7
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 4,
+        "detecting_iterations": 32
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 73
+      }
+    }
+  },
+  "A1": {
+    "iterations": 200,
+    "crashed_iterations": [],
+    "distinct_inputs": 102,
+    "bugs_detected": 8,
+    "bugs_total": 8,
+    "bdr": 1.0,
+    "mean_iterations_to_first_detection": 11.625,
+    "per_bug": {
+      "skip_bag_policing": {
+        "detected": true,
+        "first_detection_iter": 7,
+        "detecting_iterations": 32
+      },
+      "skip_frame_validation": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 77
+      },
+      "skip_mac_validation": {
+        "detected": true,
+        "first_detection_iter": 5,
+        "detecting_iterations": 13
+      },
+      "skip_token_bucket": {
+        "detected": true,
+        "first_detection_iter": 46,
+        "detecting_iterations": 1
+      },
+      "skip_vl_check": {
+        "detected": true,
+        "first_detection_iter": 1,
+        "detecting_iterations": 16
+      },
+      "skip_constant_field": {
+        "detected": true,
+        "first_detection_iter": 17,
+        "detecting_iterations": 5
+      },
+      "skip_sequence_check": {
+        "detected": true,
+        "first_detection_iter": 11,
+        "detecting_iterations": 25
+      },
+      "accept_oversized": {
+        "detected": true,
+        "first_detection_iter": 3,
+        "detecting_iterations": 77
+      }
+    }
+  }
+}

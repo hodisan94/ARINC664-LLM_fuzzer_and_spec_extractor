@@ -54,6 +54,7 @@ class SimulatorLogParser:
         "mutation_mac_spoof_count": r"AfdxMutation\.macSpoofCount\s*=\s*(\d+)",
         "mutation_seq_count":       r"AfdxMutation\.seqMutationCount\s*=\s*(\d+)",
         "mutation_dest_mac_count":  r"AfdxMutation\.destMacMutationCount\s*=\s*(\d+)",
+        "mutation_vl_override_count": r"AfdxMutation\.vlOverrideCount\s*=\s*(\d+)",
     }
 
     # Legacy text-format patterns (kept for backward compatibility)
@@ -133,11 +134,9 @@ class SimulatorLogParser:
             return metrics
 
         for key, pattern in self.MIB_PATTERNS.items():
-            total = 0
-            for m in re.finditer(pattern, self.log_content):
-                total += int(m.group(1))
-            if total > 0:
-                metrics[key] = total
+            values = [int(m.group(1)) for m in re.finditer(pattern, self.log_content)]
+            if values:
+                metrics[key] = sum(values)
 
         for key, pattern in self.ES_PATTERNS.items():
             m = re.search(pattern, self.log_content)
@@ -213,20 +212,9 @@ class SimulatorLogParser:
             merged["simulation_time_sec"] = csv_metrics["simulation_time_sec"]
 
         # Layer 3: ExportMIB (highest priority — authoritative for switch counters)
-        if mib_metrics.get("frames_received"):
-            merged["frames_received"] = mib_metrics["frames_received"]
-        if mib_metrics.get("frames_forwarded"):
-            merged["frames_forwarded"] = mib_metrics["frames_forwarded"]
-        if mib_metrics.get("frames_dropped_policing"):
-            merged["frames_dropped_policing"] = mib_metrics["frames_dropped_policing"]
-        if mib_metrics.get("frames_dropped_invalid_vl"):
-            merged["frames_dropped_invalid_vl"] = mib_metrics["frames_dropped_invalid_vl"]
-        if mib_metrics.get("frames_dropped_frame_error"):
-            merged["frames_dropped_frame_error"] = mib_metrics["frames_dropped_frame_error"]
-        if mib_metrics.get("frames_dropped_mac_error"):
-            merged["frames_dropped_mac_error"] = mib_metrics["frames_dropped_mac_error"]
-        if mib_metrics.get("frames_dropped_total"):
-            merged["frames_dropped_total"] = mib_metrics["frames_dropped_total"]
+        for key in self.MIB_PATTERNS:
+            if key in mib_metrics:
+                merged[key] = mib_metrics[key]
 
         for key in self.MUTATION_PATTERNS:
             if key in mib_metrics:

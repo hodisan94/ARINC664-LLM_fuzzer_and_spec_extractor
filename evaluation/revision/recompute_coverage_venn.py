@@ -72,7 +72,7 @@ def build_matcher(spec_rules):
             if prefix in sub_lookup:
                 cats.add(sub_lookup[prefix])
         for nc, original in norm_cats.items():
-            if norm == nc or norm.startswith(nc + "_") or nc.startswith(norm + "_"):
+            if norm == nc or norm.startswith(nc + "_"):
                 cats.add(original)
         return cats
 

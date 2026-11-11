@@ -1,0 +1,46 @@
+Mutations
+  [PASS] noop               no drops and no rejections
+         {'frames_received': 3380, 'frames_forwarded': 3380, 'frames_dropped_policing': 0, 'frames_dropped_frame_error': 0, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 0}
+  [PASS] bag_fast           BAG 1 ms on a 4 ms VL is policed
+         {'frames_received': 6078, 'frames_forwarded': 3380, 'frames_dropped_policing': 2698, 'frames_dropped_frame_error': 0, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 1796}
+  [PASS] jitter_fast        -2 ms offset on a 4 ms VL is policed
+         {'frames_received': 4280, 'frames_forwarded': 3380, 'frames_dropped_policing': 900, 'frames_dropped_frame_error': 0, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 0}
+  [PASS] jitter_slow        +4 ms offset is legal (slower than BAG)
+         {'frames_received': 2930, 'frames_forwarded': 2930, 'frames_dropped_policing': 0, 'frames_dropped_frame_error': 0, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 0}
+  [PASS] size_valid         300 B on a 64..512 B VL is accepted
+         {'frames_received': 3380, 'frames_forwarded': 3380, 'frames_dropped_policing': 0, 'frames_dropped_frame_error': 0, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 0}
+  [PASS] size_above_vl_max  600 B on a 512 B VL is a frame error
+         {'frames_received': 3380, 'frames_forwarded': 2480, 'frames_dropped_policing': 0, 'frames_dropped_frame_error': 900, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 0}
+  [PASS] size_oversized     2000 B is a frame error
+         {'frames_received': 3380, 'frames_forwarded': 2480, 'frames_dropped_policing': 0, 'frames_dropped_frame_error': 900, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 0}
+  [PASS] size_zero          frame_size 0 (clamped to the 17 B header) is a frame error
+         {'frames_received': 3380, 'frames_forwarded': 2480, 'frames_dropped_policing': 0, 'frames_dropped_frame_error': 900, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 0}
+  [PASS] mac_spoof_src      spoofed source MAC is dropped by the switch
+         {'frames_received': 3380, 'frames_forwarded': 2480, 'frames_dropped_policing': 0, 'frames_dropped_frame_error': 0, 'frames_dropped_mac_error': 900, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 0}
+  [PASS] dest_corrupt       corrupted constant field is rejected by the end systems
+         {'frames_received': 3380, 'frames_forwarded': 3380, 'frames_dropped_policing': 0, 'frames_dropped_frame_error': 0, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 1800}
+  [PASS] seq_constant_255   constant sequence number 255 fails integrity checking
+         {'frames_received': 3380, 'frames_forwarded': 3380, 'frames_dropped_policing': 0, 'frames_dropped_frame_error': 0, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 1796}
+  [PASS] seq_zero           sequence number 0 is always accepted (ARINC 664 P7 3.2.6.2.1)
+         {'frames_received': 3380, 'frames_forwarded': 3380, 'frames_dropped_policing': 0, 'frames_dropped_frame_error': 0, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 0}
+  [PASS] vl_impersonation   VL 1001 frames carrying VL 3001 arrive on ES1's port and are dropped
+         {'frames_received': 3380, 'frames_forwarded': 2480, 'frames_dropped_policing': 0, 'frames_dropped_frame_error': 0, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 900, 'es_frames_rejected': 0}
+  [PASS] vl_same_es         VL 1001 carrying VL 1002 (same port) passes the VL check; VL 1002 then exceeds its BAG
+         {'frames_received': 3380, 'frames_forwarded': 2480, 'frames_dropped_policing': 900, 'frames_dropped_frame_error': 0, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 0}
+  [PASS] tx_drop            sender drops frames with probability 0.5
+         {'frames_received': 2916, 'frames_forwarded': 2916, 'frames_dropped_policing': 0, 'frames_dropped_frame_error': 0, 'frames_dropped_mac_error': 0, 'frames_dropped_invalid_vl': 0, 'es_frames_rejected': 216}
+Bugs (targeted input, reference vs buggy)
+  [DETECTED] skip_bag_policing (policing_drop_decrease)
+  [DETECTED] skip_frame_validation (frame_error_drop_decrease)
+  [DETECTED] skip_mac_validation (mac_error_drop_decrease)
+  [NOT DETECTED] skip_token_bucket (policing_drop_decrease)
+  [DETECTED] skip_vl_check (invalid_vl_drop_decrease)
+  [DETECTED] skip_constant_field (es_rejection_decrease)
+  [DETECTED] skip_sequence_check (es_rejection_decrease)
+  [DETECTED] accept_oversized (frame_error_drop_decrease)
+Determinism
+  [PASS] noop twice gives the same counters
+  [PASS] bag_fast twice gives the same counters
+
+ALL CHECKS PASSED -> /home/hodisan1994/ns-3-reset/ns-3/evaluation/revision/out/sanity_checks.json
+Note: skip_token_bucket is reported but not required; the BAG check drops the same frames first.

@@ -16,6 +16,8 @@
 #include "afdx-virtual-link.h"
 #include "afdx-frame.h"
 #include <map>
+#include <string>
+#include <utility>
 #include <vector>
 #include <fstream>
 
@@ -47,6 +49,7 @@ public:
   // VL Management
   void AddTransmitVL(const AfdxVirtualLink& vl);
   void AddReceiveVL(uint16_t vlId);
+  void AddReceiveVL(const AfdxVirtualLink& vl);
   
   // Network interfaces (for redundancy)
   void SetNetworkADevice(Ptr<NetDevice> device);
@@ -72,7 +75,7 @@ private:
   // AFDX Protocol Logic
   bool ValidateFrame(const AfdxFrame& frame, uint32_t frameSize);
   bool CheckVLSubscription(uint16_t vlId);
-  bool CheckSequenceNumber(uint16_t vlId, uint8_t seqNum);
+  bool CheckSequenceNumber(uint16_t vlId, uint8_t seqNum, const std::string& networkId);
   bool ApplyFirstValidFrameWins(uint16_t vlId, uint8_t seqNum, const std::string& networkId);
 
   // CSV Logging
@@ -98,6 +101,7 @@ private:
   // Virtual Links
   std::map<uint16_t, AfdxVirtualLink> m_transmitVLs;  // VLs this ES transmits
   std::vector<uint16_t> m_receiveVLs;                 // VLs this ES receives
+  std::map<uint16_t, AfdxVirtualLink> m_receiveVlConfigs;  // size limits of received VLs, if known
 
   // Transmission state
   std::map<uint16_t, uint8_t> m_sequenceNumbers;      // Current seq num per VL
@@ -111,6 +115,7 @@ private:
     bool frameReceived;
   };
   std::map<uint16_t, FrameReceptionState> m_receptionState;
+  std::map<std::pair<uint16_t, std::string>, uint8_t> m_integrityPsn;  // per VL and network
 
   // Statistics (public getters below)
   uint32_t m_framesSent;

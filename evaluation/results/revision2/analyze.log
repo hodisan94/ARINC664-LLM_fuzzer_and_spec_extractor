@@ -1,0 +1,23 @@
+categories with only rejected rules: 6
+checklist: 142 statements, 97 covered by a validated rule, 93 of them map to a category
+LLM {'rule_coverage': (185, 0.0), 'rule_coverage_executed': (162.8, 1.1), 'rule_coverage_loose': (185, 0.0), 'rejected_only_covered': (6, 0.0), 'rule_coverage_pct_without_rejected': (100.0, 0.0), 'checklist_statements': (93, 0.0), 'checklist_statements_executed': (92.6, 0.55), 'distinct_labels': (189.6, 4.72), 'labels_not_mapped': (7.2, 1.3), 'valid_ratio': (1.0, 0.0), 'bugs_detected': (7.6, 0.55), 'llm_cost_usd': (18.8, 0.34), 'distinct_settings': (131.2, 4.55), 'iterations_without_mutation': (22.4, 1.14)}
+Boofuzz {'rule_coverage': (174, 0.0), 'rule_coverage_executed': (153, 0.0), 'rule_coverage_loose': (174, 0.0), 'rejected_only_covered': (5, 0.0), 'rule_coverage_pct_without_rejected': (94.41, 0.0), 'checklist_statements': (91, 0.0), 'checklist_statements_executed': (88, 0.0), 'distinct_labels': (200, 0.0), 'labels_not_mapped': (0, 0.0), 'valid_ratio': (1.0, 0.0), 'bugs_detected': (6, 0.0), 'llm_cost_usd': (0.0, 0.0), 'distinct_settings': (94, 0.0), 'iterations_without_mutation': (24, 0.0)}
+Boofuzz_file {'rule_coverage': (66, 0.0), 'rule_coverage_executed': (62, 0.0), 'rule_coverage_loose': (72, 0.0), 'rejected_only_covered': (0, 0.0), 'rule_coverage_pct_without_rejected': (36.87, 0.0), 'checklist_statements': (75, 0.0), 'checklist_statements_executed': (75, 0.0), 'distinct_labels': (200, 0.0), 'labels_not_mapped': (29, 0.0), 'valid_ratio': (1.0, 0.0), 'bugs_detected': (6, 0.0), 'llm_cost_usd': (0.0, 0.0), 'distinct_settings': (96, 0.0), 'iterations_without_mutation': (12, 0.0)}
+Random {'rule_coverage': (94.2, 6.18), 'rule_coverage_executed': (90.6, 6.02), 'rule_coverage_loose': (102.2, 5.07), 'rejected_only_covered': (1.8, 0.84), 'rule_coverage_pct_without_rejected': (51.62, 3.22), 'checklist_statements': (75.4, 4.93), 'checklist_statements_executed': (75, 4.95), 'distinct_labels': (173, 7.71), 'labels_not_mapped': (22, 3.46), 'valid_ratio': (1.0, 0.0), 'bugs_detected': (7, 0.0), 'llm_cost_usd': (0.0, 0.0), 'distinct_settings': (174.8, 3.96), 'iterations_without_mutation': (7, 0.71)}
+A0 {'rule_coverage': (6, 0.0), 'rule_coverage_executed': (6, 0.0), 'rule_coverage_loose': (8, 0.0), 'rejected_only_covered': (0, 0.0), 'rule_coverage_pct_without_rejected': (3.35, 0.0), 'checklist_statements': (3, 0.0), 'checklist_statements_executed': (3, 0.0), 'distinct_labels': (10, 0.0), 'labels_not_mapped': (4, 0.0), 'valid_ratio': (1.0, 0.0), 'bugs_detected': (6, 0.0), 'llm_cost_usd': (5.23, 0.0), 'distinct_settings': (25, 0.0), 'iterations_without_mutation': (0, 0.0)}
+A1 {'rule_coverage': (185, 0.0), 'rule_coverage_executed': (164, 0.0), 'rule_coverage_loose': (185, 0.0), 'rejected_only_covered': (6, 0.0), 'rule_coverage_pct_without_rejected': (100.0, 0.0), 'checklist_statements': (93, 0.0), 'checklist_statements_executed': (92, 0.0), 'distinct_labels': (174, 0.0), 'labels_not_mapped': (2, 0.0), 'valid_ratio': (1.0, 0.0), 'bugs_detected': (8, 0.0), 'llm_cost_usd': (9.01, 0.0), 'distinct_settings': (102, 0.0), 'iterations_without_mutation': (21, 0.0)}
+A2 {'rule_coverage': (106, 0.0), 'rule_coverage_executed': (94, 0.0), 'rule_coverage_loose': (111, 0.0), 'rejected_only_covered': (3, 0.0), 'rule_coverage_pct_without_rejected': (57.54, 0.0), 'checklist_statements': (71, 0.0), 'checklist_statements_executed': (71, 0.0), 'distinct_labels': (128, 0.0), 'labels_not_mapped': (17, 0.0), 'valid_ratio': (1.0, 0.0), 'bugs_detected': (7, 0.0), 'llm_cost_usd': (16.37, 0.0), 'distinct_settings': (92, 0.0), 'iterations_without_mutation': (32, 0.0)}
+  p=0.0079  LLM vs Random: rule_coverage
+  p=0.0079  LLM vs Random: rule_coverage_executed
+  p=0.0079  LLM vs Random: rule_coverage_loose
+  p=0.0079  LLM vs Random: rejected_only_covered
+  p=0.0079  LLM vs Random: rule_coverage_pct_without_rejected
+  p=0.0079  LLM vs Random: checklist_statements
+  p=0.0079  LLM vs Random: checklist_statements_executed
+  p=0.0159  LLM vs Random: distinct_labels
+  p=0.0079  LLM vs Random: labels_not_mapped
+  p=1.0000  LLM vs Random: valid_ratio
+  p=0.1667  LLM vs Random: bugs_detected
+  p=0.0079  LLM vs Random: distinct_settings
+  p=0.0079  LLM vs Random: iterations_without_mutation
+-> evaluation/results/revision2/campaign_metrics.json

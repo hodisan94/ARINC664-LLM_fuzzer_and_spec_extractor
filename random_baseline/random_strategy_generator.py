@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from llm_fuzzer.utils.spec_loader import SpecificationLoader
 from llm_fuzzer.utils.test_case_loader import TestCaseLoader
+from llm_fuzzer.utils.test_case_mapping import vl_sources
 
 
 class RandomStrategyGenerator:
@@ -65,6 +66,11 @@ class RandomStrategyGenerator:
         self.strategy_types = ["conformance", "edge-case", "adversarial"]
         self.test_modes = ["predefined", "custom"]
     
+    @staticmethod
+    def _other_es_vls(target_vl: int) -> List[int]:
+        sources = vl_sources()
+        return sorted(vl for vl, es in sources.items() if es != sources.get(target_vl))
+
     def plan_next_iteration(
         self,
         history: Optional[pd.DataFrame] = None,
@@ -133,7 +139,9 @@ class RandomStrategyGenerator:
             elif 'frame' in protocol_rule.lower() or 'ethernet' in protocol_rule.lower():
                 strategy_extra['frame_size'] = random.choice([0, 17, 63, 65, 1518, 1519, 2000, 10000])
             elif 'sequence' in protocol_rule.lower():
-                strategy_extra['sequence_number'] = random.choice([-1, 0, 256, 65535, 99999])
+                strategy_extra['sequence_number_override'] = random.choice([0, 1, 127, 255])
+            elif 'virtual_link' in protocol_rule.lower() or 'vl_' in protocol_rule.lower():
+                strategy_extra['vl_id_override'] = random.choice(self._other_es_vls(target_vl))
             elif 'mac' in protocol_rule.lower() or 'address' in protocol_rule.lower():
                 strategy_extra['mac_mutation_type'] = random.choice(
                     ['spoof_src', 'spoof_dst', 'broadcast', 'invalid_src', 'zero_mac'])
@@ -152,6 +160,8 @@ class RandomStrategyGenerator:
         if random.random() < 0.10:
             strategy_extra['dest_mac_mutation'] = random.choice(
                 ['corrupt_prefix', 'wrong_vl', 'zero'])
+        if random.random() < 0.10:
+            strategy_extra['vl_id_override'] = random.choice(self._other_es_vls(target_vl))
         
         # 5. Random strategy type
         strategy_type = random.choice(self.strategy_types)

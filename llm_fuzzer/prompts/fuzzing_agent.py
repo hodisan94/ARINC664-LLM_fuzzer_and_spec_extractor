@@ -9,6 +9,7 @@ custom mutations based on what it learned from previous iterations.
 
 from typing import Dict, List, Any, Optional
 import pandas as pd
+from llm_fuzzer.utils.test_case_mapping import classify_rule
 
 
 def _build_coverage_section(coverage_stats: Optional[Dict[str, Any]], iteration: int) -> str:
@@ -183,7 +184,9 @@ def _build_test_cases_section(test_cases: Dict[str, Any]) -> str:
     sorted_items = sorted(test_cases.items())
 
     lines.append(f"\nTotal rule categories with test cases: {len(sorted_items)}")
-    lines.append("Pick any rule below as your 'protocol_rule' and reference its TC indices.\n")
+    lines.append("Pick any rule below as your 'protocol_rule' and reference its TC indices.")
+    lines.append("Rules marked [no simulator parameter] (IP header, priority) cannot be expressed through\n"
+                 "the simulator parameters; a test of such a rule sends unmodified traffic.\n")
 
     DETAILED_COUNT = 5
     for idx, (rule_name, rule_data) in enumerate(sorted_items):
@@ -191,9 +194,10 @@ def _build_test_cases_section(test_cases: Dict[str, Any]) -> str:
         summary = rule_data.get("rule_summary", "")
         if not cases:
             continue
+        mark = " [no simulator parameter]" if classify_rule(rule_name) in ("ip_header", "priority") else ""
 
         if idx < DETAILED_COUNT:
-            lines.append(f"\n{rule_name}: ({len(cases)} TCs) — {summary[:100]}")
+            lines.append(f"\n{rule_name}{mark}: ({len(cases)} TCs) — {summary[:100]}")
             for tc_idx, tc in enumerate(cases[:3]):
                 lines.append(f"  TC{tc_idx}: {tc.get('violation_type', '?')} "
                              f"value={tc.get('value', '?')}")
@@ -201,7 +205,7 @@ def _build_test_cases_section(test_cases: Dict[str, Any]) -> str:
                 lines.append(f"  ... +{len(cases) - 3} more TCs")
         else:
             short_summary = f" — {summary[:80]}" if summary else ""
-            lines.append(f"  {rule_name} ({len(cases)} TCs){short_summary}")
+            lines.append(f"  {rule_name}{mark} ({len(cases)} TCs){short_summary}")
 
     lines.append("\nTo use a test case: set protocol_rule to the rule name above "
                  "and test_cases to e.g. [\"TC0\", \"TC1\"].")
@@ -227,13 +231,13 @@ def _build_recent_performance_section(recent_results: List[Dict[str, Any]]) -> s
         rule = result.get('protocol_rule', '?')
         strategy = result.get('strategy', '?')
         reward = result.get('reward', 0)
-        bugs = result.get('bugs_found', False)
+        detected = result.get('violation_detected', False)
         cat = result.get('spec_category', 'unmapped')
         policing = result.get('policing_rate', 0.0)
         es_rej = result.get('es_rejection_rate', 0.0)
         mac_err = result.get('frames_dropped_mac_error', 0)
         
-        bug_indicator = " [BUG!]" if bugs else ""
+        bug_indicator = " [VIOLATION DETECTED]" if detected else ""
         cat_tag = f" [{cat}]" if cat != "unmapped" else " [no-category]"
         lines.append(
             f"Iter {iteration}: VL={vl}, rule={rule}{cat_tag}, "
@@ -271,14 +275,17 @@ def _build_vl_statistics_section(
     
     lines.append("\nMUTATION PARAMETERS THAT ACTUALLY AFFECT THE SIMULATOR:")
     lines.append("  1. frame_size: frames exceeding MaxFrame trigger FrameError drop at switch")
-    lines.append("  2. timing_jitter_ms: changes send timing (negative=faster, positive=slower)")
+    lines.append("  2. timing_jitter_ms: fixed offset added to every send interval (negative=faster, positive=slower)")
     lines.append("  3. bag_value: converted to jitter relative to BAG (e.g. bag_value=2 on VL with BAG=4 => jitter=-2)")
     lines.append("  4. mac_mutation_type: 'spoof_src'|'spoof_dst'|'broadcast'|'invalid_src'|'zero_mac' => source MAC error drop at switch")
     lines.append("  5. prob: 0.0-1.0 TX-drop probability (frames silently dropped before sending)")
-    lines.append("  6. sequence_number_override: force a specific seq num (e.g. 0=invalid, 255=stale) => rejection at receiving ES")
+    lines.append("  6. sequence_number_override: 0-255, force this seq num on every frame (0 is invalid in AFDX; a repeated value is out of order) => rejection at receiving ES")
     lines.append("  7. dest_mac_mutation: 'corrupt_prefix'|'wrong_vl'|'zero' => constant field rejection at receiving ES")
+    lines.append("  8. vl_id_override: id of a VL sent by ANOTHER end system => the target VL's frames carry that VL's id and")
+    lines.append("     MAC addresses (VL impersonation); the switch must drop them because they arrive on an unauthorized port")
     lines.append("")
-    lines.append("  NOTE: payload_pattern is NOT yet supported by the simulator.")
+    lines.append("  NOTE: payload_pattern and sequence_number are NOT supported by the simulator; use sequence_number_override.")
+    lines.append("  NOTE: with test_cases, only the FIRST listed test case is executed, and only when no parameter above is set.")
     
     if not vl_statistics:
         lines.append("\nNo VL statistics yet (first iteration)")
@@ -289,10 +296,10 @@ def _build_vl_statistics_section(
         times_tested = stats.get('times_tested', 0)
         avg_reward = stats.get('avg_reward', 0)
         max_reward = stats.get('max_reward', 0)
-        bugs_found = stats.get('bugs_found', 0)
+        detected = stats.get('violations_detected', 0)
         
         lines.append(f"VL {vl}: tested {times_tested} times, "
-                    f"avg_reward={avg_reward:.2f}, max_reward={max_reward:.2f}, bugs={bugs_found}")
+                    f"avg_reward={avg_reward:.2f}, max_reward={max_reward:.2f}, violations_detected={detected}")
     
     return "\n".join(lines)
 
@@ -326,6 +333,7 @@ def _build_decision_guidelines(iteration: int, coverage_stats: Optional[Dict[str
         "frame_size>1518": "Oversized frames — triggers switch frame-size validation",
         "timing_jitter_ms<0": "BAG violation (fast timing) — triggers BAG policing",
         "sequence_number_override>0": "Sequence number override — triggers ES sequence check",
+        "vl_id_override": "VL impersonation (vl_id_override = a VL of another end system) — triggers switch VL/port authorization",
         "token_bucket_stress": "Token bucket stress (frame_size=1500 + default BAG timing) — overflows bandwidth budget",
     }
     untested_mechs = {k: v for k, v in all_mechs.items() if k not in used_mechs}
@@ -360,7 +368,7 @@ DECISION GUIDELINES — Phase: {phase} (category coverage {cat_pct:.0f}%)
 2. USE PREDEFINED TEST CASES (STRONGLY RECOMMENDED):
    - Look at the "PREDEFINED TEST CASES" section — {total_rules}+ rules available
    - Match your chosen rule name to find its test cases
-   - Set test_cases to e.g. ["TC0", "TC1"]
+   - Set test_cases to e.g. ["TC0"] (only the first listed test case is executed)
 
 3. CUSTOM MUTATIONS (when no predefined TCs exist):
    - Propose specific values: bag_value, frame_size, sequence_number, etc.
@@ -370,6 +378,7 @@ DECISION GUIDELINES — Phase: {phase} (category coverage {cat_pct:.0f}%)
    - dest_mac_mutation: "corrupt_prefix" => finds bugs in ES constant-field check
    - frame_size: >1518 (e.g. 2000) => finds bugs in frame-size validation
    - sequence_number_override: 0 or 255 => finds bugs in sequence checking
+   - vl_id_override: a VL id of another end system => finds bugs in switch VL authorization
    - timing_jitter_ms: negative value (e.g. -5) => finds bugs in BAG policing
    - TOKEN BUCKET STRESS: frame_size=1500 (do NOT change bag_value!)
      => Sends max-size VALID frames at the VL's NORMAL BAG rate.
@@ -411,6 +420,7 @@ You have FULL CONTROL over testing approach. Choose what makes most sense:
   "prob": <float 0.0-1.0 or null>,
   "sequence_number_override": <int 0-255 or null>,
   "dest_mac_mutation": "<corrupt_prefix|wrong_vl|zero or null>",
+  "vl_id_override": <int VL id of another end system or null>,
   "payload_pattern": "<pattern or null>",
   "strategy": "conformance" OR "edge-case" OR "adversarial",
   "reasoning": "<brief explanation of your choice>"
@@ -510,7 +520,7 @@ Example 6 - MAC spoofing (finds MAC validation bugs):
   "sequence_number": null,
   "timing_jitter_ms": null,
   "mac_mutation_type": "spoof_src",
-  "prob": 1.0,
+  "prob": null,
   "sequence_number_override": null,
   "dest_mac_mutation": null,
   "payload_pattern": null,
@@ -590,7 +600,8 @@ def format_vl_statistics(history: pd.DataFrame) -> Dict[int, Dict[str, Any]]:
             'times_tested': len(vl_data),
             'avg_reward': float(vl_data['reward'].mean()) if 'reward' in vl_data else 0.0,
             'max_reward': float(vl_data['reward'].max()) if 'reward' in vl_data else 0.0,
-            'bugs_found': int(vl_data['bugs_found'].sum()) if 'bugs_found' in vl_data else 0
+            'violations_detected': int(vl_data['violation_detected'].fillna(False).astype(bool).sum())
+            if 'violation_detected' in vl_data else 0
         }
     
     return stats

@@ -37,15 +37,17 @@ struct MutationConfig
     std::string destMacMutation;
     int destMacMutationCount;
     std::string injectBug;
+    int vlIdOverride;
+    int vlOverrideCount;
     
     MutationConfig() : 
         targetVL(0), probability(0.0), payloadDeltaBytes(0), 
         timingJitterMs(0), macMutation("none"), isExtremeTest(false), isActive(false),
         payloadAppliedBytes(0), jitterAppliedMs(0), payloadClampCount(0), 
         txProbDrops(0), macSpoofCount(0),
-        sequenceNumberOverride(0), seqMutationCount(0),
+        sequenceNumberOverride(-1), seqMutationCount(0),
         destMacMutation("none"), destMacMutationCount(0),
-        injectBug("none") {}
+        injectBug("none"), vlIdOverride(0), vlOverrideCount(0) {}
 };
 extern MutationConfig g_mutationConfig;
 
@@ -300,17 +302,11 @@ AfdxTrafficGenerator::TransmitFrame(uint16_t vlId)
   
   VLTrafficConfig& config = it->second;
   
-  // Initialize sequence number to 1 on first frame (ARINC 664 P7: never use 0)
-  if (config.sequenceNumber == 0)
-  {
-    config.sequenceNumber = 1;
-  }
-  
   // Sequence-number mutation: override with fuzzer-supplied value
   uint8_t effectiveSeqNum = config.sequenceNumber;
   if (g_mutationConfig.isActive &&
       g_mutationConfig.targetVL == vlId &&
-      g_mutationConfig.sequenceNumberOverride > 0)
+      g_mutationConfig.sequenceNumberOverride >= 0)
   {
     effectiveSeqNum = static_cast<uint8_t>(g_mutationConfig.sequenceNumberOverride & 0xFF);
     g_mutationConfig.seqMutationCount++;
@@ -435,6 +431,18 @@ AfdxTrafficGenerator::TransmitFrame(uint16_t vlId)
     }
     g_mutationConfig.destMacMutationCount++;
   }
+
+  // VL-identity mutation: the frame carries the identifier and addresses of
+  // another VL, i.e. it arrives on a port that is not authorized for that VL.
+  if (g_mutationConfig.isActive &&
+      g_mutationConfig.targetVL == vlId &&
+      m_impersonatedVlId != 0)
+  {
+    frame.SetVirtualLinkId(m_impersonatedVlId);
+    srcMac = m_impersonatedSrcMac;
+    dstMac = m_impersonatedDstMac;
+    g_mutationConfig.vlOverrideCount++;
+  }
   
   frame.SetSourceAddress(srcMac);
   frame.SetDestinationAddress(dstMac);
@@ -509,23 +517,7 @@ AfdxTrafficGenerator::TransmitFrame(uint16_t vlId)
       }
       
       // Schedule next transmission (with jitter if applicable)
-      Time nextSend = config.vl.GetBag();
-      if (g_mutationConfig.timingJitterMs != 0)
-      {
-        Ptr<UniformRandomVariable> jitterRng = CreateObject<UniformRandomVariable>();
-        int jitter_ms = g_mutationConfig.timingJitterMs;
-        // GetInteger requires min < max, so use [0, 2*jitter] and subtract jitter
-        int applied_jitter = static_cast<int>(jitterRng->GetInteger(0, 2 * jitter_ms)) - jitter_ms;
-        Time jitterTime = MilliSeconds(applied_jitter);
-        nextSend = nextSend + jitterTime;
-        if (nextSend.IsNegative() || nextSend < MicroSeconds(100))
-        {
-          nextSend = MicroSeconds(100);
-          applied_jitter = 0;
-        }
-        g_mutationConfig.jitterAppliedMs = applied_jitter;
-      }
-      
+      Time nextSend = NextSendInterval(config);
       config.transmitEvent = Simulator::Schedule(nextSend,
                                                  &AfdxTrafficGenerator::TransmitFrame,
                                                  this, vlId);
@@ -621,7 +613,7 @@ AfdxTrafficGenerator::TransmitFrame(uint16_t vlId)
   // ====================================================================
   // ARINC 664 P7 SEQUENCE NUMBER INCREMENT (CRITICAL)
   // ====================================================================
-  // Sequence numbers: 1-255, then wrap to 1 (NEVER use 0)
+  // The first frame after reset carries 0; then 1-255, wrapping to 1.
   // Reference: ARINC 664 P7 §3.2.6.2.1
   config.sequenceNumber++;
   if (config.sequenceNumber == 0 || config.sequenceNumber > 255)
@@ -632,31 +624,40 @@ AfdxTrafficGenerator::TransmitFrame(uint16_t vlId)
   // ====================================================================
   // AI FUZZER: TIMING JITTER APPLICATION (applied to next send time)
   // ====================================================================
-  Time nextSend = config.vl.GetBag();
-  if (g_mutationConfig.isActive && g_mutationConfig.targetVL == vlId && g_mutationConfig.timingJitterMs != 0)
-  {
-    Ptr<UniformRandomVariable> jitterRng = CreateObject<UniformRandomVariable>();
-    int jitter_ms = g_mutationConfig.timingJitterMs;
-    // GetInteger requires min < max, so use [0, 2*jitter] and subtract jitter
-    int applied_jitter = static_cast<int>(jitterRng->GetInteger(0, 2 * jitter_ms)) - jitter_ms;
-    Time jitterTime = MilliSeconds(applied_jitter);
-    nextSend = nextSend + jitterTime;
-    
-    // Safety: never schedule in the past
-    if (nextSend.IsNegative() || nextSend < MicroSeconds(100))
-    {
-      nextSend = MicroSeconds(100);
-      applied_jitter = 0;
-    }
-    
-    g_mutationConfig.jitterAppliedMs = applied_jitter;
-    NS_LOG_INFO("VL " << vlId << " timing jitter applied: " << applied_jitter << "ms");
-  }
-  
-  // Schedule next transmission (BAG period + optional jitter)
+  Time nextSend = NextSendInterval(config);
   config.transmitEvent = Simulator::Schedule(nextSend,
                                              &AfdxTrafficGenerator::TransmitFrame,
                                              this, vlId);
+}
+
+void
+AfdxTrafficGenerator::SetImpersonatedVl(uint16_t vlId, Mac48Address srcMac, Mac48Address dstMac)
+{
+  m_impersonatedVlId = vlId;
+  m_impersonatedSrcMac = srcMac;
+  m_impersonatedDstMac = dstMac;
+}
+
+Time
+AfdxTrafficGenerator::NextSendInterval(const VLTrafficConfig& config) const
+{
+  // Timing mutation: a fixed signed offset to the BAG (negative = faster than
+  // the BAG, positive = slower), never below 100 us.
+  Time nextSend = config.vl.GetBag();
+  uint16_t vlId = config.vl.GetVlId();
+  if (g_mutationConfig.isActive && g_mutationConfig.targetVL == vlId &&
+      g_mutationConfig.timingJitterMs != 0)
+  {
+    int offsetMs = g_mutationConfig.timingJitterMs;
+    nextSend = nextSend + MilliSeconds(offsetMs);
+    if (nextSend < MicroSeconds(100))
+    {
+      nextSend = MicroSeconds(100);
+    }
+    g_mutationConfig.jitterAppliedMs =
+        static_cast<int>((nextSend - config.vl.GetBag()).GetMilliSeconds());
+  }
+  return nextSend;
 }
 
 void

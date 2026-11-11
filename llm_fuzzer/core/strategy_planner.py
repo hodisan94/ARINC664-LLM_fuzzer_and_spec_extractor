@@ -26,6 +26,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from llm_fuzzer.utils.spec_loader import SpecificationLoader
 from llm_fuzzer.utils.test_case_loader import TestCaseLoader
+from llm_fuzzer.utils.test_case_mapping import classify_rule, impersonation_target, vl_sources
 from llm_fuzzer.prompts.fuzzing_agent import build_fuzzing_prompt, format_vl_statistics
 
 try:
@@ -69,6 +70,7 @@ class LLMStrategyPlanner:
         "prob",
         "sequence_number_override",
         "dest_mac_mutation",
+        "vl_id_override",
     ]
     
     def __init__(
@@ -199,7 +201,7 @@ class LLMStrategyPlanner:
         # Prefix matching against category names (mirrors external analysis)
         for cat in self._cat_to_rules:
             nc = self._norm(cat)
-            if norm == nc or norm.startswith(nc + '_') or nc.startswith(norm + '_'):
+            if norm == nc or norm.startswith(nc + '_'):
                 return cat
         return None
 
@@ -404,6 +406,8 @@ class LLMStrategyPlanner:
              "timing_jitter_ms<0", None),
             (41, "sequence_numbers", "sequence_number_override", 255,
              "sequence_number_override>0", None),
+            (51, "virtual_link", "vl_id_override",
+             impersonation_target(strategy.get("target_vl")), "vl_id_override", None),
         ]
         for trigger_iter, rule, param, value, mech_key, extra_fields in mech_schedule:
             if iteration == trigger_iter and mech_key not in used_mechs:
@@ -418,47 +422,46 @@ class LLMStrategyPlanner:
                     extra_fields=extra_fields,
                 )
 
-        # Token bucket stress: large frames at NORMAL BAG timing.
+        # Token bucket stress: maximum-size frames sent as fast as possible on the VL
+        # with the smallest BAG (the tightest byte budget).
         if iteration == 46 and "token_bucket_stress" not in used_mechs:
-            print(f"  [MECH-STANDALONE] iter {iteration}: token bucket stress "
-                  "(frame_size=1500, default BAG)")
-            return self._make_standalone_mechanism_strategy(
-                strategy,
-                protocol_rule="token_bucket_stress",
-                field="frame_size",
-                value=1500,
-                mechanism="token_bucket_stress",
-                iteration=iteration,
-                extra_fields={"bag_value": None},
-            )
+            vls = [vl for vl in system_config.get("available_vls", []) if vl in self.vl_table]
+            if vls:
+                vl = min(vls, key=lambda v: (self.vl_table[v]["bag_ms"], v))
+                max_frame = self.vl_table[vl]["max_frame"]
+                print(f"  [MECH-STANDALONE] iter {iteration}: token bucket stress "
+                      f"(VL {vl}, frame_size={max_frame}, bag_value=0)")
+                return self._make_standalone_mechanism_strategy(
+                    strategy,
+                    protocol_rule="token_bucket_stress",
+                    field="frame_size",
+                    value=max_frame,
+                    mechanism="token_bucket_stress",
+                    iteration=iteration,
+                    extra_fields={"bag_value": 0, "target_vl": vl},
+                )
 
         # Dedup: redirect if the rule was already tested OR its category
-        # is already covered for the same VL (when uncovered categories still remain)
-        tested_rules = set()
+        # is already covered on any VL (when uncovered categories still remain)
         tested_rule_vl_pairs = set()
         covered_cats = set()
-        covered_cats_for_vl = set()
         target_vl = strategy.get("target_vl")
         if history is not None and not history.empty and "protocol_rule" in history.columns:
-            tested_rules = set(history["protocol_rule"].dropna().unique())
             for _, row in history.iterrows():
                 rule = row.get("protocol_rule")
                 if pd.isna(rule):
                     continue
                 rule = str(rule)
-                row_vl = row.get("target_vl")
-                tested_rule_vl_pairs.add((rule, row_vl))
-                for c in self._all_categories_for_rule(rule):
-                    covered_cats.add(c)
-                    if row_vl == target_vl:
-                        covered_cats_for_vl.add(c)
+                tested_rule_vl_pairs.add((rule, row.get("target_vl")))
+                covered_cats |= self._all_categories_for_rule(rule)
 
         uncovered_cats_raw = coverage_stats.get("uncovered_categories", [])
-        uncovered_cats = [c for c in uncovered_cats_raw if self._norm(c) not in covered_cats]
+        uncovered_cats = [c for c in uncovered_cats_raw if c not in covered_cats]
         rule_cats = self._all_categories_for_rule(normalized)
         rule_already_tested = (normalized, target_vl) in tested_rule_vl_pairs
-        category_already_covered = bool(rule_cats & covered_cats_for_vl) if rule_cats else False
-        category_unmapped = len(rule_cats) == 0 and normalized not in self._all_known_rules
+        category_already_covered = bool(rule_cats & covered_cats)
+        # A label outside every rule category adds no category coverage, even if it names a test-case group.
+        category_unmapped = len(rule_cats) == 0
 
         needs_redirect = (rule_already_tested or category_already_covered or category_unmapped) and uncovered_cats
         if needs_redirect:
@@ -470,14 +473,35 @@ class LLMStrategyPlanner:
                 elif category_unmapped:
                     reason = "unmapped category"
                 else:
-                    reason = f"category '{rule_cats}' covered on VL {target_vl}"
+                    reason = f"category '{rule_cats}' covered"
                 if self.redirect_mode == "replan":
-                    candidates = self._redirect_candidates(
-                        uncovered_cats, tested_rule_vl_pairs, target_vl, strategy, system_config,
-                        exclude=self._inexpressible_rules(history))
-                    if not candidates:
-                        return strategy
-                    return self._replan_redirect(strategy, normalized, reason, candidates, system_config)
+                    # Rules that no simulator parameter can express are not offered; if the LLM
+                    # rejects all candidates, the next candidates are offered once. If it rejects
+                    # those too, the first untested rule runs with its predefined test case.
+                    exclude = self._inexpressible_rules(history) | self._no_parameter_rules()
+                    for _ in range(self.REDIRECT_ATTEMPTS):
+                        candidates = self._redirect_candidates(
+                            uncovered_cats, tested_rule_vl_pairs, target_vl, strategy, system_config,
+                            exclude=exclude)
+                        if not candidates:
+                            print(f"  [REDIRECT] no expressible candidate left")
+                            self._append_planner_action(strategy, {
+                                "type": "redirect_skipped", "from_rule": normalized,
+                                "candidates": [], "reason": "no candidates"})
+                            break
+                        strategy = self._replan_redirect(strategy, normalized, reason, candidates,
+                                                         system_config)
+                        if strategy.get("redirected_from_rule") == normalized:
+                            return strategy
+                        exclude = exclude | set(candidates)
+                    for fallback_exclude in (self._no_parameter_rules(), frozenset()):
+                        fallback = self._redirect_candidates(
+                            uncovered_cats, tested_rule_vl_pairs, target_vl, strategy, system_config,
+                            exclude=fallback_exclude, limit=1)
+                        if fallback:
+                            redirect = fallback[0]
+                            break
+                    reason = f"{reason}; LLM re-plan declined, predefined test case"
                 print(f"  [DEDUP] '{normalized}' ({reason}) -> '{redirect}'")
                 self._clear_mutation_fields(strategy)
                 strategy["redirected_from_rule"] = normalized
@@ -500,10 +524,26 @@ class LLMStrategyPlanner:
 
         return strategy
 
+    REDIRECT_ATTEMPTS = 2
+
+    def _no_parameter_rules(self) -> set:
+        """Known rules of the IP-header and priority kinds, which no simulator parameter expresses."""
+        if not hasattr(self, "_no_param_cache"):
+            self._no_param_cache = {r for r in self._all_known_rules
+                                    if classify_rule(r) in ("ip_header", "priority")}
+        return self._no_param_cache
+
     REPLAN_FIELDS = ("bag_value", "frame_size", "timing_jitter_ms", "mac_mutation_type",
-                     "prob", "sequence_number_override", "dest_mac_mutation")
+                     "prob", "sequence_number_override", "dest_mac_mutation", "vl_id_override")
     SRC_MAC_MUTATIONS = ("spoof_src", "spoof_dst", "broadcast", "invalid_src", "zero_mac")
     DEST_MAC_MUTATIONS = ("corrupt_prefix", "wrong_vl", "zero")
+
+    @staticmethod
+    def _valid_vl_override(vl_override, target_vl) -> Optional[int]:
+        """A configured VL other than the target, else None."""
+        if isinstance(vl_override, int) and vl_override in vl_sources() and vl_override != target_vl:
+            return vl_override
+        return None
 
     @staticmethod
     def _inexpressible_rules(history: Optional[pd.DataFrame]) -> set:
@@ -524,9 +564,9 @@ class LLMStrategyPlanner:
         candidates: List[str] = []
         for cat in uncovered_cats:
             rule = self._pick_untested_rule_from_category(
-                [cat], tested_rule_vl_pairs, target_vl, strategy, system_config)
-            if (rule and rule not in candidates and rule not in exclude
-                    and self._norm(cat) in self._all_categories_for_rule(rule)):
+                [cat], tested_rule_vl_pairs, target_vl, strategy, system_config,
+                exclude=exclude | set(candidates))
+            if rule and cat in self._all_categories_for_rule(rule):
                 candidates.append(rule)
             if len(candidates) == limit:
                 break
@@ -575,14 +615,16 @@ class LLMStrategyPlanner:
             "  timing_jitter_ms: offset added to the send interval (negative = faster, positive = slower)",
             "  mac_mutation_type: 'spoof_src'|'spoof_dst'|'broadcast'|'invalid_src'|'zero_mac' (source MAC)",
             "  dest_mac_mutation: 'corrupt_prefix'|'wrong_vl'|'zero' (destination MAC)",
-            "  sequence_number_override: 1-255 forces this sequence number on every frame (0 or null = no override)",
+            "  sequence_number_override: 0-255 forces this sequence number on every frame (null = no override; 0 is invalid in AFDX)",
+            "  vl_id_override: id of another VL; the target VL's frames carry that VL's id and MAC addresses",
+            "    (VL impersonation; the switch must reject it when the frames arrive on a port not assigned to that VL)",
             "  prob: 0.0-1.0 probability of dropping a frame at the sender",
             "",
             "Respond ONLY with JSON:",
             '{"protocol_rule": "<one candidate name>", "expressible": <true|false>, "target_vl": <int>,',
             ' "frame_size": <int or null>, "bag_value": <int or null>, "timing_jitter_ms": <int or null>,',
             ' "mac_mutation_type": <string or null>, "dest_mac_mutation": <string or null>,',
-            ' "sequence_number_override": <int or null>, "prob": <float or null>,',
+            ' "sequence_number_override": <int or null>, "vl_id_override": <int or null>, "prob": <float or null>,',
             ' "strategy": "<conformance|edge-case|adversarial>", "reasoning": "<one sentence>"}',
         ]
         return "\n".join(lines)
@@ -596,7 +638,9 @@ class LLMStrategyPlanner:
             "bag_value": as_int(plan.get("bag_value")),
             "frame_size": as_int(plan.get("frame_size")),
             "timing_jitter_ms": as_int(plan.get("timing_jitter_ms")),
-            "sequence_number_override": seq if seq is not None and 1 <= seq <= 255 else None,
+            "sequence_number_override": seq if seq is not None and 0 <= seq <= 255 else None,
+            "vl_id_override": self._valid_vl_override(as_int(plan.get("vl_id_override")),
+                                                      plan.get("target_vl")),
             "prob": float(prob) if isinstance(prob, (int, float)) and 0 < prob <= 1 else None,
             "mac_mutation_type": plan.get("mac_mutation_type")
             if plan.get("mac_mutation_type") in self.SRC_MAC_MUTATIONS else None,
@@ -643,25 +687,26 @@ class LLMStrategyPlanner:
         return strategy
 
     def _all_categories_for_rule(self, rule_name: str) -> set:
-        """Get ALL categories a rule maps to, normalized for dedup comparison."""
+        """Get ALL spec categories (original names) a rule maps to.
+
+        Same rule-to-category map as the BOOFUZZ-style baseline and the coverage
+        metric: the rule name, the first and last dotted parts, and category prefixes.
+        """
         cats = set()
         norm = self._norm(rule_name)
-
         if norm in self._rule_to_cat:
-            cats.add(self._norm(self._rule_to_cat[norm]))
-
+            cats.add(self._rule_to_cat[norm])
         parts = rule_name.split('.')
         if len(parts) > 1:
-            for part in parts:
+            for part in (parts[-1], parts[0]):
                 n = self._norm(part)
                 if n in self._rule_to_cat:
-                    cats.add(self._norm(self._rule_to_cat[n]))
-
-        for cat in self._cat_to_rules:
-            nc = self._norm(cat)
-            if norm == nc or norm.startswith(nc + '_') or nc.startswith(norm + '_'):
-                cats.add(nc)
-
+                    cats.add(self._rule_to_cat[n])
+        if not hasattr(self, "_norm_to_cat"):
+            self._norm_to_cat = {self._norm(c): c for c in self._cat_to_rules}
+        for nc, cat in self._norm_to_cat.items():
+            if norm == nc or norm.startswith(nc + '_'):
+                cats.add(cat)
         return cats
 
     def _pick_untested_rule_from_category(
@@ -670,31 +715,50 @@ class LLMStrategyPlanner:
         tested_rule_vl_pairs,
         target_vl,
         strategy,
-        system_config
+        system_config,
+        exclude: set = frozenset(),
     ) -> Optional[str]:
-        """Pick a rule not yet tested for this VL from the first uncovered category."""
+        """Pick a rule not yet tested for this VL (and not excluded) from the first uncovered category."""
+        def available(rule):
+            return (rule, target_vl) not in tested_rule_vl_pairs and rule not in exclude
+
+        if not hasattr(self, "_cat_to_tc_rules"):
+            self._cat_to_tc_rules = {}
+            for rule_name in self.test_cases:
+                for c in self._all_categories_for_rule(rule_name):
+                    self._cat_to_tc_rules.setdefault(c, []).append(rule_name)
+        # Test-case groups that map to an uncovered category
+        for cat in uncovered_cats:
+            for rule_name in self._cat_to_tc_rules.get(cat, []):
+                if available(rule_name):
+                    return rule_name
+        # Specification rules of an uncovered category that has no test-case group
+        for cat in uncovered_cats:
+            for sub in self._cat_to_rules.get(cat, []):
+                if available(sub) and cat in self._all_categories_for_rule(sub):
+                    return sub
         for cat in uncovered_cats:
             sub_rules = self._cat_to_rules.get(cat, [])
             # Try exact sub-rule name
             for sub in sub_rules:
-                if sub in self.test_cases and (sub, target_vl) not in tested_rule_vl_pairs:
+                if sub in self.test_cases and available(sub):
                     return sub
             # Try dotted format: category.sub_rule (common in test_cases.json)
             norm_cat = self._norm(cat)
             for sub in sub_rules:
                 dotted = f"{cat}.{sub}"
-                if dotted in self.test_cases and (dotted, target_vl) not in tested_rule_vl_pairs:
+                if dotted in self.test_cases and available(dotted):
                     return dotted
             # Try any test_case key containing the category name
             for rule_name in self._all_known_rules:
-                if (rule_name, target_vl) in tested_rule_vl_pairs:
+                if not available(rule_name):
                     continue
                 rn = self._norm(rule_name)
                 if rn == norm_cat or rn.startswith(norm_cat + '_') or norm_cat in rn.split('_'):
                     return rule_name
         # Fallback: any untested known rule
         for rule_name in self._all_known_rules:
-            if (rule_name, target_vl) not in tested_rule_vl_pairs:
+            if available(rule_name):
                 return rule_name
         return None
     
@@ -732,9 +796,7 @@ class LLMStrategyPlanner:
 
         covered_cats = set()
         for rule in seen_rules:
-            cat = self.rule_category(rule)
-            if cat:
-                covered_cats.add(cat)
+            covered_cats |= self._all_categories_for_rule(rule)
         uncovered_cats = sorted(set(all_categories) - covered_cats)
         cat_pct = len(covered_cats) / len(all_categories) * 100 if all_categories else 0.0
         
@@ -744,7 +806,8 @@ class LLMStrategyPlanner:
                 # Failed iterations leave NaN in these columns.
                 field = {k: None if isinstance(v := row.get(k), float) and v != v else v
                          for k in ("mac_mutation_type", "dest_mac_mutation", "frame_size",
-                                   "timing_jitter_ms", "sequence_number_override", "bag_value")}
+                                   "timing_jitter_ms", "sequence_number_override", "bag_value",
+                                   "vl_id_override")}
                 mt = field["mac_mutation_type"] or ""
                 if mt and mt not in ("none", ""):
                     used_mechs.add(f"mac_mutation_type:{mt}")
@@ -758,11 +821,13 @@ class LLMStrategyPlanner:
                 if tj and int(tj or 0) < 0:
                     used_mechs.add("timing_jitter_ms<0")
                 so = field["sequence_number_override"]
-                if so and int(so or 0) > 0:
+                if so is not None:
                     used_mechs.add("sequence_number_override>0")
-                fs_val = int(field["frame_size"] or 0)
-                bag_val = field["bag_value"]
-                if 1400 <= fs_val <= 1518 and bag_val is None:
+                if field["vl_id_override"]:
+                    used_mechs.add("vl_id_override")
+                vl_cfg = self.vl_table.get(row.get("target_vl"))
+                if (vl_cfg and field["bag_value"] == 0
+                        and int(field["frame_size"] or 0) == vl_cfg["max_frame"]):
                     used_mechs.add("token_bucket_stress")
 
         return {
@@ -812,6 +877,7 @@ class LLMStrategyPlanner:
                 "strategy": str(row.get("strategy", "")),
                 "reward": _safe_float(row.get("reward", 0.0)),
                 "bugs_found": bool(row.get("bugs_found", False)),
+                "violation_detected": bool(row.get("violation_detected", False)),
                 "recommendation": str(row.get("recommendation", "")),
                 "policing_rate": _safe_float(row.get("policing_rate", 0.0)),
                 "es_rejection_rate": _safe_float(row.get("es_rejection_rate", 0.0)),
@@ -963,7 +1029,7 @@ class LLMStrategyPlanner:
         # Ensure all parameter fields exist (can be null) - HYBRID SUPPORT
         all_params = ["test_cases", "bag_value", "frame_size", "sequence_number", 
                      "timing_jitter_ms", "payload_pattern", "mac_mutation_type", "prob",
-                     "sequence_number_override", "dest_mac_mutation"]
+                     "sequence_number_override", "dest_mac_mutation", "vl_id_override"]
         for param in all_params:
             if param not in strategy:
                 strategy[param] = None
@@ -994,6 +1060,12 @@ class LLMStrategyPlanner:
                 print(f"  [WARN] LLM chose invalid VL {strategy['target_vl']}, correcting to {corrected_vl}")
                 strategy["target_vl"] = corrected_vl
         
+        seq = strategy.get("sequence_number_override")
+        if seq is not None and not (isinstance(seq, int) and 0 <= seq <= 255):
+            strategy["sequence_number_override"] = None
+        strategy["vl_id_override"] = self._valid_vl_override(
+            strategy.get("vl_id_override"), strategy["target_vl"])
+
         # Validate strategy type
         valid_strategies = ["conformance", "edge-case", "adversarial"]
         if strategy["strategy"] not in valid_strategies:
@@ -1007,7 +1079,7 @@ class LLMStrategyPlanner:
         has_test_cases = strategy.get("test_cases") and len(strategy.get("test_cases", [])) > 0
         mutation_params = ["bag_value", "frame_size", "sequence_number", 
                           "timing_jitter_ms", "payload_pattern", "mac_mutation_type", "prob",
-                          "sequence_number_override", "dest_mac_mutation"]
+                          "sequence_number_override", "dest_mac_mutation", "vl_id_override"]
         has_mutation_params = any(strategy.get(p) is not None for p in mutation_params)
         
         if not has_test_cases and not has_mutation_params:

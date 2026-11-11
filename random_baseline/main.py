@@ -169,7 +169,7 @@ class RandomFuzzer:
                 elif 'frame' in rule or 'ethernet' in rule:
                     strategy['frame_size'] = _rng.choice([0, 17, 63, 65, 1518, 1519, 2000, 10000])
                 elif 'sequence' in rule:
-                    strategy['sequence_number'] = _rng.choice([-1, 0, 256, 65535, 99999])
+                    strategy['sequence_number_override'] = _rng.choice([0, 1, 127, 255])
                 else:
                     strategy['bag_value'] = _rng.choice([0, 1, 2, 3])
                     strategy['frame_size'] = _rng.choice([0, 63, 1519, 5000])
@@ -224,6 +224,8 @@ class RandomFuzzer:
                 'sim_config': sim_result.get('sim_config'),
                 'mac_mutation_type': strategy.get('mac_mutation_type'),
                 'dest_mac_mutation': strategy.get('dest_mac_mutation'),
+                'vl_id_override': strategy.get('vl_id_override'),
+                'test_case_params': strategy.get('test_case_params'),
                 'sequence_number_override': strategy.get('sequence_number_override'),
                 'timing_jitter_ms': strategy.get('timing_jitter_ms'),
                 'prob': strategy.get('prob'),
@@ -243,10 +245,12 @@ class RandomFuzzer:
                 'forward_rate': feedback['metrics'].get('forward_rate', 0.0),
                 'frames_dropped_frame_error': feedback['metrics'].get('frames_dropped_frame_error', 0),
                 'frames_dropped_mac_error': feedback['metrics'].get('frames_dropped_mac_error', 0),
+                'frames_dropped_invalid_vl': feedback['metrics'].get('frames_dropped_invalid_vl', 0),
                 'es_frames_rejected': feedback['metrics'].get('es_frames_rejected', 0),
                 'es_duplicates_discarded': feedback['metrics'].get('es_duplicates_discarded', 0),
                 'es_rejection_rate': feedback['metrics'].get('es_rejection_rate', 0.0),
                 'bugs_found': bugs_found,
+                'violation_detected': feedback.get('analysis', {}).get('violation_detected', False),
             }
             
             print(f"\nIteration {iteration} completed successfully!")

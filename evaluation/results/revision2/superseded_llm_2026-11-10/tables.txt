@@ -1,0 +1,41 @@
+% Experiment 2
+Rule Coverage (\%) & $83.4 \pm 1.0$ [82.7--84.9] & $94.1$ & $50.9 \pm 3.3$ [47.6--55.7] \\
+\quad (categories) & $154.2 \pm 1.8$ [153--157] & $174$ & $94.2 \pm 6.2$ [88--103] \\
+Executed Rule Coverage (\%) & $75.7 \pm 1.1$ [74.6--77.3] & $82.7$ & $49.0 \pm 3.3$ [46.5--53.5] \\
+\quad (categories) & $140.0 \pm 2.0$ [138--143] & $153$ & $90.6 \pm 6.0$ [86--99] \\
+Distinct rule labels & $163.6 \pm 2.9$ [160--167] & $200$ & $173.0 \pm 7.7$ [165--185] \\
+Distinct simulator settings & $116.8 \pm 5.2$ [108--122] & $94$ & $174.8 \pm 4.0$ [171--181] \\
+Iterations without mutation & $27.8 \pm 1.9$ [25--30] & $24$ & $7.0 \pm 0.7$ [6--8] \\
+Time to $80\%$ Rule Coverage & [185, 184, 184, 186, 179] & [136] & N/A \\
+Ratio of Valid Messages & $100.0\%$ & $100.0\%$ & $100.0\%$ \\
+Unique Findings (categories) & $1.8 \pm 0.4$ [1--2] & $10.4 \pm 2.7$ [7--14] & $0.2 \pm 0.4$ [0--1] \\
+
+% Ablation
+LLM & $163.6 \pm 2.9$ [160--167] & $154.2 \pm 1.8$ [153--157] & $140.0 \pm 2.0$ [138--143] & $116.8 \pm 5.2$ [108--122] & $27.8 \pm 1.9$ [25--30] & $7 \pm 1$ [6--8] \\
+A2 & $128$ & $106$ & $94$ & $92$ & $32$ & $7$ \\
+A1 & $94$ & $96$ & $96$ & $89$ & $0$ & $7$ \\
+A0 & $10$ & $6$ & $6$ & $25$ & $0$ & $6$ \\
+
+% Experiment 3: bugs detected per run
+LLM: [6, 8, 7, 7, 7]
+Boofuzz: [6]
+Random: [7, 7, 7, 7, 7]
+A2: [7]
+A1: [7]
+A0: [6]
+
+% Experiment 3: per-bug first detection (iterations counted from 0)
+\texttt{skip\_bag\_policing} & $5/5$, 4 [2--6] & \checkmark\,(44) & $5/5$, 4 [3--11] \\
+\texttt{skip\_frame\_validation} & $5/5$, 3 [1--9] & \checkmark\,(4) & $5/5$, 1 [0--1] \\
+\texttt{skip\_mac\_validation} & $5/5$, 5 [1--6] & \checkmark\,(1) & $5/5$, 23 [6--31] \\
+\texttt{skip\_token\_bucket} & $1/5$, 96 [96] & $\times$ & $0/5$ \\
+\texttt{skip\_vl\_check} & $5/5$, 10 [2--71] & \checkmark\,(5) & $5/5$, 1 [0--33] \\
+\texttt{skip\_constant\_field} & $4/5$, 3.5 [2--12] & $\times$ & $5/5$, 7 [0--43] \\
+\texttt{skip\_sequence\_check} & $5/5$, 4 [2--6] & \checkmark\,(23) & $5/5$, 14 [3--21] \\
+\texttt{accept\_oversized} & $5/5$, 3 [1--9] & \checkmark\,(4) & $5/5$, 1 [0--1] \\
+
+% LLM cost and time per run
+LLM cost [18.59, 18.41, 18.34, 18.47, 18.82] calls [310, 311, 309, 302, 313] median s/iter [59.2, 59.5, 60.9, 60.5, 64.6] backends [{'OpenAI': 310}, {'OpenAI': 311}, {'OpenAI': 309}, {'OpenAI': 302}, {'OpenAI': 313}]
+A2 cost [16.37] calls [200] median s/iter [55.8] backends [{'OpenAI': 200}]
+A1 cost [8.34] calls [333] median s/iter [44.8] backends [{'OpenAI': 333}]
+A0 cost [5.23] calls [200] median s/iter [30.9] backends [{'OpenAI': 200}]

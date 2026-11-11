@@ -42,45 +42,68 @@ Specification extraction:
 
 - `774` validated protocol rules were extracted by the three-model pipeline.
 - `643` rules were retained as relevant to the AFDX simulator.
-- `2,703` violation test cases were generated.
+- `3,956` violation test cases in `603` rule groups were generated from the final rule base
+  (`configs/test_cases.json`; Redundancy Ratio 0.9%, 36 duplicates of the same group, value, and
+  violation type). The test-case file of the submitted version (`2,703` cases) is kept as
+  `configs/test_cases_v1_2026-04-07.json`.
 - The normalized SUT-relevant rule set contains `185` rule categories.
 
 Fuzzing, `N = 200` iterations per run; LLM-guided fuzzer and random baseline: mean over five runs;
-BOOFUZZ-style baseline: one run (it is deterministic):
+BOOFUZZ-style baseline: one run (it is deterministic), in category order (reported baseline) and in
+test-case file order:
 
-| Metric | LLM-guided | BOOFUZZ-style | Random |
-|--------|-----------:|--------------:|-------:|
-| Executed Rule Coverage (categories of iterations with a mutation) | 47.6% (88.0) | 33.0% (61) | 21.4% (39.6) |
-| Rule Coverage (categories of recorded labels) | 51.6% (95.4) | 46.5% (86) | 25.5% (47.2) |
-| Executed Unique Findings per run triple (categories no other fuzzer exercises) | 40.0 | 9.2 | 4.6 |
-| Injected bugs detected (Experiment 3 replay) | 6/8 | 6/8 | 6/8 |
+| Metric | LLM-guided | BOOFUZZ-style | BOOFUZZ-style (file order) | Random |
+|--------|-----------:|--------------:|---------------------------:|-------:|
+| Rule Coverage (categories of recorded labels) | 100% (185) | 94.1% (174) | 35.7% (66) | 50.9% (94.2) |
+| Executed Rule Coverage (categories of iterations with a mutation) | 88.0% (162.8) | 82.7% (153) | 33.5% (62) | 49.0% (90.6) |
+| Unique Findings per run triple (categories no other fuzzer exercises) | 10.4 | 0 | - | 0 |
+| Distinct simulator settings | 131.2 | 94 | 96 | 174.8 |
+| Injected bugs detected (Experiment 3 replay, of 8) | 7.6 (7-8) | 6 | 6 | 7 |
 
-Ablation (one run per variant): with steering but without feedback (A1) the planner reaches
-95 categories, within the range of the full fuzzer (87-107); without steering it reaches 49 with
-feedback (A2) and 6 without (A0).
+The LLM-guided fuzzer is the only one that exposes `skip_token_bucket` (runs 1-3, iteration 46,
+through the token-bucket stress of its mechanism schedule). LLM vs. random: exact Mann-Whitney
+p = 0.008 for both coverage measures, p = 0.17 for bugs. In each LLM run, 33-41 of the 200
+iterations come from the controller's fallback to a predefined test case, which first reaches 42 of
+the 185 categories on average.
+
+Ablation (one run per variant): with steering but without feedback (A1) the planner reaches all
+185 categories (164 with a mutation); without steering it reaches 106 with feedback (A2) and 6
+without (A0).
+
+Superseded runs. After the first final LLM campaigns, the controller of the LLM-guided fuzzer was
+changed in four rounds (shared rule-to-category map, global duplicate check, redirect candidates
+from uncovered categories, fallback to a predefined test case, token-bucket stress pattern, prompt
+marker for test cases without simulator parameters); the baselines were not changed. All earlier
+LLM campaigns are kept: `evaluation/results/revision2/superseded_llm_2026-11-09/` (126 categories),
+`superseded_llm_2026-11-10/` (154), `superseded_llm_2026-11-11_F31/` (164-168) and
+`superseded_llm_2026-11-11_F32/` (183). `evaluation/results/revision2_rehearsal/` and
+`revision2_pilot/` are test runs that are not reported. The first revision campaigns, run before the
+second round of simulator and harness fixes, are in `evaluation/results/revision/`.
 
 The results reported in the submitted version of the paper (85.4% / 47.0% / 29.2% coverage and
-6/8, 4/8, 2/8 bugs) are withdrawn. They were affected by three harness problems that are now fixed:
+6/8, 4/8, 2/8 bugs) are withdrawn. They were affected by harness problems that are now fixed:
 coverage counted recorded rule labels whose test values never reached the simulator (and the
 coverage-driven redirection relabeled iterations without changing their traffic), the baseline
 histories did not log all simulator parameters, so the bug-detection replay lost their MAC and
-sequence-number mutations, and a crashed simulation was reported with the counters of the previous
-run. The files of the submitted evaluation are kept for reference (`evaluation/results/*.json`,
-`*/data/iteration_history.jsonl`).
+sequence-number mutations, a crashed simulation was reported with the counters of the previous
+run, predefined test cases were never sent to the simulator, and the reference scenario had two
+senders per VL. The files of the submitted evaluation are kept for reference
+(`evaluation/results/*.json`, `*/data/iteration_history.jsonl`).
 
-Result files of the revised evaluation:
+Result files of the final evaluation (`evaluation/results/revision2/`):
 
-- `evaluation/results/revision/runs/` - iteration histories of all campaigns (`llm_full_r1-5`,
-  `random_s1-5`, `boofuzz`, ablation variants `llm_A0`, `llm_A1`, `llm_A2`); every iteration logs
-  its exact simulator input (`sim_config`).
-- `evaluation/results/revision/bdr_replay_v2_*.json` - Experiment 3 replays of every logged input
-  against the reference SUT and the eight buggy variants.
-- `evaluation/results/revision/campaign_metrics.json` - all metrics, per run and per fuzzer, with
-  exact Mann-Whitney tests.
-- `evaluation/results/revision/figures/` - coverage curves, ablation, and Unique Findings figures.
+- `runs/` - iteration histories of all campaigns (`llm_full_r1-5`, `random_s1-5`, `boofuzz`,
+  `boofuzz_file_order`, ablation variants `llm_A0`, `llm_A1`, `llm_A2`); every iteration logs its
+  exact simulator input (`sim_config`).
+- `bdr_all.json` - Experiment 3 replays of every logged input against the reference SUT and the
+  eight buggy variants (merged from the `bdr_*.json` files next to it).
+- `campaign_metrics.json`, `tables.txt` - all metrics, per run and per fuzzer, with exact
+  Mann-Whitney tests.
+- `figures/` - coverage curves, ablation, and Unique Findings figures.
 - `evaluation/results/revision/rule_correctness_filtered.json`,
   `rule_completeness_validated.json`, `normative_checklist.json`,
-  `judge_validation_second.json` - Experiment 1 re-audit on the final rule set.
+  `judge_validation_second.json` - Experiment 1 re-audit on the final rule set;
+  `evaluation/revision/out/test_case_stats.json` - test-case statistics.
 
 ## Repository Layout
 
@@ -724,12 +747,14 @@ Detection logic:
 ## Revised Evaluation Workflow
 
 The revised evaluation uses the scripts in `evaluation/revision/`. No LLM API is used after the
-campaigns themselves.
+campaigns themselves. `evaluation/revision/run_campaigns_v3.sh` and `run_campaigns_v4.sh` launch the
+final campaigns; `sanity_checks.py` checks the clean run, every mutation, and a targeted input per
+bug.
 
 1. Run the campaigns, each with its own history and working directory, e.g.:
 
 ```bash
-R=evaluation/results/revision/runs
+R=evaluation/results/revision2/runs
 python3 llm_fuzzer/main.py --max-iterations 200 --history-path $R/llm_full_r1.jsonl \
   --output-dir /tmp/llm_r1 --work-dir /tmp/sim_llm_r1
 python3 llm_fuzzer/main.py --max-iterations 200 --ablation A1 --history-path $R/llm_A1.jsonl \
@@ -738,30 +763,31 @@ python3 random_baseline/main.py --max-iterations 200 --seed 1 --history-path $R/
   --output-dir /tmp/random_s1 --work-dir /tmp/sim_random_s1
 python3 boofuzz_baseline/main.py --max-iterations 200 --history-path $R/boofuzz.jsonl \
   --output-dir /tmp/boofuzz --work-dir /tmp/sim_boofuzz
+python3 boofuzz_baseline/main.py --max-iterations 200 --order file \
+  --history-path $R/boofuzz_file_order.jsonl --output-dir /tmp/boofuzz_f --work-dir /tmp/sim_boofuzz_f
 ```
 
 2. Replay every logged simulator input against the reference SUT and the eight buggy variants
    (Experiment 3):
 
 ```bash
+export AFDX_RESULTS=evaluation/results/revision2
 python3 evaluation/revision/bdr_replay.py \
   --history $R/llm_full_r1.jsonl=$R/llm_full_r1.jsonl \
-  --out evaluation/results/revision/bdr_replay_v2_llm.json
+  --out $AFDX_RESULTS/bdr_llm.json
 ```
 
-3. Compute all metrics and the figures:
+3. Compute all metrics and the figures (`bdr_all.json` merges the replay files):
 
 ```bash
-R=evaluation/results/revision
+D=evaluation/results/revision2
 PYTHONPATH=. python3 evaluation/revision/analyze_campaigns.py \
-  --campaign "LLM=$R/runs/llm_full_r*.jsonl" --campaign Boofuzz=$R/runs/boofuzz.jsonl \
-  --campaign "Random=$R/runs/random_s*.jsonl" --campaign A0=$R/runs/llm_A0.jsonl \
-  --campaign A1=$R/runs/llm_A1.jsonl --campaign A2=$R/runs/llm_A2.jsonl \
-  --bdr $R/bdr_replay_v2_baselines_original.json --bdr $R/bdr_replay_v2_ablation.json \
-  --bdr $R/bdr_replay_v2_llm.json --unique LLM,Boofuzz,Random --out $R/campaign_metrics.json
-PYTHONPATH=. python3 evaluation/revision/plot_revision_figures.py \
-  --bdr $R/bdr_replay_v2_baselines_original.json --bdr $R/bdr_replay_v2_ablation.json \
-  --bdr $R/bdr_replay_v2_llm.json
+  --campaign "LLM=$R/llm_full_r*.jsonl" --campaign Boofuzz=$R/boofuzz.jsonl \
+  --campaign Boofuzz_file=$R/boofuzz_file_order.jsonl --campaign "Random=$R/random_s*.jsonl" \
+  --campaign A0=$R/llm_A0.jsonl --campaign A1=$R/llm_A1.jsonl --campaign A2=$R/llm_A2.jsonl \
+  --bdr $D/bdr_all.json --unique LLM,Boofuzz,Random --out $D/campaign_metrics.json
+python3 evaluation/revision/make_tables.py $D/campaign_metrics.json > $D/tables.txt
+PYTHONPATH=. python3 evaluation/revision/plot_revision_figures.py --bdr $D/bdr_all.json
 ```
 
 Other scripts: `audit_final_rules.py` (Experiment 1 re-audit on the final rules),

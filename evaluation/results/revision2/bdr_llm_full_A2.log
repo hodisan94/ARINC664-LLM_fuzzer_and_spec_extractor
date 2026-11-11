@@ -1,0 +1,8 @@
+2997 distinct runs, 0 not cached, 12 workers
+LLM_r1                       6/8  inputs=118  skip_bag_policing(33), skip_frame_validation(79), skip_mac_validation(11), skip_vl_check(8), skip_sequence_check(32), accept_oversized(79)
+LLM_r2                       8/8  inputs=108  skip_bag_policing(32), skip_frame_validation(86), skip_mac_validation(12), skip_token_bucket(1), skip_vl_check(7), skip_constant_field(2), skip_sequence_check(32), accept_oversized(86)
+LLM_r3                       7/8  inputs=118  skip_bag_policing(34), skip_frame_validation(90), skip_mac_validation(9), skip_vl_check(11), skip_constant_field(4), skip_sequence_check(27), accept_oversized(90)
+LLM_r4                       7/8  inputs=118  skip_bag_policing(34), skip_frame_validation(89), skip_mac_validation(9), skip_vl_check(6), skip_constant_field(5), skip_sequence_check(28), accept_oversized(89)
+LLM_r5                       7/8  inputs=122  skip_bag_policing(34), skip_frame_validation(84), skip_mac_validation(13), skip_vl_check(7), skip_constant_field(3), skip_sequence_check(32), accept_oversized(84)
+A2                           7/8  inputs= 92  skip_bag_policing(15), skip_frame_validation(109), skip_mac_validation(7), skip_vl_check(3), skip_constant_field(2), skip_sequence_check(16), accept_oversized(109)
+-> evaluation/results/revision2/bdr_llm_full_A2.json

@@ -132,7 +132,9 @@ AfdxFrame::SetPayload(const uint8_t* data, uint32_t length)
   if (length < 1)
   {
     NS_LOG_WARN("Payload is 0 bytes — padding to 1 byte");
-    length = 1;
+    m_payloadSize = 1;
+    m_payload[0] = 0;
+    return;
   }
   if (length > 8983)
   {

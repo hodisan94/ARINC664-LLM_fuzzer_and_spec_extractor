@@ -34,15 +34,17 @@ struct MutationConfig
     std::string destMacMutation;
     int destMacMutationCount;
     std::string injectBug;
+    int vlIdOverride;
+    int vlOverrideCount;
     
     MutationConfig() : 
         targetVL(0), probability(0.0), payloadDeltaBytes(0), 
         timingJitterMs(0), macMutation("none"), isExtremeTest(false), isActive(false),
         payloadAppliedBytes(0), jitterAppliedMs(0), payloadClampCount(0), 
         txProbDrops(0), macSpoofCount(0),
-        sequenceNumberOverride(0), seqMutationCount(0),
+        sequenceNumberOverride(-1), seqMutationCount(0),
         destMacMutation("none"), destMacMutationCount(0),
-        injectBug("none") {}
+        injectBug("none"), vlIdOverride(0), vlOverrideCount(0) {}
 };
 extern MutationConfig g_mutationConfig;
 
@@ -102,10 +104,17 @@ AfdxEndSystem::AddTransmitVL(const AfdxVirtualLink& vl)
   }
 
   m_transmitVLs[vl.GetVlId()] = vl;
-  m_sequenceNumbers[vl.GetVlId()] = 0;
+  m_sequenceNumbers[vl.GetVlId()] = 0;  // ARINC 664 P7 §3.2.6.2.1: first frame after reset carries 0
   
   NS_LOG_INFO("ES" << m_nodeId << " added TX VL " << vl.GetVlId() 
               << " BAG=" << vl.GetBag().GetMilliSeconds() << "ms");
+}
+
+void
+AfdxEndSystem::AddReceiveVL(const AfdxVirtualLink& vl)
+{
+  m_receiveVlConfigs[vl.GetVlId()] = vl;
+  AddReceiveVL(vl.GetVlId());
 }
 
 void
@@ -217,7 +226,7 @@ AfdxEndSystem::SendFrame(uint16_t vlId)
   uint8_t effectiveSeqNum = seqNum;
   if (g_mutationConfig.isActive &&
       g_mutationConfig.targetVL == vlId &&
-      g_mutationConfig.sequenceNumberOverride > 0)
+      g_mutationConfig.sequenceNumberOverride >= 0)
   {
     effectiveSeqNum = static_cast<uint8_t>(g_mutationConfig.sequenceNumberOverride & 0xFF);
     g_mutationConfig.seqMutationCount++;
@@ -305,8 +314,8 @@ AfdxEndSystem::SendFrame(uint16_t vlId)
   
   m_framesSent++;
   
-  // Increment sequence number (wraps at 256)
-  m_sequenceNumbers[vlId] = (seqNum + 1) % 256;
+  // Increment sequence number (1..255, wraps to 1)
+  m_sequenceNumbers[vlId] = (seqNum >= 255) ? 1 : seqNum + 1;
   
   NS_LOG_INFO("ES" << m_nodeId << " sent VL" << vlId << " Seq=" << (uint32_t)seqNum);
   
@@ -440,9 +449,21 @@ AfdxEndSystem::ProcessReceivedFrame(Ptr<const Packet> packet, const std::string&
   }
   
   // ====================================================================
-  // AFDX VALIDATION STEP 4: First Valid Frame Wins (Redundancy Management)
-  // Must run before sequence check — duplicates from Network B have the
-  // same seq as the already-accepted Network A copy.
+  // AFDX VALIDATION STEP 4: Integrity Checking per network (§3.2.6.2.1)
+  // ====================================================================
+  if (activeBug != "skip_sequence_check")
+  {
+    if (!CheckSequenceNumber(vlId, seqNum, networkId))
+    {
+      m_framesRejected++;
+      LogRxEvent(vlId, seqNum, networkId, "REJECTED", "Invalid sequence number");
+      NS_LOG_WARN("ES" << m_nodeId << " rejected VL" << vlId << " - sequence error");
+      return;
+    }
+  }
+  
+  // ====================================================================
+  // AFDX VALIDATION STEP 5: Redundancy Management, First Valid Frame Wins (§3.2.6.2.2)
   // ====================================================================
   if (!ApplyFirstValidFrameWins(vlId, seqNum, networkId))
   {
@@ -451,20 +472,6 @@ AfdxEndSystem::ProcessReceivedFrame(Ptr<const Packet> packet, const std::string&
     NS_LOG_DEBUG("ES" << m_nodeId << " discarded VL" << vlId 
                  << " duplicate from " << networkId);
     return;
-  }
-  
-  // ====================================================================
-  // AFDX VALIDATION STEP 5: Sequence Number Check
-  // ====================================================================
-  if (activeBug != "skip_sequence_check")
-  {
-    if (!CheckSequenceNumber(vlId, seqNum))
-    {
-      m_framesRejected++;
-      LogRxEvent(vlId, seqNum, networkId, "REJECTED", "Invalid sequence number");
-      NS_LOG_WARN("ES" << m_nodeId << " rejected VL" << vlId << " - sequence error");
-      return;
-    }
   }
   
   // ====================================================================
@@ -496,8 +503,8 @@ AfdxEndSystem::ValidateFrame(const AfdxFrame& frame, uint32_t frameSize)
 
   // If we have a configured VL for this VL ID, validate payload size is within range
   uint16_t vlId = frame.GetVirtualLinkId();
-  auto it = m_transmitVLs.find(vlId);
-  if (it != m_transmitVLs.end())
+  auto it = m_receiveVlConfigs.find(vlId);
+  if (it != m_receiveVlConfigs.end())
   {
     const AfdxVirtualLink& vl = it->second;
     uint32_t minPayload = vl.GetMinPayloadSize();
@@ -541,54 +548,34 @@ AfdxEndSystem::CheckVLSubscription(uint16_t vlId)
 }
 
 bool
-AfdxEndSystem::CheckSequenceNumber(uint16_t vlId, uint8_t seqNum)
+AfdxEndSystem::CheckSequenceNumber(uint16_t vlId, uint8_t seqNum, const std::string& networkId)
 {
-  auto it = m_receptionState.find(vlId);
-  if (it == m_receptionState.end())
+  // ARINC 664 P7 §3.2.6.2.1: per network, accept RSN in [PSN"+"1, PSN"+"2]
+  // (wrap-around 255 -> 1), RSN == 0, or the first frame after a reset.
+  // PSN is the previous frame received on this VL and network, valid or not.
+  if (m_receptionState.find(vlId) == m_receptionState.end())
   {
     return true;
   }
-  
-  // Sequence number 0 is never valid (ARINC 664 P7: range is 1-255)
-  if (seqNum == 0)
+
+  auto key = std::make_pair(vlId, networkId);
+  auto it = m_integrityPsn.find(key);
+  bool valid = true;
+  if (seqNum != 0 && it != m_integrityPsn.end())
   {
-    NS_LOG_WARN("ES" << m_nodeId << " VL" << vlId 
-                << " sequence error: seq=0 is invalid");
-    return false;
+    auto next = [](uint8_t sn) -> uint8_t { return sn >= 255 ? 1 : sn + 1; };
+    uint8_t psn1 = next(it->second);
+    uint8_t psn2 = next(psn1);
+    valid = (seqNum == psn1 || seqNum == psn2);
+    if (!valid)
+    {
+      NS_LOG_WARN("ES" << m_nodeId << " VL" << vlId << " " << networkId
+                  << " sequence error: RSN=" << (uint32_t)seqNum
+                  << " not in [" << (uint32_t)psn1 << "," << (uint32_t)psn2 << "]");
+    }
   }
-  
-  uint8_t lastSeqNum = it->second.lastValidSeqNum;
-  
-  // First frame for this VL — accept any non-zero seq
-  if (!it->second.frameReceived)
-  {
-    return true;
-  }
-  
-  // Same sequence as last accepted → duplicate (shouldn't get here after FVFW,
-  // but guard against it). Accept so FVFW handles the dedup.
-  if (seqNum == lastSeqNum)
-  {
-    return true;
-  }
-  
-  // Forward progress: accept if seq is ahead of lastSeqNum (with wrapping).
-  // In a network with policing/drops, gaps are expected.
-  // Detect "backwards" sequences: if seqNum is more than 128 behind lastSeqNum
-  // (in circular 1-255 space), treat it as stale/invalid.
-  int diff = (int)seqNum - (int)lastSeqNum;
-  if (diff < 0) diff += 255; // wrap around 1-255 space
-  
-  if (diff > 128)
-  {
-    // Backwards / stale sequence
-    NS_LOG_WARN("ES" << m_nodeId << " VL" << vlId 
-                << " sequence error: stale seq=" << (uint32_t)seqNum
-                << " (last accepted=" << (uint32_t)lastSeqNum << ")");
-    return false;
-  }
-  
-  return true;
+  m_integrityPsn[key] = seqNum;
+  return valid;
 }
 
 bool

@@ -1,0 +1,54 @@
+2961 distinct runs, 2160 not cached, 12 workers
+  50/2160
+  100/2160
+  150/2160
+  200/2160
+  250/2160
+  300/2160
+  350/2160
+  400/2160
+  450/2160
+  500/2160
+  550/2160
+  600/2160
+  650/2160
+  700/2160
+  750/2160
+  800/2160
+  850/2160
+  900/2160
+  950/2160
+  1000/2160
+  1050/2160
+  1100/2160
+  1150/2160
+  1200/2160
+  1250/2160
+  1300/2160
+  1350/2160
+  1400/2160
+  1450/2160
+  1500/2160
+  1550/2160
+  1600/2160
+  1650/2160
+  1700/2160
+  1750/2160
+  1800/2160
+  1850/2160
+  1900/2160
+  1950/2160
+  2000/2160
+  2050/2160
+  2100/2160
+  2150/2160
+  2160/2160
+LLM_r1                       8/8  inputs=101  skip_bag_policing(13), skip_frame_validation(103), skip_mac_validation(12), skip_token_bucket(1), skip_vl_check(4), skip_constant_field(1), skip_sequence_check(24), accept_oversized(103)
+LLM_r2                       7/8  inputs=101  skip_bag_policing(25), skip_frame_validation(96), skip_mac_validation(12), skip_vl_check(4), skip_constant_field(3), skip_sequence_check(19), accept_oversized(96)
+LLM_r3                       7/8  inputs=103  skip_bag_policing(22), skip_frame_validation(102), skip_mac_validation(14), skip_vl_check(7), skip_constant_field(3), skip_sequence_check(20), accept_oversized(102)
+LLM_r4                       6/8  inputs= 95  skip_bag_policing(20), skip_frame_validation(101), skip_mac_validation(12), skip_vl_check(5), skip_sequence_check(29), accept_oversized(101)
+LLM_r5                       7/8  inputs=102  skip_bag_policing(26), skip_frame_validation(103), skip_mac_validation(13), skip_vl_check(2), skip_constant_field(2), skip_sequence_check(22), accept_oversized(103)
+A0                           7/8  inputs= 29  skip_bag_policing(3), skip_frame_validation(148), skip_mac_validation(11), skip_vl_check(34), skip_constant_field(4), skip_sequence_check(3), accept_oversized(148)
+A1                           7/8  inputs= 95  skip_bag_policing(38), skip_frame_validation(92), skip_mac_validation(12), skip_vl_check(22), skip_constant_field(7), skip_sequence_check(30), accept_oversized(92)
+A2                           8/8  inputs= 81  skip_bag_policing(6), skip_frame_validation(104), skip_mac_validation(14), skip_token_bucket(1), skip_vl_check(8), skip_constant_field(2), skip_sequence_check(12), accept_oversized(104)
+-> evaluation/results/revision2/bdr_llm.json
